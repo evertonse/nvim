@@ -1,4 +1,4 @@
-local status_ok, indent_blankline = pcall(require, "indent_blankline")
+local status_ok, indent_blankline = pcall(require, 'indent_blankline')
 if not status_ok then
   return
 end
@@ -40,7 +40,7 @@ end
 --   "operation_type",
 -- }
 -- -- HACK: work-around for https://github.com/lukas-reineke/indent-blankline.nvim/issues/59
--- vim.wo.colorcolumn = "99999"
+vim.wo.colorcolumn = '99999'
 
 --vim.cmd [[highlight IndentBlanklineIndent1 guifg=#E06C75 gui=nocombine]]
 --vim.cmd [[highlight IndentBlanklineIndent2 guifg=#E5C07B gui=nocombine]]
@@ -51,5 +51,4 @@ end
 -- vim.opt.listchars:append "space:⋅"
 -- vim.opt.listchars:append "space:"
 vim.opt.list = true
-vim.opt.listchars:append "eol:↴"
-
+vim.opt.listchars:append 'eol:↴'

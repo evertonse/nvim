@@ -3,6 +3,7 @@ local overrides = require 'custom.plugins.overrides'
 local M = {}
 
 M.plugins = {
+  --NOT_YET_USED
   {
     -- NOTE: Yes, you can install new plugins here!
     'mfussenegger/nvim-dap',
@@ -113,7 +114,7 @@ M.plugins = {
       require('dap-python').setup()
     end,
   },
-
+  --NOT_YET_USED
   {
     'nvim-neorg/neorg',
     lazy = true,
@@ -139,53 +140,7 @@ M.plugins = {
     end,
   },
 
-  {
-    'moll/vim-bbye',
-    enabled = true,
-    lazy = false,
-  }, -- Avoid messing with windwos layouts when closing buffers
-
-  {
-    'ThePrimeagen/harpoon',
-    lazy = true,
-    enabled = true,
-    dependencies = {
-      { 'nvim-lua/plenary.nvim' },
-    },
-    config = function()
-      require('telescope').load_extension 'harpoon'
-      require('harpoon').setup {
-        global_settings = {
-          -- sets the marks upon calling `toggle` on the ui, instead of require `:w`.
-          save_on_toggle = true,
-
-          -- saves the harpoon file upon every change. disabling is unrecommended.
-          save_on_change = true,
-
-          -- sets harpoon to run the command immediately as it's passed to the terminal when calling `sendCommand`.
-          enter_on_sendcmd = false,
-
-          -- closes any tmux windows harpoon that harpoon creates when you close Neovim.
-          tmux_autoclose_windows = false,
-
-          -- filetypes that you want to prevent from adding to the harpoon list menu.
-          excluded_filetypes = { 'harpoon' },
-
-          -- set marks specific to each git branch inside git repository
-          mark_branch = false,
-
-          -- enable tabline with harpoon marks
-          tabline = true,
-          tabline_prefix = '   ',
-          tabline_suffix = '   ',
-        },
-        menu = {
-          width = vim.api.nvim_win_get_width(0) - 4,
-        },
-      }
-    end,
-  },
-
+  -- NOT YET USED
   {
     'ekickx/clipboard-image.nvim',
     lazy = true,
@@ -216,6 +171,7 @@ M.plugins = {
     end,
   }, -- Avoid messing with windwos layouts when closing buffers
 
+  -- NOT YET USED
   {
     'VonHeikemen/lsp-zero.nvim',
     lazy = false, --@important, might not be a agood ideia to make it so
@@ -269,15 +225,7 @@ M.plugins = {
       { 'rafamadriz/friendly-snippets' },
     },
   },
-  -- if some code requires a module from an unloaded plugin, it will be automatically loaded.
-  -- So for api plugins like devicons, we can always set lazy=true
-  {
-    'nvim-tree/nvim-web-devicons',
-    lazy = true,
-    enabled = true,
-  },
-
-  {
+  { -- TODO
     'neovim/nvim-lspconfig',
     lazy = true,
     enabled = true,
@@ -340,132 +288,6 @@ M.plugins = {
       require 'custom.plugins.configs.lspconfig'
     end,
   },
-
-  {
-    'williamboman/mason.nvim',
-    lazy = false,
-    enabled = true,
-    opts = overrides.mason,
-    build = function()
-      pcall(vim.cmd, 'MasonUpdate')
-    end,
-  },
-
-  {
-    'onsails/lspkind.nvim',
-    lazy = true,
-    enabled = false,
-  }, -- better lsp cmp icons
-
-  {
-    'RRethy/vim-illuminate',
-    lazy = true,
-    enabled = false,
-  },
-
-  {
-    'folke/trouble.nvim',
-    lazy = true,
-    enabled = false,
-  }, -- LPS Diagnostic with colors and shit
-
-  {
-    'folke/lsp-colors.nvim',
-    lazy = true,
-    enabled = false,
-  }, -- LSP colors that might be missings
-  --{ 'jackguo380/vim-lsp-cxx-highlight',     }, -- LSP based cpp highlighting
-  -->> Telescope
-  {
-    'nvim-telescope/telescope.nvim',
-    lazy = true,
-    enabled = true,
-    opts = overrides.telescope,
-  },
-
-  -- Fuzzy Finder Algorithm which requires local dependencies to be built.
-  -- Only load if `make` is available. Make sure you have the system
-  -- requirements installed.
-  -- add telescope-fzf-native
-  {
-    'telescope.nvim',
-    dependencies = {
-      'nvim-telescope/telescope-fzf-native.nvim',
-      build = 'make',
-      config = function()
-        require('telescope').load_extension 'fzf'
-      end,
-    },
-  },
-
-  {
-    'iamcco/markdown-preview.nvim',
-    lazy = false,
-    enabled = false,
-    build = 'cd app && npm install',
-    config = function()
-      vim.g.mkdp_filetypes = { 'markdown' }
-    end,
-    ft = { 'markdown' },
-  },
-
-  --Optionally  mine https://github.com/evertonse/nvim-treesitter, removed bug with windows that wasnt adressed nor have I seen any issues opened
-  {
-    'JoosepAlviste/nvim-ts-context-commentstring',
-    lazy = true,
-    enabled = false,
-  }, -- Nice Vim commenting --  context_commentstring { enabled = true },
-  -- {'David-Kunz/markid',}, -- Every identifier has the same color
-  {
-    'nvim-treesitter/playground',
-    lazy = false,
-    enabled = false,
-    config = function()
-      require('nvim-treesitter.configs').setup {
-        playground = {
-          enabled = true,
-          disable = {},
-          updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
-          persist_queries = false, -- Whether the query persists across vim sessions
-          keybindings = {
-            toggle_query_editor = 'o',
-            toggle_hl_groups = 'i',
-            toggle_injected_languages = 't',
-            toggle_anonymous_nodes = 'a',
-            toggle_language_display = 'I',
-            focus_language = 'f',
-            unfocus_language = 'F',
-            update = 'R',
-            goto_node = '<cr>',
-            show_help = '?',
-          },
-        },
-        query_linter = {
-          enabled = true,
-          use_virtual_text = true,
-          lint_events = { 'BufWrite', 'CursorHold' },
-        },
-      }
-    end,
-  },
-
-  -- Argument Coloring
-  -- {'octol/vim-cpp-enhanced-highlight',                }, -- still haven't d but adds cpp keywords for highlight tweak even further
-
-  {
-    'm-demare/hlargs.nvim',
-    lazy = false,
-    enabled = true,
-    opts = overrides.hlargs,
-    config = function()
-      require 'custom.plugins.configs.hlargs'
-      require('hlargs').enable()
-    end,
-  },
-
-  -->> Colorschemes
-  --{'marko-cerovac/material.nvim'},
-  --{ "folke/tokyonight.nvim",  },
   --[[ 
         Using my fork of Mofiqul vscode nvim theme, 
         but my theme is Focusing on Visual Studio Theme, rather tha vs code
@@ -484,27 +306,7 @@ M.plugins = {
   --   end,
   -- },
 
-  {
-    'NvChad/nvterm',
-    lazy = false,
-    enabled = true,
-    config = function()
-      -- require("nvterm").setup()
-      local ok = require 'custom.plugins.configs.nvterm'
-      assert(ok, 'nvterm did not config correctly')
-    end,
-  },
   -->> Utils
-  {
-    'dstein64/vim-startuptime',
-    lazy = false,
-    enabled = false,
-    cmd = 'StartupTime',
-    -- init is called during startup. Configuration for vim plugins typically should be set in an init function
-    init = function()
-      vim.g.startuptime_tries = 10
-    end,
-  },
 
   {
     'kylechui/nvim-surround',

@@ -6,6 +6,10 @@ return {
     main = 'ibl',
     event = 'User FilePost',
     opts = {
+
+      --char = "│"
+      --char = "▏"
+      --char = "▎"
       indent = { char = '│', highlight = 'IblChar' },
       scope = { char = '│', highlight = 'IblScopeChar' },
       exclude = {
