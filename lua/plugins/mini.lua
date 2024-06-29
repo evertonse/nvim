@@ -1,7 +1,7 @@
 return {
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
-    lazy=false,
+    lazy = false,
     dependencies = 'nvim-tree/nvim-web-devicons',
     config = function()
       -- Better Around/Inside textobjects
@@ -72,7 +72,7 @@ return {
       --  and try some other statusline plugin
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.user.nerd_font, set_vim_settings = true, }
+      statusline.setup { use_icons = vim.g.user.nerd_font, set_vim_settings = true }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
