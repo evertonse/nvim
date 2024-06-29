@@ -11,7 +11,7 @@
 
 local lazy_config = {
   defaults = { lazy = true },
-  --install = { colorscheme = { "nvchad" } },
+  install = { colorscheme = { 'theme' } },
 
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -172,7 +172,7 @@ require('lazy').setup({
 
   require 'plugins.cmp',
 
-  require 'plugins.tokyonight',
+  require 'plugins.colorscheme',
 
   require 'plugins.todo-comments',
 
@@ -186,6 +186,7 @@ require('lazy').setup({
   require 'plugins.autopairs',
   require 'plugins.neo-tree',
   require 'plugins.nvterm',
+  require 'plugins.harpoon',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
