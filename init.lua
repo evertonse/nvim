@@ -3,16 +3,17 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.user.nerd_font = false
+vim.g.user.transparency = true
+vim.g.user.theme =  "pastel"
+
+-- [[ Setting options ]]
+require 'options'
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 require 'lazy-bootstrap'
 
 -- [[ Configure and install plugins ]]
 require 'lazy-plugins'
-
--- [[ Setting options ]]
-vim.schedule(function ()
-  require 'options'
-end)
 
 
 -- [[ Basic Keymaps ]]
@@ -20,7 +21,9 @@ vim.schedule(function ()
   require 'keymaps'
 end)
 
-require 'autocommands'
+vim.schedule(function ()
+  require 'autocommands'
+end)
 
 
 -- The line beneath this is called `modeline`. See `:help modeline`
