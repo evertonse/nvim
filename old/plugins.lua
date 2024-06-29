@@ -532,38 +532,6 @@ M.plugins = {
     lazy = false,
     enabled = false,
   },
-
-  {
-    'lukas-reineke/indent-blankline.nvim',
-    -- version = "2.20.7",
-    lazy = true,
-    enabled = true,
-    init = function()
-      require('core.utils').lazy_load 'indent-blankline.nvim'
-    end,
-    opts = function()
-      return overrides.blankline
-    end,
-    config = function(_, opts)
-      require('core.utils').load_mappings 'blankline'
-      dofile(vim.g.base46_cache .. 'blankline')
-      require('indent_blankline').setup(opts)
-      vim.cmd [[
-        function! s:IndentBlanklineLinecount()
-            if nvim_buf_line_count(0) < 500
-                IndentBlanklineRefresh
-            endif
-        endfunction
-
-        augroup IndentBlanklineAutogroup
-            autocmd!
-            autocmd OptionSet shiftwidth,tabstop IndentBlanklineRefresh
-            autocmd FileChangedShellPost,Syntax * IndentBlanklineRefresh
-            autocmd TextChanged,TextChangedI * call s:IndentBlanklineLinecount()
-        augroup END
-      ]]
-    end,
-  },
 }
---
+--vim.o.timeoutlen
 return M.plugins

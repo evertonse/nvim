@@ -8,112 +8,6 @@
 --  To update plugins you can run
 --    :Lazy update
 --
--- NOTE: Here is where you install your plugins.
-require('lazy').setup({
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  'pteroctopus/faster.nvim',
-  { 'moll/vim-bbye', lazy = false },
-
-  -- NOTE: Plugins can also be added by using a table,
-  -- with the first argument being the link and the following
-  -- keys can be used to configure plugin behavior/loading/etc.
-  --
-  -- Use `opts = {}` to force a plugin to be loaded.
-  --
-  --  This is equivalent to:
-  --    require('Comment').setup({})
-
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
-  { 'nvim-tree/nvim-web-devicons' },
-
-  {
-    'folke/trouble.nvim',
-    lazy = true,
-    enabled = false,
-  }, -- LPS Diagnostic with colors and shit
-
-  {
-    'iamcco/markdown-preview.nvim',
-    lazy = false,
-    enabled = false,
-    build = 'cd app && npm install',
-    config = function()
-      vim.g.mkdp_filetypes = { 'markdown' }
-    end,
-    ft = { 'markdown' },
-  },
-  {
-    'nvim-treesitter/playground',
-    lazy = false,
-    enabled = false,
-    config = function()
-      require('nvim-treesitter.configs').setup {
-        playground = {
-          enabled = true,
-          disable = {},
-          updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
-          persist_queries = false, -- Whether the query persists across vim sessions
-          keybindings = {
-            toggle_query_editor = 'o',
-            toggle_hl_groups = 'i',
-            toggle_injected_languages = 't',
-            toggle_anonymous_nodes = 'a',
-            toggle_language_display = 'I',
-            focus_language = 'f',
-            unfocus_language = 'F',
-            update = 'R',
-            goto_node = '<cr>',
-            show_help = '?',
-          },
-        },
-        query_linter = {
-          enabled = true,
-          use_virtual_text = true,
-          lint_events = { 'BufWrite', 'CursorHold' },
-        },
-      }
-    end,
-  },
-
-  -- modular approach: using `require 'path/name'` will
-  -- include a plugin definition from file lua/path/name.lua
-
-  require 'plugins/gitsigns',
-
-  require 'plugins/which-key',
-
-  require 'plugins/telescope',
-
-  require 'plugins/lspconfig',
-
-  require 'plugins/conform',
-
-  require 'plugins/cmp',
-
-  require 'plugins/tokyonight',
-
-  require 'plugins/todo-comments',
-
-  require 'plugins/mini',
-
-  require 'plugins/treesitter',
-
-  require 'plugins.debug',
-  require 'plugins.indent_blankline',
-  require 'plugins.lint',
-  require 'plugins.autopairs',
-  require 'plugins.neo-tree',
-
-  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    This is the easiest way to modularize your config.
-  --
-  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
-}, {
-  ui = {},
-})
 
 local lazy_config = {
   defaults = { lazy = true },
@@ -146,35 +40,159 @@ local lazy_config = {
   performance = {
     rtp = {
       disabled_plugins = {
-        '2html_plugin',
-        'tohtml',
-        'getscript',
-        'getscriptPlugin',
-        'gzip',
-        'logipat',
-        'netrw',
-        'netrwPlugin',
-        'netrwSettings',
-        'netrwFileHandlers',
-        'matchit',
-        'tar',
-        'tarPlugin',
-        'rrhelper',
-        'spellfile_plugin',
-        'vimball',
-        'vimballPlugin',
-        'zip',
-        'zipPlugin',
-        'tutor',
-        'rplugin',
-        'syntax',
-        'synmenu',
-        'optwin',
-        'compiler',
-        'bugreport',
-        'ftplugin',
+        -- '2html_plugin',
+        -- 'tohtml',
+        -- 'getscript',
+        -- 'getscriptPlugin',
+        -- 'gzip',
+        -- 'logipat',
+        -- 'netrw',
+        -- 'netrwPlugin',
+        -- 'netrwSettings',
+        -- 'netrwFileHandlers',
+        -- 'matchit',
+        -- 'tar',
+        -- 'tarPlugin',
+        -- 'rrhelper',
+        -- 'spellfile_plugin',
+        -- 'vimball',
+        -- 'vimballPlugin',
+        -- 'zip',
+        -- 'zipPlugin',
+        -- 'tutor',
+        -- 'rplugin',
+        -- 'syntax',
+        -- 'synmenu',
+        -- 'optwin',
+        -- 'compiler',
+        -- 'bugreport',
+        -- 'ftplugin',
       },
     },
   },
 }
+-- NOTE: Here is where you install your plugins.
+require('lazy').setup({
+  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  --'pteroctopus/faster.nvim',
+  { 'moll/vim-bbye', lazy = false },
+
+  -- NOTE: Plugins can also be added by using a table,
+  -- with the first argument being the link and the following
+  -- keys can be used to configure plugin behavior/loading/etc.
+  --
+  -- Use `opts = {}` to force a plugin to be loaded.
+  --
+  --  This is equivalent to:
+  --    require('Comment').setup({})
+
+  -- "gc" to comment visual regions/lines
+  { 'numToStr/Comment.nvim', opts = {} },
+  --{ 'nvim-tree/nvim-web-devicons' },
+
+  {
+    'folke/trouble.nvim',
+    lazy = true,
+    enabled = false,
+  }, -- LPS Diagnostic with colors and shit
+
+  {
+    'iamcco/markdown-preview.nvim',
+    lazy = false,
+    enabled = false,
+    build = 'cd app && npm install',
+    config = function()
+      vim.g.mkdp_filetypes = { 'markdown' }
+    end,
+    ft = { 'markdown' },
+  },
+  {
+    'ekickx/clipboard-image.nvim',
+    branch = 'feat_WSL',
+    lazy = false,
+    enabled = false,
+  },
+  {
+    'stevearc/oil.nvim',
+    lazy = true,
+    enabled = false,
+    opts = {},
+    config = function()
+      require 'custom.plugins.configs.oil'
+      vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+      vim.keymap.set('n', '<leader>o', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+    end,
+    -- Optional dependencies
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+  },
+  {
+    'VonHeikemen/fine-cmdline.nvim',
+    dependencies = {
+      { 'MunifTanjim/nui.nvim' },
+    },
+    lazy = true,
+    enabled = false,
+    config = function()
+      -- vim.api.nvim_set_keymap("n", "<CR>", "<cmd>FineCmdline<CR>", { noremap = true })
+      vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
+    end,
+  },
+  {
+    'max397574/better-escape.nvim',
+    lazy = false,
+    enabled = false,
+    event = 'InsertEnter',
+    config = function()
+      require('better_escape').setup {
+        mapping = {
+          'jk',
+          'kj',
+          'jj',
+          'kk',
+        }, -- a table with mappings to use
+        timeout = vim.o.timeoutlen > 100 and vim.o.timeoutlen or 100, -- the time in which the keys must be hit in ms. Use option timeoutlen by default
+        clear_empty_lines = true, -- clear line after escaping if there is only whitespace
+        keys = '<Esc>', -- keys used for escaping, if it is a function will use the result everytime
+      }
+    end,
+  },
+
+  -- modular approach: using `require 'path/name'` will
+  -- include a plugin definition from file lua/path/name.lua
+
+  require 'plugins.gitsigns',
+
+  require 'plugins.which-key',
+
+  require 'plugins.telescope',
+
+  require 'plugins.lspconfig',
+
+  require 'plugins.conform',
+
+  require 'plugins.cmp',
+
+  require 'plugins.tokyonight',
+
+  require 'plugins.todo-comments',
+
+  require 'plugins.mini',
+
+  require 'plugins.treesitter',
+
+  require 'plugins.debug',
+  --require 'plugins.indent_blankline',
+  require 'plugins.lint',
+  require 'plugins.autopairs',
+  require 'plugins.neo-tree',
+  --require 'plugins.nvterm',
+
+  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
+  --    This is the easiest way to modularize your config.
+  --
+  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
+  --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
+  -- { import = 'custom.plugins' },
+}, lazy_config)
+
 -- vim: ts=2 sts=2 sw=2 et
