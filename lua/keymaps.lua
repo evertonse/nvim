@@ -515,8 +515,8 @@ M.general = {
     ['<C-k>'] = { '<Up>', 'Move up' },
     -- Insert --
     -- Press jk fast to exit insert mode
-    ['jk'] = { '<ESC>', noremap_opts },
-    ['kj'] = { '<ESC>', noremap_opts },
+    -- ['jk'] = { '<ESC>', noremap_opts },
+    -- ['kj'] = { '<ESC>', noremap_opts },
     ['<C-Up>'] = { '<C-o>{', noremap_opts },
     ['<C-Down>'] = { '<C-o>}', noremap_opts },
     ['<C-Left>'] = { '<C-o>b', noremap_opts },
