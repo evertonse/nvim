@@ -159,7 +159,7 @@ require('lazy').setup({
   { --https://github.com/andymass/vim-matchup
     'andymass/vim-matchup',
     lazy = false,
-    enabled = false,
+    enabled = true,
     config = function()
       -- may set any options here
       vim.g.matchup_matchparen_offscreen = { method = 'popup' }
@@ -172,7 +172,7 @@ require('lazy').setup({
   },
   {
     'tiagovla/scope.nvim',
-    enabled = true,
+    enabled = false,
     lazy = false,
   },
 

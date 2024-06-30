@@ -20,7 +20,7 @@ return {
 
           -- Function which formats the tab label
           -- By default surrounds with space and possibly prepends with icon
-          -- format = nil,
+          format = nil,
 
           -- Whether to set Vim's settings for tabline (make it always shown and
           -- allow hidden buffers)
@@ -31,7 +31,7 @@ return {
           tabpage_section = 'right',
         }
       require('mini.cursorword').setup()
-      local _ = false
+      local _ = true
         or require('mini.indentscope').setup {
           -- Draw options
           draw = {
@@ -92,7 +92,7 @@ return {
       --  and try some other statusline plugin
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.user.nerd_font, set_vim_settings = true }
+      statusline.setup { use_icons = vim.g.user.nerd_font, set_vim_settings = false }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for

@@ -59,7 +59,7 @@ g.loaded_netrwSettings = 1
 g.loaded_netrwFileHandlers = 1
 
 local options = {
-  laststatus = 3,
+  laststatus = 2,
   backup = false, -- creates a backup file
   clipboard = nil, -- allows neovim to access the system clipboard
   cmdheight = 1, -- more space in the neovim command line for displaying messages
@@ -96,7 +96,7 @@ local options = {
   linebreak = true, -- companion to wrap, don't split words
   scrolloff = 4, -- minimal number of screen lines to keep above and below the cursor
   sidescrolloff = 4, -- minimal number of screen columns either side of cursor if wrap is `false`
-  guifont = 'JetBrainsMono NF:h9.1', -- the font used in graphical neovim applications
+  -- guifont = 'JetBrainsMono NF:h9.1', -- the font used in graphical neovim applications
   whichwrap = 'bs<>[]hl', -- which "horizontal" keys are allowed to travel to prev/next line
   breakindent = true,
 }
