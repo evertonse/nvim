@@ -170,6 +170,11 @@ require('lazy').setup({
     enabled = false,
     lazy = false,
   },
+  {
+    'tiagovla/scope.nvim',
+    enabled = true,
+    lazy = false,
+  },
 
   -- modular approach: using `require 'path/name'` will
   -- include a plugin definition from file lua/path/name.lua

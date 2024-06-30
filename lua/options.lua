@@ -3,39 +3,11 @@
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
--- Make line numbers default
-vim.opt.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
-
--- Enable mouse mode, can be useful for resizing splits for example!
-vim.opt.mouse = 'a'
-
--- Don't show the mode, since it's already in the status line
-vim.opt.showmode = false
-
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.opt.clipboard = 'unnamedplus'
 vim.o.cursorlineopt = 'both' -- to enable cursorline
-
--- Enable break indent
-vim.opt.breakindent = true
-
--- Save undo history
-vim.opt.undofile = true
-
--- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
--- Keep signcolumn on by default
-vim.opt.signcolumn = 'yes'
-
--- Decrease update time
-vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
@@ -101,7 +73,7 @@ local options = {
   pumheight = 5, -- pop up menu height
   showmode = false, -- we don't need to see things like -- INSERT -- anymore
   showtabline = 1, -- always show tabs
-  smartcase = false, -- smart case
+  smartcase = true, -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
   smartindent = false, -- make indenting smarter again
   splitbelow = true, -- force all horizontal splits to go below current window
   splitright = true, -- force all vertical splits to go to the right of current window
@@ -126,26 +98,18 @@ local options = {
   sidescrolloff = 4, -- minimal number of screen columns either side of cursor if wrap is `false`
   guifont = 'JetBrainsMono NF:h9.1', -- the font used in graphical neovim applications
   whichwrap = 'bs<>[]hl', -- which "horizontal" keys are allowed to travel to prev/next line
+  breakindent = true,
 }
 
 for k, v in pairs(options) do
   vim.opt[k] = v
 end
 
-vim.opt.shortmess = 'atilmnrxwoOstTIF' -- flags to shorten vim messages, see :help 'shortmess'
+vim.opt.shortmess:append 'atilmnrxwoOstTIFc' -- flags to shorten vim messages, see :help 'shortmess'
 vim.opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages
 vim.opt.iskeyword:append '-' -- hyphenated words recognized by searches
 vim.opt.formatoptions:remove { 'c', 'r', 'o' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
 vim.opt.runtimepath:remove '/vimfiles' -- separate vim plugins from neovim in case vim still in use
-
---Enable break indent
-vim.opt.breakindent = true
-
--- Save undo history
-vim.opt.undofile = true
--- Case insensitive searching UNLESS /C or capital in search
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
 
 -- Decrease update time
 vim.wo.signcolumn = 'yes'
