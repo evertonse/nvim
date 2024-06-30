@@ -1,7 +1,8 @@
 return {
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
-    lazy = false,
+    lazy = true,
+    event = 'VimEnter',
     dependencies = 'nvim-tree/nvim-web-devicons',
     config = function()
       -- Better Around/Inside textobjects
@@ -12,24 +13,25 @@ return {
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
       require('mini.git').setup {}
-      require('mini.tabline').setup {
-        -- Whether to show file icons (requires 'nvim-tree/nvim-web-devicons')
-        show_icons = true,
+      local _ = false
+        or require('mini.tabline').setup {
+          -- Whether to show file icons (requires 'nvim-tree/nvim-web-devicons')
+          show_icons = true,
 
-        -- Function which formats the tab label
-        -- By default surrounds with space and possibly prepends with icon
-        format = nil,
+          -- Function which formats the tab label
+          -- By default surrounds with space and possibly prepends with icon
+          -- format = nil,
 
-        -- Whether to set Vim's settings for tabline (make it always shown and
-        -- allow hidden buffers)
-        set_vim_settings = true,
+          -- Whether to set Vim's settings for tabline (make it always shown and
+          -- allow hidden buffers)
+          set_vim_settings = true,
 
-        -- Where to show tabpage section in case of multiple vim tabpages.
-        -- One of 'left', 'right', 'none'.
-        tabpage_section = 'right',
-      }
+          -- Where to show tabpage section in case of multiple vim tabpages.mini
+          -- One of 'left', 'right', 'none'.
+          tabpage_section = 'right',
+        }
       require('mini.cursorword').setup()
-      local mini_indentscope = true
+      local _ = true
         or require('mini.indentscope').setup {
           -- Draw options
           draw = {

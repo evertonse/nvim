@@ -165,6 +165,11 @@ require('lazy').setup({
       vim.g.matchup_matchparen_offscreen = { method = 'popup' }
     end,
   },
+  {
+    'kdheepak/tabline.nvim',
+    enabled = false,
+    lazy = false,
+  },
 
   -- modular approach: using `require 'path/name'` will
   -- include a plugin definition from file lua/path/name.lua
