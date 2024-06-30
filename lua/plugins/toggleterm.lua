@@ -12,11 +12,11 @@ end
 
 return {
   'akinsho/toggleterm.nvim',
-  lazy = false,
+  lazy = true,
   event = 'VimEnter',
   version = '*',
   opts = {
-    close_on_exit = false,
+    close_on_exit = true,
     persist_size = true,
     -- on_close = hook_term_open,
     size = function(term)
