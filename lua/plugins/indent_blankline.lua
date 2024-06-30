@@ -12,7 +12,7 @@ return {
   opts = {
 
     indent = { char = '▏', repeat_linebreak = false },
-    scope = { char = '▏', show_end = false, include = { node_type = { lua = { 'return_statement', 'table_constructor' } } } },
+    scope = { char = '▏', priority = 2048, show_end = false, include = { node_type = { lua = { 'return_statement', 'table_constructor' } } } },
     whitespace = { remove_blankline_trail = true },
     -- NOTE: Char Options = "│' '│' '▏' "▎"
     --                      Alternatives: ~
