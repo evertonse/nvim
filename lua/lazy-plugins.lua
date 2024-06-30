@@ -18,7 +18,7 @@
 
 local lazy_config = {
   defaults = { lazy = true },
-  install = { colorscheme = { 'colorscheme' } },
+  install = { colorscheme = { 'personal' } },
   change_detection = { notify = true },
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -151,15 +151,6 @@ require('lazy').setup({
       vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
     end,
   },
-  { --https://github.com/andymass/vim-matchup
-    'andymass/vim-matchup',
-    lazy = false,
-    enabled = true,
-    config = function()
-      -- may set any options here
-      vim.g.matchup_matchparen_offscreen = { method = 'popup' }
-    end,
-  },
   {
     'kdheepak/tabline.nvim',
     enabled = false,
@@ -169,6 +160,18 @@ require('lazy').setup({
     'tiagovla/scope.nvim',
     enabled = false,
     lazy = false,
+  },
+  {
+    'NeogitOrg/neogit',
+    dependencies = {
+      'nvim-lua/plenary.nvim', -- required
+      'sindrets/diffview.nvim', -- optional - Diff integration
+
+      -- Only one of these is needed, not both.
+      'nvim-telescope/telescope.nvim', -- optional
+      'ibhagwan/fzf-lua', -- optional
+    },
+    config = true,
   },
 
   -- modular approach: using `require 'path/name'` will
@@ -196,15 +199,15 @@ require('lazy').setup({
 
   require 'plugins.treesitter',
 
-  require 'plugins.harpoon',
-
   require 'plugins.debug',
 
+  ------------------------
+  require 'plugins.harpoon',
+  require 'plugins.vim_matchup',
   require 'plugins.indent_blankline',
   require 'plugins.lint',
   require 'plugins.autopairs',
   require 'plugins.neo-tree',
-
   require 'plugins.colorizer',
   require 'plugins.better_scape',
 
