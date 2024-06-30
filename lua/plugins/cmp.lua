@@ -35,15 +35,101 @@ return {
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-path',
     },
     config = function()
-      -- See `:help cmp`
+      -- please take a look at this https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
+      --https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#completionItemKind
       local cmp = require 'cmp'
+      local CompletionItemKind = {
+        --[[Text ]]
+        30,
+        --[[Method = ]]
+        2,
+        --[[Function = ]]
+        1,
+        --[[Constructor = ]]
+        4,
+        --[[Field = ]]
+        4,
+        --[[Variable = ]]
+        3,
+        --[[Class = ]]
+        7,
+        --[[Interface = ]]
+        8,
+        --[[Module = ]]
+        9,
+        --[[Property = ]]
+        10,
+        --[[Unit = ]]
+        11,
+        --[[Value = ]]
+        12,
+        --[[Enum = ]]
+        13,
+        --[[Keyword = ]]
+        14,
+        --[[Snippet = ]]
+        3,
+        --[[Color = ]]
+        16,
+        --[[File = ]]
+        17,
+        --[[Reference = ]]
+        18,
+        --[[Folder = ]]
+        19,
+        --[[EnumMember = ]]
+        20,
+        --[[Constant = ]]
+        21,
+        --[[Struct = ]]
+        22,
+        --[[Event = ]]
+        23,
+        --[[Operator = ]]
+        24,
+        --[[TypeParameter = ]]
+        25,
+      }
+
+      local cmp_select = { behavior = cmp.SelectBehavior.Select }
+      -- See `:help cmp`
       local luasnip = require 'luasnip'
       local lspkind = require 'lspkind'
       luasnip.config.setup {}
 
       cmp.setup {
+        sorting = {
+          priority_weight = 1.2,
+          comparators = {
+            -- cmp.score_offset, -- not good at all
+            cmp.config.compare.exact,
+            function(e1, e2)
+              local k1 = CompletionItemKind[e1:get_kind()]
+              local k2 = CompletionItemKind[e2:get_kind()]
+              if k1 < k2 then
+                return true
+              end
+              return false
+            end,
+            cmp.scopes, -- what?
+            cmp.config.compare.locality,
+            cmp.config.compare.kind,
+            cmp.config.compare.recently_used,
+            cmp.config.compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
+            cmp.config.compare.order,
+            -- compare.sort_text,
+            -- compare.exact,
+            -- compare.length, -- useless
+            cmp.config.compare.offset,
+            -- cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
+          },
+        },
         formatting = {
           format = lspkind.cmp_format {
             mode = 'symbol', -- show only symbol annotations

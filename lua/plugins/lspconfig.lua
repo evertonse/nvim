@@ -1,7 +1,9 @@
 return {
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
-    lazy = false,
+    --lazy = false,
+    event = 'VimEnter',
+    -- event = 'User FilePost',
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
@@ -176,6 +178,12 @@ return {
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        bashls = {},
+        --[[ OLS  https://github.com/DanielGavin/ols.gits ]]
+        ols = {},
+
+        --[[ zig ]]
+        zls = {},
         clangd = {},
         -- gopls = {},
         pyright = {},

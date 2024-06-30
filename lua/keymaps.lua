@@ -1,6 +1,7 @@
 --
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
+--  See :map <leader> to show all keymappings starting with the leader key
 --
 --
 
@@ -224,10 +225,43 @@ local grep_and_show_results = function()
   -- vim.cmd "cclose"
 end
 
+local float_term = {
+  terminal = nil,
+  width_percentage = 0.43,
+  height_percentage = 0.35,
+  width_min = 50,
+  height_min = 20,
+}
+local float_term_toggle = function()
+  local _, tt = pcall(require, 'toggleterm.terminal')
+  local f = float_term
+  f.terminal = f.terminal
+    or tt.Terminal:new {
+      direction = 'float',
+      float_opts = {
+        width = math.floor(vim.o.columns * f.width_percentage),
+        height = math.floor(vim.o.lines * f.height_percentage),
+      },
+    }
+  f.terminal.float_opts.width = math.max(f.width_min, math.floor(vim.o.columns * f.width_percentage))
+  f.terminal.float_opts.height = math.max(f.height_min, math.floor(vim.o.lines * f.height_percentage))
+  f.terminal:toggle()
+end
+
 M.general = {
+  -- [TERMINAL and NORMAL]
+  tn = {},
   -- [NORMAL]
   n = {
 
+    -->> ToggleTerm
+    ['<A-i>'] = {
+      function()
+        float_term_toggle()
+        --vim.cmd [[startinsert]]
+      end,
+      'Toggle nvimtree',
+    },
     -->> neo-tree
     ['<leader>e'] = { '<cmd> Neotree toggle <CR>', 'Toggle neo tree' },
     ['<leader>E'] = { '<cmd> Neotree reveal <CR>', 'Toggle neo tree' },
@@ -269,25 +303,25 @@ M.general = {
       end,
       'this works like file navigation except that if there is no terminal at the specified index a new terminal is created.',
     },
-    ['<A-m>'] = {
+    ['<leader>ha'] = {
       function()
         require('harpoon.mark').add_file()
         print 'harpoon mark added'
       end,
-      '',
+      '[H]arpoon [A]dd mark',
     },
-    ['<A-r>'] = {
+    ['<leader>hr'] = {
       function()
         require('harpoon.mark').rm_file 'harpoon mark removed'
       end,
-      '',
+      '[H]arpoon [R]emove mark',
     },
     -- ["<A-b>"]         = { ":Telescope harpoon marks initial_mode=normal <CR>", "this works like file navigation except that if there is no terminal at the specified index a new terminal is created." },
-    ['<A-b>'] = {
+    ['<leader>hb'] = {
       function()
         require('harpoon.ui').toggle_quick_menu()
       end,
-      'this works like file navigation except that if there is no terminal at the specified index a new terminal is created.',
+      '[H]arpoon [B]uffer navigation',
     },
     ['<A-n>'] = {
       function()
@@ -395,7 +429,6 @@ M.general = {
       'New buffer',
     },
     --["<leader>b"]      = { "<cmd> enew <CR>", "New buffer" },
-    ['<leader>nvc'] = { '<cmd> NvCheatsheet <CR>', 'Mapping cheatsheet' },
     ['<M-Up>'] = { 'ddkP', noremap_opts }, --// Moving the line up
     ['<M-Down>'] = { 'ddjP', noremap_opts }, -- // Moving the line down
     ['<M-[>'] = { ':resize -2<CR>', noremap_opts },
@@ -585,6 +618,13 @@ M.general = {
   },
 
   t = {
+    -->> ToggleTerm
+    ['<A-i>'] = {
+      function()
+        float_term_toggle()
+      end,
+      'Toggle nvimtree',
+    },
     ['<C-x>'] = { vim.api.nvim_replace_termcodes('<C-\\><C-N>', true, true, true), 'Escape terminal mode' },
     -- ["<C-c>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal with Crtl + c which my be strange to do since crtl+c already means something" },
     ['<C-w>'] = { vim.api.nvim_replace_termcodes('<C-\\><C-N>', true, true, true), 'Escape terminal mode' },
@@ -808,8 +848,8 @@ M['neo-tree'] = {
 M.telescope = {
   plugin = true,
 
+  -- Normal and Terminal Mode
   n = {
-    -- find
     --["<leader>f"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     ['<leader>af'] = { '<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>', 'Find all' },
     ['<leader>f'] = {
@@ -835,82 +875,6 @@ M.telescope = {
     ['<leader>th'] = { '<cmd> Telescope themes <CR>', 'Nvchad themes' },
 
     ['<leader>ma'] = { '<cmd> Telescope marks initial_mode=normal<CR>', 'telescope bookmarks' },
-  },
-}
-
-M.nvterm = {
-  plugin = true,
-
-  t = {
-    -- toggle in terminal mode
-    ['<A-i>'] = {
-      function()
-        require('nvterm.terminal').toggle 'float'
-        vim.cmd [[startinsert]]
-      end,
-      'Toggle floating term',
-    },
-
-    ['<A-h>'] = {
-      function()
-        require('nvterm.terminal').toggle 'horizontal'
-      end,
-      'Toggle horizontal term',
-    },
-
-    ['<A-t>'] = {
-      function()
-        require('nvterm.terminal').toggle 'vertical'
-      end,
-      'Toggle vertical term',
-    },
-  },
-
-  n = {
-    -- toggle in normal mode
-    ['<A-i>'] = {
-      function()
-        require('nvterm.terminal').toggle 'float'
-      end,
-      'Toggle floating term',
-    },
-
-    ['<A-h>'] = {
-      function()
-        require('nvterm.terminal').toggle 'horizontal'
-      end,
-      'Toggle horizontal term',
-    },
-
-    ['<A-v>'] = {
-      function()
-        require('nvterm.terminal').toggle 'vertical'
-      end,
-      'Toggle vertical term',
-    },
-
-    -- new
-    ['<leader><M-h>'] = {
-      function()
-        require('nvterm.terminal').new 'horizontal'
-      end,
-      'New horizontal term',
-    },
-
-    ['<leader><M-v>'] = {
-      function()
-        require('nvterm.terminal').new 'vertical'
-      end,
-      'New vertical term',
-    },
-    ['<leader><A-i>'] = {
-      function()
-        -- require("nvterm.terminal").send("exit ", "float") -- the 2nd argument i.e direction is optional
-        -- vim.cmd(":bd!")
-        require('nvterm.terminal').new 'float'
-      end,
-      'Toggle floating term',
-    },
   },
 }
 
@@ -1091,10 +1055,20 @@ local function set_keymaps(mode, key, mapping)
   vim.keymap.set(mode, key, mapping[1], opts)
 end
 
--- Loop through each mode and set the keymaps
-for mode, mappings in pairs(M.general) do
-  for key, mapping in pairs(mappings) do
-    set_keymaps(mode, key, mapping)
+-- Delete maps do disable
+for mode, mappings in pairs(M.disabled) do
+  for key, _ in pairs(mappings) do
+    pcall(function()
+      vim.keymap.del(mode, key)
+    end)
+  end
+end
+
+for modes, mappings in pairs(M.general) do
+  for mode in modes:gmatch '.' do
+    for key, mapping in pairs(mappings) do
+      set_keymaps(mode, key, mapping)
+    end
   end
 end
 -- vim: ts=2 sts=2 sw=2 et

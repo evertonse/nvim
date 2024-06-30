@@ -43,61 +43,83 @@ return {
 
     local terminal = require 'nvterm.terminal'
 
-    local toggle_modes = { 'n', 't' }
-    local mappings = {
-      {
-        toggle_modes,
-        '<A-h>',
-        function()
-          terminal.toggle 'horizontal'
-        end,
+    local maps = {
+      plugin = true,
+
+      t = {
+        -- toggle in terminal mode
+        ['<A-i>'] = {
+          function()
+            require('nvterm.terminal').toggle 'float'
+            vim.cmd [[startinsert]]
+          end,
+          'Toggle floating term',
+        },
+
+        ['<A-h>'] = {
+          function()
+            require('nvterm.terminal').toggle 'horizontal'
+          end,
+          'Toggle horizontal term',
+        },
+
+        ['<A-t>'] = {
+          function()
+            require('nvterm.terminal').toggle 'vertical'
+          end,
+          'Toggle vertical term',
+        },
       },
-      {
-        toggle_modes,
-        '<A-o>',
-        function()
-          terminal.toggle 'vertical'
-        end,
-      },
-      {
-        toggle_modes,
-        '<A-i>',
-        function()
-          terminal.toggle 'float'
-        end,
-      },
-      {
-        toggle_modes,
-        '<F5>',
-        function()
-          terminal.send('make run -j 3 > make.log &', 'float')
-          -- terminal.send("make -j 3 &" .. vim.fn.expand "%", "float")
-        end,
-      },
-      {
-        { 'n' },
-        '<leader><A-h>',
-        function()
-          terminal.new 'horizontal'
-        end,
-      },
-      {
-        { 'n' },
-        '<leader><A-v>',
-        function()
-          terminal.new 'vertical'
-        end,
-      },
-      {
-        { 'n' },
-        '<leader><A-i>',
-        function()
-          terminal.new 'float'
-        end,
+
+      n = {
+        -- toggle in normal mode
+        ['<A-i>'] = {
+          function()
+            require('nvterm.terminal').toggle 'float'
+          end,
+          'Toggle floating term',
+        },
+
+        ['<A-h>'] = {
+          function()
+            require('nvterm.terminal').toggle 'horizontal'
+          end,
+          'Toggle horizontal term',
+        },
+
+        ['<A-v>'] = {
+          function()
+            require('nvterm.terminal').toggle 'vertical'
+          end,
+          'Toggle vertical term',
+        },
+
+        -- new
+        ['<leader><M-h>'] = {
+          function()
+            require('nvterm.terminal').new 'horizontal'
+          end,
+          'New horizontal term',
+        },
+
+        ['<leader><M-v>'] = {
+          function()
+            require('nvterm.terminal').new 'vertical'
+          end,
+          'New vertical term',
+        },
+        ['<leader><A-i>'] = {
+          function()
+            -- require("nvterm.terminal").send("exit ", "float") -- the 2nd argument i.e direction is optional
+            -- vim.cmd(":bd!")
+            require('nvterm.terminal').new 'float'
+          end,
+          'Toggle floating term',
+        },
       },
     }
     local opts = { noremap = true, silent = true }
-    for _, mapping in ipairs(mappings) do
+    for _, mapping in ipairs(maps) do
       vim.keymap.set(mapping[1], mapping[2], mapping[3], opts)
     end
   end,

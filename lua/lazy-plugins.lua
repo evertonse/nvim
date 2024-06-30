@@ -176,17 +176,22 @@ require('lazy').setup({
 
   require 'plugins.todo-comments',
 
+  require 'plugins.toggleterm',
+
   require 'plugins.mini',
 
   require 'plugins.treesitter',
 
+  require 'plugins.harpoon',
+
   require 'plugins.debug',
+
   require 'plugins.indent_blankline',
   require 'plugins.lint',
   require 'plugins.autopairs',
   require 'plugins.neo-tree',
-  require 'plugins.nvterm',
-  require 'plugins.harpoon',
+
+  require 'plugins.colorizer',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
