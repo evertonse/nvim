@@ -49,7 +49,7 @@ g.loaded_netrwSettings = 1
 g.loaded_netrwFileHandlers = 1
 
 local options = {
-  laststatus = 2,
+  laststatus = 3,
   backup = false, -- creates a backup file
   clipboard = nil, -- allows neovim to access the system clipboard
   cmdheight = 1, -- more space in the neovim command line for displaying messages
