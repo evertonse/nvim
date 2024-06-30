@@ -35,7 +35,6 @@ vim.cmd ':set nomore'
 vim.cmd ':set ttyfast' -- Lazy Redraw
 vim.cmd [[ :set iskeyword-=- ]]
 vim.cmd [[ :set updatetime=20 ]]
-vim.cmd [[: ts=2 sts=2 sw=2]]
 -- vim.loader.enable()
 --
 -- vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(

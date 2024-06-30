@@ -17,9 +17,9 @@
 -- If you are on another machine, you can do `:Lazy restore`, to update all your plugins to the version from the lockfile.
 
 local lazy_config = {
-  defaults = { lazy = true, version = '*' },
+  defaults = { lazy = true },
   install = { colorscheme = { 'colorscheme' } },
-
+  change_detection = { notify = true },
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
@@ -27,7 +27,7 @@ local lazy_config = {
       ft = '',
       lazy = '󰂠 ',
       loaded = '',
-      not_loaded = '',
+      notloaded = '',
     } or {
       cmd = '⌘',
       config = '🛠',
