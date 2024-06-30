@@ -1,5 +1,6 @@
 -- [[ Configure and install plugins ]]
---
+--  Docs:
+--    https://lazy.folke.io/spec
 --  To check the current status of your plugins, run
 --    :Lazy
 --
@@ -8,10 +9,16 @@
 --  To update plugins you can run
 --    :Lazy update
 --
+-- 🔒 Lockfile
+-- After every update, the local lockfile (lazy-lock.json) is updated with the installed revisions. It is recommended to have this file under version control.
+--
+-- If you use your Neovim config on multiple machines, using the lockfile, you can ensure that the same version of every plugin is installed.
+--
+-- If you are on another machine, you can do `:Lazy restore`, to update all your plugins to the version from the lockfile.
 
 local lazy_config = {
-  defaults = { lazy = true },
-  install = { colorscheme = { 'theme' } },
+  defaults = { lazy = true, version = '*' },
+  install = { colorscheme = { 'colorscheme' } },
 
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -36,6 +43,13 @@ local lazy_config = {
       task = '📌',
       lazy = '💤 ',
     },
+  },
+  profiling = {
+    -- Enables extra stats on the debug tab related to the loader cache.
+    -- Additionally gathers stats about all package.loaders
+    loader = false,
+    -- Track each new require in the Lazy profiling tab
+    require = true,
   },
   performance = {
     rtp = {
@@ -137,28 +151,6 @@ require('lazy').setup({
       vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
     end,
   },
-  {
-    'max397574/better-escape.nvim',
-    lazy = false,
-    enabled = true,
-    event = 'InsertEnter',
-    config = function()
-      require('better_escape').setup {
-        mapping = {
-          'jk',
-          'kj',
-          'jj',
-          'kk',
-        }, -- a table with mappings to use
-        timeout = vim.o.timeoutlen > 100 and vim.o.timeoutlen or 100, -- the time in which the keys must be hit in ms. Use option timeoutlen by default
-        clear_empty_lines = true, -- clear line after escaping if there is only whitespace
-        -- keys = '<Esc>', -- keys used for escaping, if it is a function will use the result everytime
-        keys = function()
-          return vim.api.nvim_win_get_cursor(0)[2] > 1 and '<esc>l' or '<esc>'
-        end,
-      }
-    end,
-  },
   { --https://github.com/andymass/vim-matchup
     'andymass/vim-matchup',
     lazy = false,
@@ -214,6 +206,7 @@ require('lazy').setup({
   require 'plugins.neo-tree',
 
   require 'plugins.colorizer',
+  require 'plugins.better_scape',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.

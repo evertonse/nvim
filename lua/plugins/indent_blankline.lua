@@ -4,7 +4,9 @@ return {
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help ibl`
     main = 'ibl',
-    event = 'User FilePost',
+    lazy = false,
+    event = 'BufEnter',
+    --event = 'User FilePost',
     opts = {
 
       --char = "│"
@@ -18,20 +20,13 @@ return {
           'terminal',
           'lazy',
           'lspinfo',
-          'TelescopePrompt',
-          'TelescopeResults',
           'mason',
-          'nvdash',
-          'nvcheatsheet',
           'startify',
           'dashboard',
           'packer',
           'neogitstatus',
           'NvimTree',
           'Trouble',
-          'help',
-          'lazy',
-          'lspinfo',
           'TelescopePrompt',
           'TelescopeResults',
           'nvdash',
