@@ -10,6 +10,13 @@
 -- treesitter-highlight-priority in treesitter.txt
 --
 -- treesitter-query in treesitter.txt
+local disable_function = function(lang)
+  local buf_name = vim.fn.expand '%'
+  if vim.bo.filetype == 'tmux' or lang == 'conf' or string.find(buf_name, 'tmux%-') then
+    return true
+  end
+end
+
 return {
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
@@ -28,6 +35,7 @@ return {
       auto_install = true,
       highlight = {
         enable = true,
+        disable = disable_function,
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
