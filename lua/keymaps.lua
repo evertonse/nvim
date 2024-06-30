@@ -71,6 +71,7 @@ M.disabled = {
     ['<leader>fv'] = '',
     ['<leader>fx'] = '',
     ['<leader>fz'] = '',
+    ['<leader>/'] = '',
 
     ['<leader>ph'] = '',
     ['<leader>pt'] = '',
@@ -93,8 +94,6 @@ M.disabled = {
     -- bufferline
     ['<leader>x'] = '',
     ['<S-b>'] = '',
-    -- comment
-    ['<leader>/'] = '',
     -- lspconfig
     ['d]'] = '',
     ['[d'] = '',
@@ -115,7 +114,7 @@ M.disabled = {
   },
   v = {
     -- comment
-    --["<leader>/"] = "",
+    ['<leader>/'] = '',
     ['<M-Down'] = '',
   },
   t = {

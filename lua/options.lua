@@ -59,7 +59,7 @@ g.loaded_netrwSettings = 1
 g.loaded_netrwFileHandlers = 1
 
 local options = {
-  laststatus = 0,
+  laststatus = 3,
   backup = false, -- creates a backup file
   clipboard = nil, -- allows neovim to access the system clipboard
   cmdheight = 1, -- more space in the neovim command line for displaying messages
@@ -116,3 +116,5 @@ vim.wo.signcolumn = 'yes'
 
 -- Set completeopt to have a better completion experience
 vim.opt.completeopt = 'menuone,noselect'
+vim.cmd ':set display-=msgsep'
+vim.cmd ':set nomore'

@@ -31,7 +31,7 @@ return {
           tabpage_section = 'right',
         }
       require('mini.cursorword').setup()
-      local _ = true
+      local _ = false
         or require('mini.indentscope').setup {
           -- Draw options
           draw = {
