@@ -7,12 +7,41 @@ return {
   main = 'ibl',
   -- version = 'v3.7.1',
   event = 'VimEnter',
-  --event = 'User FilePost',
+  enable = true,
+  -- event = 'User FilePost',
   opts = {
 
-    indent = { char = '▏' },
-    scope = { char = '│' },
-    --NOTE: options = "│' '│' '▏' "▎"
+    indent = { char = '▏', repeat_linebreak = false },
+    scope = { char = '▏', show_end = false, include = { node_type = { lua = { 'return_statement', 'table_constructor' } } } },
+    whitespace = { remove_blankline_trail = true },
+    -- NOTE: Char Options = "│' '│' '▏' "▎"
+    --                      Alternatives: ~
+    --                        • left aligned solid
+    --                          • `▏`
+    --                          • `▎` (default)
+    --                          • `▍`
+    --                          • `▌`
+    --                          • `▋`
+    --                          • `▊`
+    --                          • `▉`
+    --                          • `█`
+    --                        • center aligned solid
+    --                          • `│`
+    --                          • `┃`
+    --                        • right aligned solid
+    --                          • `▕`
+    --                          • `▐`
+    --                        • center aligned dashed
+    --                          • `╎`
+    --                          • `╏`
+    --                          • `┆`
+    --                          • `┇`
+    --                          • `┊`
+    --                          • `┋`
+    --                        • center aligned double
+    --                          • `║`
+    debounce = 10,
+
     exclude = {
       filetypes = {
         'help',
