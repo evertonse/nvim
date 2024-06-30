@@ -13,14 +13,12 @@ vim.cmd [[
   augroup _general_settings
     autocmd!
     autocmd FileType qf,help,man,lspinfo nnoremap <silent> <buffer> q :close<CR> 
-    autocmd TextYankPost * silent!lua require('vim.highlight').on_yank({higroup = 'Visual', timeout = 200}) 
+    " autocmd TextYankPost * silent!lua require('vim.highlight').on_yank({higroup = 'Visual', timeout = 200}) 
     autocmd BufWinEnter * :set formatoptions-=cro
-   " autocmd BufWinEnter * :colorscheme vs
-   " autocmd BufWritePost,FileWritePost * :colorscheme vs
-   " autocmd BufReadPost * :colorscheme vs
+    autocmd WinEnter * setlocal cursorline
+    autocmd WinLeave * setlocal nocursorline
    " autocmd WinNew * :print "hello"
    " autocmd FileType qf set nobuflisted
-   " autocmd VimEnter * :colorscheme vs 
   augroup end
 
   augroup _git
@@ -32,7 +30,13 @@ vim.cmd [[
   augroup _markdown
     autocmd!
     autocmd FileType markdown setlocal wrap
-    autocmd FileType markdown setlocal spell
+    "autocmd FileType markdown setlocal spell
+  augroup end
+
+  augroup _tex
+    autocmd!
+    autocmd FileType tex setlocal wrap
+    "autocmd FileType markdown setlocal spell
   augroup end
 
   function! Odin_settings()
@@ -47,15 +51,7 @@ vim.cmd [[
     autocmd VimResized * tabdo wincmd = 
   augroup end
 
-  augroup _alpha
-    autocmd!
-    autocmd User AlphaReady set showtabline=0 | autocmd BufUnload <buffer> set showtabline=2
-  augroup end
 
-  augroup _nvimtree
-    autocmd!
-    "autocmd WinNew * :colorscheme blue
-  augroup end
    " Return to last edit position when opening files (You want this!)
   autocmd BufReadPost *
      \ if line("'\"") > 0 && line("'\"") <= line("$") |
@@ -78,19 +74,14 @@ vim.cmd [[
 vim.cmd [[
 augroup Binary
   au!
-  au BufReadPre  *.bin let &bin=1
-  " au BufReadPost *.bin if &bin | %!xxd  
-  au BufReadPost *.bin set ft=xxd | endif
+  au BufReadPost *.xxd set ft=xxd | endif
   au BufReadPost *.bin set ft=bin | endif
-  " au BufWritePre *.bin if &bin | %!xxd -r
-  " au BufWritePre *.bin endif
-  " au BufWritePost *.bin if &bin | %!xxd
-  " au BufWritePost *.bin set nomod | endif
+  au BufReadPost *.exe set ft=bin | endif
 augroup END
 ]]
 
-vim.cmd [[autocmd FileType bin,xxd nnoremap <F5> :%!xxd <CR>]]
-vim.cmd [[autocmd FileType bin,xxd nnoremap <F6> :%!xxd -r <CR>]]
+vim.cmd [[autocmd FileType bin nnoremap <F5> :%!xxd <CR>]]
+vim.cmd [[autocmd FileType bin nnoremap <F6> :%!xxd -r <CR>]]
 
 -- vim.api.nvim_create_autocmd(
 --     { "BufRead", "BufNewFile" },
@@ -119,16 +110,8 @@ vim.cmd [[
           autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
       augroup END
   endif
-]];
+]]
 
-
--- vim.api.nvim_create_autocmd("LspTokenUpdate", {
---   callback = function(args)
---     local token = args.data.token
---     print("Lsp token has been updated", token)
---   end,
--- })
---
 -- close quicklist after enter
 vim.cmd [[ autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>]]
 

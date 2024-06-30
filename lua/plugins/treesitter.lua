@@ -1,3 +1,15 @@
+-- Highlight groups don't have priority. They just define the highlighting.
+--
+-- The priority is set from the syntax in case of legacy highlighting :help :syn-priority, or by the query pattern in case of treesitter :help treesitter-highlight-priority. So in your case, if you want to make type.java have a higher priority, you need to find the query where it is defined. Copy the query into your config and manually set a higher priority.
+--
+-- Read :help treesitter-query for more information.
+-- Help pages for:
+--
+-- :syn-priority in syntax.txt
+--
+-- treesitter-highlight-priority in treesitter.txt
+--
+-- treesitter-query in treesitter.txt
 return {
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
