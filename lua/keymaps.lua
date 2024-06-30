@@ -226,10 +226,10 @@ end
 
 local float_term = {
   terminal = nil,
-  width_percentage = 0.43,
+  width_percentage = 0.63,
   height_percentage = 0.35,
-  width_min = 50,
-  height_min = 20,
+  width_min = 70,
+  height_min = 23,
 }
 local float_term_toggle = function()
   local _, tt = pcall(require, 'toggleterm.terminal')
