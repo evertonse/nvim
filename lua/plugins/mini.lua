@@ -32,12 +32,15 @@ return {
         }
 
       require('mini.cursorword').setup()
-      local _ = true
+      --[ mini.indentscope ] Disabled, we're using indent_blankline
+      -- which does scope highlighting rather than indentlevel highlighting
+      local _ = false
         and require('mini.indentscope').setup {
           -- Draw options
+          priority = 2,
           draw = {
             -- Delay (in ms) between event and start of drawing scope indicator
-            delay = 0.2,
+            delay = 10,
 
             -- Animation rule for scope's first drawing. A function which, given
             -- next and total step numbers, returns wait time (in ms). See
@@ -46,7 +49,7 @@ return {
 
             animation = require('mini.indentscope').gen_animation.none(),
             -- Symbol priority. Increase to display on top of more symbols.
-            priority = 2,
+            -- priority = 0,
           },
 
           -- Module mappings. Use `''` (empty string) to disable one.
@@ -64,7 +67,7 @@ return {
           options = {
             -- Type of scope's border: which line(s) with smaller indent to
             -- categorize as border. Can be one of: 'both', 'top', 'bottom', 'none'.
-            border = 'top',
+            border = 'none',
 
             -- Whether to use cursor column when computing reference indent.
             -- Useful to see incremental scopes with horizontal cursor movements.
