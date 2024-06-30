@@ -401,8 +401,12 @@ M.general = {
     -- Copy all
     ['<leader><C-y>'] = { '<cmd> %y+ <CR>', 'Copy whole file' },
 
+    -- Neotree git status
+    ['<leader>ng'] = { '<cmd>Neotree git_status <CR>', 'Show git status' },
+    ['<leader>nb'] = { '<cmd>Neotree buffers <CR>', 'Show Buffers opened' },
+    ['<leader>nc'] = { '<cmd>Neotree current <CR>', ' : Open within the current window, like netrw or vinegar would.' },
+
     -- line numbers
-    ['<leader>n'] = { '<cmd> set nu! <CR>', 'Toggle line number' },
     ['<leader>rn'] = { '<cmd> set rnu! <CR>', 'Toggle relative number' },
 
     -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>

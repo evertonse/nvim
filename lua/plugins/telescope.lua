@@ -33,6 +33,15 @@ return {
     },
     config = function()
       local actions = require 'telescope.actions'
+      local select_default = function(data)
+        local mode = vim.api.nvim_get_mode().mode
+        -- vim.cmd [[Neotree close]]
+        actions.select_default(data)
+        if mode == 'i' then
+          vim.cmd [[stopinsert]]
+          return
+        end
+      end
       -- Telescope is a fuzzy finder that comes with a lot of different things that
       -- it can fuzzy find! It's more than just a "file finder", it can search
       -- many different aspects of Neovim, your workspace, LSP, and more!
@@ -133,16 +142,8 @@ return {
               ['<Down>'] = actions.move_selection_next,
               ['<Up>'] = actions.move_selection_previous,
 
-              -- ["<CR>"] = actions.select_default,
-              ['<CR>'] = function(data)
-                local mode = vim.api.nvim_get_mode().mode
-                vim.cmd [[Neotree close]]
-                actions.select_default(data)
-                if mode == 'i' then
-                  vim.cmd [[stopinsert]]
-                  return
-                end
-              end,
+              ['<CR>'] = select_default,
+              ['<C-y>'] = select_default,
               ['<C-l>'] = actions.select_default,
               ['<C-x>'] = actions.select_horizontal,
               ['<C-v>'] = actions.select_vertical,
@@ -179,15 +180,8 @@ return {
                   return
                 end
               end,
-              ['<CR>'] = function(data)
-                local mode = vim.api.nvim_get_mode().mode
-                actions.select_default(data)
-                vim.cmd [[Neotree close]]
-                if mode == 'i' then
-                  vim.cmd [[stopinsert]]
-                  return
-                end
-              end,
+              ['<CR>'] = select_default,
+              ['<C-y>'] = select_default,
 
               ['l'] = actions.select_default,
 

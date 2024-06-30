@@ -195,13 +195,14 @@ return {
       },
       nesting_rules = {},
       filesystem = {
+
         filtered_items = {
           visible = false, -- when true, they will just be displayed differently than normal items
           hide_dotfiles = true,
           hide_gitignored = true,
           hide_hidden = true, -- only works on Windows for hidden files/directories
           hide_by_name = {
-            --"node_modules"
+            'node_modules',
           },
           hide_by_pattern = { -- uses glob style patterns
             --"*.meta",
@@ -224,11 +225,15 @@ return {
           leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
         },
         group_empty_dirs = true, -- when true, empty folders will be grouped together
-        hijack_netrw_behavior = 'open_default', -- netrw disabled, opening a directory opens neo-tree
-        -- in whatever position is specified in window.position
-        -- "open_current",  -- netrw disabled, opening a directory opens within the
-        -- window like netrw would, regardless of window.position
-        -- "disabled",    -- netrw left alone, neo-tree does not handle opening dirs
+
+        -- disabled               Netrw left alone, neo-tree does not handle opening dirs.
+        --
+        -- open_default (default) Netrw disabled, opening a directory opens neo-tree
+        --                        in whatever position is specified in `window.position`.
+        --
+        -- open_current           Netrw disabled, opening a directory opens within the
+        --                        window like netrw would, regardless of `window.position`.
+        hijack_netrw_behavior = 'open_current',
         use_libuv_file_watcher = true, -- This will use the OS level file watchers to detect changes
         -- instead of relying on nvim autocmd events.
         window = {
