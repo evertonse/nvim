@@ -320,14 +320,6 @@ M.plugins = {
       }
     end,
   },
-  -- {
-  --   "tpope/vim-surround",
-  --   lazy = false,
-  --   enabled = true,
-  --   dependencies = {
-  --     { "tpope/vim-repeat" },
-  --   },
-  -- },
 
   { --https://github.com/andymass/vim-matchup
     'andymass/vim-matchup',

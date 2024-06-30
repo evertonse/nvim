@@ -156,6 +156,15 @@ require('lazy').setup({
       }
     end,
   },
+  { --https://github.com/andymass/vim-matchup
+    'andymass/vim-matchup',
+    lazy = false,
+    enabled = false,
+    config = function()
+      -- may set any options here
+      vim.g.matchup_matchparen_offscreen = { method = 'popup' }
+    end,
+  },
 
   -- modular approach: using `require 'path/name'` will
   -- include a plugin definition from file lua/path/name.lua

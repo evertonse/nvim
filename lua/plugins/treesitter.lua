@@ -5,6 +5,12 @@ return {
     build = ':TSUpdate',
     event = { 'BufReadPost', 'BufNewFile' },
     opts = {
+      -- vim-matchup config
+      matchup = {
+        enable = true, -- mandatory, false will disable the whole extension
+        disable = { 'c', 'ruby' }, -- optional, list of language that will be disabled
+        -- [options]
+      },
       ensure_installed = { 'bash', 'c', 'python', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
