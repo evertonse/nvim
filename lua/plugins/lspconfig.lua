@@ -77,7 +77,7 @@ return {
               normal_hl = 'Comment', -- Base highlight group in the notification window
               winblend = 100, -- Background color opacity in the notification window
               border = 'none', -- Border around the notification window
-              zindex = 45, -- Stacking priority of the notification window
+              zindex = 20000, -- Stacking priority of the notification window
               max_width = 0, -- Maximum width of the notification window
               max_height = 0, -- Maximum height of the notification window
               x_padding = 1, -- Padding from right edge of window boundary
@@ -91,9 +91,6 @@ return {
           integration = {
             ['nvim-tree'] = {
               enable = true, -- Integrate with nvim-tree/nvim-tree.lua (if installed)
-            },
-            ['neo-tree'] = {
-              enable = true,
             },
             ['xcodebuild-nvim'] = {
               enable = true, -- Integrate with wojciech-kulik/xcodebuild.nvim (if installed)

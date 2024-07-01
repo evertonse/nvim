@@ -224,9 +224,9 @@ require('lazy').setup({
   require 'plugins.lint',
   require 'plugins.autopairs',
 
-  -- require 'plugins.neo-tree',
-  -- require 'plugins.nnn',
-  require 'plugins.lf',
+  require 'plugins.neo-tree', -- NOTE: Slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
+  -- require 'plugins.nnn', -- NOTE: works fine but needs better NNN configurations with tui-preview plugin ,
+  -- require 'plugins.lf', -- NOTE: Appear to bugout with my toggleterm config
   require 'plugins.colorizer',
   require 'plugins.better_scape',
 
