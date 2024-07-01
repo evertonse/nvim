@@ -188,7 +188,7 @@ require('lazy').setup({
     -- :ZenMode
     'folke/zen-mode.nvim',
     event = 'BufEnter',
-    lazy = false,
+    -- lazy = false,
     opts = {
       plugins = { tmux = { enabled = true } },
       on_open = function(_)

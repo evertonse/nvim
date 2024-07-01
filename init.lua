@@ -1,3 +1,11 @@
+-- TODO:
+--    zen mode needs better interection zindex with neotree
+--    find faster neotre for windows
+--    confiure noice cmdline to enable normal mode on itfind faster neotre for windows
+--    setup inc-rename to work with noice
+--    rename o poup
+--    checkout tabby for neovim and other
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
