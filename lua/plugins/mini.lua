@@ -6,7 +6,6 @@ return {
     dependencies = 'nvim-tree/nvim-web-devicons',
     config = function()
       -- Better Around/Inside textobjects
-      --
       -- Examples:
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
