@@ -21,6 +21,26 @@ local current_buffer_file_extension = function()
   return extension
 end
 
+-- Define a function to handle 'k' key behavior
+local handle_k = function()
+  local mode = vim.api.nvim_get_mode().mode
+  if vim.v.count == 0 and mode ~= 'n' and mode ~= 'no' then
+    return 'gk'
+  else
+    return 'k'
+  end
+end
+
+-- Define a function to handle 'j' key behavior
+local handle_j = function()
+  local mode = vim.api.nvim_get_mode().mode
+  if vim.v.count == 0 and mode ~= 'n' and mode ~= 'no' then
+    return 'gj'
+  else
+    return 'j'
+  end
+end
+
 local scratch = function()
   vim.ui.input({ prompt = 'enter command: ', completion = 'command' }, function(input)
     if input == nil then
@@ -259,16 +279,18 @@ M.general = {
         float_term_toggle()
         --vim.cmd [[startinsert]]
       end,
-      'Toggle nvimtree',
+      'Totgle nvimtree',
     },
-    ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], '[R]eplace [W]ord' },
+    ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS>]], '[R]eplace [W]ord' },
     -->> neo-tree
     ['<leader>e'] = { '<cmd> Neotree toggle <CR>', 'Toggle neo tree' },
     ['<leader>E'] = { '<cmd> Neotree reveal <CR>', 'Toggle neo tree' },
+
     -->> NNN picker
     -- ['<leader>e'] = { '<cmd> NnnPicker <CR>', 'NNN Floating Window' },
+
     -->> commands
-    ['<leader>gd'] = { grep_and_show_results, noremap_opts },
+    ['<leader>gd'] = { grep_and_show_results, noremap_opts }, -- NOTE:This is remaped when lsp is present
     ['gf'] = { 'gFzz', noremap_opts },
     ['<C-o>'] = { '<C-o>zz', noremap_opts },
     ['<C-i>'] = { '<C-i>zz', noremap_opts },
@@ -276,15 +298,10 @@ M.general = {
     ['<leader>tp'] = { ':tabp<CR>', noremap_opts },
     ['<leader>tt'] = { ':tab split<CR>', noremap_opts },
     ['<leader>tc'] = { ':tabc<CR>', noremap_opts },
+
     -->> Window
     ['<leader>sc'] = {
       scratch,
-      'this works like file navigation except that if there is no terminal at the specified index a new terminal is created.',
-    },
-    ['<C-w>z'] = {
-      function()
-        vim.cmd 'split v'
-      end,
       'this works like file navigation except that if there is no terminal at the specified index a new terminal is created.',
     },
     -->> Harpoon A-o is more ergonomic
@@ -416,10 +433,10 @@ M.general = {
     -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
     -- empty mode is same as using <cmd> :map
     -- also don't use g[j|k] when in operator pending mode, so it doesn't alter d, y or c behaviour
-    ['j'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
-    ['k'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },
-    ['<Up>'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },
-    ['<Down>'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
+    ['k'] = { handle_k, 'Move up', { expr = true } },
+    ['j'] = { handle_j, 'Move down', { expr = true } },
+    ['<Up>'] = { handle_k, 'Move up', { expr = true } },
+    ['<Down>'] = { handle_j, 'Move down', { expr = true } },
 
     -- new buffer
     ['<C-w>f'] = {
