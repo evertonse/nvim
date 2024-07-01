@@ -263,8 +263,9 @@ M.general = {
     },
     ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], '[R]eplace [W]ord' },
     -->> neo-tree
-    ['<leader>e'] = { '<cmd> Neotree toggle <CR>', 'Toggle neo tree' },
+    -- ['<leader>e'] = { '<cmd> Neotree toggle <CR>', 'Toggle neo tree' },
     ['<leader>E'] = { '<cmd> Neotree reveal <CR>', 'Toggle neo tree' },
+    ['<leader>e'] = { '<cmd> NnnPicker <CR>', 'NNN Floating Window' },
     -->> commands
     ['<leader>gd'] = { grep_and_show_results, noremap_opts },
     ['gf'] = { 'gFzz', noremap_opts },
@@ -836,7 +837,8 @@ M.nvimtree = {
     -- toggle
     -- ["<C-n>"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
     -- focus
-    ['<leader>e'] = { '<cmd> NvimTreeToggle <CR>', 'Toggle nvimtree' },
+
+    -- ['<leader>e'] = { '<cmd> NvimTreeToggle <CR>', 'Toggle nvimtree' },
     --["<leader>e"] = { "<cmd> NvimTreeFocus <CR>", "Focus nvimtree" },
     ['<leader>E'] = { '<cmd> NvimTreeFindFile <CR>', 'Focus Current file' },
   },

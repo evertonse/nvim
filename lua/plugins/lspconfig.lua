@@ -1,5 +1,6 @@
 return {
   { -- LSP Configuration & Plugins
+    -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
     'neovim/nvim-lspconfig',
     -- lazy = false,
     -- event = 'VimEnter',
@@ -46,10 +47,10 @@ return {
 
           -- Options related to notification subsystem
           notification = {
-            poll_rate = 5, -- How frequently to update and render notifications
+            poll_rate = 10, -- How frequently to update and render notifications
             filter = vim.log.levels.INFO, -- Minimum notifications level
-            history_size = 128, -- Number of removed messages to retain in history
-            override_vim_notify = false, -- Automatically override vim.notify() with Fidget
+            history_size = 64, -- Number of removed messages to retain in history
+            override_vim_notify = true, -- Automatically override vim.notify() with Fidget
             -- How to configure notification groups when instantiated
             -- Conditionally redirect notifications to another backend
             redirect = function(msg, level, opts)
@@ -90,6 +91,9 @@ return {
           integration = {
             ['nvim-tree'] = {
               enable = true, -- Integrate with nvim-tree/nvim-tree.lua (if installed)
+            },
+            ['neo-tree'] = {
+              enable = true,
             },
             ['xcodebuild-nvim'] = {
               enable = true, -- Integrate with wojciech-kulik/xcodebuild.nvim (if installed)
@@ -226,12 +230,11 @@ return {
 
           -- The following autocommand is used to enable inlay hints in your
           -- code, if the language server you are using supports them
-          --
           -- This may be unwanted, since they displace some of your code
           if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
-            map('<leader>th', function()
+            map('<leader>lth', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(nil))
-            end, '[T]oggle Inlay [H]ints')
+            end, '[L]SP [T]oggle Inlay [H]ints')
           end
         end,
       })

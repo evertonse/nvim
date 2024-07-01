@@ -144,8 +144,8 @@ require('lazy').setup({
     dependencies = {
       { 'MunifTanjim/nui.nvim' },
     },
-    lazy = true,
-    enabled = false,
+    lazy = false,
+    enabled = true,
     config = function()
       -- vim.api.nvim_set_keymap("n", "<CR>", "<cmd>FineCmdline<CR>", { noremap = true })
       vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
@@ -223,7 +223,10 @@ require('lazy').setup({
   require 'plugins.indent_blankline',
   require 'plugins.lint',
   require 'plugins.autopairs',
-  require 'plugins.neo-tree',
+
+  -- require 'plugins.neo-tree',
+  -- require 'plugins.nnn',
+  require 'plugins.lf',
   require 'plugins.colorizer',
   require 'plugins.better_scape',
 
