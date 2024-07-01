@@ -274,7 +274,8 @@ return {
         bashls = {},
         --[[ OLS  https://github.com/DanielGavin/ols.gits ]]
         ols = {},
-
+        ast_grep = {},
+        jdtls = {},
         --[[ zig ]]
         zls = {},
         clangd = {},
@@ -323,6 +324,13 @@ return {
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
+        ensure_installed = {
+          'lua_ls',
+          -- 'rust_analyzer',
+          -- 'gopls',
+          'clangd',
+          'pyright',
+        },
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -332,6 +340,46 @@ return {
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
+          zls = function()
+            local lspconfig = require 'lspconfig'
+            lspconfig.zls.setup {
+              root_dir = lspconfig.util.root_pattern('.git', 'build.zig', 'zls.json'),
+              settings = {
+                zls = {
+                  enable_inlay_hints = true,
+                  enable_snippets = true,
+                  warn_style = true,
+                },
+              },
+            }
+            vim.g.zig_fmt_parse_errors = 0
+            vim.g.zig_fmt_autosave = 0
+          end,
+          ['lua_ls'] = function()
+            local lspconfig = require 'lspconfig'
+            lspconfig.lua_ls.setup {
+              capabilities = capabilities,
+              settings = {
+                Lua = {
+                  runtime = { version = 'Lua 5.1' },
+                  diagnostics = {
+                    globals = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
+                  },
+                },
+              },
+            }
+          end,
+        },
+      }
+      vim.diagnostic.config {
+        update_in_insert = false,
+        float = {
+          focusable = false,
+          style = 'minimal',
+          -- border = 'rounded',
+          -- source = 'always',
+          header = '',
+          prefix = '',
         },
       }
     end,
