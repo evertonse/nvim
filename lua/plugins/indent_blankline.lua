@@ -15,7 +15,7 @@ return {
     scope = {
       char = '▏',
       priority = 2048,
-      show_start = false,
+      show_start = true,
       show_end = false,
       include = { node_type = { lua = { 'return_statement', 'table_constructor' } } },
     },
