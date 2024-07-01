@@ -87,8 +87,9 @@ local lazy_config = {
 }
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
+  -- :h event for valid  vim events, there are some only in neovim like LspDetach
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  --'pteroctopus/faster.nvim',
+  { 'pteroctopus/faster.nvim', event = 'BufEnter' }, -- Faster j,k movement
   { 'moll/vim-bbye', lazy = false },
 
   -- NOTE: Plugins can also be added by using a table,
@@ -103,7 +104,13 @@ require('lazy').setup({
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
   --{ 'nvim-tree/nvim-web-devicons' },
-
+  { 'moll/vim-bbye', lazy = false },
+  {
+    'filipdutescu/renamer.nvim',
+    branch = 'master',
+    event = 'LspAttch',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+  },
   {
     'folke/trouble.nvim',
     lazy = true,

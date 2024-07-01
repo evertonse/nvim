@@ -1,3 +1,5 @@
+-- NOTE: read below for intructions
+--    https://vonheikemen.github.io/devlog/tools/neovim-lsp-client-guide/
 return {
   { -- LSP Configuration & Plugins
     -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
