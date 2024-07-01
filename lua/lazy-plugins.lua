@@ -88,7 +88,7 @@ local lazy_config = {
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  --'pteroctopus/faster.nvim',
+  { 'pteroctopus/faster.nvim', lazy = false }, -- make j, k moving repeating interval faster
   { 'moll/vim-bbye', lazy = false },
 
   -- NOTE: Plugins can also be added by using a table,
@@ -102,7 +102,6 @@ require('lazy').setup({
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
-  --{ 'nvim-tree/nvim-web-devicons' },
 
   {
     'folke/trouble.nvim',
@@ -163,6 +162,8 @@ require('lazy').setup({
   },
   {
     'NeogitOrg/neogit',
+    event = 'VimEnter',
+    enabled = true,
     dependencies = {
       'nvim-lua/plenary.nvim', -- required
       'sindrets/diffview.nvim', -- optional - Diff integration

@@ -4,10 +4,12 @@
 return {
   'nvim-neo-tree/neo-tree.nvim',
   version = '*',
+  branch = 'v3.x',
   dependencies = {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
     'MunifTanjim/nui.nvim',
+    '3rd/image.nvim', -- Optional image support in preview window: See `# Preview Mode` for more information
   },
   cmd = 'Neotree',
   keys = {
@@ -81,7 +83,7 @@ return {
         },
         name = {
           trailing_slash = false,
-          use_git_status_colors = false,
+          use_git_status_colors = true,
           -- highlight = "NeoTreeFileName",
         },
         git_status = {
@@ -222,7 +224,7 @@ return {
         follow_current_file = {
           enabled = false, -- This will find and focus the file in the active buffer every time
           --               -- the current file is changed while the tree is open.
-          leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+          leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
         },
         group_empty_dirs = true, -- when true, empty folders will be grouped together
 
@@ -276,7 +278,7 @@ return {
         follow_current_file = {
           enabled = false, -- This will find and focus the file in the active buffer every time
           --              -- the current file is changed while the tree is open.
-          leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+          leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
         },
         group_empty_dirs = true, -- when true, empty folders will be grouped together
         show_unloaded = true,
