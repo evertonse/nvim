@@ -28,7 +28,7 @@ local scratch = function()
     elseif input == 'scratch' then
       input = "echo('')"
     end
-    local cmd = vim.api.nvim_exec(input, { output = true })
+    local cmd = vim.api.nvim_exec2(input, { output = true })
     local output = {}
     for line in cmd:gmatch '[^\n]+' do
       table.insert(output, line)
@@ -261,6 +261,7 @@ M.general = {
       end,
       'Toggle nvimtree',
     },
+    ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], '[R]eplace [W]ord' },
     -->> neo-tree
     ['<leader>e'] = { '<cmd> Neotree toggle <CR>', 'Toggle neo tree' },
     ['<leader>E'] = { '<cmd> Neotree reveal <CR>', 'Toggle neo tree' },
@@ -485,6 +486,7 @@ M.general = {
     ['<C-u>'] = { '<C-u>zz', noremap_opts },
     ['n'] = { 'nzzzv', noremap_opts },
     ['N'] = { 'Nzzzv', noremap_opts },
+    ['J'] = { 'mzJ`z', noremap_opts },
 
     ['[d'] = { vim.diagnostic.goto_prev, noremap_opts },
     [']d'] = { vim.diagnostic.goto_next, noremap_opts },
