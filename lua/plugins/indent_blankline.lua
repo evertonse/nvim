@@ -11,8 +11,14 @@ return {
   -- event = 'User FilePost',
   opts = {
 
-    indent = { char = '▏', repeat_linebreak = false },
-    scope = { char = '▏', priority = 2048, show_end = false, include = { node_type = { lua = { 'return_statement', 'table_constructor' } } } },
+    indent = { char = '▏', repeat_linebreak = true },
+    scope = {
+      char = '▏',
+      priority = 2048,
+      show_start = false,
+      show_end = false,
+      include = { node_type = { lua = { 'return_statement', 'table_constructor' } } },
+    },
     whitespace = { remove_blankline_trail = true },
     -- NOTE: Char Options = "│' '│' '▏' "▎"
     --                      Alternatives: ~
@@ -67,7 +73,10 @@ return {
   },
   config = function(_, opts)
     local hooks = require 'ibl.hooks'
-    hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+    local hide_first_indent = false
+    if hide_first_indent then
+      hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+    end
     require('ibl').setup(opts)
   end,
 }
