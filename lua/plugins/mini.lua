@@ -102,7 +102,8 @@ return {
       -- cursor location to LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
-        return '%2l:%-2v'
+        -- '%2l:%-2v' for LINE:COLUMN and '%3p%%' for percentage through the file
+        return '%2l:%-2v%3p%%'
       end
 
       -- ... and there is more!
