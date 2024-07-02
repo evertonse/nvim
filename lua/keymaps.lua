@@ -337,6 +337,8 @@ end
 M.general = {
   -- [TERMINAL and NORMAL]
   tn = {},
+  vn = { ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS>]], '[R]eplace [W]ord' } },
+
   -- [NORMAL]
   n = {
 

@@ -1,6 +1,7 @@
 return {
   'folke/noice.nvim',
   event = 'VeryLazy',
+  enabled = false,
   dependencies = {
     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
     'MunifTanjim/nui.nvim',
@@ -13,7 +14,7 @@ return {
     routes = {
       {
         view = 'notify',
-        filter = { event = 'msg_showmode' },
+        -- filter = { event = 'msg_showmode' },
       },
       {
         filter = {

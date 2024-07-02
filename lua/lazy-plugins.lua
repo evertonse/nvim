@@ -91,6 +91,7 @@ require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   { 'pteroctopus/faster.nvim', event = 'BufEnter' }, -- Faster j,k movement
   { 'moll/vim-bbye', lazy = false },
+  { 'yorickpeterse/nvim-pqf', enabled = false }, -- Nicer Quick List
   {
     'smjonas/inc-rename.nvim',
     lazy = false,
@@ -227,6 +228,8 @@ require('lazy').setup({
   -- include a plugin definition from file lua/path/name.lua
 
   require 'plugins.gitsigns',
+
+  require 'plugins.git_conflict',
 
   require 'plugins.which-key',
 

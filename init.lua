@@ -5,6 +5,7 @@
 --    setup inc-rename to work with noice
 --    rename o poup
 --    checkout tabby for neovim and other
+--    config oil.nvim to test it's performance
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
