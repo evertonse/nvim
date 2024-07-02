@@ -95,7 +95,26 @@ return {
       --  and try some other statusline plugin
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.user.nerd_font, set_vim_settings = false }
+
+      local lsp_status = function()
+        local clients = vim.lsp.get_clients()
+        if next(clients) == nil then
+          return ''
+        end
+
+        local buf_clients = vim.lsp.get_clients()
+        local client_names = {}
+        for _, client in pairs(buf_clients) do
+          table.insert(client_names, client.name)
+        end
+
+        return 'LSP: ' .. table.concat(client_names, ', ')
+      end
+
+      statusline.setup {
+        use_icons = vim.g.user.nerd_font,
+        set_vim_settings = false,
+      }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
@@ -103,7 +122,7 @@ return {
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
         -- '%2l:%-2v' for LINE:COLUMN and '%3p%%' for percentage through the file
-        return '%2l:%-2v%3p%%'
+        return lsp_status() .. ' %2l:%-2v%3p%%'
       end
 
       -- ... and there is more!
