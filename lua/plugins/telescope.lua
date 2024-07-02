@@ -9,12 +9,13 @@ return {
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
-    tag = '0.1.5',
     lazy = false,
+    tag = '0.1.8',
     dependencies = {
       'nvim-lua/plenary.nvim',
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
         'nvim-telescope/telescope-fzf-native.nvim',
+        -- build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release',
 
         -- `build` is used to run some command when the plugin is installed/updated.
         -- This is only run then, not every time Neovim starts up.
@@ -80,11 +81,12 @@ return {
           prompt_prefix = '   ',
           selection_caret = '  ',
           entry_prefix = '  ',
-          selection_strategy = 'reset',
+          selection_strategy = 'closest',
           -- sorting_strategy = 'descending',
-          -- layout_strategy = 'horizontal',
-          path_display = { 'smart' },
-          -- path_display = { 'truncate' },
+          sorting_strategy = 'ascending',
+          layout_strategy = 'horizontal',
+          -- path_display = { 'smart' },
+          path_display = { 'truncate' },
           initial_mode = 'normal',
           preview = {
             treesitter = true,
@@ -92,11 +94,14 @@ return {
           layout_config = {
             horizontal = {
               prompt_position = 'top',
-              preview_width = 0.55,
-              results_width = 0.8,
+              preview_width = 0.45,
+              results_width = 0.7,
               mirror = false,
             },
             vertical = {
+              prompt_position = 'top',
+              preview_width = 0.55,
+              results_width = 0.8,
               mirror = true,
             },
             width = 0.87,
@@ -128,7 +133,7 @@ return {
             fuzzy = true, -- false will only do exact matching
             override_generic_sorter = true, -- override the generic sorter
             override_file_sorter = true, -- override the file sorter
-            case_mode = 'ignore_case', -- or "ignore_case" or "respect_case" -- the default case_mode is "smart_case"
+            case_mode = 'smart_case', -- or "ignore_case" or "respect_case" -- the default case_mode is "smart_case"
           },
           mappings = {
             i = {

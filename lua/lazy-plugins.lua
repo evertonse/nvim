@@ -89,7 +89,7 @@ local lazy_config = {
 require('lazy').setup({
   -- :h event for valid  vim events, there are some only in neovim like LspDetach
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  { 'pteroctopus/faster.nvim', event = 'BufEnter' }, -- Faster j,k movement
+  { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   { 'moll/vim-bbye', lazy = false },
   { 'yorickpeterse/nvim-pqf', enabled = false }, -- Nicer Quick List
   {
