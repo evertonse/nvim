@@ -302,7 +302,14 @@ return {
       }
 
       -- Merge default capabilities with disabled capabilities
-      local basedpyright_capabilities = vim.tbl_deep_extend('force', capabilities, disabled_capabilities)
+      local basedpyright_capabilities = vim.tbl_deep_extend('force', capabilities, {})
+      basedpyright_capabilities.textDocument.publishDiagnostics = {
+        relatedInformation = false, -- Disable related information
+        tagSupport = {
+          valueSet = {}, -- Disable tag support
+        },
+      }
+      basedpyright_capabilities.textDocument.publishDiagnostics = { dynamicRegistration = false }
       local servers = {
         bashls = {},
         --[[ OLS  https://github.com/DanielGavin/ols.gits ]]
@@ -319,8 +326,19 @@ return {
           autostart = true, -- This is the important new option
           -- offset_encoding = 'utf-8', -- Not supported yet by based_pyright
           capabilities = basedpyright_capabilities,
+          on_init = function(client)
+            client.server_capabilities.documentFormattingProvider = false
+            client.server_capabilities.documentFormattingRangeProvider = false
+          end,
           filetypes = { 'python' },
           settings = {
+            python = {
+              linting = {
+                enabled = false, -- Disable linting
+                pylintEnabled = false, -- If using pylint, disable it as well
+                flake8Enabled = false, -- If using flake8, disable it as well
+              },
+            },
             basedpyright = {
               analysis = {
                 disableOrganizeImports = false,
