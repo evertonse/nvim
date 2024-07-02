@@ -11,11 +11,22 @@ return {
   -- event = 'User FilePost',
   opts = {
 
-    indent = { char = '▏', repeat_linebreak = true },
-    scope = {
+    indent = {
       char = '▏',
+      -- char = '▏',
+      -- char = '｜',
+      -- char = '▕',
+
+      repeat_linebreak = true,
+    },
+    scope = {
+      -- char = '▏',
+      char = '▏',
+      -- char = '▕',
+      -- char = '│',
+      --                          • ``
       priority = 2048,
-      show_start = true,
+      show_start = os.getenv 'TMUX' == nil,
       show_end = false,
       include = { node_type = { lua = { 'return_statement', 'table_constructor' } } },
     },
