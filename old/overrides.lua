@@ -316,6 +316,8 @@ local function nvimtree_on_attach(bufnr)
   -- Default mappings. Feel free to modify or remove as you wish.
   --
   -- BEGIN_DEFAULT_ON_ATTACH
+
+  local map = vim.keymap.set
   vim.keymap.set('n', 'sC-]s', api.tree.change_root_to_node, opts 'CD')
   vim.keymap.set('n', '<C-e>', api.node.open.replace_tree_buffer, opts 'Open: In Place')
   vim.keymap.set('n', '<C-k>', api.node.show_info_popup, opts 'Info')

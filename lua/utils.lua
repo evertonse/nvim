@@ -1,3 +1,32 @@
+SetKeyMaps = function(mapping_table, disable)
+  -- Delete maps do disable
+  local set = function(mode, key, mapping)
+    local nowait_opts = { noremap = true, silent = true, nowait = true }
+    local opts = nowait_opts
+    if type(mapping[2]) == 'table' then
+      opts = vim.tbl_deep_extend('force', mapping[2], opts)
+    elseif type(mapping[2]) == 'string' then
+      opts = vim.tbl_deep_extend('force', mapping[3] or {}, opts)
+      opts.desc = mapping[2]
+    else
+      opts = { noremap = true, silent = true }
+    end
+    vim.keymap.set(mode, key, mapping[1], opts)
+  end
+
+  for modes, mappings in pairs(mapping_table) do
+    for mode in modes:gmatch '.' do
+      for key, mapping in pairs(mappings) do
+        if mapping == '' then
+          vim.keymap.del(mode, key)
+        else
+          set(mode, key, mapping)
+        end
+      end
+    end
+  end
+end
+
 function TableDump2(node)
   local cache, stack, output = {}, {}, {}
   local depth = 1

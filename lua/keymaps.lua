@@ -1129,26 +1129,8 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-
 -- Function to set keymaps
-local function set_keymaps(mode, key, mapping)
-  local opts = nowait_opts
-  if type(mapping[2]) == 'table' then
-    opts = vim.tbl_deep_extend('force', mapping[2], opts)
-  elseif type(mapping[2]) == 'string' then
-    opts = vim.tbl_deep_extend('force', mapping[3] or {}, opts)
-    opts.desc = mapping[2]
-  else
-    opts = { noremap = true, silent = true }
-  end
-  vim.keymap.set(mode, key, mapping[1], opts)
-end
 
--- Delete maps do disable
 for mode, mappings in pairs(M.disabled) do
   for key, _ in pairs(mappings) do
     pcall(function()
@@ -1157,11 +1139,7 @@ for mode, mappings in pairs(M.disabled) do
   end
 end
 
-for modes, mappings in pairs(M.general) do
-  for mode in modes:gmatch '.' do
-    for key, mapping in pairs(mappings) do
-      set_keymaps(mode, key, mapping)
-    end
-  end
-end
+-- SetKeyMaps(M.disable, true)
+SetKeyMaps(M.general)
+
 -- vim: ts=2 sts=2 sw=2 et

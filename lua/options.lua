@@ -8,6 +8,7 @@
 --  See `:help 'clipboard'`
 vim.opt.clipboard = 'unnamedplus'
 vim.o.cursorlineopt = 'both' -- to enable cursorline
+vim.o.wildmenu = false -- no autocomplete on cmdline because i'm usign Noice.nvim
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
@@ -97,8 +98,7 @@ local options = {
 for k, v in pairs(options) do
   vim.opt[k] = v
 end
-
-vim.opt.shortmess:append 'atilmnrxwoOstTIFc' -- flags to shorten vim messages, see :help 'shortmess'
+vim.opt.shortmess:append 'satilmnrxwWoOSqtTIFc' -- flags to shorten vim messages, see :help 'shortmess'
 vim.opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages
 vim.opt.iskeyword:append '-' -- hyphenated words recognized by searches
 vim.opt.formatoptions:remove { 'c', 'r', 'o' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.

@@ -1,7 +1,7 @@
 -- TODO:
 --    zen mode needs better interection zindex with neotree
---    find faster neotre for windows
---    confiure noice cmdline to enable normal mode on itfind faster neotre for windows
+--    find faster neotree for windows
+--    configure noice cmdline to enable normal mode on itfind faster neotre for windows
 --    setup inc-rename to work with noice
 --    rename o poup
 --    checkout tabby for neovim and other
@@ -14,7 +14,7 @@ vim.g.user.nerd_font = false
 vim.g.user.transparency = true
 vim.g.user.theme = 'pastel'
 
--- [[ Setting globals utils functions]]
+-- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
 
 -- [[ Setting options ]]
