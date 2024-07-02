@@ -152,10 +152,11 @@ return {
             luasnip.lsp_expand(args.body)
           end,
         },
-        completion = { completeopt = 'menu,menuone,noinsert,noselect' },
-        experimental = {
-          ghost_text = true, -- optional, can help show inline suggestions
-        },
+        -- completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
+        completion = { completeopt = 'menu,menuone,noinsert,preview' },
+        -- experimental = {
+        --   ghost_text = true, -- optional, can help show inline suggestions
+        -- },
 
         -- For an understanding of why these mappings were
         -- chosen, you will need to read `:help ins-completion`
@@ -217,15 +218,18 @@ return {
           { name = 'luasnip' },
           { name = 'path' },
           { name = 'buffer' },
+          -- { name = 'cmdline' },
         },
       }
-      -- `/` cmdline setup.
-      cmp.setup.cmdline('/', {
+      local search_opts = {
         mapping = cmp.mapping.preset.cmdline(),
         sources = {
           { name = 'buffer' },
         },
-      })
+      }
+      -- `/` cmdline setup.
+      cmp.setup.cmdline('/', search_opts)
+      cmp.setup.cmdline('?', search_opts)
       -- `:` cmdline setup.
       cmp.setup.cmdline(':', {
         mapping = cmp.mapping.preset.cmdline(),
@@ -238,7 +242,19 @@ return {
               ignore_cmds = { 'Man', '!' },
             },
           },
+          {
+            name = 'cmdline_history',
+          },
         }),
+      })
+      -- Change sources based on filetype for cmdline window
+      cmp.setup.filetype('vim', {
+        sources = {
+          -- { name = 'nvim_lsp' },
+          -- { name = 'luasnip' },
+          -- { name = 'path' },
+          { name = 'cmdline' }, -- Example of an additional source
+        },
       })
     end,
   },

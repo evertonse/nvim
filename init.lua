@@ -10,6 +10,7 @@
 --    check keymaps
 --    check why shit be slow these days when moving arround
 --    check 'c' mapping for mini plugin
+--    see about this ---@field public performance? cmp.PerformanceConfig
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '

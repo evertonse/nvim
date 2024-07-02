@@ -97,7 +97,11 @@ return {
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
+      require('mini.surround').setup {
+        -- see `:h MiniSurround.config`.
+        search_method = 'cover',
+        respect_selection_type = true,
+      }
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
@@ -131,7 +135,7 @@ return {
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
         -- '%2l:%-2v' for LINE:COLUMN and '%3p%%' for percentage through the file
-        return lsp_status() .. '%2l:%-2v%3p%%'
+        return lsp_status() .. '%-2l:%-2v%-4p%%'
       end
 
       -- ... and there is more!
