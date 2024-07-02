@@ -12,8 +12,17 @@ return {
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
       require('mini.git').setup {}
-      local _ = false
-        or require('mini.tabline').setup {
+
+      require('mini.align').setup {
+        -- see :help mini.align
+        mappings = {
+          start = 'ga',
+          start_with_preview = 'gA',
+        },
+      }
+
+      local _ = true
+        and require('mini.tabline').setup {
           -- Whether to show file icons (requires 'nvim-tree/nvim-web-devicons')
           show_icons = true,
 
@@ -23,7 +32,7 @@ return {
 
           -- Whether to set Vim's settings for tabline (make it always shown and
           -- allow hidden buffers)
-          set_vim_settings = true,
+          set_vim_settings = false,
 
           -- Where to show tabpage section in case of multiple vim tabpages.mini
           -- One of 'left', 'right', 'none'.

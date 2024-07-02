@@ -323,10 +323,5 @@ return {
         },
       },
     }
-
-    local open_on_starup = false
-    if open_on_starup then
-      -- vim.cmd [[nnoremap \ :Neotree reveal<cr>]]
-    end
   end,
 }

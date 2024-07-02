@@ -585,7 +585,7 @@ M.general = {
     ['<leader>D'] = { '"_D', noremap_opts },
     --["<leader>p"]      = { '"_p',  noremap_opts },
     ['x'] = { '"_x', noremap_opts },
-    ['s'] = { '"_s', noremap_opts },
+    -- ['s'] = { '"_s', noremap_opts }, -- Were using surround so this key must go
     ['ge'] = { 'G', noremap_opts },
     ['gh'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move big left', { expr = true } },
     ['gl'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move big right', { expr = true } },
@@ -673,7 +673,7 @@ M.general = {
     ['<leader>Y'] = { '"+y$', noremap_opts },
 
     ['x'] = { '"_x', noremap_opts },
-    ['s'] = { '"_s', noremap_opts },
+    -- ['s'] = { '"_s', noremap_opts },
     ['ge'] = { 'G', noremap_opts },
     ['<leader>s'] = { '"_s', noremap_opts },
 
@@ -705,7 +705,7 @@ M.general = {
     ['<leader>P'] = { '"+P', noremap_opts },
 
     ['x'] = { '"_x', noremap_opts },
-    ['s'] = { '"_s', noremap_opts },
+    -- ['s'] = { '"_s', noremap_opts },
     ['ge'] = { 'G', noremap_opts },
   },
 
