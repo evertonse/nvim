@@ -46,10 +46,10 @@ vim.cmd ':set clipboard=""'
 vim.cmd ':set display-=msgsep'
 vim.cmd ':set nomore'
 -- vim.cmd ':set lz' -- Lazy Redraw
-vim.cmd ':set ttyfast' -- Lazy Redraw
+-- vim.cmd ':set ttyfast' -- Lazy Redraw
 vim.cmd [[ :set iskeyword-=- ]]
-vim.cmd [[ :set updatetime=20 ]]
--- vim.loader.enable()
+vim.loader.enable()
+
 --
 -- vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 --     vim.lsp.diagnostic.on_publish_diagnostics, {

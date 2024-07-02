@@ -12,6 +12,7 @@ return {
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
       require('mini.git').setup {}
+      require('mini.pick').setup {}
 
       require('mini.align').setup {
         -- see :help mini.align
