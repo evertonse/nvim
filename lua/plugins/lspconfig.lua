@@ -272,6 +272,37 @@ return {
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+
+      -- Define the capabilities you want to disable
+      local disabled_capabilities = {
+        textDocument = {
+          completion = { dynamicRegistration = false },
+          hover = { dynamicRegistration = false },
+          signatureHelp = { dynamicRegistration = false },
+          references = { dynamicRegistration = false },
+          documentHighlight = { dynamicRegistration = false },
+          documentSymbol = { dynamicRegistration = false },
+          formatting = { dynamicRegistration = false },
+          rangeFormatting = { dynamicRegistration = false },
+          onTypeFormatting = { dynamicRegistration = false },
+          definition = { dynamicRegistration = false },
+          codeAction = { dynamicRegistration = false },
+          codeLens = { dynamicRegistration = false },
+          documentLink = { dynamicRegistration = false },
+          colorProvider = { dynamicRegistration = false },
+          rename = { dynamicRegistration = false },
+          publishDiagnostics = { dynamicRegistration = false },
+        },
+        workspace = {
+          didChangeConfiguration = { dynamicRegistration = false },
+          didChangeWatchedFiles = { dynamicRegistration = false },
+          symbol = { dynamicRegistration = false },
+          executeCommand = { dynamicRegistration = false },
+        },
+      }
+
+      -- Merge default capabilities with disabled capabilities
+      local basedpyright_capabilities = vim.tbl_deep_extend('force', capabilities, disabled_capabilities)
       local servers = {
         bashls = {},
         --[[ OLS  https://github.com/DanielGavin/ols.gits ]]
@@ -283,7 +314,62 @@ return {
         clangd = {},
         -- gopls = {},
         -- pyright = {},
-        basedpyright = {},
+
+        basedpyright = { -- https://docs.basedpyright.com/#/settings
+          autostart = true, -- This is the important new option
+          -- offset_encoding = 'utf-8', -- Not supported yet by based_pyright
+          capabilities = basedpyright_capabilities,
+          filetypes = { 'python' },
+          settings = {
+            basedpyright = {
+              analysis = {
+                disableOrganizeImports = false,
+                diagnosticSeverityOverrides = {
+                  reportGeneralTypeIssues = 'none',
+                  reportMissingImports = 'none',
+                  reportMissingTypeStubs = 'none',
+                  reportPrivateUsage = 'none',
+                  reportOptionalSubscript = 'none',
+                  reportOptionalMemberAccess = 'none',
+                  reportOptionalOperand = 'none',
+                  reportOptionalCall = 'none',
+                  reportOptionalIterable = 'none',
+                  reportUnusedImport = 'none',
+                  reportUnusedFunction = 'none',
+                  reportUnusedClass = 'none',
+                  reportUnusedVariable = 'none',
+                  reportDuplicateImport = 'none',
+                  reportUnusedCoroutine = 'none',
+                  reportUnusedExpression = 'none',
+                  reportUnusedParameter = 'none',
+                  reportUnusedTypeParam = 'none',
+                  reportUnusedTupleExpression = 'none',
+                  reportUnusedCallResult = 'none',
+                  reportImplicitStringConcatenation = 'none',
+                  reportIncompatibleCall = 'none',
+                  reportIncompatibleVariableOverride = 'none',
+                  reportIncompatibleMethodOverride = 'none',
+                  reportIncompatibleReturnOverride = 'none',
+                },
+                logLevel = 'Error',
+                useLibraryCodeForTypes = true,
+                diagnosticMode = 'openFilesOnly',
+                autoSearchPaths = true,
+                typeCheckingMode = 'off',
+              },
+              include = { 'src' },
+              reportMissingImports = true,
+              typeCheckingMode = 'off',
+              -- typeCheckingMode = 'standard',
+              autoImportCompletion = false,
+              diagnosticMode = 'openFilesOnly',
+              autoSearchPaths = false,
+              disable = {
+                'E501', -- Line too long (adjust according to your needs)
+              },
+            },
+          },
+        },
         -- pylsp = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -328,15 +414,6 @@ return {
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
-        ensure_installed = {
-          'lua_ls',
-          -- 'rust_analyzer',
-          -- 'gopls',
-          'clangd',
-          -- 'pylsp',
-          'basedpyright',
-          -- 'pyright',
-        },
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}

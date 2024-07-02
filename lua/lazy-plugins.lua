@@ -230,6 +230,7 @@ require('lazy').setup({
   require 'plugins.gitsigns',
 
   require 'plugins.git_conflict',
+  { 'sindrets/diffview.nvim', lazy = false },
 
   require 'plugins.which-key',
 
