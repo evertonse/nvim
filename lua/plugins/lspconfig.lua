@@ -145,7 +145,7 @@ return {
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
       vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
+        group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
         callback = function(event)
           -- NOTE: Remember that Lua is a real programming language, and as such it is possible
           -- to define small helper and utility functions so you don't have to repeat yourself.
@@ -184,7 +184,16 @@ return {
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
-          map('<leader>lr', vim.lsp.buf.rename, '[L]SP [R]ename')
+          -- map('<leader>lr', vim.lsp.buf.rename, '[L]SP [R]ename')
+          local rename_func = function()
+            local inc_rename_available, _ = pcall(require, 'inc_rename')
+            if inc_rename_available then
+              vim.cmd(':IncRename ' .. vim.fn.expand '<cword>')
+            else
+              vim.lsp.buf.rename()
+            end
+          end
+          map('<leader>lr', rename_func, '[L]SP [R]ename')
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
@@ -204,6 +213,7 @@ return {
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
+
           if client and client.server_capabilities.documentHighlightProvider then
             local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
@@ -262,6 +272,13 @@ return {
           },
         },
       }
+      -- capabilities.textDocument.sync = {
+      --   openClose = true,
+      --   change = 2, -- Incremental sync
+      --   willSave = false,
+      --   willSaveWaitUntil = false,
+      --   save = false,
+      -- }
 
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.

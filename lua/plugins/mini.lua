@@ -32,7 +32,7 @@ return {
 
           -- Whether to set Vim's settings for tabline (make it always shown and
           -- allow hidden buffers)
-          set_vim_settings = false,
+          set_vim_settings = true,
 
           -- Where to show tabpage section in case of multiple vim tabpages.mini
           -- One of 'left', 'right', 'none'.
