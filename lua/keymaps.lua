@@ -28,6 +28,51 @@ local function save_and_delete_buffer()
   vim.cmd 'Bdelete!'
 end
 
+local neo_tree_reveal_toggle = function()
+  local reveal_file = vim.fn.expand '%:p'
+  if reveal_file == '' then
+    reveal_file = vim.fn.getcwd()
+  else
+    local f = io.open(reveal_file, 'r')
+    if f then
+      f.close(f)
+    else
+      reveal_file = vim.fn.getcwd()
+    end
+  end
+  require('neo-tree.command').execute {
+    action = 'focus', -- OPTIONAL, this is the default value
+    source = 'filesystem', -- OPTIONAL, this is the default value
+    position = 'float',
+    toggle = true,
+    reveal_file = reveal_file, -- path to file or folder to reveal
+    reveal_force_cwd = false, -- change cwd without asking if needed
+  }
+end
+
+local neo_tree_toggle = function()
+  require('neo-tree.command').execute {
+    action = 'focus', -- OPTIONAL, this is the default value
+    source = 'filesystem', -- OPTIONAL, this is the default value
+    position = 'float',
+    toggle = true,
+  }
+end
+
+-- Function to hide Neo-tree buffer without closing it
+local function hide_neotree()
+  -- Get the window ID of the Neo-tree buffer
+  local neotree_bufnr = vim.fn.bufnr 'Neotree'
+  if neotree_bufnr ~= -1 then
+    -- Get the window ID containing the Neo-tree buffer
+    local win_id = vim.fn.bufwinnr(neotree_bufnr)
+    if win_id ~= -1 then
+      -- Hide the window
+      vim.api.nvim_win_hide(win_id)
+    end
+  end
+end
+
 -- Function to reopen the most recently saved buffer path
 local function reopen_last_buffer()
   local last_buffer_path = table.remove(buffer_paths)
@@ -305,8 +350,8 @@ M.general = {
     },
     ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS>]], '[R]eplace [W]ord' },
     -->> neo-tree
-    ['<leader>e'] = { '<cmd> Neotree toggle <CR>', 'Toggle neo tree' },
-    ['<leader>E'] = { '<cmd> Neotree reveal <CR>', 'Toggle neo tree' },
+    ['<leader>e'] = { neo_tree_toggle, 'Toggle neo tree' },
+    ['<leader>E'] = { neo_tree_reveal_toggle, 'Toggle neo tree' },
 
     -->> NNN picker
     -- ['<leader>e'] = { '<cmd> NnnPicker <CR>', 'NNN Floating Window' },

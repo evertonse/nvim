@@ -3,6 +3,10 @@
 
 return {
   'nvim-neo-tree/neo-tree.nvim',
+  source_selector = {
+    winbar = true,
+    statusline = false,
+  },
   version = '*',
   dependencies = {
     'nvim-lua/plenary.nvim',
@@ -11,8 +15,8 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '<leader>e', ':Neotree toggle<CR>', { desc = 'NeoTree toggle' } },
-    { '<leader>E', ':Neotree reveal<CR>', { desc = 'NeoTree reveal' } },
+    -- { '<leader>e', ':Neotree toggle<CR>', { desc = 'NeoTree toggle' } },
+    -- { '<leader>E', ':Neotree reveal<CR>', { desc = 'NeoTree reveal' } },
   },
   config = function()
     -- If you want icons for diagnostic errors, you'll need to define them somewhere:

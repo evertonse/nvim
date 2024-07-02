@@ -282,7 +282,9 @@ return {
         zls = {},
         clangd = {},
         -- gopls = {},
-        pyright = {},
+        -- pyright = {},
+        basedpyright = {},
+        -- pylsp = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -331,7 +333,9 @@ return {
           -- 'rust_analyzer',
           -- 'gopls',
           'clangd',
-          'pyright',
+          -- 'pylsp',
+          'basedpyright',
+          -- 'pyright',
         },
         handlers = {
           function(server_name)
