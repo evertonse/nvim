@@ -6,6 +6,10 @@
 --    rename o poup
 --    checkout tabby for neovim and other
 --    config oil.nvim to test it's performance
+--    configure mini.surround to surround word with quotes similar to le nvim.surround
+--    check keymaps
+--    check why shit be slow these days when movind arround
+--    check 'c' mapping for mini plugin
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '

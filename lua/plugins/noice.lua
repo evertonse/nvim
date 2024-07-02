@@ -10,37 +10,54 @@ return {
     --   If not available, we use `mini` as the fallback
     -- 'rcarriga/nvim-notify',
   },
+  -- Config https://github.com/folke/noice.nvim/blob/main/lua/noice/config/views.lua#L31C1-L56C5
   opts = {
     routes = {
       {
         view = 'notify',
-        -- filter = { event = 'msg_showmode' },
+        filter = { event = 'msg_showmode' },
       },
       {
         filter = {
-          event = 'notify',
-          min_height = 15,
+          event = 'msg_show',
+          kind = '',
+          find = 'written',
         },
-        view = 'split',
+        opts = { skip = true },
       },
+      {
+        filter = {
+          event = 'msg_show',
+          kind = 'search_count',
+        },
+        opts = { skip = true },
+      },
+      {
+        filter = {
+          event = 'msg_show',
+          kind = '',
+          find = 'written',
+        },
+        opts = { skip = true },
+      },
+      --   filter = {
+      -- {
+      --     event = 'notify',
+      --     min_height = 15,
+      --   },
+      --   view = 'split',
+      -- },
     },
     views = {
-      popupmenu = {
-        relative = 'editor',
-        zindex = 65,
-        -- position = 'auto', -- when auto, then it will be positioned to the cmdline or cursor
-        position = 'bottom',
-        size = {
-          width = 29999,
-          height = 'auto',
-          max_height = 20,
-          -- min_width = 10,
+      cmdline_popup = {
+        border = {
+          style = 'none',
+          padding = { 2, 3 },
         },
-      },
-      cmdline_popupmenu = {
-        view = 'popupmenu',
-        position = 'bottom',
-        zindex = 200,
+        filter_options = {},
+        win_options = {
+          winhighlight = 'NormalFloat:NormalFloat,FloatBorder:FloatBorder',
+        },
       },
     },
     popupmenu = {
@@ -52,6 +69,14 @@ return {
       kind_icons = {}, -- set to `false` to disable icons
     },
     cmdline = {
+      format = {
+        search_down = {
+          view = 'cmdline',
+        },
+        search_up = {
+          view = 'cmdline',
+        },
+      },
       enabled = true, -- enables the Noice cmdline UI
       -- view = 'cmdline_popup', -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
       position = 'bottom',
