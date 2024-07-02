@@ -135,7 +135,7 @@ return {
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
         -- '%2l:%-2v' for LINE:COLUMN and '%3p%%' for percentage through the file
-        return lsp_status() .. '%-2l:%-2v%-4p%%'
+        return lsp_status() .. '%-2l:%-2v %-3p%%'
       end
 
       -- ... and there is more!
