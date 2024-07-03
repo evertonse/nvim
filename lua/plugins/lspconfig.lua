@@ -67,7 +67,9 @@ return {
               icon_separator = ' ', -- Separator between group name and icon
               group_separator = '---', -- Separator between notification groups
               -- Highlight group used for group separator
-              group_separator_hl = 'Comment',
+              -- group_separator_hl = 'Comment',
+              group_separator_hl = 'SpecialComment',
+
               -- How to render notification messages
               render_message = function(msg, cnt)
                 return cnt == 1 and msg or string.format('(%dx) %s', cnt, msg)
@@ -77,7 +79,7 @@ return {
             -- Options related to the notification window and buffer
             window = {
               normal_hl = 'Comment', -- Base highlight group in the notification window
-              winblend = 20, -- Background color opacity in the notification window
+              winblend = 22, -- Background color opacity in the notification window
               border = 'none', -- Border around the notification window
               zindex = 20000, -- Stacking priority of the notification window
               max_width = 0, -- Maximum width of the notification window
@@ -199,9 +201,20 @@ return {
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
           map('<leader>lca', vim.lsp.buf.code_action, '[L]SP [C]ode [A]ction')
+          -- Define a function to check if LSP is attached and call hover if it is
+          local function lsp_hover_or_fallback()
+            local clients = vim.lsp.buf.get_client()
+            if next(clients) ~= nil then
+              vim.lsp.buf.hover()
+            else
+              -- Fallback to the default 'K' behavior (looking up man pages)
+              -- vim.api.nvim_feedkeys('K', 'n', false)
+            end
+          end
 
           -- Opens a popup that displays documentation about the word under your cursor
           --  See `:help K` for why this keymap.
+          map('K', lsp_hover_or_fallback, 'Hover Documentation')
           map('K', vim.lsp.buf.hover, 'Hover Documentation')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.

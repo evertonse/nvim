@@ -18,8 +18,8 @@ vim.opt.list = false -- set to true to see whitespace
 vim.opt.listchars = { tab = '» ', trail = ' ', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
--- vim.opt.inccommand = 'split'
-vim.opt.inccommand = 'nosplit'
+-- vim.opt.inccommand = 'nosplit' -- NO spliting the windows to see previe
+vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
@@ -91,7 +91,7 @@ local options = {
   linebreak = true, -- companion to wrap, don't split words
   scrolloff = 4, -- minimal number of screen lines to keep above and below the cursor
   sidescrolloff = 4, -- minimal number of screen columns either side of cursor if wrap is `false`
-  -- guifont = 'JetBrainsMono NF:h9.1', -- the font used in graphical neovim applications
+  guifont = 'JetBrainsMono NF:h9.1', -- the font used in graphical neovim applications
   whichwrap = 'bs<>[]hl', -- which "horizontal" keys are allowed to travel to prev/next line
   breakindent = true,
 }
@@ -99,7 +99,7 @@ local options = {
 for k, v in pairs(options) do
   vim.opt[k] = v
 end
-vim.opt.shortmess:append 'satilmnrxwWoOSqtTIFc' -- flags to shorten vim messages, see :help 'shortmess'
+vim.opt.shortmess:append 'saAtilmnrxwWoOqtTIFcC' -- flags to shorten vim messages, see :help 'shortmess'
 vim.opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages
 vim.opt.iskeyword:append '-' -- hyphenated words recognized by searches
 vim.opt.formatoptions:remove { 'c', 'r', 'o' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.

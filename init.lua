@@ -23,6 +23,21 @@ vim.g.user.theme = 'pastel'
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
 
+-- Create a custom command with command-preview flag
+vim.api.nvim_create_user_command('MySubstitute', function(opts)
+  vim.cmd(string.format('s/%s/%s/%s', opts.args[1], opts.args[2], opts.args[3] or ''))
+end, {
+  nargs = '+',
+  preview = function(args)
+    -- Generate the command to preview
+    local cmd = string.format('s/%s/%s/%s', args.args[1], args.args[2], args.args[3] or '')
+    -- Execute the command in preview mode
+    vim.cmd 'redraw'
+    vim.fn.execute(cmd)
+  end,
+  desc = 'Custom substitute command with preview',
+})
+
 -- [[ Setting options ]]
 require 'options'
 

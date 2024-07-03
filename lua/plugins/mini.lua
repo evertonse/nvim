@@ -110,7 +110,7 @@ return {
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
 
-      local lsp_status = function()
+      local lsp_servers_attached = function()
         local clients = vim.lsp.get_clients()
         if next(clients) == nil then
           return ''
@@ -136,7 +136,7 @@ return {
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
         -- '%2l:%-2v' for LINE:COLUMN and '%3p%%' for percentage through the file
-        return lsp_status() .. '%-2l:%-2v %-3p%%'
+        return lsp_servers_attached() .. '%-2l:%-2v %3p%%'
       end
 
       -- ... and there is more!
