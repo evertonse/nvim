@@ -14,6 +14,7 @@
 --    ui select on telescope on normal mode by typing a number
 --    see if surround is better than mini.surround
 --    Telescope change last value
+--    :mksession
 --    Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
 
 vim.g.mapleader = ' '

@@ -28,10 +28,9 @@ SetKeyMaps = function(mapping_table, disable)
 end
 
 -- Function to customize entry display and handle selection by number
-local function number_entry_picker()
-
-	-- Ensure Telescope is installed
-	require 'telescope'
+function number_entry_picker()
+  -- Ensure Telescope is installed
+  require 'telescope'
   local pickers = require 'telescope.pickers'
   local finders = require 'telescope.finders'
   local sorters = require 'telescope.sorters'

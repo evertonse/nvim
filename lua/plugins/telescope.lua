@@ -4,13 +4,17 @@
 -- you do for a plugin at the top level, you can do for a dependency.
 --
 -- Use the `dependencies` key to specify the dependencies of a particular plugin
+local commit_working_path_support = 'bfcc7d5c6f12209139f175e6123a7b7de6d9c18a'
+local commit_working_path_support_branch = 'master'
 
 return {
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
     lazy = false,
-    tag = '0.1.8',
+    -- tag = '0.1.8',
+    branch = commit_working_path_support_branch,
+    commit = commit_working_path_support,
     dependencies = {
       'nvim-lua/plenary.nvim',
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
