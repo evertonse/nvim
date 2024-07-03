@@ -1,7 +1,7 @@
 return {
   'folke/noice.nvim',
   event = 'VeryLazy',
-  enabled = true,
+  enabled = false,
   dependencies = {
     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
     'MunifTanjim/nui.nvim',
@@ -12,6 +12,7 @@ return {
   },
   -- Config https://github.com/folke/noice.nvim/blob/main/lua/noice/config/views.lua#L31C1-L56C5
   opts = {
+    throttle = 1000 / 60, -- how frequently does Noice need to check for ui updates? This has no effect when in blocking mode.
     lsp = {
       -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
       override = {
@@ -32,5 +33,10 @@ return {
   config = function(_, opts)
     --@class NoiceConfigViews: table<string, NoiceViewOptions>
     local defaults = require('noice').setup(opts)
+    local ok, telescope = pcall(require, 'telescope')
+    if not ok then
+      return
+    end
+    telescope.load_extension 'noice'
   end,
 }

@@ -30,20 +30,20 @@ return {
       popup_border_style = 'single', -- "double", "none", "rounded", "shadow", "single" or "solid"
       enable_git_status = true,
       enable_diagnostics = true,
-      -- neo_tree_popup_input_ready= false, -- Enable normal mode for input dialogs.
+      neo_tree_popup_input_ready = true, -- Enable normal mode for input dialogs.
       open_files_do_not_replace_types = { 'terminal', 'trouble', 'qf' }, -- when opening files, do not use windows containing these filetypes or buftypes
-      sort_case_insensitive = false, -- used when sorting files and directories in the tree
+      sort_case_insensitive = true, -- used when sorting files and directories in the tree
       sort_function = nil, -- use a custom function for sorting files and directories in the tree
-      event_handlers = {
-        {
-          event = 'neo_tree_popup_input_ready',
-          ---@param args { bufnr: integer, winid: integer }
-          handler = function(args)
-            vim.cmd 'stopinsert'
-            vim.keymap.set('i', '<esc>', vim.cmd.stopinsert, { noremap = true, buffer = args.bufnr })
-          end,
-        },
-      },
+      -- event_handlers = {
+      --   {
+      --     event = 'neo_tree_popup_input_ready',
+      --     ---@param args { bufnr: integer, winid: integer }
+      --     handler = function(args)
+      --       vim.cmd 'stopinsert'
+      --       vim.keymap.set('i', '<esc>', vim.cmd.stopinsert, { noremap = true, buffer = args.bufnr })
+      --     end,
+      --   },
+      -- },
 
       -- sort_function = function (a,b)
       --       if a.type == b.type then
@@ -94,8 +94,7 @@ return {
             added = '+', -- or "✚", but this is redundant info if you use git_status_colors on the name
             modified = '', -- or "", but this is redundant info if you use git_status_colors on the name
             deleted = '✖', -- this can only be used in the git_status source
-            renamed = '󰁕', -- this can only be used in the git_status source
-            -- Status type
+            renamed = '󰁕', -- this can only be used in the git_status source Status type
             -- untracked = "",
             untracked = '?',
             ignored = '',
@@ -159,6 +158,7 @@ return {
           -- ["S"] = "split_with_window_picker",
           -- ["s"] = "vsplit_with_window_picker",
           ['t'] = 'open_tabnew',
+          --["P"] = "toggle_preview", -- enter preview mode, which shows the current node without focusing
           -- ["<cr>"] = "open_drop",
           -- ["t"] = "open_tab_drop",
           ['w'] = 'open_with_window_picker',

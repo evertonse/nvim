@@ -199,36 +199,22 @@ require('lazy').setup({
     lazy = false,
   },
   {
-    'NeogitOrg/neogit',
-    dependencies = {
-      'nvim-lua/plenary.nvim', -- required
-      'sindrets/diffview.nvim', -- optional - Diff integration
-
-      -- Only one of these is needed, not both.
-      'nvim-telescope/telescope.nvim', -- optional
-      -- 'ibhagwan/fzf-lua', -- optional
-    },
-    config = true,
+    --     u/roku_remote avatar
+    -- roku_remote
+    -- •
+    -- 1y ago
+    -- •
+    -- Edited 1y ago
+    -- #2 is one of my most desired features and, imo, one of Vim’s largest deficiencies. The command window doesn’t allow for incremental preview and command mode requires the use chords instead of vim’s language. I’ve only used it a little bit but I really like Emacs’ notion of the command line as a buffer like any other. Ideally, the command line should just be the current line of the command window, allowing for incremental preview and the usage of vim bindings, but allowing you to expand it to see the entire command history if desired. I imagine it would require MASSIVE changes, if the incremental preview feature could be ported to “normal” buffers at all
+    'gelguy/wilder.nvim',
+    lazy = false,
+    opts = { modes = { ':', '/', '?' } },
+    config = function(_, opts)
+      local wilder = require 'wilder'
+      wilder.setup(opts)
+    end,
   },
-  -- Lua
-  {
-    -- :ZenMode
-    'folke/zen-mode.nvim',
-    event = 'BufEnter',
-    -- lazy = false,
-    opts = {
-      plugins = { tmux = { enabled = true } },
-      on_open = function(_)
-        vim.cmd [[set laststatus=0 ]]
-      end,
-      on_close = function(_)
-        vim.cmd [[set laststatus=3 ]]
-      end,
-    },
-  },
-
-  -- modular approach: using `require 'path/name'` will
-  -- include a plugin definition from file lua/path/name.lua
+  require 'plugins.neogit',
 
   require 'plugins.gitsigns',
 

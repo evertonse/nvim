@@ -319,7 +319,10 @@ local float_term = {
   height_min = 23,
 }
 local float_term_toggle = function()
-  local _, tt = pcall(require, 'toggleterm.terminal')
+  local ok, tt = pcall(require, 'toggleterm.terminal')
+  if not ok then
+    return
+  end
   local f = float_term
   f.terminal = f.terminal
     or tt.Terminal:new {
@@ -481,7 +484,7 @@ M.general = {
     },
 
     -- >> recorging
-    ['Q'] = { '@', 'Activate MACRO on q register' },
+    -- ['Q'] = { '@', 'Activate MACRO on q register' },
     -- ["q"]             = { "q", "Activate MACRO on q register" },
     -- ["Q"]             = { ToggleRecording, "Record MACRO on q register" },
     --
@@ -492,6 +495,9 @@ M.general = {
 
     -- save
     ['<C-s>'] = { '<cmd> w <CR>', 'Save file' },
+
+    -- Open Cmdline Window
+    ['Q'] = { '<cmd> q:', 'Open Cmdline Window' },
 
     -- Copy all
     ['<leader><C-y>'] = { '<cmd> %y+ <CR>', 'Copy whole file' },

@@ -231,22 +231,23 @@ return {
       cmp.setup.cmdline('/', search_opts)
       cmp.setup.cmdline('?', search_opts)
       -- `:` cmdline setup.
-      cmp.setup.cmdline(':', {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { name = 'path' },
-        }, {
-          {
-            name = 'cmdline',
-            option = {
-              ignore_cmds = { 'Man', '!' },
+      local _ = false
+        and cmp.setup.cmdline(':', {
+          mapping = cmp.mapping.preset.cmdline(),
+          sources = cmp.config.sources({
+            { name = 'path' },
+          }, {
+            {
+              name = 'cmdline',
+              option = {
+                ignore_cmds = { 'Man', '!' },
+              },
             },
-          },
-          {
-            name = 'cmdline_history',
-          },
-        }),
-      })
+            {
+              name = 'cmdline_history',
+            },
+          }),
+        })
       -- Change sources based on filetype for cmdline window
       cmp.setup.filetype('vim', {
         sources = {

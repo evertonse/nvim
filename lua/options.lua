@@ -8,7 +8,7 @@
 --  See `:help 'clipboard'`
 vim.opt.clipboard = 'unnamedplus'
 vim.o.cursorlineopt = 'both' -- to enable cursorline
-vim.o.wildmenu = false -- no autocomplete on cmdline because i'm usign Noice.nvim
+vim.o.wildmenu = true -- if set to false disallow autocomplete on cmdline since I'm using cmp.cmdline
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
