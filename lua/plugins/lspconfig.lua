@@ -203,7 +203,7 @@ return {
           map('<leader>lca', vim.lsp.buf.code_action, '[L]SP [C]ode [A]ction')
           -- Define a function to check if LSP is attached and call hover if it is
           local function lsp_hover_or_fallback()
-            local clients = vim.lsp.buf.get_client()
+            local clients = vim.lsp.get_clients()
             if next(clients) ~= nil then
               vim.lsp.buf.hover()
             else
@@ -214,7 +214,7 @@ return {
 
           -- Opens a popup that displays documentation about the word under your cursor
           --  See `:help K` for why this keymap.
-          map('K', lsp_hover_or_fallback(), 'Hover Documentation')
+          map('K', lsp_hover_or_fallback, 'Hover Documentation')
           -- map('K', vim.lsp.buf.hover, 'Hover Documentation')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.

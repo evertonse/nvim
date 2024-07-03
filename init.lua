@@ -24,6 +24,7 @@ vim.g.user = {
   transparency = true,
   theme = 'pastel',
   wilder = false,
+  inc_rename = true,
 }
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
