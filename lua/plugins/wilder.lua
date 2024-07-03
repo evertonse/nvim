@@ -13,5 +13,6 @@ return {
   config = function(_, opts)
     local wilder = require 'wilder'
     wilder.setup(opts)
+    vim.o.wildmenu = true
   end,
 }

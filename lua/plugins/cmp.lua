@@ -231,9 +231,20 @@ return {
       cmp.setup.cmdline('/', search_opts)
       cmp.setup.cmdline('?', search_opts)
       -- `:` cmdline setup.
-      local _ = false
+      local _ = true
         and cmp.setup.cmdline(':', {
-          mapping = cmp.mapping.preset.cmdline(),
+          completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
+          mapping = cmp.mapping.preset.cmdline {
+            ['<leader>'] = {
+              c = function()
+                if cmp.visible() then
+                  cmp.select_next_item()
+                else
+                  cmp.mapping.complete_common_string()
+                end
+              end,
+            },
+          },
           sources = cmp.config.sources({
             { name = 'path' },
           }, {
