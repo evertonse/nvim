@@ -29,8 +29,8 @@ vim.opt.list = false -- set to true to see whitespace
 vim.opt.listchars = { tab = '» ', trail = ' ', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
--- vim.opt.inccommand = 'nosplit' -- NO spliting the windows to see previe
-vim.opt.inccommand = 'split'
+vim.opt.inccommand = 'nosplit' -- NO spliting the windows to see previe
+-- vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true

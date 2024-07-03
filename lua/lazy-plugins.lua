@@ -25,7 +25,7 @@ local lazy_config = {
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
     icons = vim.g.user.nerd_font and {
       ft = '',
-      lazy = '󰂠 ',
+      lazy = '󰂠',
       loaded = '',
       notloaded = '',
     } or {
@@ -88,31 +88,12 @@ local lazy_config = {
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- :h event for valid  vim events, there are some only in neovim like LspDetach
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  -- 'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  require 'plugins.guess-indent',
+  { 'bfredl/nvim-incnormal', enabled = true, event = 'BufEnter' },
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   { 'moll/vim-bbye', event = 'User FileOpened' },
   { 'yorickpeterse/nvim-pqf', enabled = false }, -- Nicer Quick List
-  {
-    'smjonas/inc-rename.nvim',
-    lazy = false,
-    config = function()
-      require('inc_rename').setup {
-        -- the name of the command
-        cmd_name = 'IncRename',
-        -- the highlight group used for highlighting the identifier's new name
-        hl_group = 'Substitute',
-        -- whether an empty new name should be previewed; if false the command preview will be cancelled instead
-        preview_empty_name = false,
-        -- whether to display a `Renamed m instances in n files` message after a rename operation
-        show_message = true,
-        -- whether to save the "IncRename" command in the commandline history (set to false to prevent issues with
-        -- navigating to older entries that may arise due to the behavior of command preview)
-        save_in_cmdline_history = true,
-        -- the type of the external input buffer to use (the only supported value is currently "dressing")
-        input_buffer_type = nil,
-      }
-    end,
-  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -170,8 +151,6 @@ require('lazy').setup({
   },
   require 'plugins.wilder',
 
-  require 'plugins.oil',
-
   require 'plugins.fine-cmdline',
 
   require 'plugins.neogit',
@@ -205,19 +184,21 @@ require('lazy').setup({
   require 'plugins.debug',
 
   ------------------------
+  require 'plugins.inc-rename',
   require 'plugins.harpoon',
   require 'plugins.vim_matchup',
   require 'plugins.indent_blankline',
   require 'plugins.lint',
   require 'plugins.autopairs',
 
+  require 'plugins.oil',
   require 'plugins.neo-tree', -- NOTE: Slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
   -- require 'plugins.nnn', -- NOTE: works fine but needs better NNN configurations with tui-preview plugin ,
   -- require 'plugins.lf', -- NOTE: Appear to bugout with my toggleterm config
   require 'plugins.colorizer',
   require 'plugins.better_scape',
   require 'plugins.noice',
-
+  require 'plugins.live-command',
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --

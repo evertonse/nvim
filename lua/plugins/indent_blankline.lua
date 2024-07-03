@@ -82,6 +82,7 @@ return {
     exclude = {
       filetypes = {
         'help',
+        'vim',
         'terminal',
         'lazy',
         'lspinfo',
@@ -99,7 +100,7 @@ return {
         'cmp_menu',
         '',
       },
-      buftypes = { 'terminal', 'nofile', 'quickfix' },
+      buftypes = { 'terminal', 'nofile', 'vim', 'quickfix' },
     },
   },
   config = function(_, opts)

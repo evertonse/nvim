@@ -27,6 +27,87 @@ SetKeyMaps = function(mapping_table, disable)
   end
 end
 
+-- Function to customize entry display and handle selection by number
+local function number_entry_picker()
+
+	-- Ensure Telescope is installed
+	require 'telescope'
+  local pickers = require 'telescope.pickers'
+  local finders = require 'telescope.finders'
+  local sorters = require 'telescope.sorters'
+  local actions = require 'telescope.actions'
+  local action_state = require 'telescope.actions.state'
+
+  local opts = {}
+
+  -- Custom entry display with sequence numbers
+  local entry_display = require 'telescope.pickers.entry_display'
+  local displayer = entry_display.create {
+    separator = ' ',
+    items = {
+      { width = 4 },
+      { remaining = true },
+    },
+  }
+
+  local make_display = function(entry)
+    return displayer {
+      { tostring(entry.index) .. '.', 'TelescopePromptPrefix' },
+      { entry.value, 'TelescopePromptPrefix' },
+    }
+  end
+
+  -- Sample items for the picker (replace this with your own items)
+  local items = { 'First Option', 'Second Option', 'Third Option', 'Fourth Option' }
+
+  for i = 1, #items do
+    items[i] = {
+      value = items[i],
+      ordinal = items[i],
+      display = make_display,
+      index = i,
+    }
+  end
+
+  -- Create the picker
+  pickers
+    .new(opts, {
+      prompt_title = 'Numbered Picker',
+      finder = finders.new_table {
+        results = items,
+        entry_maker = function(entry)
+          return entry
+        end,
+      },
+      sorter = sorters.get_generic_fuzzy_sorter(),
+      attach_mappings = function(prompt_bufnr, map)
+        -- Default action for selecting an item
+        actions.select_default:replace(function()
+          local selection = action_state.get_selected_entry()
+          print('You selected: ' .. selection.value)
+          actions.close(prompt_bufnr)
+        end)
+
+        -- Map number keys to select corresponding item
+        for i = 1, 9 do
+          map('i', tostring(i), function()
+            local selection = items[tonumber(i)]
+            if selection then
+              print('You selected: ' .. selection.value)
+              actions.close(prompt_bufnr)
+            end
+          end)
+        end
+
+        return true
+      end,
+    })
+    :find()
+end
+
+-- Create a command to invoke the custom picker
+vim.api.nvim_set_keymap('n', '<leader>np', '<cmd>lua number_entry_picker()<CR>', { noremap = true, silent = true })
+
 function TableDump2(node)
   local cache, stack, output = {}, {}, {}
   local depth = 1

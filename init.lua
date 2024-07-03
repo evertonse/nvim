@@ -4,17 +4,17 @@
 --    [ ] configure noice cmdline to enable normal mode on it
 --    [ ] find faster neotre for windows
 --    [ ] setup inc-rename to work with noice
---    rename o popup
 --    checkout tabby for neovim and other
 --    config oil.nvim to test it's performance
---    configure mini.surround to surround word with quotes similar to le nvim.surround
---    check keymaps
+--    [x] configure mini.surround to surround word with quotes similar to le nvim.surround
+--    [x] check keymaps
 --    check why shit be slow these days when moving arround
 --    check 'c' mapping for mini plugin
 --    see about this ---@field public performance? cmp.PerformanceConfig
 --    ui select on telescope on normal mode by typing a number
 --    see if surround is better than mini.surround
 --    Telescope change last value
+--    Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '

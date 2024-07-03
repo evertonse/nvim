@@ -190,8 +190,10 @@ return {
           -- map('<leader>lr', vim.lsp.buf.rename, '[L]SP [R]ename')
           local rename_func = function()
             local inc_rename_available, _ = pcall(require, 'inc_rename')
-            if inc_rename_available or vim.g.user.inc_rename then
-              return 'IncRename ' .. vim.fn.expand '<cword>'
+            if inc_rename_available then
+              return function()
+                return ':IncRename ' .. vim.fn.expand '<cword>'
+              end
             else
               return vim.lsp.buf.rename
             end

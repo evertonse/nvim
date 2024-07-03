@@ -1,3 +1,4 @@
+-- https://github.com/hrsh6th/nvim-cmp/wiki/Advanced-techniques
 return {
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -235,6 +236,17 @@ return {
       -- `:` cmdline setup.
       local _ = not vim.g.user.wilder
         and cmp.setup.cmdline(':', {
+          enabled = function()
+            -- Set of commands where cmp will be disabled
+            local disabled = {
+              IncRename = true,
+            }
+            -- Get first word of cmdline
+            local cmd = vim.fn.getcmdline():match '%S+'
+            -- Return true if cmd isn't disabled
+            -- else call/return cmp.close(), which returns false
+            return not disabled[cmd] or cmp.close()
+          end,
           completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
           -- completion = { completeopt = 'menu' },
           mapping = cmp.mapping.preset.cmdline {

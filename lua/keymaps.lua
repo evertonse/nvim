@@ -361,12 +361,12 @@ M.general = {
 
     -->> NNN picker
     -- ['<leader>e'] = { '<cmd> NnnPicker <CR>', 'NNN Floating Window' },
-    ['<leader>lr'] = {
-      function()
-        return ':IncRename ' .. vim.fn.expand '<cword>'
-      end,
-      { expr = true },
-    },
+    -- ['<leader>lr'] = {
+    --   function()
+    --     return ':IncRename ' .. vim.fn.expand '<cword>'
+    --   end,
+    --   { expr = true },
+    -- },
 
     -->> commands
     ['<leader>gd'] = { grep_and_show_results, noremap_opts }, -- NOTE:This is remaped when lsp is present

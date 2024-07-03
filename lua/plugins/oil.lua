@@ -1,7 +1,7 @@
 return {
   'stevearc/oil.nvim',
   event = 'VimEnter',
-  enabled = true,
+  enabled = false,
   opts = {},
   -- config = function(_, opts)
   --   require 'custom.plugins.configs.oil'
