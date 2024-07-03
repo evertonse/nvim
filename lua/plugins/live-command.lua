@@ -2,6 +2,7 @@
 return {
   'smjonas/live-command.nvim',
   -- live-command supports semantic versioning via tags
+  lazy = false,
   -- tag = "1.*",
   config = function()
     require('live-command').setup {
