@@ -179,6 +179,8 @@ return {
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<C-\\>'] = cmp.mapping.confirm { select = true },
+          ['|'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
@@ -228,18 +230,29 @@ return {
         },
       }
       -- `/` cmdline setup.
-      cmp.setup.cmdline('/', search_opts)
-      cmp.setup.cmdline('?', search_opts)
+      local _ = not vim.g.user.wilder and cmp.setup.cmdline('/', search_opts)
+      local _ = not vim.g.user.wilder and cmp.setup.cmdline('?', search_opts)
       -- `:` cmdline setup.
-      local _ = true
+      local _ = not vim.g.user.wilder
         and cmp.setup.cmdline(':', {
           completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
+          -- completion = { completeopt = 'menu' },
           mapping = cmp.mapping.preset.cmdline {
-            ['<leader>'] = {
+            ['<C-y>'] = {
+              c = function()
+                if not cmp.get_selected_entry() then
+                  cmp.select_next_item()
+                end
+                cmp.mapping.confirm { select = true }
+              end,
+            },
+            ['<Tab>'] = {
               c = function()
                 if cmp.visible() then
                   cmp.select_next_item()
+                  cmp.mapping.confirm { select = true }
                 else
+                  cmp.complete()
                   cmp.mapping.complete_common_string()
                 end
               end,

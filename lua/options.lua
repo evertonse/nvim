@@ -6,6 +6,17 @@
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
+
+-- [[ Setting vim cmds ]]
+vim.cmd ':set clipboard=""'
+vim.cmd ':set display-=msgsep'
+-- vim.cmd ':set display-=lastline' -- No Line on left
+vim.cmd ':set nomore'
+-- vim.cmd ':set lz' -- Lazy Redraw
+-- vim.cmd ':set ttyfast' -- Lazy Redraw
+vim.cmd [[ :set iskeyword-=- ]]
+
+vim.loader.enable()
 vim.opt.clipboard = 'unnamedplus'
 vim.o.cursorlineopt = 'both' -- to enable cursorline
 vim.o.wildmenu = false -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
@@ -24,8 +35,6 @@ vim.opt.inccommand = 'split'
 -- Show which line your cursor is on
 vim.opt.cursorline = true
 
--- vim: ts=2 sts=2 sw=2 et
---local vim = vim
 local g = vim.g
 
 g.loaded_gzip = 1

@@ -1,3 +1,16 @@
+function ShowSearchCount()
+  if vim.v.hlsearch == 1 then
+    vim.fn.setreg('/', '')
+    local count = vim.fn.searchcount().total
+    vim.cmd('echom "Matches: ' .. count .. '"')
+  end
+end
+
+vim.cmd [[
+  "autocmd CmdlineEnter /,? lua ShowSearchCount()
+  "autocmd CmdlineLeave /,? redrawstatus
+]]
+
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
@@ -44,6 +57,9 @@ vim.cmd [[
     setlocal shiftwidth=4
   endfunction
   autocmd FileType odin call Odin_settings()
+  
+  autocmd FileType python :setlocal tabstop=4 shiftwidth=4 expandtab
+  autocmd FileType lua :setlocal tabstop=2 shiftwidth=2 expandtab
 
 
   augroup _auto_resize
@@ -90,7 +106,6 @@ vim.cmd [[autocmd FileType bin nnoremap <F6> :%!xxd -r <CR>]]
 vim.cmd [[autocmd filetype python nnoremap <F5> :w <bar> exec '!python '.shellescape('%')<CR>]]
 -- vim.cmd [[autocmd filetype c nnoremap <F5> :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>]]
 vim.cmd [[autocmd filetype cpp nnoremap <F5> :w <bar> exec '!g++ '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>]]
-vim.cmd [[autocmd filetype tex set wrap]]
 vim.cmd [[autocmd TermOpen * setlocal nonumber norelativenumber signcolumn=no]]
 -- vim.cmd [[autocmd TermOpen * startinsert ]] -- stopinsert ]]        -- starts terminal in insert mode
 

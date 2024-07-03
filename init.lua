@@ -11,32 +11,23 @@
 --    check why shit be slow these days when moving arround
 --    check 'c' mapping for mini plugin
 --    see about this ---@field public performance? cmp.PerformanceConfig
+--    ui select on telescope on normal mode by typing a number
+--    see if surround is better than mini.surround
+--    Telescope change last value
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
--- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.user = {}
-vim.g.user.nerd_font = false
-vim.g.user.transparency = true
-vim.g.user.theme = 'pastel'
+
+vim.g.user = {
+  nerd_font = true,
+  transparency = true,
+  theme = 'pastel',
+  wilder = false,
+}
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
-
--- Create a custom command with command-preview flag
-vim.api.nvim_create_user_command('MySubstitute', function(opts)
-  vim.cmd(string.format('s/%s/%s/%s', opts.args[1], opts.args[2], opts.args[3] or ''))
-end, {
-  nargs = '+',
-  preview = function(args)
-    -- Generate the command to preview
-    local cmd = string.format('s/%s/%s/%s', args.args[1], args.args[2], args.args[3] or '')
-    -- Execute the command in preview mode
-    vim.cmd 'redraw'
-    vim.fn.execute(cmd)
-  end,
-  desc = 'Custom substitute command with preview',
-})
+-- ShowStringAndWait(TableDump2(vim.g.user))
 
 -- [[ Setting options ]]
 require 'options'
@@ -56,18 +47,3 @@ require 'lazy-plugins'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
--- [[ Setting vim cmds ]]
-vim.cmd ':set clipboard=""'
-vim.cmd ':set display-=msgsep'
-vim.cmd ':set nomore'
--- vim.cmd ':set lz' -- Lazy Redraw
--- vim.cmd ':set ttyfast' -- Lazy Redraw
-vim.cmd [[ :set iskeyword-=- ]]
-vim.loader.enable()
-
---
--- vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
---     vim.lsp.diagnostic.on_publish_diagnostics, {
---         virtual_text = true
---     }
--- )
