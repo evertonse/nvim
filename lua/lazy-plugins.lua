@@ -184,6 +184,7 @@ require('lazy').setup({
   require 'plugins.debug',
 
   ------------------------
+  { 'gennaro-tedesco/nvim-peekup', lazy = false },
   require 'plugins.inc-rename',
   require 'plugins.harpoon',
   require 'plugins.vim_matchup',

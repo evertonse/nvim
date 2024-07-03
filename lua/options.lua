@@ -6,18 +6,7 @@
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-
--- [[ Setting vim cmds ]]
-vim.cmd ':set clipboard=""'
-vim.cmd ':set display-=msgsep'
--- vim.cmd ':set display-=lastline' -- No Line on left
-vim.cmd ':set nomore'
--- vim.cmd ':set lz' -- Lazy Redraw
--- vim.cmd ':set ttyfast' -- Lazy Redraw
-vim.cmd [[ :set iskeyword-=- ]]
-
 vim.loader.enable()
-vim.opt.clipboard = 'unnamedplus'
 vim.o.cursorlineopt = 'both' -- to enable cursorline
 vim.o.wildmenu = false -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
 
@@ -65,7 +54,8 @@ g.netrw_winsize = 25
 local options = {
   laststatus = 3,
   backup = false, -- creates a backup file
-  clipboard = nil, -- allows neovim to access the system clipboard
+  -- clipboard = nil, -- allows neovim to access the system clipboard
+  clipboard = 'unnamedplus',
   cmdheight = 1, -- more space in the neovim command line for displaying messages
   completeopt = { 'menuone', 'noselect' }, -- mostly just for cmp
   conceallevel = 0, -- so that `` is visible in markdown files
@@ -113,3 +103,27 @@ vim.opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages
 vim.opt.iskeyword:append '-' -- hyphenated words recognized by searches
 vim.opt.formatoptions:remove { 'c', 'r', 'o' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
 vim.opt.runtimepath:remove '/vimfiles' -- separate vim plugins from neovim in case vim still in use
+
+-- [[ Setting vim cmds ]]
+vim.cmd ':set display-=msgsep'
+-- vim.cmd ':set display-=lastline' -- No Line on left
+vim.cmd ':set nomore'
+-- vim.cmd ':set lz' -- Lazy Redraw
+-- vim.cmd ':set ttyfast' -- Lazy Redraw
+vim.cmd [[ :set iskeyword-=- ]]
+-- vim.cmd ':set clipboard=""'
+vim.cmd [[
+"set clipboard+=unnamedplus
+let g:clipboard = {
+          \   'name': 'win32yank-wsl',
+          \   'copy': {
+          \      '+': 'win32yank.exe -i --crlf',
+          \      '*': 'win32yank.exe -i --crlf',
+          \    },
+          \   'paste': {
+          \      '+': 'win32yank.exe -o --lf',
+          \      '*': 'win32yank.exe -o --lf',
+          \   },
+          \   'cache_enabled': 0,
+          \ }
+]]
