@@ -90,7 +90,7 @@ require('lazy').setup({
   -- :h event for valid  vim events, there are some only in neovim like LspDetach
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
-  { 'moll/vim-bbye', lazy = false },
+  { 'moll/vim-bbye', event = 'User FileOpened' },
   { 'yorickpeterse/nvim-pqf', enabled = false }, -- Nicer Quick List
   {
     'smjonas/inc-rename.nvim',
@@ -111,7 +111,9 @@ require('lazy').setup({
         -- the type of the external input buffer to use (the only supported value is currently "dressing")
         input_buffer_type = nil,
         -- callback to run after renaming, receives the result table (from LSP handler) as an argument
-        post_hook = nil,
+        post_hook = function(lsp_table)
+          print(TableDump2(lsp_table))
+        end,
       }
     end,
   },
@@ -163,7 +165,7 @@ require('lazy').setup({
   {
     'stevearc/oil.nvim',
     lazy = true,
-    enabled = false,
+    enabled = true,
     opts = {},
     config = function()
       require 'custom.plugins.configs.oil'
@@ -231,6 +233,7 @@ require('lazy').setup({
   require 'plugins.gitsigns',
 
   require 'plugins.git_conflict',
+
   { 'sindrets/diffview.nvim', lazy = false },
 
   require 'plugins.which-key',

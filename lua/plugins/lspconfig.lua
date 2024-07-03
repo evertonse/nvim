@@ -21,7 +21,7 @@ return {
         opts = {
           -- Options related to LSP progress subsystem
           progress = {
-            poll_rate = 100, -- How and when to poll for progress messages
+            poll_rate = 200, -- How and when to poll for progress messages
             suppress_on_insert = true, -- Suppress new messages while in insert mode
             ignore_done_already = true, -- Ignore new tasks that are already complete
             ignore_empty_message = true, -- Ignore new tasks that don't contain a message
@@ -49,7 +49,7 @@ return {
 
           -- Options related to notification subsystem
           notification = {
-            poll_rate = 100, -- How frequently to update and render notifications
+            poll_rate = 300, -- How frequently to update and render notifications
             filter = vim.log.levels.INFO, -- Minimum notifications level
             history_size = 64, -- Number of removed messages to retain in history
             override_vim_notify = true, -- Automatically override vim.notify() with Fidget
@@ -77,7 +77,7 @@ return {
             -- Options related to the notification window and buffer
             window = {
               normal_hl = 'Comment', -- Base highlight group in the notification window
-              winblend = 30, -- Background color opacity in the notification window
+              winblend = 20, -- Background color opacity in the notification window
               border = 'none', -- Border around the notification window
               zindex = 20000, -- Stacking priority of the notification window
               max_width = 0, -- Maximum width of the notification window
@@ -152,8 +152,9 @@ return {
           --
           -- In this case, we create a function that lets us more easily define mappings specific
           -- for LSP related items. It sets the mode, buffer and description for us each time.
-          local map = function(keys, func, desc)
-            vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+          local map = function(keys, func, desc, mode)
+            mode = mode or 'n'
+            vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
           -- Jump to the definition of the word under your cursor.
@@ -188,7 +189,7 @@ return {
           local rename_func = function()
             local inc_rename_available, _ = pcall(require, 'inc_rename')
             if inc_rename_available then
-              vim.cmd(':IncRename ' .. vim.fn.expand '<cword>')
+              vim.cmd('IncRename ' .. vim.fn.expand '<cword>')
             else
               vim.lsp.buf.rename()
             end
@@ -206,6 +207,9 @@ return {
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+
+          -- Make sure to replace '<leader>r' with the keybinding of your choice.
+          map('<leader>lf', vim.lsp.buf.format, 'Ranged [L]sp [F]formatting', 'v')
 
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
