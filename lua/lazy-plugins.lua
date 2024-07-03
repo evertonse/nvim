@@ -110,10 +110,6 @@ require('lazy').setup({
         save_in_cmdline_history = true,
         -- the type of the external input buffer to use (the only supported value is currently "dressing")
         input_buffer_type = nil,
-        -- callback to run after renaming, receives the result table (from LSP handler) as an argument
-        post_hook = function(lsp_table)
-          print(TableDump2(lsp_table))
-        end,
       }
     end,
   },
@@ -163,32 +159,6 @@ require('lazy').setup({
     enabled = false,
   },
   {
-    'stevearc/oil.nvim',
-    lazy = true,
-    enabled = true,
-    opts = {},
-    config = function()
-      require 'custom.plugins.configs.oil'
-      vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
-      vim.keymap.set('n', '<leader>o', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
-    end,
-    -- Optional dependencies
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-  },
-  {
-    'VonHeikemen/fine-cmdline.nvim',
-    dependencies = {
-      { 'MunifTanjim/nui.nvim' },
-    },
-    lazy = false,
-    enabled = false,
-    config = function()
-      -- vim.api.nvim_set_keymap("n", "<CR>", "<cmd>FineCmdline<CR>", { noremap = true })
-      vim.keymap.set({ 'n' }, ':', '<cmd>FineCmdline<CR>', { noremap = true })
-      vim.keymap.set({ 'x', 'v' }, ':', ":<C-u>FineCmdline '<,'><CR>", { noremap = true })
-    end,
-  },
-  {
     'kdheepak/tabline.nvim',
     enabled = false,
     lazy = false,
@@ -199,6 +169,11 @@ require('lazy').setup({
     lazy = false,
   },
   require 'plugins.wilder',
+
+  require 'plugins.oil',
+
+  require 'plugins.fine-cmdline',
+
   require 'plugins.neogit',
 
   require 'plugins.gitsigns',

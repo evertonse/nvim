@@ -132,6 +132,7 @@ M.disabled = {
     ['<S-Tab>'] = '',
   },
   n = {
+    ['K'] = '', -- disable search for `man` pages, too slow
     ['<leader>D'] = '',
     ['<S-tab>'] = '',
     ['<tab>'] = '',

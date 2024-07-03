@@ -190,13 +190,13 @@ return {
           -- map('<leader>lr', vim.lsp.buf.rename, '[L]SP [R]ename')
           local rename_func = function()
             local inc_rename_available, _ = pcall(require, 'inc_rename')
-            if inc_rename_available then
-              vim.cmd('IncRename ' .. vim.fn.expand '<cword>')
+            if inc_rename_available or vim.g.user.inc_rename then
+              return 'IncRename ' .. vim.fn.expand '<cword>'
             else
-              vim.lsp.buf.rename()
+              return vim.lsp.buf.rename
             end
           end
-          map('<leader>lr', rename_func, '[L]SP [R]ename')
+          map('<leader>lr', rename_func(), '[L]SP [R]ename')
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
@@ -214,8 +214,8 @@ return {
 
           -- Opens a popup that displays documentation about the word under your cursor
           --  See `:help K` for why this keymap.
-          map('K', lsp_hover_or_fallback, 'Hover Documentation')
-          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+          map('K', lsp_hover_or_fallback(), 'Hover Documentation')
+          -- map('K', vim.lsp.buf.hover, 'Hover Documentation')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.

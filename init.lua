@@ -1,9 +1,10 @@
 -- TODO:
 --    [ ] zen mode needs better interection zindex with neotree
 --    [ ] find faster neotree for windows
---    [ ] configure noice cmdline to enable normal mode on itfind faster neotre for windows
+--    [ ] configure noice cmdline to enable normal mode on it
+--    [ ] find faster neotre for windows
 --    [ ] setup inc-rename to work with noice
---    rename o poup
+--    rename o popup
 --    checkout tabby for neovim and other
 --    config oil.nvim to test it's performance
 --    configure mini.surround to surround word with quotes similar to le nvim.surround
