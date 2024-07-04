@@ -91,6 +91,27 @@ require('lazy').setup({
   { 'tpope/vim-sleuth', lazy = false, enabled = false }, -- Detect tabstop and shiftwidth automatically
   require 'plugins.guess-indent',
 
+  { 'rmagatti/auto-session', lazy = false, enabled = false },
+  {
+    'folke/persistence.nvim',
+    event = 'BufReadPre', -- this will only start session saving when an actual file was opened
+    lazy = false,
+    enabled = true,
+    config = function(_, opts)
+      require('persistence').setup(opts)
+      -- restore the session for the current directory
+      vim.keymap.set('n', '<leader><F7>', require('persistence').load, {})
+
+      -- restore the last session
+      vim.keymap.set('n', '<leader><F5>', function()
+        require('persistence').load { last = true }
+      end, {})
+
+      -- stop Persistence => session won't be saved on exit
+      vim.keymap.set('n', '<leader><F6>', require('persistence').stop, {})
+    end,
+  },
+
   { 'bfredl/nvim-incnormal', enabled = false, event = 'BufEnter' },
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   { 'moll/vim-bbye', event = 'User FileOpened' },
@@ -99,7 +120,6 @@ require('lazy').setup({
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
-  --
   -- Use `opts = {}` to force a plugin to be loaded.
   --
   --  This is equivalent to:

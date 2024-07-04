@@ -288,7 +288,7 @@ return {
             {
               name = 'cmdline_history', -- NOTE: Which cmdline history is right? Are they different concepts? they might just be
             },
-            { name = 'cmp-cmdline-history' },
+            { name = 'cmp-cmdline-history' }, -- TODO: be sure -> I think this one is a Plugin
           },
         })
       -- Change sources based on filetype for cmdline window
