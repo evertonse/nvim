@@ -1,6 +1,7 @@
 return {
   'NeogitOrg/neogit',
   enabled = true,
+  lazy = false,
   dependencies = {
     'nvim-lua/plenary.nvim', -- required
     'sindrets/diffview.nvim', -- optional - Diff integration

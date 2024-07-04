@@ -445,7 +445,17 @@ return {
                 callSnippet = 'Replace',
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
+              diagnostics = { disable = { 'missing-fields' } },
+              workspace = {
+                -- Make the server aware of Neovim runtime files
+                library = vim.api.nvim_get_runtime_file('', true),
+                -- Someone wrote this helps if Lua Lsp is asking whether to create luassert.
+                checkThirdParty = false,
+              },
+              -- Do not send telemetry data containing a randomized but unique identifier.
+              telemetry = {
+                enable = false,
+              },
             },
           },
         },

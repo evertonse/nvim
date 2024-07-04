@@ -135,7 +135,7 @@ M.disabled = {
     ['K'] = '', -- disable search for `man` pages, too slow
     ['<leader>D'] = '',
     ['<S-tab>'] = '',
-    ['<tab>'] = '',
+    ['<Tab>'] = '',
     ['<C-n>'] = '',
     ['<leader>fo'] = '',
     ['<leader>fa'] = '',
@@ -415,7 +415,7 @@ M.general = {
       '[H]arpoon [R]emove mark',
     },
     -- ["<A-b>"]         = { ":Telescope harpoon marks initial_mode=normal <CR>", "this works like file navigation except that if there is no terminal at the specified index a new terminal is created." },
-    ['<leader>hb'] = {
+    ['<leader>hh'] = {
       function()
         require('harpoon.ui').toggle_quick_menu()
       end,
@@ -608,7 +608,6 @@ M.general = {
 
   i = {
     -- go to  beginning and end
-    ['<tab>'] = { '<space><space><space><space>', '4 spaces' },
     ['<C-b>'] = { '<ESC>^i', 'Beginning of line' },
     ['<C-e>'] = { '<End>', 'End of line' },
 

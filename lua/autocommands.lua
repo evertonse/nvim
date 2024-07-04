@@ -18,20 +18,20 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
   callback = function()
-    vim.highlight.on_yank()
+    vim.highlight.on_yank { higroup = 'Visual', timeout = 200 }
   end,
 })
+
 -- Apperantly " in front of a line in vimscript is a comment?
 vim.cmd [[
   augroup _general_settings
     autocmd!
     autocmd FileType qf,help,man,lspinfo nnoremap <silent> <buffer> q :close<CR> 
-    " autocmd TextYankPost * silent!lua require('vim.highlight').on_yank({higroup = 'Visual', timeout = 200}) 
     autocmd BufWinEnter * :set formatoptions-=cro
     autocmd WinEnter * setlocal cursorline
     autocmd WinLeave * setlocal nocursorline
    " autocmd WinNew * :print "hello"
-   " autocmd FileType qf set nobuflisted
+    autocmd FileType qf set nobuflisted
   augroup end
 
   augroup _git
@@ -58,8 +58,9 @@ vim.cmd [[
   endfunction
   autocmd FileType odin call Odin_settings()
   
-  autocmd FileType python :setlocal tabstop=4 shiftwidth=4 expandtab
-  autocmd FileType lua :setlocal tabstop=2 shiftwidth=2 expandtab
+  "autocmd FileType python :setlocal tabstop=4 shiftwidth=4 expandtab
+  "autocmd FileType lua :setlocal tabstop=2 shiftwidth=2 expandtab
+
 
 
   augroup _auto_resize

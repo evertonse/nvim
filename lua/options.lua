@@ -55,7 +55,7 @@ local options = {
   laststatus = 3,
   backup = false, -- creates a backup file
   -- clipboard = nil, -- allows neovim to access the system clipboard
-  clipboard = 'unnamedplus',
+  clipboard = '',
   cmdheight = 1, -- more space in the neovim command line for displaying messages
   completeopt = { 'menuone', 'noselect' }, -- mostly just for cmp
   conceallevel = 0, -- so that `` is visible in markdown files
@@ -77,10 +77,31 @@ local options = {
   undofile = true, -- enable persistent undo
   updatetime = 300, -- faster completion (4000ms default)
   writebackup = false, -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
+
   expandtab = true, -- convert tabs to spaces
   tabstop = 4, -- insert 2 spaces for a tab
-  softtabstop = 4,
+  softtabstop = -1,
   shiftwidth = 4, -- the number of spaces inserted for each indentation
+
+  -- 'softtabstop' 'sts'	number	(default 0)
+  -- 			local to buffer
+  -- 	Number of spaces that a <Tab> counts for while performing editing
+  -- 	operations, like inserting a <Tab> or using <BS>.  It "feels" like
+  -- 	<Tab>s are being inserted, while in fact a mix of spaces and <Tab>s is
+  -- 	used.  This is useful to keep the 'ts' setting at its standard value
+  -- 	of 8, while being able to edit like it is set to 'sts'.  However,
+  -- 	commands like "x" still work on the actual characters.
+  -- 	When 'sts' is zero, this feature is off.
+  -- 	When 'sts' is negative, the value of 'shiftwidth' is used.
+  -- 	See also |ins-expandtab|.  When 'expandtab' is not set, the number of
+  -- 	spaces is minimized by using <Tab>s.
+  -- 	The 'L' flag in 'cpoptions' changes how tabs are used when 'list' is
+  -- 	set.
+  --
+  -- 	The value of 'softtabstop' will be ignored if |'varsofttabstop'| is set
+  -- 	to anything other than an empty string.
+  -- :set tabstop? | set shiftwidth? | set softtabstop?
+
   cursorline = true, -- highlight the current line
   number = true, -- set numbered lines
   relativenumber = true, -- set relative numbered lines
@@ -103,6 +124,7 @@ vim.opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages
 vim.opt.iskeyword:append '-' -- hyphenated words recognized by searches
 vim.opt.formatoptions:remove { 'c', 'r', 'o' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
 vim.opt.runtimepath:remove '/vimfiles' -- separate vim plugins from neovim in case vim still in use
+vim.cmd 'set whichwrap+=<,>,[,],h,l'
 
 -- [[ Setting vim cmds ]]
 vim.cmd ':set display-=msgsep'

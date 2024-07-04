@@ -36,9 +36,9 @@ require 'utils'
 require 'options'
 
 vim.schedule(function()
-  -- require 'autocommands'
+  require 'autocommands'
 end)
-
+--
 -- [[ Basic Keymaps ]]
 require 'keymaps'
 
