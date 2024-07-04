@@ -185,7 +185,24 @@ require('lazy').setup({
   require 'plugins.debug',
 
   ------------------------
-  { 'gennaro-tedesco/nvim-peekup', lazy = false },
+
+  {
+    'mbbill/undotree',
+    enabled = true,
+    lazy = false,
+    key = { {
+      'n',
+      '<leader><F5>',
+      function()
+        vim.cmd [[UndotreeToggle]]
+      end,
+    } },
+  },
+  {
+    'gennaro-tedesco/nvim-peekup',
+    enabled = false --[[Mega Slow, plus :Telescope register is almost the same]],
+    lazy = false,
+  },
   require 'plugins.inc-rename',
   require 'plugins.harpoon',
   require 'plugins.vim_matchup',

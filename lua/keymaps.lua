@@ -498,7 +498,7 @@ M.general = {
     ['<C-s>'] = { '<cmd> w <CR>', 'Save file' },
 
     -- Open Cmdline Window
-    ['Q'] = { '<cmd> q:<CR>', 'Open Cmdline Window' },
+    -- ['Q'] = { '<cmd> q:<CR>', 'Open Cmdline Window' },
 
     -- Copy all
     ['<leader><C-y>'] = { '<cmd> %y+ <CR>', 'Copy whole file' },

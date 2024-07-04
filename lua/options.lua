@@ -124,7 +124,12 @@ vim.opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages
 vim.opt.iskeyword:append '-' -- hyphenated words recognized by searches
 vim.opt.formatoptions:remove { 'c', 'r', 'o' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
 vim.opt.runtimepath:remove '/vimfiles' -- separate vim plugins from neovim in case vim still in use
-vim.cmd 'set whichwrap+=<,>,[,],h,l'
+
+-- Enable persistent undo
+vim.opt.undofile = true
+
+-- Set the directory for undo files
+vim.opt.undodir = os.getenv 'HOME' .. '/.local/share/nvim'
 
 -- [[ Setting vim cmds ]]
 vim.cmd ':set display-=msgsep'
