@@ -236,6 +236,7 @@ return {
       -- `:` cmdline setup.
       local _ = not vim.g.user.wilder
         and cmp.setup.cmdline(':', {
+          autocomplete = false,
           enabled = function()
             -- Set of commands where cmp will be disabled
             local disabled = {
@@ -270,9 +271,8 @@ return {
               end,
             },
           },
-          sources = cmp.config.sources({
+          sources = cmp.config.sources {
             { name = 'path' },
-          }, {
             {
               name = 'cmdline',
               option = {
@@ -280,9 +280,16 @@ return {
               },
             },
             {
-              name = 'cmdline_history',
+              name = 'cmdline_window',
+              option = {
+                ignore_cmds = { 'Man', '!' },
+              },
             },
-          }),
+            {
+              name = 'cmdline_history', -- NOTE: Which cmdline history is right? Are they different concepts? they might just be
+            },
+            { name = 'cmp-cmdline-history' },
+          },
         })
       -- Change sources based on filetype for cmdline window
       cmp.setup.filetype('vim', {
