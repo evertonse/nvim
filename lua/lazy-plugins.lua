@@ -89,7 +89,8 @@ local lazy_config = {
 require('lazy').setup({
   -- :h event for valid  vim events, there are some only in neovim like LspDetach
   { 'tpope/vim-sleuth', lazy = false, enabled = false }, -- Detect tabstop and shiftwidth automatically
-  -- require 'plugins.guess-indent',
+  require 'plugins.guess-indent',
+
   { 'bfredl/nvim-incnormal', enabled = false, event = 'BufEnter' },
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   { 'moll/vim-bbye', event = 'User FileOpened' },
