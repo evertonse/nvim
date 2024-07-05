@@ -139,9 +139,16 @@ vim.cmd ':set nomore'
 -- vim.cmd ':set ttyfast' -- Lazy Redraw
 vim.cmd [[ :set iskeyword-=- ]]
 -- vim.cmd ':set clipboard=""'
-vim.cmd [[k
-"set clipboard+=unnamedplus
-let g:clipboard = {
+
+local on_wsl = function()
+  local output = vim.fn.systemlist 'uname -r'
+  return #output > 0 and string.find(output[1], 'WSL')
+end
+
+if on_wsl() then
+  vim.cmd [[
+  "set clipboard+=unnamedplus
+  let g:clipboard = {
           \   'name': 'win32yank-wsl',
           \   'copy': {
           \      '+': 'win32yank.exe -i --crlf',
@@ -153,4 +160,5 @@ let g:clipboard = {
           \   },
           \   'cache_enabled': 0,
           \ }
-]]
+  ]]
+end

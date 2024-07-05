@@ -13,6 +13,7 @@ return {
       win = 'TabLine',
       tail = 'TabLine',
     }
+    vim.o.showtabline = 2
     require('tabby').setup {
       line = function(line)
         return {
