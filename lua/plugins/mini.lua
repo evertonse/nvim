@@ -128,7 +128,7 @@ return {
           return ''
         end
 
-        local buf_clients = vim.lsp.get_clients()
+        local buf_clients = vim.lsp.get_clients { bufnr = 0 }
         local client_names = {}
         for _, client in pairs(buf_clients) do
           table.insert(client_names, client.name)
@@ -141,6 +141,39 @@ return {
         use_icons = vim.g.user.nerd_font,
         set_vim_settings = false,
       }
+
+      local function recording_mode()
+        local rec_reg = vim.fn.reg_recording()
+        if rec_reg ~= '' then
+          return '@' .. rec_reg .. ' '
+        else
+          return ''
+        end
+      end
+
+      -- You can configure sections in the statusline by overriding their
+      -- default behavior. For example, here we set the section for
+      -- cursor location to LINE:COLUMN
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_location = function()
+        -- '%2l:%-2v' for LINE:COLUMN and '%3p%%' for percentage through the file
+        local function escape_status()
+          local ok, m = pcall(require, 'better_escape')
+          return ok and m.waiting and '✺ ' or ''
+        end
+
+        return escape_status() .. '%2l:%-2v %3p%%'
+      end
+
+      statusline.section_lsp = function(args)
+        return ''
+      end
+
+      local old_section_fileinfo = statusline.section_fileinfo
+      statusline.section_fileinfo = function(args)
+        return (vim.g.user.icons and '󰰎 ' or '') .. lsp_servers_attached() .. recording_mode() .. old_section_fileinfo(args)
+      end
+
       local hipatterns = require 'mini.hipatterns'
       hipatterns.setup {
         highlighters = {
@@ -155,20 +188,6 @@ return {
           hex_color = hipatterns.gen_highlighter.hex_color(),
         },
       }
-
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        -- '%2l:%-2v' for LINE:COLUMN and '%3p%%' for percentage through the file
-        local function escape_status()
-          local ok, m = pcall(require, 'better_escape')
-          return ok and m.waiting and '✺ ' or ''
-        end
-        return escape_status() .. lsp_servers_attached() .. '%-2l:%-2v %3p%%'
-      end
-
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,

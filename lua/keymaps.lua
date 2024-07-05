@@ -18,6 +18,21 @@ local M = {}
 -- Create a table to store buffer paths
 local buffer_paths = {}
 
+local jump_to_prev_location_in_current_buffer = function()
+  local current_buf = vim.api.nvim_get_current_buf()
+  local jump_list = vim.fn.getjumplist()[1]
+
+  for i = #jump_list, 1, -1 do
+    local jump = jump_list[i]
+    if jump.bufnr == current_buf then
+      vim.api.nvim_win_set_cursor(0, { jump.lnum, jump.col })
+      -- Remove the jump from the jumplist to prevent infinite loop
+      table.remove(jump_list, i)
+      break
+    end
+  end
+end
+
 -- Function to save the current buffer path and delete the buffer
 local function save_and_delete_buffer()
   local current_buffer = vim.api.nvim_get_current_buf()
@@ -342,7 +357,9 @@ end
 M.general = {
   -- [TERMINAL and NORMAL]
   tn = {},
-  vn = { ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS>]], '[R]eplace [W]ord' } },
+  vn = { ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' } },
+
+  vnx = { ['<leater><C-o>'] = { jump_to_prev_location_in_current_buffer, 'jump_to_prev_location_in_current_buffer' } },
 
   -- [NORMAL]
   n = {

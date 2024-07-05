@@ -8,7 +8,7 @@
 --  See `:help 'clipboard'`
 vim.loader.enable()
 vim.o.cursorlineopt = 'both' -- to enable cursorline
-vim.o.wildmenu = false -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
+vim.o.wildmenu = true -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
 
 -- vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
 vim.opt.sessionoptions = { -- required
@@ -25,7 +25,7 @@ vim.opt.list = false -- set to true to see whitespace
 vim.opt.listchars = { tab = '» ', trail = ' ', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
-vim.opt.inccommand = 'nosplit' -- NO spliting the windows to see previe
+vim.opt.inccommand = 'nosplit' -- NO spliting the windows to see preview
 -- vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
@@ -126,7 +126,7 @@ local options = {
 for k, v in pairs(options) do
   vim.opt[k] = v
 end
-vim.opt.shortmess:append 'saAtilmnrxwWoOqtTIFcC' -- flags to shorten vim messages, see :help 'shortmess'
+vim.opt.shortmess:append 'saAtilmnrxwWoOtTIFcC' -- flags to shorten vim messages, see :help 'shortmess'
 vim.opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages
 vim.opt.iskeyword:append '-' -- hyphenated words recognized by searches
 vim.opt.formatoptions:remove { 'c', 'r', 'o' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
