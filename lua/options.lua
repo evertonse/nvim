@@ -10,6 +10,15 @@ vim.loader.enable()
 vim.o.cursorlineopt = 'both' -- to enable cursorline
 vim.o.wildmenu = false -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
 
+-- vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
+vim.opt.sessionoptions = { -- required
+  'winsize',
+  'winpos ',
+  'buffers',
+  'tabpages',
+  'globals',
+}
+
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`

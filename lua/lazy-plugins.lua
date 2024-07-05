@@ -140,18 +140,22 @@ require('lazy').setup({
     'backdround/tabscope.nvim',
     event = 'VimEnter',
     lazy = false,
-    enabled = true,
+    enabled = false,
   },
   -- require 'plugins.tabby',
   {
     'kdheepak/tabline.nvim',
-    enabled = false,
     lazy = false,
+    enabled = false,
   },
   {
     'tiagovla/scope.nvim',
-    enabled = false,
+    config = function()
+      require('scope').setup {}
+    end,
     lazy = false,
+    -- event = 'VeryLazy',
+    enabled = true,
   },
   require 'plugins.tabline',
 
@@ -222,12 +226,12 @@ require('lazy').setup({
   require 'plugins.colorizer',
   require 'plugins.better-scape',
   require 'plugins.noice',
+  { 'bfredl/nvim-incnormal', enabled = false, event = 'BufEnter' }, -- NOTE:live-command if better
   require 'plugins.live-command',
-  { 'bfredl/nvim-incnormal', enabled = false, event = 'BufEnter' },
 
   require 'plugins.guess-indent',
   -- Eiter we use persistence or auto-session, based on user config
-  vim.g.user.persistence and require 'plugins.persistence' or require 'plugins.auto-session',
+  require ('plugins.' .. vim.g.user.session_plugin),
   require 'plugins.alternate-toggle',
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`

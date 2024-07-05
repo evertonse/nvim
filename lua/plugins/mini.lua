@@ -27,7 +27,7 @@ return {
           -- Whether to show file icons (requires 'nvim-tree/nvim-web-devicons')
           show_icons = true,
 
-          -- Function which formats the tab label
+          -- Function which formats the tab labelk
           -- By default surrounds with space and possibly prepends with icon
           format = nil,
 

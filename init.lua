@@ -14,6 +14,7 @@
 --    [x seem the same I'll keep using mini.surround then I'll see about chaging]see if surround is better than mini.surround
 --    [x I'm using auto-session [ ] see the source code later ]:mksession
 --    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
+local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -23,7 +24,7 @@ vim.g.user = {
   theme = 'pastel',
   wilder = false,
   inc_rename = true,
-  persistence = false, --NOTE: Better note Idk, bugs with Telescope sometimes
+  session_plugin = session_opts[2], --NOTE: Better note Idk, bugs with Telescope sometimes
   mini_pick = false,
 }
 

@@ -27,6 +27,12 @@ SetKeyMaps = function(mapping_table)
   end
 end
 
+local on_windows = function()
+  local os_name = vim.loop.os_uname().sysname
+  local os_version = vim.loop.os_uname().version
+  return os_name == 'Windows_NT' or os_version:match 'Windows'
+end
+
 local function toggle_boolean_word()
   -- Get the current cursor position
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))

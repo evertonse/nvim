@@ -3,7 +3,12 @@ return {
   event = 'VimEnter',
   enabled = true,
   config = function()
-    vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
+    -- vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
+    vim.opt.sessionoptions = { -- required
+      'buffers',
+      'tabpages',
+      'globals',
+    }
     require('auto-session').setup {
       -- log_level = 'info',
       -- auto_session_enable_last_session = vim.loop.cwd() == vim.loop.os_homedir(),
