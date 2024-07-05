@@ -14,7 +14,7 @@
 --    [x I'm using auto-session [ ] see the source code later ]:mksession
 --    [ ] ui select on telescope on normal mode by typing a number
 --    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
---    [ ] Mini lsp
+--    [x] Mini lsp, recording
 local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
 
 vim.g.mapleader = ' '

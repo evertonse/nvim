@@ -230,8 +230,7 @@ require('lazy').setup({
   require 'plugins.live-command',
 
   require 'plugins.guess-indent',
-  -- Eiter we use persistence or auto-session, based on user config
-  require ('plugins.' .. vim.g.user.session_plugin),
+  require('plugins.' .. vim.g.user.session_plugin),
   require 'plugins.alternate-toggle',
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`

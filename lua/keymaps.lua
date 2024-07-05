@@ -1130,10 +1130,6 @@ M.cmp = {
   },
 }
 
--- Set highlight on search, but clear on pressing <Esc> in normal mode
-vim.opt.hlsearch = true
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-
 -- Diagnostic keymaps
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier

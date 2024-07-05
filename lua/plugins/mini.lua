@@ -171,7 +171,7 @@ return {
 
       local old_section_fileinfo = statusline.section_fileinfo
       statusline.section_fileinfo = function(args)
-        return (vim.g.user.icons and '󰰎 ' or '') .. lsp_servers_attached() .. recording_mode() .. old_section_fileinfo(args)
+        return recording_mode() .. (vim.g.user.icons and '󰰎 ' or '') .. lsp_servers_attached() .. old_section_fileinfo(args)
       end
 
       local hipatterns = require 'mini.hipatterns'

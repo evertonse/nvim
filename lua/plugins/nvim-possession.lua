@@ -20,6 +20,7 @@ return {
       end,
       post_hook = function()
         vim.cmd [[ScopeLoadState]] -- Scope.nvim loading
+        vim.cmd [[stopinsert]] -- Scope.nvim loading
       end,
     }
   end,
