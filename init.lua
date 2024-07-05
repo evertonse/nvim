@@ -3,7 +3,7 @@
 --    [x oil.nvim i think ] find faster neotree for windows
 --    [- Could not doit ] configure noice cmdline to enable normal mode on it
 --    [x Working fine ] setup inc-rename to work with noice
---    [ ] checkout tabby for neovim and other
+--    [c] checkout tabby for neovim and other
 --    [x ] config oil.nvim to test it's performance
 --    [x] configure mini.surround to surround word with quotes similar to le nvim.surround
 --    [x] check keymaps

@@ -688,7 +688,7 @@ M.general = {
     ['<leader>Y'] = { '"+y$', noremap_opts },
 
     ['x'] = { '"_x', noremap_opts },
-    -- ['s'] = { '"_s', noremap_opts },
+    ['c'] = { '"_c', noremap_opts },
     ['ge'] = { 'G', noremap_opts },
     ['<leader>s'] = { '"_s', noremap_opts },
 
@@ -720,7 +720,7 @@ M.general = {
     ['<leader>P'] = { '"+P', noremap_opts },
 
     ['x'] = { '"_x', noremap_opts },
-    -- ['s'] = { '"_s', noremap_opts },
+    ['c'] = { '"_c', noremap_opts },
     ['ge'] = { 'G', noremap_opts },
   },
 

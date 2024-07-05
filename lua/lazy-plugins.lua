@@ -101,7 +101,7 @@ require('lazy').setup({
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  require 'plugins.Comment',
   --{ 'nvim-tree/nvim-web-devicons' },
   { 'moll/vim-bbye', lazy = false },
   -- lazy.nvim
