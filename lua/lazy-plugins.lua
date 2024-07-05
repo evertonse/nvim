@@ -90,41 +90,9 @@ require('lazy').setup({
   -- :h event for valid  vim events, there are some only in neovim like LspDetach
   { 'tpope/vim-sleuth', lazy = false, enabled = false }, -- Detect tabstop and shiftwidth automatically
   require 'plugins.guess-indent',
-  {
-    'rmagatti/auto-session',
-    lazy = false,
-    enabled = true,
-    config = function()
-      require('auto-session').setup {
-        log_level = 'info',
-        auto_session_enable_last_session = true,
-        auto_session_root_dir = vim.fn.stdpath 'data' .. '/sessions/',
-        auto_session_enabled = true,
-        auto_save_enabled = true,
-        auto_restore_enabled = true,
-        auto_session_suppress_dirs = nil,
-      }
-    end,
-  },
-  {
-    'rmagatti/alternate-toggler',
-    config = function()
-      require('alternate-toggler').setup {
-        alternates = {
-          ['=='] = '!=',
-        },
-      }
-
-      vim.keymap.set(
-        'n',
-        '<C-x>', -- <space><space>
-        "<cmd>lua require('alternate-toggler').toggleAlternate()<CR>"
-      )
-    end,
-    event = 'BufReadPost',
-  },
-
-  -- require 'plugins.persistence',
+  require 'plugins.persistence',
+  require 'plugins.alternate-toggle',
+  -- require 'plugins.auto-session',
   { 'bfredl/nvim-incnormal', enabled = false, event = 'BufEnter' },
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   { 'moll/vim-bbye', event = 'User FileOpened' },
@@ -248,7 +216,7 @@ require('lazy').setup({
   -- require 'plugins.nnn', -- NOTE: works fine but needs better NNN configurations with tui-preview plugin ,
   -- require 'plugins.lf', -- NOTE: Appear to bugout with my toggleterm config
   require 'plugins.colorizer',
-  require 'plugins.better_scape',
+  require 'plugins.better-scape',
   require 'plugins.noice',
   require 'plugins.live-command',
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`

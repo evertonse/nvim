@@ -5,7 +5,7 @@ return {
   -- See `:help ibl`
   pin = true,
   main = 'ibl',
-  version = 'v3.7.1',
+  tag = 'v3.7.1',
   event = 'VimEnter',
   enable = true,
   -- event = 'User FilePost',

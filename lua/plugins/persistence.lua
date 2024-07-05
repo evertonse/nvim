@@ -19,7 +19,7 @@ return {
     -- stop Persistence => session won't be saved on exit
     vim.keymap.set('n', '<leader><F6>', require('persistence').stop, {})
 
-    vim.api.nvim_create_autocmd('BufEnter', {
+    vim.api.nvim_create_autocmd('VimEnter', {
       group = vim.api.nvim_create_augroup('persistence', { clear = true }),
       callback = function(event)
         require('persistence').load { last = true }
