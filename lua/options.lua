@@ -9,6 +9,29 @@
 vim.loader.enable()
 vim.o.cursorlineopt = 'both' -- to enable cursorline
 vim.o.wildmenu = true -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
+vim.opt.wildmode = 'list:longest,list:full' -- for : stuff
+vim.opt.wildignore:append { '.javac', 'node_modules', '*.pyc' }
+vim.opt.wildignore:append { '.aux', '.out', '.toc' } -- LaTeX
+vim.opt.wildignore:append {
+  '.o',
+  '.obj',
+  '.dll',
+  '.exe',
+  '.so',
+  '.a',
+  '.lib',
+  '.pyc',
+  '.pyo',
+  '.pyd',
+  '.swp',
+  '.swo',
+  '.class',
+  '.DS_Store',
+  '.git',
+  '.hg',
+  '.orig',
+}
+vim.opt.suffixesadd:append { '.java', '.rs' } -- search for suffexes using gf
 
 -- vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
 vim.opt.sessionoptions = { -- required

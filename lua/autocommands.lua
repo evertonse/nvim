@@ -137,6 +137,14 @@ vim.cmd [[autocmd TermOpen * setlocal nonumber norelativenumber signcolumn=no]]
 --     endif
 -- ]]
 --
+vim.api.nvim_create_autocmd('VimEnter', {
+  group = vim.api.nvim_create_augroup('UserAutoClose', {}),
+  callback = function(args)
+    if vim.bo[args.buf].buftype == 'nofile' then
+      vim.api.nvim_buf_delete(args.buf, {})
+    end
+  end,
+})
 
 -- close quicklist after enter
 vim.cmd [[ autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>]]

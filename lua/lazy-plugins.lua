@@ -15,7 +15,6 @@
 -- If you use your Neovim config on multiple machines, using the lockfile, you can ensure that the same version of every plugin is installed.
 --
 -- If you are on another machine, you can do `:Lazy restore`, to update all your plugins to the version from the lockfile.
-
 local lazy_config = {
   defaults = { lazy = true },
   install = { colorscheme = { 'personal' } },

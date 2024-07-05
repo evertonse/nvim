@@ -5,34 +5,43 @@
 --
 --
 
-local term_opts = { silent = true }
-local noremap_opts = { noremap = true, silent = true }
-local nowait_opts = { noremap = true, silent = true, nowait = true }
-FULLSCREEN = false
-
 local M = {}
+local term_opts = { silent = true }
+local noremap_opts = { noremap = true, silent = true, nowait = true }
+local wait_opts = { noremap = true, silent = true, nowait = false }
+FULLSCREEN = false
+-- Define a table to store previous positions
+local previous_position = {}
+
+-- Function to jump within the current buffer
+vim.cmd [[
+function! JumpWithinFile(back, forw)
+    let [n, i] = [bufnr('%'), 1]
+    let p = [n] + getpos('.')[1:]
+    sil! exe 'norm!1' . a:forw
+    while 1
+        let p1 = [bufnr('%')] + getpos('.')[1:]
+        if n == p1[0] | break | endif
+        if p == p1
+            sil! exe 'norm!' . (i-1) . a:back
+            break
+        endif
+        let [p, i] = [p1, i+1]
+        sil! exe 'norm!1' . a:forw
+    endwhile
+endfunction
+
+]]
+-- Setup mappings
+vim.api.nvim_set_keymap('n', '<leader><C-o>', [[:call JumpWithinFile("\<c-i>", "\<c-o>")<cr>]], { silent = true, noremap = true })
+vim.api.nvim_set_keymap('n', '<leader><C-i>', [[:call JumpWithinFile("\<c-o>", "\<c-i>")<cr>]], { silent = true, noremap = true })
+
 -- add this table only when you want to disable default keys
 -- TIPS `:map <key>` to see all keys with that prefix
 
 -- redirect output of command to scratch buffer
 -- Create a table to store buffer paths
 local buffer_paths = {}
-
-local jump_to_prev_location_in_current_buffer = function()
-  local current_buf = vim.api.nvim_get_current_buf()
-  local jump_list = vim.fn.getjumplist()[1]
-
-  for i = #jump_list, 1, -1 do
-    local jump = jump_list[i]
-    if jump.bufnr == current_buf then
-      vim.api.nvim_win_set_cursor(0, { jump.lnum, jump.col })
-      -- Remove the jump from the jumplist to prevent infinite loop
-      table.remove(jump_list, i)
-      break
-    end
-  end
-end
-
 -- Function to save the current buffer path and delete the buffer
 local function save_and_delete_buffer()
   local current_buffer = vim.api.nvim_get_current_buf()
@@ -359,11 +368,18 @@ M.general = {
   tn = {},
   vn = { ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' } },
 
-  vnx = { ['<leater><C-o>'] = { jump_to_prev_location_in_current_buffer, 'jump_to_prev_location_in_current_buffer' } },
-
   -- [NORMAL]
   n = {
+    ['<Esc>'] = { '<cmd>noh <CR>', 'Clear highlights' },
 
+    ['<leader><C-k>'] = {
+      function() end,
+      'jump_to_prev_location_in_current_buffer',
+    },
+    ['<leader><C-j>'] = {
+      function() end,
+      'jump_to_prev_location_in_current_buffer',
+    },
     -->> ToggleTerm
     ['<A-i>'] = {
       function()
@@ -510,7 +526,6 @@ M.general = {
     -- ["Q"]             = { "qq", "Record MACRO on q register" },
 
     ['<leader>x'] = { ':%bd!|e# <cr>', 'close all buffers expect current one' },
-    ['<Esc><Esc>'] = { ':noh <CR>', 'Clear highlights' },
 
     -- save
     ['<C-s>'] = { '<cmd> w <CR>', 'Save file' },
@@ -1026,11 +1041,12 @@ M.blankline = {
   n = {
     ['<leader>jc'] = {
       function()
-        local ok, start =
-          require('indent_blankline.utils').get_current_context(vim.g.indent_blankline_context_patterns, vim.g.indent_blankline_use_treesitter_scope)
-
-        if ok then
-          vim.api.nvim_win_set_cursor(vim.api.nvim_get_current_win(), { start, 0 })
+        local bufnr = vim.api.nvim_get_current_buf()
+        local config = require('ibl.config').get_config(bufnr)
+        local scope = require('ibl.scope').get(bufnr, config)
+        if scope then
+          local row, column = scope:start()
+          vim.api.nvim_win_set_cursor(vim.api.nvim_get_current_win(), { row + 1, column })
           vim.cmd [[normal! _]]
         end
       end,
@@ -1154,6 +1170,6 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 
 SetKeyMaps(M.disabled)
 SetKeyMaps(M.general)
--- SetKeyMaps(M.blankline)
+SetKeyMaps(M.blankline)
 
 -- vim: ts=2 sts=2 sw=2 et
