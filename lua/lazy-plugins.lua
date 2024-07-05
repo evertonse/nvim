@@ -217,6 +217,7 @@ require('lazy').setup({
   require 'plugins.indent_blankline',
   require 'plugins.lint',
   require 'plugins.autopairs',
+  { 'uga-rosa/ccc.nvim', event = 'VeryLazy' },
 
   require 'plugins.oil',
   require 'plugins.neo-tree', -- NOTE: Slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,

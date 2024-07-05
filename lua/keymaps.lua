@@ -14,6 +14,16 @@ FULLSCREEN = false
 local previous_position = {}
 
 -- Function to jump within the current buffer
+local function spelltoggle()
+  if vim.opt.spell:get() then
+    vim.opt_local.spell = false
+    vim.opt_local.spelllang = 'en'
+  else
+    vim.opt_local.spell = true
+    vim.opt_local.spelllang = { 'en_us' }
+  end
+end
+
 vim.cmd [[
 function! JumpWithinFile(back, forw)
     let [n, i] = [bufnr('%'), 1]
@@ -370,6 +380,9 @@ M.general = {
 
   -- [NORMAL]
   n = {
+    ['<leader>5'] = { spelltoggle, '' },
+    ['<leader>z'] = { '[s1z=``', '' },
+
     ['<Esc>'] = { '<cmd>noh <CR>', 'Clear highlights' },
 
     ['<leader><C-k>'] = {
