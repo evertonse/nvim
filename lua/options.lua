@@ -146,6 +146,8 @@ local options = {
   breakindent = true,
 }
 
+vim.opt.diffopt:append 'linematch:50'
+
 for k, v in pairs(options) do
   vim.opt[k] = v
 end
