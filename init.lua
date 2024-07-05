@@ -15,6 +15,7 @@
 --    [ ] ui select on telescope on normal mode by typing a number
 --    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
 --    [x] Mini lsp, recording
+--    [ ] Create a telescope options to select from yank history
 local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
 
 vim.g.mapleader = ' '
