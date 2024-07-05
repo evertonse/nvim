@@ -129,7 +129,7 @@ vim.opt.runtimepath:remove '/vimfiles' -- separate vim plugins from neovim in ca
 vim.opt.undofile = true
 
 -- Set the directory for undo files
-vim.opt.undodir = os.getenv 'HOME' .. '/.local/share/nvim'
+vim.opt.undodir = os.getenv 'HOME' .. '/.local/share/nvim' or os.getenv 'HOME'
 
 -- [[ Setting vim cmds ]]
 vim.cmd ':set display-=msgsep'
