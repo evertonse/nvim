@@ -10,9 +10,9 @@ return {
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
-      require('mini.git').setup {}
-      require('mini.pick').setup {}
+      require('mini.ai').setup { n_lines = 500 } -- see :help MiniAi.config
+      local _ = vim.g.user.mini_ai and require('mini.git').setup {}
+      local _ = vim.g.user.mini_pick and require('mini.pick').setup {} -- telescope alternative
 
       require('mini.align').setup {
         -- see :help mini.align
@@ -41,8 +41,8 @@ return {
         }
 
       require('mini.cursorword').setup()
-      --[ mini.indentscope ] Disabled, we're using indent_blankline
       -- which does scope highlighting rather than indentlevel highlighting
+      -- TODO: When current indent from indentblank is MERGED we might come here and disable mini.indentscope
       local _ = false
         and require('mini.indentscope').setup {
           -- Draw options
@@ -100,6 +100,18 @@ return {
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup {
         -- see `:h MiniSurround.config`.
+        mappings = {
+          add = 'sa', -- Add surrounding in Normal and Visual modes
+          delete = 'sd', -- Delete surrounding
+          find = 'sf', -- Find surrounding (to the right)
+          find_left = 'sF', -- Find surrounding (to the left)
+          highlight = 'sh', -- Highlight surrounding
+          replace = 'sc', -- Chande Surrounding
+          update_n_lines = 'sn', -- Update `n_lines`
+
+          suffix_last = 'l', -- Suffix to search with "prev" method
+          suffix_next = 'n', -- Suffix to search with "next" method
+        },
         search_method = 'cover',
         respect_selection_type = true,
       }

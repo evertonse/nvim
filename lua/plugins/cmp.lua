@@ -104,6 +104,9 @@ return {
       luasnip.config.setup {}
 
       cmp.setup {
+        performance = {
+          max_view_entries = 7,
+        },
         sorting = {
           priority_weight = 1.2,
           comparators = {

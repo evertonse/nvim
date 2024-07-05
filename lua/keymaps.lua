@@ -988,8 +988,6 @@ M.telescope = {
 }
 
 M.whichkey = {
-  plugin = true,
-
   n = {
     ['<leader>WK'] = {
       function()
@@ -1008,8 +1006,6 @@ M.whichkey = {
 }
 
 M.blankline = {
-  plugin = true,
-
   n = {
     ['<leader>jc'] = {
       function()
@@ -1145,5 +1141,6 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 
 SetKeyMaps(M.disabled)
 SetKeyMaps(M.general)
+-- SetKeyMaps(M.blankline)
 
 -- vim: ts=2 sts=2 sw=2 et
