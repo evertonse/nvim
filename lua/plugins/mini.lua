@@ -123,14 +123,13 @@ return {
       -- set use_icons to true if you have a Nerd Font
 
       local lsp_servers_attached = function()
-        local clients = vim.lsp.get_clients()
+        local clients = vim.lsp.get_clients { bufnr = 0 }
         if next(clients) == nil then
           return ''
         end
 
-        local buf_clients = vim.lsp.get_clients { bufnr = 0 }
         local client_names = {}
-        for _, client in pairs(buf_clients) do
+        for _, client in pairs(clients) do
           table.insert(client_names, client.name)
         end
 
@@ -171,7 +170,11 @@ return {
 
       local old_section_fileinfo = statusline.section_fileinfo
       statusline.section_fileinfo = function(args)
-        return recording_mode() .. (vim.g.user.icons and '󰰎 ' or '') .. lsp_servers_attached() .. old_section_fileinfo(args)
+        local lspstring = lsp_servers_attached()
+        if lspstring ~= '' then
+          lspstring = (vim.g.user.icons and '󰰎 ' or '') .. lspstring
+        end
+        return recording_mode() .. lspstring .. old_section_fileinfo(args)
       end
 
       local hipatterns = require 'mini.hipatterns'
