@@ -136,6 +136,14 @@ require('lazy').setup({
     enabled = false,
   },
   {
+    -- Investigate this further, why isnt it working
+    'backdround/tabscope.nvim',
+    event = 'VimEnter',
+    lazy = false,
+    enabled = true,
+  },
+  -- require 'plugins.tabby',
+  {
     'kdheepak/tabline.nvim',
     enabled = false,
     lazy = false,
@@ -145,6 +153,8 @@ require('lazy').setup({
     enabled = false,
     lazy = false,
   },
+  require 'plugins.tabline',
+
   require 'plugins.wilder',
 
   require 'plugins.fine-cmdline',
@@ -219,7 +229,7 @@ require('lazy').setup({
   -- Eiter we use persistence or auto-session, based on user config
   vim.g.user.persistence and require 'plugins.persistence' or require 'plugins.auto-session',
   require 'plugins.alternate-toggle',
-  { 'pteroctopus/faster.nvim', enabled = true, event = 'BufEnter' }, -- Faster j,k movement
+  { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
