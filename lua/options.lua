@@ -129,7 +129,7 @@ vim.opt.runtimepath:remove '/vimfiles' -- separate vim plugins from neovim in ca
 vim.opt.undofile = true
 
 -- Set the directory for undo files
-vim.opt.undodir = os.getenv 'HOME' .. '/.local/share/nvim' or os.getenv 'HOME'
+vim.opt.undodir = (os.getenv 'HOME' or '') .. '/.local/share/nvim'
 
 -- [[ Setting vim cmds ]]
 vim.cmd ':set display-=msgsep'
@@ -139,7 +139,7 @@ vim.cmd ':set nomore'
 -- vim.cmd ':set ttyfast' -- Lazy Redraw
 vim.cmd [[ :set iskeyword-=- ]]
 -- vim.cmd ':set clipboard=""'
-vim.cmd [[
+vim.cmd [[k
 "set clipboard+=unnamedplus
 let g:clipboard = {
           \   'name': 'win32yank-wsl',
