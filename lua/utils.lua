@@ -18,7 +18,7 @@ SetKeyMaps = function(mapping_table, disable)
     for mode in modes:gmatch '.' do
       for key, mapping in pairs(mappings) do
         if mapping == '' then
-          vim.keymap.del(mode, key)
+          pcall(vim.keymap.del, {mode, key})
         else
           set(mode, key, mapping)
         end
@@ -26,6 +26,48 @@ SetKeyMaps = function(mapping_table, disable)
     end
   end
 end
+
+local function toggle_boolean_word()
+  -- Get the current cursor position
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+  -- Get the current line in the buffer
+  local line = vim.api.nvim_get_current_line()
+
+  -- Find the start and end positions of the word under the cursor
+  local start_pos, end_pos = line:find('%w+', col + 1)
+
+  -- If there's no word under the cursor, return
+  if not start_pos then
+    return
+  end
+
+  -- Extract the word under the cursor
+  local word = line:sub(start_pos, end_pos)
+
+  -- Check if the word is "true" or "false" and toggle it
+  if word == 'true' then
+    word = 'false'
+  elseif word == 'false' then
+    word = 'true'
+  else
+    return
+  end
+
+  -- Replace the word in the line
+  local new_line = line:sub(1, start_pos - 1) .. word .. line:sub(end_pos + 1)
+
+  -- Set the new line in the buffer
+  vim.api.nvim_set_current_line(new_line)
+
+  -- Move the cursor to the end of the toggled word
+  vim.api.nvim_win_set_cursor(0, { row, start_pos - 1 + #word })
+end
+
+-- Optionally, create a command to call this function
+vim.api.nvim_create_user_command('ToggleBooleanWord', toggle_boolean_word, {})
+
+-- Optionally, create a key mapping to call this function
+vim.api.nvim_set_keymap('n', '<Leader>tb', ':lua toggle_boolean_word()<CR>', { noremap = true, silent = true })
 
 -- Function to customize entry display and handle selection by number
 function number_entry_picker()

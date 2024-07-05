@@ -132,6 +132,7 @@ M.disabled = {
     ['<S-Tab>'] = '',
   },
   n = {
+    ['<C-a>'] = '',
     ['K'] = '', -- disable search for `man` pages, too slow
     ['<leader>D'] = '',
     ['<S-tab>'] = '',
@@ -731,6 +732,7 @@ M.general = {
       end,
       'Toggle nvimtree',
     },
+
     ['<C-x>'] = { vim.api.nvim_replace_termcodes('<C-\\><C-N>', true, true, true), 'Escape terminal mode' },
     -- ["<C-c>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal with Crtl + c which my be strange to do since crtl+c already means something" },
     ['<C-w>'] = { vim.api.nvim_replace_termcodes('<C-\\><C-N>', true, true, true), 'Escape terminal mode' },
@@ -1120,10 +1122,6 @@ vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -1145,15 +1143,7 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 --  See `:help wincmd` for a list of all window commands
 -- Function to set keymaps
 
-for mode, mappings in pairs(M.disabled) do
-  for key, _ in pairs(mappings) do
-    pcall(function()
-      vim.keymap.del(mode, key)
-    end)
-  end
-end
-
--- SetKeyMaps(M.disable, true)
+SetKeyMaps(M.disabled)
 SetKeyMaps(M.general)
 
 -- vim: ts=2 sts=2 sw=2 et

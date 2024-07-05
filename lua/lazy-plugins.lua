@@ -90,28 +90,41 @@ require('lazy').setup({
   -- :h event for valid  vim events, there are some only in neovim like LspDetach
   { 'tpope/vim-sleuth', lazy = false, enabled = false }, -- Detect tabstop and shiftwidth automatically
   require 'plugins.guess-indent',
-
-  { 'rmagatti/auto-session', lazy = false, enabled = false },
   {
-    'folke/persistence.nvim',
-    event = 'BufReadPre', -- this will only start session saving when an actual file was opened
+    'rmagatti/auto-session',
     lazy = false,
     enabled = true,
-    config = function(_, opts)
-      require('persistence').setup(opts)
-      -- restore the session for the current directory
-      vim.keymap.set('n', '<leader><F7>', require('persistence').load, {})
-
-      -- restore the last session
-      vim.keymap.set('n', '<leader><F5>', function()
-        require('persistence').load { last = true }
-      end, {})
-
-      -- stop Persistence => session won't be saved on exit
-      vim.keymap.set('n', '<leader><F6>', require('persistence').stop, {})
+    config = function()
+      require('auto-session').setup {
+        log_level = 'info',
+        auto_session_enable_last_session = true,
+        auto_session_root_dir = vim.fn.stdpath 'data' .. '/sessions/',
+        auto_session_enabled = true,
+        auto_save_enabled = true,
+        auto_restore_enabled = true,
+        auto_session_suppress_dirs = nil,
+      }
     end,
   },
+  {
+    'rmagatti/alternate-toggler',
+    config = function()
+      require('alternate-toggler').setup {
+        alternates = {
+          ['=='] = '!=',
+        },
+      }
 
+      vim.keymap.set(
+        'n',
+        '<C-x>', -- <space><space>
+        "<cmd>lua require('alternate-toggler').toggleAlternate()<CR>"
+      )
+    end,
+    event = 'BufReadPost',
+  },
+
+  -- require 'plugins.persistence',
   { 'bfredl/nvim-incnormal', enabled = false, event = 'BufEnter' },
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   { 'moll/vim-bbye', event = 'User FileOpened' },

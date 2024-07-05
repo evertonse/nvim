@@ -27,7 +27,6 @@ vim.g.user = {
   wilder = false,
   inc_rename = true,
 }
-
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
 -- ShowStringAndWait(TableDump2(vim.g.user))
