@@ -12,8 +12,6 @@ vim.o.wildmenu = false -- if set to `false` disallow autocomplete on cmdline sin
 
 -- vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
 vim.opt.sessionoptions = { -- required
-  'winsize',
-  'winpos ',
   'buffers',
   'tabpages',
   'globals',
