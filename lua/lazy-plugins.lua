@@ -89,12 +89,6 @@ local lazy_config = {
 require('lazy').setup({
   -- :h event for valid  vim events, there are some only in neovim like LspDetach
   { 'tpope/vim-sleuth', lazy = false, enabled = false }, -- Detect tabstop and shiftwidth automatically
-  require 'plugins.guess-indent',
-  require 'plugins.persistence',
-  require 'plugins.alternate-toggle',
-  -- require 'plugins.auto-session',
-  { 'bfredl/nvim-incnormal', enabled = false, event = 'BufEnter' },
-  { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   { 'moll/vim-bbye', event = 'User FileOpened' },
   { 'yorickpeterse/nvim-pqf', enabled = false }, -- Nicer Quick List
 
@@ -219,6 +213,13 @@ require('lazy').setup({
   require 'plugins.better-scape',
   require 'plugins.noice',
   require 'plugins.live-command',
+  { 'bfredl/nvim-incnormal', enabled = false, event = 'BufEnter' },
+
+  require 'plugins.guess-indent',
+  -- Eiter we use persistence or auto-session, based on user config
+  vim.g.user.persistence and require 'plugins.persistence' or require 'plugins.auto-session',
+  require 'plugins.alternate-toggle',
+  { 'pteroctopus/faster.nvim', enabled = true, event = 'BufEnter' }, -- Faster j,k movement
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --

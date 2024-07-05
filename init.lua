@@ -25,6 +25,7 @@ vim.g.user = {
   theme = 'pastel',
   wilder = false,
   inc_rename = true,
+  persistence = false, --NOTE: Better note Idk, bugs with Telescope sometimes
 }
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]

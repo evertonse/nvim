@@ -1,4 +1,4 @@
-SetKeyMaps = function(mapping_table, disable)
+SetKeyMaps = function(mapping_table)
   -- Delete maps do disable
   local set = function(mode, key, mapping)
     local nowait_opts = { noremap = true, silent = true, nowait = true }
@@ -18,7 +18,7 @@ SetKeyMaps = function(mapping_table, disable)
     for mode in modes:gmatch '.' do
       for key, mapping in pairs(mappings) do
         if mapping == '' then
-          pcall(vim.keymap.del, {mode, key})
+          pcall(vim.keymap.del, { mode, key })
         else
           set(mode, key, mapping)
         end
@@ -149,7 +149,7 @@ end
 -- Create a command to invoke the custom picker
 vim.api.nvim_set_keymap('n', '<leader>np', '<cmd>lua number_entry_picker()<CR>', { noremap = true, silent = true })
 
-function TableDump2(node)
+function TableDump(node)
   local cache, stack, output = {}, {}, {}
   local depth = 1
   local output_str = '{\n'
@@ -180,7 +180,9 @@ function TableDump2(node)
           key = "['" .. tostring(k) .. "']"
         end
 
-        if type(v) == 'number' or type(v) == 'boolean' then
+        if v == nil then
+          output_str = output_str .. string.rep('\t', depth) .. key .. ' = nil'
+        elseif type(v) == 'number' or type(v) == 'boolean' then
           output_str = output_str .. string.rep('\t', depth) .. key .. ' = ' .. tostring(v)
         elseif type(v) == 'table' then
           output_str = output_str .. string.rep('\t', depth) .. key .. ' = {\n'
@@ -188,6 +190,8 @@ function TableDump2(node)
           table.insert(stack, v)
           cache[node] = cur_index + 1
           break
+        elseif type(v) == 'function' then
+          output_str = output_str .. string.rep('\t', depth) .. key .. " = '" .. tostring(v) .. "'"
         else
           output_str = output_str .. string.rep('\t', depth) .. key .. " = '" .. tostring(v) .. "'"
         end
@@ -225,21 +229,6 @@ function TableDump2(node)
   output_str = table.concat(output)
 
   return output_str
-end
-
-function TableDump(o)
-  if type(o) == 'table' then
-    local s = '{ '
-    for k, v in pairs(o) do
-      if type(k) ~= 'number' then
-        k = '"' .. k .. '"'
-      end
-      s = s .. '[' .. k .. '] = ' .. TableDump(v) .. ','
-    end
-    return s .. '} '
-  else
-    return tostring(o)
-  end
 end
 
 ShowStringAndWait = function(input_string)
