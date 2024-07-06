@@ -242,16 +242,19 @@ local function show_yank_history_on_quick()
   for idx = #yank_history, 1, -1 do
     local entry = yank_history[idx]
     table.insert(qf_list, {
-      -- filename = '',
+      -- filename = entry,
+      -- pattern = entry,
+      module = entry:gsub('\n', ''):match '^%s*(.-)%s*$',
       -- lnum = idx,
       -- col = 0,
       -- nr = idx,
-      text = entry,
+      -- text = entry,
+      user_data = entry,
     })
   end
 
   vim.fn.setqflist(qf_list)
-  vim.cmd 'copen'
+  vim.cmd 'horizontal copen'
 
   local get_selected_location_entry = function()
     local qfl = vim.fn.getqflist()
@@ -267,7 +270,9 @@ local function show_yank_history_on_quick()
   end
 
   local choose = function()
-    vim.fn.setreg('"', get_selected_location_entry().text)
+    -- vim.fn.setreg('"', get_selected_location_entry().text)
+    local data = get_selected_location_entry().user_data
+    vim.fn.setreg('"', data)
     vim.cmd 'cclose'
   end
   -- Define the quickfix command mappings
