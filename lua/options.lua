@@ -8,8 +8,9 @@
 --  See `:help 'clipboard'`
 vim.loader.enable()
 vim.o.cursorlineopt = 'both' -- to enable cursorline
-vim.o.wildmenu = true -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
-vim.opt.wildmode = 'list:longest,list:full' -- for : stuff
+vim.o.wildmenu = false -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
+-- vim.opt.wildmode = 'list:longest,list:full' -- for : stuff
+vim.opt.wildmode = 'list:longest' -- for : stuff
 vim.opt.wildignore:append { '.javac', 'node_modules', '*.pyc' }
 vim.opt.wildignore:append { '.aux', '.out', '.toc' } -- LaTeX
 vim.opt.wildignore:append {
