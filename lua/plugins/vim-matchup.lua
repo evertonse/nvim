@@ -28,7 +28,7 @@ return { --https://github.com/andymass/vim-matchup
     -- NOTE: WLags a lot with treesitter highlighting IDK WHY
     vim.g.matchup_matchparen_enabled = 1
 
-    vim.g.matchup_surround_enabled = 1
+    vim.g.matchup_surround_enabled = 1 -- Surround motions
 
     vim.g.matchup_motion_enabled = 1
 
@@ -47,7 +47,7 @@ return { --https://github.com/andymass/vim-matchup
 
     -- Customize like below in https://github.com/andymass/vim-matchup/wiki/The-match-up-wiki
     vim.cmd [[
-      autocmd FileType lua let b:match_words = 'for:do'
+      autocmd FileType lua let b:match_words = 'for:end'
     ]]
   end,
 }

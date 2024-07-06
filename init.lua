@@ -31,6 +31,7 @@ vim.g.user = {
   inc_rename = true,
   session_plugin = session_opts[2], --NOTE: Better note Idk, bugs with Telescope sometimes
   mini_pick = false,
+  notification_poll_rate = 40,
 }
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]

@@ -6,7 +6,8 @@ return {
   pin = true,
   main = 'ibl',
   tag = 'v3.7.1',
-  event = 'VimEnter',
+  -- event = 'VimEnter',
+  event = 'BufReadPost',
   enable = true,
   -- event = 'User FilePost',
   opts = {
@@ -77,7 +78,6 @@ return {
     --                          • `┋`
     --                        • center aligned double
     --                          • `║`
-    debounce = 10,
 
     exclude = {
       filetypes = {

@@ -209,8 +209,8 @@ require('lazy').setup({
   },
   require 'plugins.inc-rename',
   require 'plugins.harpoon',
-  require 'plugins.vim_matchup', -- NOTE: Interaction with matchup and treesitter slow thing down when jumping from one context to another(lua table to another with jk), I think longer lines are more problematic
-  require 'plugins.indent_blankline',
+  require 'plugins.vim-matchup', -- NOTE: Interaction with matchup and treesitter slow thing down when jumping from one context to another(lua table to another with jk), I think longer lines are more problematic
+  require 'plugins.indent-blankline',
   require 'plugins.lint',
   require 'plugins.autopairs',
   { 'uga-rosa/ccc.nvim', event = 'VeryLazy' },

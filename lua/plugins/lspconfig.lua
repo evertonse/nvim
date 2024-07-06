@@ -6,9 +6,10 @@ return {
     'neovim/nvim-lspconfig',
     -- lazy = false,
     -- event = 'VimEnter',
+    event = 'VimEnter',
     -- event = 'VeryLazy',
     -- event = 'BufEnter',
-    event = 'BufReadPost',
+    -- event = 'BufReadPost',
     -- event = 'BufReadCmd', -- NOTE: It hangs in the first opned buffer for some reason? I thought it was just an event
 
     dependencies = {
@@ -24,7 +25,7 @@ return {
         opts = {
           -- Options related to LSP progress subsystem
           progress = {
-            poll_rate = 200, -- How and when to poll for progress messages
+            poll_rate = vim.g.user.notification_poll_rate, -- How and when to poll for progress messages
             suppress_on_insert = true, -- Suppress new messages while in insert mode
             ignore_done_already = true, -- Ignore new tasks that are already complete
             ignore_empty_message = true, -- Ignore new tasks that don't contain a message
@@ -34,7 +35,7 @@ return {
             -- Options related to how LSP progress messages are displayed as notifications
             display = {
               render_limit = 8, -- How many LSP messages to show at once
-              done_ttl = 2, -- How long a message should persist after completion
+              done_ttl = 3, -- How long a message should persist after completion
               done_style = 'Normal', -- Highlight group for completed LSP tasks
               progress_ttl = math.huge, -- How long a message should persist when in progress
               -- Icon shown when LSP progress tasks are in progress
@@ -52,8 +53,9 @@ return {
 
           -- Options related to notification subsystem
           notification = {
-            poll_rate = 300, -- How frequently to update and render notifications
+            poll_rate = vim.g.user.notification_poll_rate, -- How frequently to update and render notifications
             filter = vim.log.levels.INFO, -- Minimum notifications level
+            -- filter = vim.log.levels.ERROR,
             history_size = 64, -- Number of removed messages to retain in history
             override_vim_notify = true, -- Automatically override vim.notify() with Fidget
             -- How to configure notification groups when instantiated
@@ -84,7 +86,7 @@ return {
               normal_hl = 'Comment', -- Base highlight group in the notification window
               winblend = 22, -- Background color opacity in the notification window
               border = 'none', -- Border around the notification window
-              zindex = 20000, -- Stacking priority of the notification window
+              zindex = 12345, -- Stacking priority of the notification window
               max_width = 0, -- Maximum width of the notification window
               max_height = 0, -- Maximum height of the notification window
               x_padding = 1, -- Padding from right edge of window boundary
@@ -106,7 +108,8 @@ return {
 
           -- Options related to logging
           logger = {
-            level = vim.log.levels.WARN, -- Minimum logging level
+            level = vim.log.levels.Error, -- Minimum logging level
+            -- level = vim.log.levels.WARN,
             max_size = 10000, -- Maximum log file size, in KB
             float_precision = 0.01, -- Limit the number of decimals displayed for floats
             -- Where Fidget writes its logs to
@@ -195,7 +198,7 @@ return {
             local inc_rename_available, _ = pcall(require, 'inc_rename')
             if inc_rename_available then
               return function()
-                return ':IncRename ' .. vim.fn.expand '<cword>'
+                return ':IncRename ' .. vim.fn.expand '<cword>' .. '<Down>'
               end
             else
               return vim.lsp.buf.rename
