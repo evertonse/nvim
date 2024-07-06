@@ -16,6 +16,7 @@
 --    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
 --    [x] Mini lsp, recording
 --    [ ] Create a telescope options to select from yank history
+--    [ ] MORE PLUGINS https://github.com/rockerBOO/awesome-neovim#cursorline
 local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
 
 vim.g.mapleader = ' '
