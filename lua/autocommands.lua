@@ -244,7 +244,7 @@ local function show_yank_history_on_quick()
     table.insert(qf_list, {
       -- filename = entry,
       -- pattern = entry,
-      module = entry:gsub('\n', ''):match '^%s*(.-)%s*$',
+      module = entry:gsub('\n', '\\n'):match '^%s*(.-)%s*$',
       -- lnum = idx,
       -- col = 0,
       -- nr = idx,
