@@ -24,9 +24,17 @@ return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
   cmd = { 'TSInstall', 'TSBufEnable', 'TSBufDisable', 'TSModuleInfo' },
   build = ':TSUpdate',
-  event = { 'BufReadPost', 'BufNewFile' },
+  -- event = { 'BufReadPost', 'BufNewFile' },
+  event = { 'BufEnter' },
   dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
   opts = {
+    highlight = {
+      enable = true,
+      disable = function(lang, bufnr) -- Disable in large buffers
+        -- return lang == 'cpp' and vim.api.nvim_buf_line_count(bufnr) > 50000
+        return vim.api.nvim_buf_line_count(bufnr) > 50000
+      end,
+    },
 
     incremental_selection = {
       enable = true,
@@ -38,6 +46,7 @@ return { -- Highlight, edit, and navigate code
       },
     },
     textobjects = {
+      enable = true,
       select = {
         enable = true,
         lookahead = true,
@@ -96,7 +105,7 @@ return { -- Highlight, edit, and navigate code
     -- Prefer git instead of curl in order to improve connectivity in some environments
     require('nvim-treesitter.install').prefer_git = true
     ---@diagnostic disable-next-line: missing-fields
-    require('nvim-treesitter.configs').setup({} and opts)
+    require('nvim-treesitter.configs').setup(opts)
 
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -121,4 +130,3 @@ return { -- Highlight, edit, and navigate code
     -- vim.treesitter.language.register('templ', 'templ')
   end,
 }
--- vim: ts=2 sts=2 sw=2 et

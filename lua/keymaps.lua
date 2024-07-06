@@ -405,7 +405,10 @@ end
 M.general = {
   -- [TERMINAL and NORMAL]
   tn = {},
-  vn = { ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' } },
+  vnx = {
+    ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' },
+    ['<leader><leader>'] = { ':Norm', 'live preview of normal command' },
+  },
 
   -- [NORMAL]
   n = {
@@ -1218,5 +1221,3 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 SetKeyMaps(M.disabled)
 SetKeyMaps(M.general)
 SetKeyMaps(M.blankline)
-
--- vim: ts=2 sts=2 sw=2 et

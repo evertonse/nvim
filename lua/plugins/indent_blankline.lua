@@ -10,7 +10,7 @@ return {
   enable = true,
   -- event = 'User FilePost',
   opts = {
-
+    debounce = 512,
     indent = {
       -- char = '▏',
       -- char = '⏐',
@@ -82,6 +82,8 @@ return {
     exclude = {
       filetypes = {
         'help',
+        'bin',
+        'hex',
         'vim',
         'terminal',
         'lazy',
@@ -98,7 +100,6 @@ return {
         'nvdash',
         'nvcheatsheet',
         'cmp_menu',
-        '',
       },
       buftypes = { 'terminal', 'nofile', 'vim', 'quickfix' },
     },

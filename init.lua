@@ -18,6 +18,7 @@
 --    [ ] Create a telescope options to select from yank history
 --    [ ] MORE PLUGINS https://github.com/rockerBOO/awesome-neovim#cursorline
 local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
+local surround_opts = { 'mini.surround', 'vim-surround' }
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
