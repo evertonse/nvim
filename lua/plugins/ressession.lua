@@ -52,12 +52,17 @@ return {
   },
   config = function(_, opts)
     local resession = require 'resession'
-    -- resession.setup(opts)
-    resession.setup {}
+    resession.setup(opts)
+    -- resession.setup {}
     -- Resession does NOTHING automagically, so we have to set up some keymaps
-    vim.keymap.set('n', '<leader>rss', resession.save)
-    vim.keymap.set('n', '<leader>rsl', resession.load)
-    vim.keymap.set('n', '<leader>rsd', resession.delete)
+    local maps = {
+      n = {
+        ['<leader>rss'] = { resession.save, 'Ressesion Save' },
+        ['<leader>rsl'] = { resession.load, 'Ressesion Load' },
+        ['<leader>rsd'] = { resession.delete, 'Ressesion delete' },
+      },
+    }
+    SetKeyMaps(maps)
     vim.api.nvim_create_autocmd('VimEnter', {
       callback = function()
         -- Only load the session if nvim was started with no args

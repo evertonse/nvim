@@ -1,10 +1,13 @@
 return {
   'rmagatti/alternate-toggler', --NOTE: Maybe instead of alternater we want CYCLER
+  lazy = false,
+  event = 'BufReadPost',
   config = function()
     require('alternate-toggler').setup {
       alternates = {
         ['=='] = '!=',
         ['else'] = 'elif',
+        ['true'] = 'false',
       },
     }
 
@@ -14,5 +17,4 @@ return {
       require('alternate-toggler').toggleAlternate
     )
   end,
-  event = 'BufReadPost',
 }
