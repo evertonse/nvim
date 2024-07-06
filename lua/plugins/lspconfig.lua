@@ -6,8 +6,11 @@ return {
     'neovim/nvim-lspconfig',
     -- lazy = false,
     -- event = 'VimEnter',
-    event = 'BufEnter',
-    -- event = 'User FilePost',
+    -- event = 'VeryLazy',
+    -- event = 'BufEnter',
+    event = 'BufReadPost',
+    -- event = 'BufReadCmd', -- NOTE: It hangs in the first opned buffer for some reason? I thought it was just an event
+
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
@@ -538,4 +541,3 @@ return {
     end,
   },
 }
--- vim: ts=2 sts=2 sw=2 et

@@ -18,7 +18,7 @@
 local lazy_config = {
   defaults = { lazy = true },
   install = { colorscheme = { 'personal' } },
-  change_detection = { notify = true },
+  change_detection = { notify = false },
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
@@ -102,7 +102,7 @@ require('lazy').setup({
   -- "gc" to comment visual regions/lines
   require 'plugins.Comment',
   --{ 'nvim-tree/nvim-web-devicons' },
-  { 'moll/vim-bbye', lazy = false },
+  { 'moll/vim-bbye', lazy = false, enabled = false },
   -- lazy.nvim
   {
     'filipdutescu/renamer.nvim',
@@ -152,9 +152,9 @@ require('lazy').setup({
     config = function()
       require('scope').setup {}
     end,
-    lazy = false,
+    lazy = true,
     -- event = 'VeryLazy',
-    enabled = true,
+    enabled = false,
   },
   require 'plugins.tabline',
 
@@ -169,6 +169,8 @@ require('lazy').setup({
   require 'plugins.git_conflict',
 
   { 'sindrets/diffview.nvim', lazy = false },
+
+  --------------------------------------
 
   require 'plugins.which-key',
 
@@ -192,7 +194,7 @@ require('lazy').setup({
 
   require 'plugins.debug',
 
-  ------------------------
+  --------------------------------------
 
   {
     'mbbill/undotree',
@@ -230,7 +232,7 @@ require('lazy').setup({
   require 'plugins.live-command',
 
   require 'plugins.guess-indent',
-  require('plugins.' .. vim.g.user.session_plugin),
+  -- require('plugins.' .. vim.g.user.session_plugin),
   require 'plugins.alternate-toggle',
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`

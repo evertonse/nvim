@@ -11,7 +11,6 @@ local noremap_opts = { noremap = true, silent = true, nowait = true }
 local wait_opts = { noremap = true, silent = true, nowait = false }
 FULLSCREEN = false
 -- Define a table to store previous positions
-local previous_position = {}
 
 -- Function to jump within the current buffer
 local function spelltoggle()
@@ -23,28 +22,6 @@ local function spelltoggle()
     vim.opt_local.spelllang = { 'en_us' }
   end
 end
-
-vim.cmd [[
-function! JumpWithinFile(back, forw)
-    let [n, i] = [bufnr('%'), 1]
-    let p = [n] + getpos('.')[1:]
-    sil! exe 'norm!1' . a:forw
-    while 1
-        let p1 = [bufnr('%')] + getpos('.')[1:]
-        if n == p1[0] | break | endif
-        if p == p1
-            sil! exe 'norm!' . (i-1) . a:back
-            break
-        endif
-        let [p, i] = [p1, i+1]
-        sil! exe 'norm!1' . a:forw
-    endwhile
-endfunction
-
-]]
--- Setup mappings
-vim.api.nvim_set_keymap('n', '<leader><C-o>', [[:call JumpWithinFile("\<c-i>", "\<c-o>")<cr>]], { silent = true, noremap = true })
-vim.api.nvim_set_keymap('n', '<leader><C-i>', [[:call JumpWithinFile("\<c-o>", "\<c-i>")<cr>]], { silent = true, noremap = true })
 
 -- add this table only when you want to disable default keys
 -- TIPS `:map <key>` to see all keys with that prefix
@@ -373,6 +350,43 @@ local float_term_toggle = function()
   f.terminal:toggle()
 end
 
+-- Function to jump to previous or next location within the current buffer
+-- Function to get the current index in the jumplist
+local function get_current_jumplist_index()
+  local current_pos = vim.fn.getpos '.'
+  local jump_list = vim.fn.getjumplist()[1]
+
+  for index, jump in ipairs(jump_list) do
+    if jump.bufnr == current_pos[1] and jump.lnum == current_pos[2] and jump.col == current_pos[3] then
+      return index
+    end
+  end
+  return nil
+end
+
+-- Function to jump within the current buffer
+jumplist_current_index = 0
+local function jump_within_buffer(direction)
+  local jump_list = vim.fn.getjumplist()[1]
+  local current_buf = vim.api.nvim_get_current_buf()
+
+  local step = (direction == 'back') and -1 or 1
+  local new_index = jumplist_current_index + step
+
+  while new_index >= 1 and new_index <= #jump_list do
+    local jump = jump_list[new_index]
+    if jump.bufnr == current_buf then
+      vim.api.nvim_win_set_cursor(0, { jump.lnum, jump.col })
+      local current_jumplist_count = #vim.fn.getjumplist()[1]
+      local diff = math.abs(#jump_list - current_jumplist_count)
+      assert(diff == 0, 'Diff were not zero, that means the jumplist changed')
+      jumplist_current_index = new_index
+      return
+    end
+    new_index = new_index + step
+  end
+end
+
 M.general = {
   -- [TERMINAL and NORMAL]
   tn = {},
@@ -380,18 +394,22 @@ M.general = {
 
   -- [NORMAL]
   n = {
-    ['<leader>5'] = { spelltoggle, '' },
+    ['<leader>5'] = { spelltoggle, '5 for [5]pell Toggle' },
     ['<leader>z'] = { '[s1z=``', '' },
 
     ['<Esc>'] = { '<cmd>noh <CR>', 'Clear highlights' },
 
     ['<leader><C-k>'] = {
-      function() end,
-      'jump_to_prev_location_in_current_buffer',
+      function()
+        jump_within_buffer 'back'
+      end,
+      [[jump_within_buffer 'back']],
     },
     ['<leader><C-j>'] = {
-      function() end,
-      'jump_to_prev_location_in_current_buffer',
+      function()
+        jump_within_buffer 'foward'
+      end,
+      [[jump_within_buffer 'foward']],
     },
     -->> ToggleTerm
     ['<A-i>'] = {

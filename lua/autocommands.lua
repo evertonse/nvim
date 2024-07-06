@@ -127,9 +127,9 @@ vim.cmd [[autocmd TermOpen * setlocal nonumber norelativenumber signcolumn=no]]
 vim.api.nvim_create_autocmd('VimEnter', {
   group = vim.api.nvim_create_augroup('UserAutoClose', {}),
   callback = function(args)
-    if vim.bo[args.buf].buftype == 'nofile' then
-      vim.api.nvim_buf_delete(args.buf, {})
-    end
+    -- if vim.bo[args.buf].buftype == 'nofile' then
+    --   vim.api.nvim_buf_delete(args.buf, {})
+    -- end
   end,
 })
 

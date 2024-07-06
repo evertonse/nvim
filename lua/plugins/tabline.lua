@@ -1,5 +1,6 @@
 return {
   'kdheepak/tabline.nvim',
+  enabled = false,
   config = function()
     require('tabline').setup {
       -- Defaults configuration options
