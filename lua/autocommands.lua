@@ -1,16 +1,3 @@
-function ShowSearchCount()
-  if vim.v.hlsearch == 1 then
-    vim.fn.setreg('/', '')
-    local count = vim.fn.searchcount().total
-    vim.cmd('echom "Matches: ' .. count .. '"')
-  end
-end
-
-vim.cmd [[
-  "autocmd CmdlineEnter /,? lua ShowSearchCount()
-  "autocmd CmdlineLeave /,? redrawstatus
-]]
-
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
@@ -155,3 +142,135 @@ vim.cmd [[
 " let g:mdip_imgdir = 'img'
 " let g:mdip_imgname = 'image'
 ]]
+
+local function reverse_table(tbl)
+  local size = #tbl
+  local reversed = {}
+  for i = size, 1, -1 do
+    table.insert(reversed, tbl[i])
+  end
+  return reversed
+end
+
+local yank_history = {}
+local function capture_yank()
+  local yanked_text = vim.fn.getreg '"'
+  table.insert(yank_history, yanked_text)
+end
+
+vim.api.nvim_create_augroup('YankCapture', { clear = true })
+
+vim.api.nvim_create_autocmd('TextYankPost', {
+  group = 'YankCapture',
+  callback = capture_yank,
+})
+
+-- Custom sorter that sorts in reverse order
+vim.api.nvim_create_user_command('YankHistory', function()
+  local finders = require 'telescope.finders'
+  local pickers = require 'telescope.pickers'
+  local actions = require 'telescope.actions'
+  local sorters = require 'telescope.sorters'
+  local action_state = require 'telescope.actions.state'
+  local opts = require('telescope.themes').get_dropdown { sorting_strategy = 'descending' }
+
+  local reverse_sorter = sorters.new {
+    scoring_function = function(_, prompt, entry)
+      return -2
+    end,
+  }
+  -- ShowStringAndWait(vim.inspect(opts))
+  -- opts.sorting_strategy = 'ascending'
+  pickers
+    .new({}, {
+      prompt_title = 'Yank History',
+      finder = finders.new_table {
+        -- results = reverse_table(yank_history),
+        results = yank_history,
+        entry_maker = function(entry)
+          local width = vim.api.nvim_win_get_width(0) - 4 -- Adjust as needed
+          local newline_index = math.max(string.find(entry, '\n', 1, true) - 1, 0)
+          -- Clamp to the nearest newline if found, or clamp to the specified width
+          local clamped_output = newline_index and string.sub(entry, 1, newline_index) or string.sub(entry, 1, width)
+          return {
+            display = clamped_output,
+            value = entry,
+            ordinal = entry,
+          }
+        end,
+      },
+
+      sorter = reverse_sorter,
+      -- sorter = sorters.highlighter_only(opts),
+      attach_mappings = function(_, map)
+        local choose = function(prompt_bufnr)
+          local selection = action_state.get_selected_entry()
+          vim.fn.setreg('"', selection.value)
+          actions.close(prompt_bufnr)
+        end
+        map({ 'n', 'i' }, '<CR>', choose)
+        map({ 'n', 'i' }, 'y', choose)
+        map({ 'n', 'i' }, 'l', choose)
+        return true
+      end,
+    })
+    :find()
+end, {})
+
+-- Function to open a quickfix window with yank history
+
+-- Function to show yank history in a custom quickfix window
+local function show_yank_history_on_quick()
+  local qf_list = {}
+
+  for idx = #yank_history, 1, -1 do
+    local entry = yank_history[idx]
+    table.insert(qf_list, {
+      filename = '',
+      lnum = idx,
+      col = 0,
+      -- nr = idx,
+      text = entry,
+    })
+  end
+
+  vim.fn.setqflist(qf_list)
+  vim.cmd 'copen'
+
+  local get_selected_location_entry = function()
+    local qfl = vim.fn.getqflist()
+    local lnum = vim.api.nvim__buf_stats(0).current_lnum
+    -- ShowStringAndWait(vim.inspect(qfl))
+    -- ShowStringAndWait(vim.inspect(lnum))
+    local idx = lnum
+    if idx > 0 and idx <= #qfl then
+      return qfl[idx]
+    else
+      return ''
+    end
+  end
+
+  local choose = function()
+    vim.fn.setreg('"', get_selected_location_entry().text)
+    vim.cmd 'cclose'
+  end
+  -- Define the quickfix command mappings
+  local mappings = {
+    ['<CR>'] = choose,
+    ['y'] = choose,
+    ['l'] = choose,
+  }
+
+  -- Set the mappings for the quickfix window
+  for key, func in pairs(mappings) do
+    vim.keymap.set('n', key, func, {
+      buffer = 0,
+      silent = true,
+      noremap = true,
+      expr = false,
+      nowait = true,
+    })
+  end
+end
+
+vim.api.nvim_create_user_command('YankHistory2', show_yank_history_on_quick, {})

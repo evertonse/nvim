@@ -68,6 +68,14 @@ return {
 
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
+      local close_telescope = function(data)
+        local mode = vim.api.nvim_get_mode().mode
+        actions.close(data)
+        if mode == 'i' then
+          vim.cmd [[stopinsert]]
+          return
+        end
+      end
       require('telescope').setup {
 
         defaults = {
@@ -182,14 +190,9 @@ return {
             },
 
             n = {
-              ['<esc>'] = function(data)
-                local mode = vim.api.nvim_get_mode().mode
-                actions.close(data)
-                if mode == 'i' then
-                  vim.cmd [[stopinsert]]
-                  return
-                end
-              end,
+              ['<esc>'] = close_telescope,
+              ['<leader>q'] = close_telescope,
+
               ['<CR>'] = select_default,
               ['<C-y>'] = select_default,
 
