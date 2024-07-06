@@ -394,8 +394,9 @@ M.general = {
 
   -- [NORMAL]
   n = {
+    ['<leader>hy'] = { ':YankHistory', '[H]istory [Y]ank' },
     ['<leader>5'] = { spelltoggle, '5 for [5]pell Toggle' },
-    ['<leader>z'] = { '[s1z=``', '' },
+    ['<leader>z'] = { '[s1z=``', 'Correct [Z]peling Mistakes' },
 
     ['<Esc>'] = { '<cmd>noh <CR>', 'Clear highlights' },
 

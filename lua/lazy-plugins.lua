@@ -142,16 +142,11 @@ require('lazy').setup({
   },
   -- require 'plugins.tabby',
   {
-    'kdheepak/tabline.nvim',
-    lazy = false,
-    enabled = false,
-  },
-  {
     'tiagovla/scope.nvim',
     config = function()
       require('scope').setup {}
     end,
-    lazy = true,
+    lazy = false,
     -- event = 'VeryLazy',
     enabled = true,
   },
@@ -198,13 +193,14 @@ require('lazy').setup({
   {
     'mbbill/undotree',
     enabled = true,
-    lazy = false,
+    event = 'BufEnter',
     key = { {
       'n',
-      '<leader><F5>',
+      '<leader>ut',
       function()
         vim.cmd [[UndotreeToggle]]
       end,
+      '[U]ndotree [T]oggle',
     } },
   },
   {
@@ -231,7 +227,7 @@ require('lazy').setup({
   require 'plugins.live-command',
 
   require 'plugins.guess-indent',
-  -- require('plugins.' .. vim.g.user.session_plugin),
+  require('plugins.' .. vim.g.user.session_plugin),
   require 'plugins.alternate-toggle',
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
