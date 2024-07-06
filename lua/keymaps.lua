@@ -408,6 +408,16 @@ M.general = {
   vnx = {
     ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' },
     ['<leader><leader>'] = { ':Norm <Down>', 'live preview of normal command' },
+    ['<C-\\>'] = {
+      function()
+        vim.api.nvim_input ':<Down><C-f>i<Down>'
+      end,
+    },
+    ['\\'] = {
+      function()
+        vim.api.nvim_input ':<Down>'
+      end,
+    },
   },
 
   -- [NORMAL]
@@ -1211,7 +1221,6 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --
