@@ -228,6 +228,7 @@ require('lazy').setup({
   require 'plugins.guess-indent',
   require('plugins.' .. vim.g.user.session_plugin),
   require 'plugins.alternate-toggle',
+  require 'plugins.aerial',
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.

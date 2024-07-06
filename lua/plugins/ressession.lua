@@ -53,7 +53,7 @@ return {
         enable_in_tab = true,
       },
       -- NOTE: I don't wanna save quicklist
-      quickfix = false,
+      -- quickfix = false,
     },
   },
   config = function(_, opts)
@@ -96,8 +96,8 @@ return {
     })
     vim.api.nvim_create_autocmd('VimLeavePre', {
       callback = function()
-        -- close_quickfix()
-        resession.save(vim.fn.getcwd(), { dir = 'session', notify = false })
+        close_quickfix()
+        resession.save(vim.fn.getcwd(), { dir = 'session', notify = true })
         -- resession.save 'last'
       end,
     })

@@ -1,5 +1,6 @@
 {
   "LuaSnip": { "branch": "master", "commit": "ce0a05ab4e2839e1c48d072c5236cce846a387bc" },
+  "aerial.nvim": { "branch": "master", "commit": "db0af491ff13c18a966ce2f9ac7f5211aec000a7" },
   "alternate-toggler": { "branch": "main", "commit": "819800304d3e8e575fd6aa461a8bcf2217e1cfb6" },
   "better-escape.nvim": { "branch": "master", "commit": "7e86edafb8c7e73699e0320f225464a298b96d12" },
   "ccc.nvim": { "branch": "main", "commit": "4fb5abaef2f2e0540fe22d4d74a9841205fff9e4" },

@@ -250,6 +250,12 @@ return {
               ['<CR>'] = select_default,
               ['<C-y>'] = select_default,
 
+              ['<C-p>'] = actions.move_selection_previous,
+              ['<C-n>'] = actions.move_selection_next,
+
+              ['<C-o>'] = actions.cycle_history_prev,
+              ['<C-i>'] = actions.cycle_history_next,
+
               ['l'] = actions.select_default,
 
               ['<C-x>'] = actions.select_horizontal,
