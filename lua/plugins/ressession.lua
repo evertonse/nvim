@@ -63,8 +63,8 @@ return {
         -- Only load the session if nvim was started with no args
         if vim.fn.argc(-1) == 0 then
           -- Save these to a different directory, so our manual sessions don't get polluted
-          -- resession.load(vim.fn.getcwd(), { dir = 'dirsession', silence_errors = true })
-          resession.load 'last'
+          resession.load(vim.fn.getcwd(), { dir = 'session', silence_errors = true })
+          -- resession.load 'last'
           vim.cmd [[stopinsert]]
         end
       end,
@@ -72,8 +72,8 @@ return {
     })
     vim.api.nvim_create_autocmd('VimLeavePre', {
       callback = function()
-        resession.save 'last'
-        -- resession.save(vim.fn.getcwd(), { dir = 'dirsession', notify = false })
+        resession.save(vim.fn.getcwd(), { dir = 'session', notify = false })
+        -- resession.save 'last'
       end,
     })
   end,
