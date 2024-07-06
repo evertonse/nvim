@@ -10,12 +10,10 @@
 -- treesitter-highlight-priority in treesitter.txt
 --
 -- treesitter-query in treesitter.txt
-local disable_function = function(lang)
-  if true then
-    return true
-  end
+local disable_treesitter_when = function(lang, bufnr)
+  local too_big = vim.api.nvim_buf_line_count(bufnr) > 50000
   local buf_name = vim.fn.expand '%'
-  if vim.bo.filetype == 'tmux' or lang == 'conf' or string.find(buf_name, 'tmux%-') then
+  if vim.bo.filetype == 'tmux' or too_big or lang == 'conf' or string.find(buf_name, 'tmux%-') then
     return true
   end
 end
@@ -28,12 +26,14 @@ return { -- Highlight, edit, and navigate code
   event = { 'BufEnter' },
   dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
   opts = {
+
+    --XXX: Found out that putting these highlight options is laggy on long lines when the cursor is
+    -- on the far right going up and down (j and k movement).
+    -- EDIT(2024-jul-06): This is only true together with vim-matchup, which I have disabled some things that improved performance
     highlight = {
       enable = true,
-      disable = function(lang, bufnr) -- Disable in large buffers
-        -- return lang == 'cpp' and vim.api.nvim_buf_line_count(bufnr) > 50000
-        return vim.api.nvim_buf_line_count(bufnr) > 50000
-      end,
+      disable = disable_treesitter_when,
+      additional_vim_regex_highlighting = { 'ruby' },
     },
 
     incremental_selection = {
@@ -81,22 +81,12 @@ return { -- Highlight, edit, and navigate code
     -- vim-matchup config
     matchup = {
       enable = true, -- mandatory, false will disable the whole extension
-      disable = { 'c', 'ruby' }, -- optional, list of language that will be disabled
+      disable = { 'ruby' }, -- optional, list of language that will be disabled
       -- [options]
     },
     ensure_installed = { 'bash', 'c', 'python', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
     -- Autoinstall languages that are not installed
     auto_install = true,
-    --XXX: Found out that putting these highlight options is laggy on long lines when the cursor is
-    -- on the far right going up and down (j and k movement)
-    -- highlight = {
-    --   enable = true,
-    --   -- disable = disable_function,
-    --   -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-    --   --  If you are experiencing weird indenting issues, add the language to
-    --   --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-    --   additional_vim_regex_highlighting = { 'ruby' },
-    -- },
     indent = { enable = true, disable = { 'ruby' } },
   },
   config = function(_, opts)
