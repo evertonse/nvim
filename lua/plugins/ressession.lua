@@ -63,6 +63,19 @@ return {
       },
     }
     SetKeyMaps(maps)
+    -- Define a function to close the quickfix window
+    local function close_quickfix()
+      local quickfix_open = false
+      for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if vim.fn.getwininfo(win)[1].quickfix == 1 then
+          quickfix_open = true
+          break
+        end
+      end
+      if quickfix_open then
+        vim.cmd 'cclose'
+      end
+    end
     vim.api.nvim_create_autocmd('VimEnter', {
       callback = function()
         -- Only load the session if nvim was started with no args
@@ -77,6 +90,7 @@ return {
     })
     vim.api.nvim_create_autocmd('VimLeavePre', {
       callback = function()
+        close_quickfix()
         resession.save(vim.fn.getcwd(), { dir = 'session', notify = false })
         -- resession.save 'last'
       end,
