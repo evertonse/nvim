@@ -166,7 +166,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- Custom sorter that sorts in reverse order
-vim.api.nvim_create_user_command('YankHistory', function()
+vim.api.nvim_create_user_command('TelescopeYankHistory', function()
   local finders = require 'telescope.finders'
   local pickers = require 'telescope.pickers'
   local actions = require 'telescope.actions'
@@ -273,4 +273,4 @@ local function show_yank_history_on_quick()
   end
 end
 
-vim.api.nvim_create_user_command('YankHistory2', show_yank_history_on_quick, {})
+vim.api.nvim_create_user_command('YankHistory', show_yank_history_on_quick, {})
