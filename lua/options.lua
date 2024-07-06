@@ -35,7 +35,7 @@ vim.opt.wildignore:append {
 vim.opt.suffixesadd:append { '.java', '.rs' } -- search for suffexes using gf
 
 -- vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
-vim.o.sessionoptions = 'buffers,curdir,folds,help,tabpages,winsize,winpos'
+-- vim.o.sessionoptions = 'buffers,curdir,folds,help,tabpages,winsize,winpos'
 vim.opt.sessionoptions = { -- required
   'buffers',
   'tabpages',

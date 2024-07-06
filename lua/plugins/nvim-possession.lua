@@ -3,6 +3,10 @@ return {
   lazy = false,
   dependencies = {
     {
+      'ibhagwan/fzf-lua',
+      lazy = false,
+    },
+    {
       'tiagovla/scope.nvim',
       lazy = false,
       config = true,
