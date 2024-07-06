@@ -52,7 +52,8 @@ return {
         -- For tab-scoped sessions, the on_save and on_load methods of extensions will be disabled by default. There is a special config argument always available that can override this:
         enable_in_tab = true,
       },
-      quickfix = { enabled = false },
+      -- NOTE: I don't wanna save quicklist
+      quickfix = false,
     },
   },
   config = function(_, opts)
@@ -95,7 +96,7 @@ return {
     })
     vim.api.nvim_create_autocmd('VimLeavePre', {
       callback = function()
-        close_quickfix()
+        -- close_quickfix()
         resession.save(vim.fn.getcwd(), { dir = 'session', notify = false })
         -- resession.save 'last'
       end,
