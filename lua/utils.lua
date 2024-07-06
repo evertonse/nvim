@@ -4,9 +4,9 @@ SetKeyMaps = function(mapping_table)
     local nowait_opts = { noremap = true, silent = true, nowait = true }
     local opts = nowait_opts
     if type(mapping[2]) == 'table' then
-      opts = vim.tbl_deep_extend('force', mapping[2], opts)
+      opts = vim.tbl_deep_extend('force', opts, mapping[2])
     elseif type(mapping[2]) == 'string' then
-      opts = vim.tbl_deep_extend('force', mapping[3] or {}, opts)
+      opts = vim.tbl_deep_extend('force', opts, mapping[3] or {})
       opts.desc = mapping[2]
     else
       opts = { noremap = true, silent = true }
