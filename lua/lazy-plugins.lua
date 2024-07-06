@@ -145,7 +145,7 @@ require('lazy').setup({
     config = function()
       require('scope').setup {}
     end,
-    -- lazy = false,
+    lazy = false,
     event = 'VeryLazy',
     enabled = true,
   },
