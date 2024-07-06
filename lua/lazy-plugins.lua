@@ -88,7 +88,6 @@ local lazy_config = {
 require('lazy').setup({
   -- :h event for valid  vim events, there are some only in neovim like LspDetach
   { 'tpope/vim-sleuth', lazy = false, enabled = false }, -- Detect tabstop and shiftwidth automatically
-  { 'moll/vim-bbye', event = 'User FileOpened' },
   { 'yorickpeterse/nvim-pqf', enabled = false }, -- Nicer Quick List
 
   -- NOTE: Plugins can also be added by using a table,
@@ -100,8 +99,8 @@ require('lazy').setup({
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  require 'plugins.Comment',
-  { 'moll/vim-bbye', lazy = false, enabled = true },
+  -- require 'plugins.Comment',
+  { 'moll/vim-bbye', lazy = false, enabled = false },
   -- lazy.nvim
   {
     'filipdutescu/renamer.nvim',
@@ -146,23 +145,23 @@ require('lazy').setup({
     config = function()
       require('scope').setup {}
     end,
-    lazy = false,
-    -- event = 'VeryLazy',
-    enabled = true,
+    -- lazy = false,
+    event = 'VeryLazy',
+    enabled = false,
   },
-  require 'plugins.tabline',
+  -- require 'plugins.tabline',
+  --
+  -- require 'plugins.wilder',
+  --
+  -- require 'plugins.fine-cmdline',
+  --
+  -- require 'plugins.neogit',
+  --
+  -- require 'plugins.gitsigns',
+  --
+  -- require 'plugins.git_conflict',
 
-  require 'plugins.wilder',
-
-  require 'plugins.fine-cmdline',
-
-  require 'plugins.neogit',
-
-  require 'plugins.gitsigns',
-
-  require 'plugins.git_conflict',
-
-  { 'sindrets/diffview.nvim', lazy = false },
+  -- { 'sindrets/diffview.nvim', lazy = false },
 
   --------------------------------------
 
@@ -186,7 +185,7 @@ require('lazy').setup({
 
   require 'plugins.treesitter',
 
-  require 'plugins.debug',
+  -- require 'plugins.debug',
 
   --------------------------------------
 

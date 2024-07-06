@@ -142,10 +142,10 @@ local function clean_up_buffers()
 end
 
 -- Create an autocommand to trigger on BufEnter
-vim.api.nvim_create_autocmd('VimEnter', {
-  group = vim.api.nvim_create_augroup('UserAutoClose', { clear = true }),
-  callback = clean_up_buffers,
-})
+-- vim.api.nvim_create_autocmd('VimEnter', {
+--   group = vim.api.nvim_create_augroup('UserAutoClose', { clear = true }),
+--   callback = clean_up_buffers,
+-- })
 
 -- close quicklist after enter
 vim.cmd [[ autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>]]

@@ -1,6 +1,6 @@
 return {
   'NeogitOrg/neogit',
-  enabled = true,
+  enabled = false,
   event = 'VeryLazy',
   -- lazy = false,
   dependencies = {
