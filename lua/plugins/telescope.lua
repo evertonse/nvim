@@ -66,6 +66,55 @@ return {
       -- Telescope picker. This is really useful to discover what Telescope can
       -- do as well as how to actually do it!
 
+      -- https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes
+      local previewers = require 'telescope.previewers'
+      local Job = require 'plenary.job'
+      local _bad = { '.*%.csv' } -- Put all filetypes that slow you down in this array
+      local bad_files = function(filepath)
+        for _, v in ipairs(_bad) do
+          if filepath:match(v) then
+            return false
+          end
+        end
+        return true
+      end
+
+      ---@diagnostic disable-next-line: redefined-local
+      local new_maker = function(filepath, bufnr, opts)
+        opts = opts or {}
+        if opts.use_ft_detect == nil then
+          opts.use_ft_detect = true
+        end
+        opts.use_ft_detect = opts.use_ft_detect == false and false or bad_files(filepath)
+        filepath = vim.fn.expand(filepath)
+
+        Job:new({
+          command = 'file',
+          args = { '--mime-type', '-b', filepath },
+          on_exit = function(j)
+            local mime_type = vim.split(j:result()[1], '/')[1]
+            if mime_type == 'text' then
+              vim.loop.fs_stat(filepath, function(_, stat)
+                if not stat then
+                  return
+                end
+                if stat.size > 100000 then
+                  vim.schedule(function()
+                    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { 'FILE TOO LARGE' })
+                  end)
+                else
+                  previewers.buffer_previewer_maker(filepath, bufnr, opts)
+                end
+              end)
+            else
+              -- maybe we want to write something to the buffer here
+              vim.schedule(function()
+                vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { 'BINARY' })
+              end)
+            end
+          end,
+        }):sync()
+      end
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
       local close_telescope = function(data)
@@ -79,6 +128,8 @@ return {
       require('telescope').setup {
 
         defaults = {
+          buffer_previewer_maker = new_maker,
+          -- buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
           vimgrep_arguments = {
             'rg',
             '-L',
@@ -139,7 +190,6 @@ return {
           grep_previewer = require('telescope.previewers').vim_buffer_vimgrep.new,
           qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
           -- Developer configurations: Not meant for general override
-          buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
           -- fzf native
           fzf = {
             fuzzy = true, -- false will only do exact matching
@@ -149,11 +199,14 @@ return {
           },
           mappings = {
             i = {
-              ['<C-p>'] = actions.cycle_history_prev,
-              ['<C-n>'] = actions.cycle_history_next,
+              ['<C-p>'] = actions.move_selection_previous,
+              ['<C-n>'] = actions.move_selection_next,
 
-              ['<A-j>'] = actions.move_selection_next,
-              ['<A-k>'] = actions.move_selection_previous,
+              ['<C-o>'] = actions.cycle_history_prev,
+              ['<C-i>'] = actions.cycle_history_next,
+
+              ['<c-j>'] = actions.move_selection_next,
+              ['<c-k>'] = actions.move_selection_previous,
 
               -- ["<C-c>"] = actions.close,
 
@@ -179,7 +232,7 @@ return {
               ['<M-q>'] = actions.send_selected_to_qflist + actions.open_qflist,
               --["<C-l>"] = actions.complete_tag,
               ['<C-_>'] = actions.which_key, -- keys from pressing <C-/>
-              ['<esc>'] = function(data)
+              ['<Esc>'] = function(data)
                 local mode = vim.api.nvim_get_mode().mode
                 actions.close(data)
                 if mode == 'i' then
@@ -190,6 +243,7 @@ return {
             },
 
             n = {
+              ['1'] = close_telescope,
               ['<esc>'] = close_telescope,
               ['<leader>q'] = close_telescope,
 

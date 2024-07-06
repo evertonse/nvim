@@ -30,8 +30,12 @@ return {
     -- override default filter
     buf_filter = function(bufnr)
       local buftype = vim.bo[bufnr].buftype
+      local filetype = vim.bo[bufnr].filetype
       if buftype == 'help' then
         return true
+      end
+      if filetype == 'qf' or buftype == 'qf' then
+        return false
       end
       if buftype ~= '' and buftype ~= 'acwrite' then
         return false
@@ -46,9 +50,10 @@ return {
     extensions = {
       scope = {
         -- For tab-scoped sessions, the on_save and on_load methods of extensions will be disabled by default. There is a special config argument always available that can override this:
-        -- enable_in_tab = true,
+        enable_in_tab = true,
       },
-    }, -- add scope.nvim extension
+      quickfix = { enabled = false },
+    },
   },
   config = function(_, opts)
     local resession = require 'resession'

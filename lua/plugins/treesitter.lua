@@ -10,6 +10,7 @@
 -- treesitter-highlight-priority in treesitter.txt
 --
 -- treesitter-query in treesitter.txt
+
 local disable_treesitter_when = function(lang, bufnr)
   local too_big = vim.api.nvim_buf_line_count(bufnr) > 50000
   local buf_name = vim.fn.expand '%'
@@ -24,7 +25,7 @@ return { -- Highlight, edit, and navigate code
   build = ':TSUpdate',
   -- event = { 'BufReadPost', 'BufNewFile' },
   event = { 'BufEnter' },
-  dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
+  dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects', event = 'InsertEnter' },
   opts = {
 
     --XXX: Found out that putting these highlight options is laggy on long lines when the cursor is
@@ -48,6 +49,11 @@ return { -- Highlight, edit, and navigate code
     textobjects = {
       enable = true,
       select = {
+        selection_modes = {
+          ['@parameter.outer'] = 'v', -- charwise
+          ['@function.outer'] = 'V', -- linewise
+          ['@class.outer'] = '<c-v>', -- blockwise
+        },
         enable = true,
         lookahead = true,
         keymaps = {
