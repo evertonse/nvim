@@ -31,15 +31,15 @@ return {
     local resession = require 'resession'
     resession.setup(opts)
     -- Resession does NOTHING automagically, so we have to set up some keymaps
-    vim.keymap.set('n', '<leader>ss', resession.save)
-    vim.keymap.set('n', '<leader>sl', resession.load)
-    vim.keymap.set('n', '<leader>sd', resession.delete)
+    vim.keymap.set('n', '<leader>rss', resession.save)
+    vim.keymap.set('n', '<leader>rsl', resession.load)
+    vim.keymap.set('n', '<leader>rsd', resession.delete)
     vim.api.nvim_create_autocmd('VimEnter', {
       callback = function()
         -- Only load the session if nvim was started with no args
         if vim.fn.argc(-1) == 0 then
           -- Save these to a different directory, so our manual sessions don't get polluted
-          resession.load(vim.fn.getcwd(), { dir = 'dirsession', silence_errors = false })
+          resession.load(vim.fn.getcwd(), { dir = 'dirsession', silence_errors = true })
           vim.cmd [[stopinsert]]
         end
       end,

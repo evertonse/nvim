@@ -147,7 +147,7 @@ require('lazy').setup({
     end,
     -- lazy = false,
     event = 'VeryLazy',
-    enabled = false,
+    enabled = true,
   },
   -- require 'plugins.tabline',
   --
