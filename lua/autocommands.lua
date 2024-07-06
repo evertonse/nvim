@@ -18,7 +18,7 @@ vim.cmd [[
     autocmd WinEnter * setlocal cursorline
     autocmd WinLeave * setlocal nocursorline
    " autocmd WinNew * :print "hello"
-    autocmd FileType qf set nobuflisted
+    autocmd FileType qf,nofile,help set nobuflisted
   augroup end
 
   augroup _git
@@ -91,9 +91,9 @@ vim.cmd [[autocmd FileType bin nnoremap <F6> :%!xxd -r <CR>]]
 --     { "BufRead", "BufNewFile" },
 --     { pattern = { "*.txt", "*.md", "*.tex" }, command = "setlocal spell" }
 -- )
-vim.cmd [[autocmd filetype python nnoremap <F5> :w <bar> exec '!python '.shellescape('%')<CR>]]
+-- vim.cmd [[autocmd filetype python nnoremap <F5> :w <bar> exec '!python '.shellescape('%')<CR>]]
 -- vim.cmd [[autocmd filetype c nnoremap <F5> :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>]]
-vim.cmd [[autocmd filetype cpp nnoremap <F5> :w <bar> exec '!g++ '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>]]
+-- vim.cmd [[autocmd filetype cpp nnoremap <F5> :w <bar> exec '!g++ '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>]]
 vim.cmd [[autocmd TermOpen * setlocal nonumber norelativenumber signcolumn=no]]
 -- vim.cmd [[autocmd TermOpen * startinsert ]] -- stopinsert ]]        -- starts terminal in insert mode
 
@@ -165,8 +165,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = capture_yank,
 })
 
--- Custom sorter that sorts in reverse order
-vim.api.nvim_create_user_command('TelescopeYankHistory', function()
+local telescope_yank_history = function()
   local finders = require 'telescope.finders'
   local pickers = require 'telescope.pickers'
   local actions = require 'telescope.actions'
@@ -215,7 +214,10 @@ vim.api.nvim_create_user_command('TelescopeYankHistory', function()
       end,
     })
     :find()
-end, {})
+end
+
+-- Custom sorter that sorts in reverse order
+vim.api.nvim_create_user_command('TelescopeYankHistory', telescope_yank_history, {})
 
 -- Function to open a quickfix window with yank history
 
