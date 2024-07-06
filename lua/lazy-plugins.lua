@@ -100,7 +100,7 @@ require('lazy').setup({
 
   -- "gc" to comment visual regions/lines
   -- require 'plugins.Comment',
-  { 'moll/vim-bbye', lazy = false, enabled = false },
+  { 'moll/vim-bbye', lazy = false, enabled = true },
   -- lazy.nvim
   {
     'filipdutescu/renamer.nvim',

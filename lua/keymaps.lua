@@ -365,26 +365,41 @@ local function get_current_jumplist_index()
 end
 
 -- Function to jump within the current buffer
-jumplist_current_index = 0
+jumplist_current_index = 1
 local function jump_within_buffer(direction)
-  local jump_list = vim.fn.getjumplist()[1]
   local current_buf = vim.api.nvim_get_current_buf()
-
-  local step = (direction == 'back') and -1 or 1
-  local new_index = jumplist_current_index + step
-
-  while new_index >= 1 and new_index <= #jump_list do
-    local jump = jump_list[new_index]
+  local jump_list = {}
+  local unfiltered_jump_list = vim.fn.getjumplist()[1]
+  for i = #unfiltered_jump_list, 1, -1 do
+    local jump = unfiltered_jump_list[i]
     if jump.bufnr == current_buf then
-      vim.api.nvim_win_set_cursor(0, { jump.lnum, jump.col })
-      local current_jumplist_count = #vim.fn.getjumplist()[1]
-      local diff = math.abs(#jump_list - current_jumplist_count)
-      assert(diff == 0, 'Diff were not zero, that means the jumplist changed')
-      jumplist_current_index = new_index
-      return
+      table.insert(jump_list, jump)
     end
-    new_index = new_index + step
   end
+
+  local step = (direction == 'back') and 1 or -1
+  local curr_index = jumplist_current_index
+
+  if curr_index >= 1 and curr_index <= #jump_list then
+    local jump = jump_list[curr_index]
+    local new_index = curr_index + step
+    jumplist_current_index = new_index
+    vim.api.nvim_win_set_cursor(0, { jump.lnum, jump.col })
+  end
+  ShowStringAndWait(
+    'jumplist_current_index = '
+      .. vim.inspect(jumplist_current_index)
+      .. 'new_index = '
+      .. vim.inspect(new_index)
+      .. ' unfiltered_jump_list = '
+      .. vim.inspect(unfiltered_jump_list)
+      .. 'jump_list = '
+      .. vim.inspect(jump_list)
+      .. '#jump_list = '
+      .. vim.inspect(#jump_list)
+      .. '#vim.fn.getjumplist()[1] = '
+      .. vim.inspect(#vim.fn.getjumplist()[1])
+  )
 end
 
 M.general = {
@@ -400,13 +415,13 @@ M.general = {
 
     ['<Esc>'] = { '<cmd>noh <CR>', 'Clear highlights' },
 
-    ['<leader><C-k>'] = {
+    ['0'] = {
       function()
         jump_within_buffer 'back'
       end,
       [[jump_within_buffer 'back']],
     },
-    ['<leader><C-j>'] = {
+    ['9'] = {
       function()
         jump_within_buffer 'foward'
       end,
