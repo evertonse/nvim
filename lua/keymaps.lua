@@ -415,13 +415,13 @@ M.general = {
 
     ['<Esc>'] = { '<cmd>noh <CR>', 'Clear highlights' },
 
-    ['0'] = {
+    ['<c-0>'] = {
       function()
         jump_within_buffer 'back'
       end,
       [[jump_within_buffer 'back']],
     },
-    ['9'] = {
+    ['<c-9>'] = {
       function()
         jump_within_buffer 'foward'
       end,
