@@ -226,9 +226,9 @@ local function show_yank_history_on_quick()
   for idx = #yank_history, 1, -1 do
     local entry = yank_history[idx]
     table.insert(qf_list, {
-      filename = '',
-      lnum = idx,
-      col = 0,
+      -- filename = '',
+      -- lnum = idx,
+      -- col = 0,
       -- nr = idx,
       text = entry,
     })
