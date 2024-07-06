@@ -380,9 +380,9 @@ local function jump_within_buffer(direction)
   local step = (direction == 'back') and 1 or -1
   local curr_index = jumplist_current_index
 
+  local new_index = curr_index + step
   if curr_index >= 1 and curr_index <= #jump_list then
     local jump = jump_list[curr_index]
-    local new_index = curr_index + step
     jumplist_current_index = new_index
     vim.api.nvim_win_set_cursor(0, { jump.lnum, jump.col })
   end
@@ -407,7 +407,7 @@ M.general = {
   tn = {},
   vnx = {
     ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' },
-    ['<leader><leader>'] = { ':Norm', 'live preview of normal command' },
+    ['<leader><leader>'] = { ':Norm <Down>', 'live preview of normal command' },
   },
 
   -- [NORMAL]
