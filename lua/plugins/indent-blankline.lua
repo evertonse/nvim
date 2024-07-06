@@ -47,6 +47,7 @@ return {
       --                          • ``
       priority = 2048,
       show_start = os.getenv 'TMUX' == nil,
+      -- show_start = true,
       show_end = false,
       include = { node_type = { lua = { 'return_statement', 'table_constructor' } } },
     },
