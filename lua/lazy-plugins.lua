@@ -101,8 +101,7 @@ require('lazy').setup({
 
   -- "gc" to comment visual regions/lines
   require 'plugins.Comment',
-  --{ 'nvim-tree/nvim-web-devicons' },
-  { 'moll/vim-bbye', lazy = false, enabled = false },
+  { 'moll/vim-bbye', lazy = false, enabled = true },
   -- lazy.nvim
   {
     'filipdutescu/renamer.nvim',
@@ -154,7 +153,7 @@ require('lazy').setup({
     end,
     lazy = true,
     -- event = 'VeryLazy',
-    enabled = false,
+    enabled = true,
   },
   require 'plugins.tabline',
 

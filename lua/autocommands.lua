@@ -124,13 +124,27 @@ vim.cmd [[autocmd TermOpen * setlocal nonumber norelativenumber signcolumn=no]]
 --     endif
 -- ]]
 --
+-- Create a function to check and delete buffers
+local function clean_up_buffers()
+  local buffers = vim.api.nvim_list_bufs()
+
+  for _, buf in ipairs(buffers) do
+    -- Check if the buffer is valid and listed
+    if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_get_option(buf, 'buflisted') then
+      -- Check if the buffer is unnamed or hidden
+      local buftype = vim.api.nvim_buf_get_option(buf, 'buftype')
+      local bufname = vim.api.nvim_buf_get_name(buf)
+      if buftype == 'nofile' or bufname == '' or bufname == '[No Name]' then
+        vim.api.nvim_buf_delete(buf, { force = true })
+      end
+    end
+  end
+end
+
+-- Create an autocommand to trigger on BufEnter
 vim.api.nvim_create_autocmd('VimEnter', {
-  group = vim.api.nvim_create_augroup('UserAutoClose', {}),
-  callback = function(args)
-    -- if vim.bo[args.buf].buftype == 'nofile' then
-    --   vim.api.nvim_buf_delete(args.buf, {})
-    -- end
-  end,
+  group = vim.api.nvim_create_augroup('UserAutoClose', { clear = true }),
+  callback = clean_up_buffers,
 })
 
 -- close quicklist after enter
