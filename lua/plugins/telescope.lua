@@ -154,36 +154,40 @@ return {
       end
       -- NOTE: :help telecope.setup() and :help telescope.builtin
       require('telescope').setup {
-        -- pickers = {
-        --   find_files = {
-        --
-        --     entry_maker = function(entry)
-        --       -- Customize the display of each entry
-        --       local icon = ' ' -- Example icon (you can use any icon here)
-        --       local display = icon .. entry
-        --       -- assert(false)
-        --
-        --       return {
-        --         value = entry,
-        --         ordinal = entry,
-        --         display = display,
-        --       }
-        --     end,
-        --   },
-        -- },
+        pickers = {
+          find_files = {
+
+            find_command = { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--color=never' },
+            -- entry_maker = function(entry)
+            --   -- Customize the display of each entry
+            --   local icon = ' ' -- Example icon (you can use any icon here)
+            --   local display = icon .. entry
+            --   -- assert(false)
+            --
+            --   return {
+            --     value = entry,
+            --     ordinal = entry,
+            --     display = display,
+            --   }
+            -- end,
+          },
+          live_grep = {
+            find_command = { 'fd', '--type', 'f', '--hidden', '--exclude', '.git' },
+          },
+        },
         defaults = {
           -- buffer_previewer_maker = new_maker,
           buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
-          -- vimgrep_arguments = {
-          --   'rg',
-          --   '-L',
-          --   '--color=never',
-          --   '--no-heading',
-          --   '--with-filename',
-          --   '--line-number',
-          --   '--column',
-          --   '--smart-case',
-          -- },
+          vimgrep_arguments = {
+            'rg',
+            '-L',
+            '--color=never',
+            '--no-heading',
+            '--with-filename',
+            '--line-number',
+            '--column',
+            '--smart-case',
+          },
           --פֿ
           prompt_prefix = '   ',
           selection_caret = ' ',

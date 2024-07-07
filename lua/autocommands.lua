@@ -179,6 +179,18 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = capture_yank,
 })
 
+vim.api.nvim_create_autocmd('CmdwinEnter', {
+  pattern = '*',
+  callback = function()
+    vim.api.nvim_buf_set_keymap(0, 'i', '<C-f>', '<C-c><Down>', { noremap = true, silent = true })
+    vim.api.nvim_input 'a'
+    local close_completion = false
+    if close_completion then
+      vim.cmd [[pclose]]
+    end
+  end,
+})
+
 local telescope_yank_history = function()
   local finders = require 'telescope.finders'
   local pickers = require 'telescope.pickers'
