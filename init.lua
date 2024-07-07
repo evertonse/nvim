@@ -17,6 +17,10 @@
 --    [x] Mini lsp, recording
 --    [ ] Create a telescope options to select from yank history
 --    [ ] MORE PLUGINS https://github.com/rockerBOO/awesome-neovim#cursorline
+--    [ ] Take a look at https://github.com/ggandor/leap.nvim
+--    [ ] Take a look at  hop.nvim
+--    [ ] Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
+
 local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
 local surround_opts = { 'mini.surround', 'vim-surround' }
 

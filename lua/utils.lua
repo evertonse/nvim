@@ -1,3 +1,65 @@
+function show_lines_with_numbers()
+  -- Create a new buffer
+  local buf = vim.api.nvim_create_buf(false, true)
+
+  -- Set up some lines in the buffer
+  local lines = {
+    ' First line',
+    ' Second line',
+    ' Third line',
+    ' Fourth line',
+    ' Fifth line',
+  }
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+
+  -- Open the buffer in a new window
+  vim.api.nvim_open_win(buf, true, {
+    relative = 'editor',
+    width = 40,
+    height = 10,
+    row = 5,
+    col = 10,
+    style = 'minimal',
+    border = 'single',
+  })
+
+  -- Add ExtMarks to display numbers before each line
+  local ns_id = vim.api.nvim_create_namespace 'line_numbers'
+  for i, _ in ipairs(lines) do
+    local line_number = tostring(i)
+    vim.api.nvim_buf_set_extmark(buf, ns_id, i - 1, 0, {
+      virt_text = { { line_number, 'Number' } },
+      virt_text_pos = 'overlay',
+      hl_mode = 'combine',
+    })
+  end
+end
+
+function show_numbers_in_telescope_picker()
+  local buf = vim.api.nvim_get_current_buf()
+
+  -- Check if the current buffer is a Telescope picker
+  if not (vim.bo[buf].filetype == 'TelescopePrompt') then
+    print 'Current buffer is not a Telescope picker'
+    return
+  end
+
+  -- Get the lines in the buffer
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+
+  -- Add ExtMarks to display numbers before each line
+  local ns_id = vim.api.nvim_create_namespace 'line_numbers'
+  for i, _ in ipairs(lines) do
+    local line_number = tostring(i + 1)
+    vim.api.nvim_buf_set_extmark(buf, ns_id, i, 0, {
+      virt_text = { { line_number, 'Number' } },
+      -- virt_text_pos = 'overlay',
+      virt_text_pos = 'eol',
+      hl_mode = 'combine',
+    })
+  end
+end
+
 SetKeyMaps = function(mapping_table)
   -- Delete maps do disable
   local set = function(mode, key, mapping)

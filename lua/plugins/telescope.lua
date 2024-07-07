@@ -7,11 +7,38 @@
 local commit_working_path_support = 'bfcc7d5c6f12209139f175e6123a7b7de6d9c18a'
 local commit_working_path_support_branch = 'master'
 
+local select_nth_entry = function(nth)
+  return function(prompt_bufnr)
+    -- vim.api.nvim_input(':' .. tostring(nth))
+    local picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
+    picker:set_selection(nth)
+    vim.cmd [[stopinsert]]
+
+    -- require('telescope.actions').select_default(prompt_bufnr)
+  end
+end
+
+-- local entry_display = require 'telescope.pickers.entry_display'
+-- local make_entry = require 'telescope.make_entry'
+
+-- Custom make_display function for find_files
+-- Custom entry maker function
+local function custom_entry_maker(entry, index)
+  local prefix = index <= 9 and index .. ': ' or ''
+  local display_text = prefix .. entry
+
+  return {
+    value = entry,
+    display = display_text,
+    ordinal = entry,
+  }
+end
+
 return {
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
-    lazy = false,
+    -- lazy = false,
     -- tag = '0.1.8',
     branch = commit_working_path_support_branch,
     commit = commit_working_path_support,
@@ -125,31 +152,48 @@ return {
           return
         end
       end
+      -- NOTE: :help telecope.setup() and :help telescope.builtin
       require('telescope').setup {
-
+        -- pickers = {
+        --   find_files = {
+        --
+        --     entry_maker = function(entry)
+        --       -- Customize the display of each entry
+        --       local icon = ' ' -- Example icon (you can use any icon here)
+        --       local display = icon .. entry
+        --       -- assert(false)
+        --
+        --       return {
+        --         value = entry,
+        --         ordinal = entry,
+        --         display = display,
+        --       }
+        --     end,
+        --   },
+        -- },
         defaults = {
-          buffer_previewer_maker = new_maker,
-          -- buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
-          vimgrep_arguments = {
-            'rg',
-            '-L',
-            '--color=never',
-            '--no-heading',
-            '--with-filename',
-            '--line-number',
-            '--column',
-            '--smart-case',
-          },
+          -- buffer_previewer_maker = new_maker,
+          buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
+          -- vimgrep_arguments = {
+          --   'rg',
+          --   '-L',
+          --   '--color=never',
+          --   '--no-heading',
+          --   '--with-filename',
+          --   '--line-number',
+          --   '--column',
+          --   '--smart-case',
+          -- },
           --פֿ
           prompt_prefix = '   ',
-          selection_caret = '  ',
-          entry_prefix = '  ',
+          selection_caret = ' ',
+          entry_prefix = ' ',
           selection_strategy = 'closest',
           -- sorting_strategy = 'descending',
           sorting_strategy = 'ascending',
           layout_strategy = 'horizontal',
-          -- path_display = { 'smart' },
-          path_display = { 'truncate' },
+          path_display = { 'smart' },
+          -- path_display = { 'truncate' },
           initial_mode = 'normal',
           preview = {
             treesitter = true,
@@ -190,15 +234,20 @@ return {
           grep_previewer = require('telescope.previewers').vim_buffer_vimgrep.new,
           qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
           -- Developer configurations: Not meant for general override
-          -- fzf native
-          fzf = {
-            fuzzy = true, -- false will only do exact matching
-            override_generic_sorter = true, -- override the generic sorter
-            override_file_sorter = true, -- override the file sorter
-            case_mode = 'smart_case', -- or "ignore_case" or "respect_case" -- the default case_mode is "smart_case"
-          },
           mappings = {
             i = {
+              ["'"] = select_nth_entry(0),
+              ['1'] = select_nth_entry(1),
+              ['2'] = select_nth_entry(2),
+              ['3'] = select_nth_entry(3),
+              ['4'] = select_nth_entry(4),
+              ['5'] = select_nth_entry(5),
+              ['6'] = select_nth_entry(6),
+              ['7'] = select_nth_entry(7),
+              ['8'] = select_nth_entry(8),
+              ['9'] = select_nth_entry(9),
+              ['0'] = select_nth_entry(10),
+
               ['<C-p>'] = actions.move_selection_previous,
               ['<C-n>'] = actions.move_selection_next,
 
@@ -243,7 +292,17 @@ return {
             },
 
             n = {
-              ['1'] = close_telescope,
+              ["'"] = select_nth_entry(0),
+              ['1'] = select_nth_entry(1),
+              ['2'] = select_nth_entry(2),
+              ['3'] = select_nth_entry(3),
+              ['4'] = select_nth_entry(4),
+              ['5'] = select_nth_entry(5),
+              ['6'] = select_nth_entry(6),
+              ['7'] = select_nth_entry(7),
+              ['8'] = select_nth_entry(8),
+              ['9'] = select_nth_entry(9),
+              ['0'] = select_nth_entry(10),
               ['<esc>'] = close_telescope,
               ['<leader>q'] = close_telescope,
 
@@ -293,12 +352,21 @@ return {
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
+            require('telescope.themes').get_cursor(),
+          },
+          fzf = {
+            fuzzy = true, -- false will only do exact matching
+            override_generic_sorter = true, -- override the generic sorter
+            override_file_sorter = true, -- override the file sorter
+            case_mode = 'smart_case', -- or "ignore_case" or "respect_case"
+            -- the default case_mode is "smart_case"
           },
         },
       }
 
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
+      -- This will load fzy_native and have it override the default file sorter
       pcall(require('telescope').load_extension, 'ui-select')
 
       -- See `:help telescope.builtin`
@@ -314,7 +382,8 @@ return {
           ['<leader>sk'] = { builtin.keymaps, '[S]earch [K]eymaps' },
           ['<leader>f'] = {
             function()
-              builtin.find_files { initial_mode = 'insert' }
+              --[[hidden = true]]
+              builtin.find_files { no_ignore = true, initial_mode = 'insert' }
             end,
             '[S]earch [F]iles',
           },
@@ -334,7 +403,12 @@ return {
           ['<leader>sd'] = { builtin.diagnostics, '[S]earch [D]iagnostics' },
           ['<leader>srf'] = { builtin.resume, '[S]earch [R]esume' },
           ['<leader>s.'] = { builtin.oldfiles, '[S]earch Recent Files ("." for repeat)' },
-          ['<leader>b'] = { builtin.buffers, 'Find existing [B]uffers' },
+          ['<leader>b'] = {
+            function()
+              builtin.buffers { select_current = true }
+            end,
+            'Find existing [B]uffers',
+          },
           -- Slightly advanced example of overriding default behavior and theme
           ['<leader>/'] = {
             function() -- You can pass additional configuration to Telescope to change the theme, layout, etc.

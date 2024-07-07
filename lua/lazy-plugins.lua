@@ -207,6 +207,22 @@ require('lazy').setup({
     enabled = false --[[Mega Slow, plus :Telescope register is almost the same]],
     lazy = false,
   },
+  -- Hop (Better Navigation)
+  {
+    'phaazon/hop.nvim',
+    opts = {},
+    lazy = false,
+  },
+  {
+    'jinh0/eyeliner.nvim',
+    lazy = false,
+    config = function()
+      require('eyeliner').setup {
+        highlight_on_key = true, -- show highlights only after keypress
+        dim = false, -- dim all other characters if set to true (recommended!)
+      }
+    end,
+  },
   require 'plugins.inc-rename',
   require 'plugins.harpoon',
   require 'plugins.vim-matchup', -- NOTE: Interaction with matchup and treesitter slow thing down when jumping from one context to another(lua table to another with jk), I think longer lines are more problematic

@@ -14,7 +14,8 @@
 local disable_treesitter_when = function(lang, bufnr)
   local too_big = vim.api.nvim_buf_line_count(bufnr) > 50000
   local buf_name = vim.fn.expand '%'
-  if vim.bo.filetype == 'tmux' or too_big or lang == 'conf' or string.find(buf_name, 'tmux%-') then
+  local is_binary = vim.bo.filetype == 'bin'
+  if is_binary or vim.bo.filetype == 'tmux' or too_big or lang == 'conf' or string.find(buf_name, 'tmux%-') then
     return true
   end
 end
