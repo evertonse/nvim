@@ -1053,6 +1053,7 @@ M.telescope = {
   -- Normal and Terminal Mode
   n = {
     --["<leader>f"] = { "<cmd> Telescope find_files <CR>", "Find files" },
+    ['<leader>markslocal'] = { '<cmd> :Telescope marks mark_type=local <CR>', 'Find all' },
     ['<leader>af'] = { '<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>', 'Find all' },
     ['<leader>f'] = {
       -- "<cmd>lua require'telescope.builtin'.find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }})<cr>",

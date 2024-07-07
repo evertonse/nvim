@@ -20,6 +20,7 @@
 --    [ ] Take a look at https://github.com/ggandor/leap.nvim
 --    [ ] Take a look at  hop.nvim
 --    [ ] Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
+--    [ ] REFACTOR: Make all keymaps in keymaps, and require 'keymaps'.telescope for example in plugin site
 
 local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
 local surround_opts = { 'mini.surround', 'vim-surround' }
