@@ -408,6 +408,7 @@ M.general = {
   vnx = {
     ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' },
     ['<leader><leader>'] = { ':Norm <Down>', 'live preview of normal command' },
+    [';'] = { ':<Down>', 'Command Mode' },
     ['<C-\\>'] = {
       function()
         vim.api.nvim_input ':<Down><C-f>i<Down>'
@@ -1227,6 +1228,40 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 --  See `:help wincmd` for a list of all window commands
 -- Function to set keymaps
 
+local function set_global_mark(mark)
+  local existing_mark = vim.fn.getpos("'" .. mark)
+  -- Check if the mark is already set (line number will be > 0)
+  if existing_mark[2] > 0 then
+    -- Prompt the user for confirmation
+    local response = vim.fn.confirm("Mark '" .. mark .. "' already exists. Overwrite?", '&Yes\n&No', 2)
+    if response ~= 1 then
+      return
+    end
+  end
+  -- Set the global mark
+  vim.cmd('mark ' .. mark)
+end
+
+-- global marks
+local prefixes = "m'"
+local letters = 'abcdefghijklmnopqrstuvwxyz'
+for i = 1, #prefixes do
+  local prefix = prefixes:sub(i, i)
+  for j = 1, #letters do
+    local lower_letter = letters:sub(j, j)
+    local upper_letter = string.upper(lower_letter)
+    if prefix == 'm' then
+      M.general.vnx[prefix .. lower_letter] = {
+        function()
+          set_global_mark(upper_letter)
+        end,
+        ' Mark ' .. upper_letter,
+      }
+    else
+      M.general.vnx[prefix .. lower_letter] = { prefix .. upper_letter, 'Go to mark ' .. upper_letter }
+    end
+  end
+end
 SetKeyMaps(M.disabled)
 SetKeyMaps(M.general)
 SetKeyMaps(M.blankline)
