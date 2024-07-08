@@ -32,11 +32,12 @@ vim.opt.wildignore:append {
   '.hg',
   '.orig',
 }
+
 vim.opt.suffixesadd:append { '.java', '.rs' } -- search for suffexes using gf
 
 -- vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
 -- vim.o.sessionoptions = 'buffers,curdir,folds,help,tabpages,winsize,winpos'
-vim.opt.sessionoptions = { -- required
+vim.opt.sessionoptions = { -- XXX: required for scope.nvim
   'buffers',
   'tabpages',
   'globals',

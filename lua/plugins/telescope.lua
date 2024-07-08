@@ -240,7 +240,7 @@ return {
           -- Developer configurations: Not meant for general override
           mappings = {
             i = {
-              ["'"] = select_nth_entry(0),
+              ["'"] = show_numbers_in_telescope_picker,
               ['1'] = select_nth_entry(1),
               ['2'] = select_nth_entry(2),
               ['3'] = select_nth_entry(3),

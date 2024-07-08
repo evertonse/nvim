@@ -35,12 +35,20 @@ function show_lines_with_numbers()
   end
 end
 
-function show_numbers_in_telescope_picker()
-  local buf = vim.api.nvim_get_current_buf()
+function show_numbers_in_telescope_picker(prompt_bufnr, opts)
+  local picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
+  local actions = require 'telescope.actions'
+  local max_results = picker.max_results
+  local num_results = picker.manager:num_results()
+  local results_bufnr = picker.results_bufnr
+  local sorting_strategy = picker.sorting_strategky
+
+  local buf = results_bufnr
+  -- local buf = vim.api.nvim_get_current_buf()
 
   -- Check if the current buffer is a Telescope picker
   if not (vim.bo[buf].filetype == 'TelescopePrompt') then
-    print 'Current buffer is not a Telescope picker'
+    print('Current buffer is not a Telescope picker' .. vim.inspect(vim.bo[buf]))
     return
   end
 

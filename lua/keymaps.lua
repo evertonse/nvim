@@ -408,7 +408,7 @@ M.general = {
   vnx = {
     ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' },
     ['<leader><leader>'] = { ':Norm <Down>', 'live preview of normal command' },
-    [';'] = { ':<Down>', 'Command Mode' },
+    [';'] = { ':<Down><Down>', 'Command Mode' },
     ['<C-\\>'] = {
       function()
         vim.api.nvim_input ':<Down><C-f>i<Down>'

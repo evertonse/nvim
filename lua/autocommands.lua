@@ -182,8 +182,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.api.nvim_create_autocmd('CmdwinEnter', {
   pattern = '*',
   callback = function()
-    vim.api.nvim_buf_set_keymap(0, 'i', '<C-f>', '<C-c><Down>', { noremap = true, silent = true })
-    vim.api.nvim_input 'a'
+    local modes = { 'i', 'n' }
+    for _, mode in ipairs(modes) do
+      vim.api.nvim_buf_set_keymap(0, mode, '<C-f>', '<C-c><Down>', { noremap = true, silent = true })
+    end
+    -- vim.api.nvim_input 'a'
     local close_completion = false
     if close_completion then
       vim.cmd [[pclose]]
