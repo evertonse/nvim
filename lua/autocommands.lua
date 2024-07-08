@@ -310,3 +310,40 @@ local function show_yank_history_on_quick()
 end
 
 vim.api.nvim_create_user_command('YankHistory', show_yank_history_on_quick, {})
+
+local function get_yank_file_path()
+  -- Get the current working directory
+  local cwd = vim.fn.getcwd()
+  -- Define the file path for storing the last yank
+  return cwd .. '/.last_yank.txt'
+end
+
+local function save_last_yank()
+  local yanked_text = vim.fn.getreg '"'
+  local yank_file = get_yank_file_path()
+  local file = io.open(yank_file, 'w')
+  if file then
+    file:write(yanked_text)
+    file:close()
+  end
+end
+
+local function load_last_yank()
+  local yank_file = get_yank_file_path()
+  local file = io.open(yank_file, 'r')
+  if file then
+    local yanked_text = file:read '*all'
+    vim.fn.setreg('"', yanked_text)
+    file:close()
+  end
+end
+
+-- Autocommand to save the last yanked text before exiting Neovim
+vim.api.nvim_create_autocmd('VimLeavePre', {
+  callback = save_last_yank,
+})
+
+-- Autocommand to load the last yanked text when entering Neovim
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = load_last_yank,
+})

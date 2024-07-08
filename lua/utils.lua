@@ -35,40 +35,6 @@ function show_lines_with_numbers()
   end
 end
 
-function show_numbers_in_telescope_picker(prompt_bufnr, opts)
-  local picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
-  local actions = require 'telescope.actions'
-  local max_results = picker.max_results
-  local num_results = picker.manager:num_results()
-  local results_bufnr = picker.results_bufnr
-  local sorting_strategy = picker.sorting_strategky
-
-  local buf = results_bufnr
-  -- local buf = vim.api.nvim_get_current_buf()
-
-  -- Check if the current buffer is a Telescope picker
-  if not (vim.bo[buf].filetype == 'TelescopePrompt') then
-    print('Current buffer is not a Telescope picker' .. vim.inspect(vim.bo[buf].filetype))
-    ShowStringAndWait(vim.inspect(vim.bo[buf]))
-    return
-  end
-
-  -- Get the lines in the buffer
-  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-
-  -- Add ExtMarks to display numbers before each line
-  local ns_id = vim.api.nvim_create_namespace 'line_numbers'
-  for i, _ in ipairs(lines) do
-    local line_number = tostring(i + 1)
-    vim.api.nvim_buf_set_extmark(buf, ns_id, i, 0, {
-      virt_text = { { line_number, 'Number' } },
-      -- virt_text_pos = 'overlay',
-      virt_text_pos = 'eol',
-      hl_mode = 'combine',
-    })
-  end
-end
-
 SetKeyMaps = function(mapping_table)
   -- Delete maps do disable
   local set = function(mode, key, mapping)
@@ -261,6 +227,10 @@ function TableDump(node)
   output_str = table.concat(output)
 
   return output_str
+end
+
+Inspect = function(table)
+  ShowStringAndWait(vim.inspect(table))
 end
 
 ShowStringAndWait = function(input_string)

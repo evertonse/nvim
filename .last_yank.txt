@@ -1,0 +1,2 @@
+
+      -- Enable Telescope extensions if they are installed

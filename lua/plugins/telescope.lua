@@ -13,8 +13,119 @@ local select_nth_entry = function(nth)
     local picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
     picker:set_selection(nth)
     vim.cmd [[stopinsert]]
+    vim.cmd [[redraw]]
 
-    -- require('telescope.actions').select_default(prompt_bufnr)
+    require('telescope.actions').select_default(prompt_bufnr)
+  end
+end
+
+local telescope_hop = function(prompt_bufnr, opts)
+  local picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
+  local actions = require 'telescope.actions'
+  local max_results = picker.max_results
+  local num_results = picker.manager:num_results()
+  local results_bufnr = picker.results_bufnr
+  local sorting_strategy = picker.sorting_strategy
+
+  local buf = results_bufnr
+  -- local buf = vim.api.nvim_get_current_buf()
+
+  -- Check if the current buffer is a Telescope picker
+  if not (vim.bo[buf].filetype == 'TelescopeResults') then
+    print('Current buffer is not a Telescope picker' .. vim.inspect(vim.bo[buf].filetype))
+    ShowStringAndWait(vim.inspect(vim.bo[buf]))
+    return
+  end
+
+  -- Inspect(picker)
+
+  -- Get the lines in the buffer
+  -- local keys = { '1', '2''a', 's', 'd', 'f', 'h', 'j', 'k', 'l' }
+  local keys = {
+    'a',
+    's',
+    'd',
+    'f',
+    'g',
+    'h',
+    'j',
+    'k',
+    'l',
+    'q',
+    'w',
+    'e',
+    'r',
+    't',
+    'y',
+    'u',
+    'i',
+    'o',
+    'p',
+    'A',
+    'S',
+    'D',
+    'F',
+    'G',
+    'H',
+    'J',
+    'K',
+    'L',
+    ':',
+    'Q',
+    'W',
+    'E',
+    'R',
+    'T',
+    'Y',
+    'U',
+    'I',
+    'O',
+    'P',
+  }
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+
+  -- Add ExtMarks to display numbers before each line
+  local ns_id = vim.api.nvim_create_namespace 'line_numbers'
+  local keyline = {}
+  for i = 1, math.min(num_results, max_results, #lines, #keys) do
+    local key = keys[i]
+    local line_number = tostring(i)
+    vim.api.nvim_buf_set_extmark(buf, ns_id, i - 1, 0, {
+      virt_text = { { key, 'Number' } },
+      -- • virt_text_pos : position of virtual text. Possible values:
+      --  • "eol": right after eol character (default).
+      --  • "overlay": display over the specified column, without
+      --    shifting the underlying text.
+      --  • "right_align": display right aligned in the window.
+      --  • "inline": display at the specified column, and shift the
+      --    buffer text to the right as needed.
+      -- virt_text_pos = 'overlay',
+      end_col = 0,
+      -- virt_text_pos = 'right_align',
+      virt_text_pos = 'inline',
+
+      -- virt_text_pos = 'eol',
+      -- hl_mode = 'blend',
+      hl_mode = 'combine',
+    })
+    keyline[key] = i - 1
+  end
+  vim.cmd [[redraw]]
+  Inspect(opts)
+
+  local char = vim.fn.getchar()
+  local key = vim.fn.nr2char(char)
+  -- Inspect { char, key }
+
+  if keyline[key] ~= nil then
+    vim.api.nvim_buf_clear_namespace(results_bufnr, ns_id, 0, -1)
+    picker:set_selection(keyline[key])
+    vim.cmd [[redraw]]
+
+    local last_key = vim.fn.nr2char(vim.fn.getchar())
+    actions.select_default(prompt_bufnr)
+    if last_key == 'l' then
+    end
   end
 end
 
@@ -59,6 +170,7 @@ return {
         end,
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
+      { 'evertonse/telescope-hop.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
@@ -240,17 +352,31 @@ return {
           -- Developer configurations: Not meant for general override
           mappings = {
             i = {
-              ["'"] = show_numbers_in_telescope_picker,
-              ['1'] = select_nth_entry(1),
-              ['2'] = select_nth_entry(2),
-              ['3'] = select_nth_entry(3),
-              ['4'] = select_nth_entry(4),
-              ['5'] = select_nth_entry(5),
-              ['6'] = select_nth_entry(6),
-              ['7'] = select_nth_entry(7),
-              ['8'] = select_nth_entry(8),
-              ['9'] = select_nth_entry(9),
-              ['0'] = select_nth_entry(10),
+              -- ["'"] = telescope_hop,
+              ["'"] = function(prompt_bufnr)
+                local opts = {
+                  callback = actions.toggle_selection,
+                  -- callback = function(inner_prompt_bufnr)
+                  --   local picker = require('telescope.actions.state').get_current_picker(inner_prompt_bufnr)
+                  --   picker:set_selection()
+                  --   -- actions.toggle_selection(prompt_bufnr)
+                  --   -- actions.toggle_selection(prompt_bufnr)
+                  -- end,
+                  -- loop_callback = actions.send_selected_to_qflist,
+                  loop_callback = actions.select_default,
+                }
+                -- require('telescope').extensions.hop._hop_loop(prompt_bufnr, opts)
+                require('telescope').extensions.hop._hop_loop(prompt_bufnr, opts)
+              end,
+              ['1'] = select_nth_entry(1 - 1),
+              ['2'] = select_nth_entry(2 - 1),
+              ['3'] = select_nth_entry(3 - 1),
+              ['4'] = select_nth_entry(4 - 1),
+              ['5'] = select_nth_entry(5 - 1),
+              ['6'] = select_nth_entry(6 - 1),
+              ['7'] = select_nth_entry(7 - 1),
+              ['8'] = select_nth_entry(8 - 1),
+              ['9'] = select_nth_entry(9 - 1),
 
               ['<C-p>'] = actions.move_selection_previous,
               ['<C-n>'] = actions.move_selection_next,
@@ -296,17 +422,6 @@ return {
             },
 
             n = {
-              ["'"] = select_nth_entry(0),
-              ['1'] = select_nth_entry(1),
-              ['2'] = select_nth_entry(2),
-              ['3'] = select_nth_entry(3),
-              ['4'] = select_nth_entry(4),
-              ['5'] = select_nth_entry(5),
-              ['6'] = select_nth_entry(6),
-              ['7'] = select_nth_entry(7),
-              ['8'] = select_nth_entry(8),
-              ['9'] = select_nth_entry(9),
-              ['0'] = select_nth_entry(10),
               ['<esc>'] = close_telescope,
               ['<leader>q'] = close_telescope,
 
@@ -372,6 +487,7 @@ return {
       pcall(require('telescope').load_extension, 'fzf')
       -- This will load fzy_native and have it override the default file sorter
       pcall(require('telescope').load_extension, 'ui-select')
+      pcall(require('telescope').load_extension 'hop')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
@@ -410,6 +526,10 @@ return {
           ['<leader>b'] = {
             function()
               builtin.buffers { select_current = true }
+              -- vim.cmd [[ insert]]
+              -- vim.api.nvim_feedkeys("'", 'i', false)
+              -- vim.api.nvim_input "'"
+              -- telescope_hop(vim.api.nvim_buf_get_name(0))
             end,
             'Find existing [B]uffers',
           },

@@ -112,9 +112,16 @@ return {
         -- @field public confirm_resolve_timeout integer
         -- @field public async_budget integer Maximum time (in ms) an async function is allowed to run during one step of the event loop.
         -- @field public max_view_entries integer
-        -- performance = {
-        --   max_view_entries = 7,
-        -- },
+
+        performance = {
+          debounce = 30,
+          throttle = 10,
+          fetching_timeout = 500,
+          confirm_resolve_timeout = 80,
+          async_budget = 1,
+          max_view_entries = 200,
+        },
+
         sorting = {
           priority_weight = 1.2,
           comparators = {
