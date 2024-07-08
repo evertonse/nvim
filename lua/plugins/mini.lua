@@ -100,6 +100,7 @@ return {
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup {
         -- see `:h MiniSurround.config`.
+        custom_surroundings = nil,
         mappings = {
           add = 'sa', -- Add surrounding in Normal and Visual modes
           delete = 'sd', -- Delete surrounding

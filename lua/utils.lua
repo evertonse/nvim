@@ -48,7 +48,8 @@ function show_numbers_in_telescope_picker(prompt_bufnr, opts)
 
   -- Check if the current buffer is a Telescope picker
   if not (vim.bo[buf].filetype == 'TelescopePrompt') then
-    print('Current buffer is not a Telescope picker' .. vim.inspect(vim.bo[buf]))
+    print('Current buffer is not a Telescope picker' .. vim.inspect(vim.bo[buf].filetype))
+    ShowStringAndWait(vim.inspect(vim.bo[buf]))
     return
   end
 
