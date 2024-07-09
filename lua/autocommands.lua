@@ -14,7 +14,7 @@ vim.cmd [[
   augroup _general_settings
     autocmd!
     autocmd FileType qf,help,man,lspinfo nnoremap <silent> <buffer> q :close<CR> 
-    autocmd BufWinEnter * :set formatoptions-=cro
+    
     autocmd WinEnter * setlocal cursorline
     autocmd WinLeave * setlocal nocursorline
    " autocmd WinNew * :print "hello"
@@ -30,13 +30,13 @@ vim.cmd [[
   augroup _markdown
     autocmd!
     autocmd FileType markdown setlocal wrap
-    "autocmd FileType markdown setlocal spell
+    autocmd FileType markdown setlocal spell
   augroup end
 
   augroup _tex
     autocmd!
     autocmd FileType tex setlocal wrap
-    "autocmd FileType markdown setlocal spell
+    autocmd FileType markdown setlocal spell
   augroup end
 
   function! Odin_settings()
@@ -186,7 +186,12 @@ vim.api.nvim_create_autocmd('CmdwinEnter', {
     for _, mode in ipairs(modes) do
       vim.api.nvim_buf_set_keymap(0, mode, '<C-f>', '<C-c><Down>', { noremap = true, silent = true })
     end
-    -- vim.api.nvim_input 'a'
+    vim.api.nvim_buf_set_keymap(0, 'i', '<CR>', '<C-c><CR>', { noremap = true, silent = true })
+
+    if vim.api.nvim_get_mode().mode == 'n' then
+      vim.api.nvim_input 'a'
+    end
+
     local close_completion = false
     if close_completion then
       vim.cmd [[pclose]]
@@ -294,6 +299,7 @@ local function show_yank_history_on_quick()
   local mappings = {
     ['<CR>'] = choose,
     ['y'] = choose,
+    ['<c-y>'] = choose,
     ['l'] = choose,
   }
 
@@ -346,4 +352,41 @@ vim.api.nvim_create_autocmd('VimLeavePre', {
 -- Autocommand to load the last yanked text when entering Neovim
 vim.api.nvim_create_autocmd('VimEnter', {
   callback = load_last_yank,
+})
+
+-- Autocmd to apply the mapping when entering the quickfix window
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'qf',
+  callback = function()
+    -- map <Esc> to close quickfix window
+    vim.api.nvim_buf_set_keymap(0, 'n', '<Esc>', ':cclose<CR>', { noremap = true, silent = true })
+  end,
+})
+vim.api.nvim_create_autocmd('BufWinEnter', {
+  callback = function()
+    vim.cmd [[set formatoptions-=cro]]
+    local buf = vim.api.nvim_get_current_buf()
+    -- TelescopeResults
+
+    -- 'TelescopePrompt',TelescopeResults
+    if vim.bo[buf].filetype == 'TelescopeResults' then
+      vim.cmd [[startinsert]]
+      vim.api.input "'"
+    end
+  end,
+})
+
+-- User TelescopeResumePost
+-- PickerInsert
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'TelescopeResumePost',
+  -- pattern = 'PickerInsert',
+  callback = function(what)
+    Inspect(what)
+    assert(0)
+    -- vim.cmd [[insert]]
+    -- vim.api.input "'"
+    if vim.api.nvim_get_mode() == 'n' then
+    end
+  end,
 })

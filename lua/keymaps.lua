@@ -411,7 +411,7 @@ M.general = {
     [';'] = { ':<Down><Down>', 'Command Mode' },
     ['<C-\\>'] = {
       function()
-        vim.api.nvim_input ':<Down><C-f>i<Down>'
+        vim.api.nvim_input ':<Down><C-f>'
       end,
     },
     ['\\'] = {

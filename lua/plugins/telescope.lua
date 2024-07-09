@@ -40,7 +40,7 @@ local telescope_hop = function(prompt_bufnr, opts)
   -- Inspect(picker)
 
   -- Get the lines in the buffer
-  -- local keys = { '1', '2''a', 's', 'd', 'f', 'h', 'j', 'k', 'l' }
+  -- local keys = { '1', '2','a', 's', 'd', 'f', 'h', 'j', 'k', 'l' }
   local keys = {
     'a',
     's',
@@ -354,19 +354,18 @@ return {
             i = {
               -- ["'"] = telescope_hop,
               ["'"] = function(prompt_bufnr)
+                -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
                 local opts = {
-                  callback = actions.toggle_selection,
-                  -- callback = function(inner_prompt_bufnr)
-                  --   local picker = require('telescope.actions.state').get_current_picker(inner_prompt_bufnr)
-                  --   picker:set_selection()
-                  --   -- actions.toggle_selection(prompt_bufnr)
-                  --   -- actions.toggle_selection(prompt_bufnr)
-                  -- end,
+                  -- callback = actions.toggle_selection,
+                  callback = function(inner_prompt_bufnr)
+                    actions.select_default(inner_prompt_bufnr)
+                    -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
+                  end,
                   -- loop_callback = actions.send_selected_to_qflist,
-                  loop_callback = actions.select_default,
+                  -- loop_callback = actions.select_default,
                 }
+                require('telescope').extensions.hop._hop(prompt_bufnr, opts)
                 -- require('telescope').extensions.hop._hop_loop(prompt_bufnr, opts)
-                require('telescope').extensions.hop._hop_loop(prompt_bufnr, opts)
               end,
               ['1'] = select_nth_entry(1 - 1),
               ['2'] = select_nth_entry(2 - 1),
@@ -502,8 +501,11 @@ return {
           ['<leader>sk'] = { builtin.keymaps, '[S]earch [K]eymaps' },
           ['<leader>f'] = {
             function()
-              --[[hidden = true]]
-              builtin.find_files { no_ignore = true, initial_mode = 'insert' }
+              builtin.find_files {
+                --[[hidden = true]]
+                no_ignore = true,
+                initial_mode = 'insert',
+              }
             end,
             '[S]earch [F]iles',
           },
@@ -526,10 +528,6 @@ return {
           ['<leader>b'] = {
             function()
               builtin.buffers { select_current = true }
-              -- vim.cmd [[ insert]]
-              -- vim.api.nvim_feedkeys("'", 'i', false)
-              -- vim.api.nvim_input "'"
-              -- telescope_hop(vim.api.nvim_buf_get_name(0))
             end,
             'Find existing [B]uffers',
           },

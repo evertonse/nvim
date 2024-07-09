@@ -311,6 +311,40 @@ local check_external_reqs = function()
   return true
 end
 
+-- Custom function to trigger an action immediately after the picker opens
+function open_buffers_and_perform_action()
+  local actions = require 'telescope.actions'
+  local action_state = require 'telescope.actions.state'
+  local builtin = require 'telescope.builtin'
+  builtin.buffers {
+    attach_mappings = function(prompt_bufnr, map)
+      -- local opts = {
+      --   -- callback = actions.toggle_selection,
+      --   callback = function(inner_prompt_bufnr)
+      --     actions.select_default(inner_prompt_bufnr)
+      --     -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
+      --   end,
+      --   -- loop_callback = actions.send_selected_to_qflist,
+      --   -- loop_callback = actions.select_default,
+      -- }
+      -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
+      require('telescope').extensions.hop._hop(prompt_bufnr, {})
+      -- Define the action to be performed here
+      -- local perform_action = function()
+      --   local selection = action_state.get_selected_entry()
+      --   actions.close(prompt_bufnr)
+      --   print('Selected buffer: ' .. selection.bufnr) -- Replace with your desired action
+      --   -- You can add your custom logic here
+      -- end
+      --
+      -- -- Perform the action immediately
+      -- perform_action()
+      --
+      -- Return false to avoid remapping keys
+      return false
+    end,
+  }
+end
 return {
   check = function()
     vim.health.start 'kickstart.nvim'
