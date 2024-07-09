@@ -23,6 +23,37 @@ local function spelltoggle()
   end
 end
 
+local function close_buffers_except_current_only_in_this_tab(right)
+  -- local current_buf = vim.api.nvim_get_current_buf()
+  -- local scope = require 'scope.utils'
+  -- local buffers = scope.get_valid_buffers()
+
+  local current_buf = vim.api.nvim_get_current_buf()
+  local current_tab = vim.api.nvim_get_current_tabpage()
+  require('scope.core').revalidate() -- Gotta fill the cache
+  local buffers = require('scope.core').cache[current_tab]
+
+  Inspect(buffers)
+
+  for i, buf in ipairs(buffers) do
+    local check_for_difference = buf ~= current_buf
+    local check_for_tabs_on_right = buf > current_buf
+    local ok = (right and check_for_tabs_on_right) or (not right and check_for_difference)
+    -- local ok = check_for_tabs_on_right
+
+    if ok then
+      -- Check if the buffer is listed and loaded before deleting
+      vim.api.nvim_buf_set_option(buf, 'buflisted', false)
+      if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted then
+        table.remove(require('scope.core').cache[current_tab], i)
+        -- vim.api.nvim_buf_delete(buf, {})
+      end
+    end
+  end
+  require('scope.core').revalidate()
+  Inspect(buffers)
+end
+
 -- add this table only when you want to disable default keys
 -- TIPS `:map <key>` to see all keys with that prefix
 
@@ -582,7 +613,13 @@ M.general = {
     --
     -- ["Q"]             = { "qq", "Record MACRO on q register" },
 
-    ['<leader>x'] = { ':%bd!|e# <cr>', 'close all buffers expect current one' },
+    ['<leader>x'] = {
+      function()
+        close_buffers_except_current_only_in_this_tab(true)
+      end,
+      'close all buffers to the right of current one',
+    },
+    ['<leader>X'] = { close_buffers_except_current_only_in_this_tab, 'close all buffers expect current one' },
 
     -- save
     ['<C-s>'] = { '<cmd> w <CR>', 'Save file' },
