@@ -1,3 +1,53 @@
+function custom_find_files()
+  local actions = require 'telescope.actions'
+  local action_state = require 'telescope.actions.state'
+  local pickers = require 'telescope.pickers'
+  local finders = require 'telescope.finders'
+  local sorters = require 'telescope.sorters'
+
+  local function select_nth_entry(prompt_bufnr, nth)
+    local picker = action_state.get_current_picker(prompt_bufnr)
+    picker:set_selection(nth - 1) -- set_selection is 0-based
+    actions.select_default(prompt_bufnr)
+  end
+
+  pickers
+    .new({}, {
+      prompt_title = 'Custom Find Files',
+      finder = finders.new_oneshot_job { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--color', 'never' },
+      sorter = sorters.get_fuzzy_file(),
+      attach_mappings = function(prompt_bufnr, map)
+        -- Automatically select the first entry when the picker opens
+        vim.defer_fn(
+          function(inner1_prompt_bufnr)
+            -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
+            local opts = {
+              -- callback = actions.toggle_selection,
+              callback = function(inner2_prompt_bufnr)
+                actions.select_default(inner2_prompt_bufnr)
+                -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
+              end,
+              -- loop_callback = actions.send_selected_to_qflist,
+              -- loop_callback = actions.select_default,
+            }
+            require('telescope').extensions.hop._hop(prompt_bufnr, opts)
+            -- require('telescope').extensions.hop._hop_loop(prompt_bufnr, opts)
+          end,
+          -- select_nth_entry(prompt_bufnr, 1) -- Select the first entry
+          100
+        )
+
+        -- Optional: Map additional keys if needed
+        map('i', '<C-f>', function()
+          -- select_nth_entry(prompt_bufnr, 1)
+        end)
+
+        return true
+      end,
+    })
+    :find()
+end
+
 function show_lines_with_numbers()
   -- Create a new buffer
   local buf = vim.api.nvim_create_buf(false, true)
@@ -311,40 +361,6 @@ local check_external_reqs = function()
   return true
 end
 
--- Custom function to trigger an action immediately after the picker opens
-function open_buffers_and_perform_action()
-  local actions = require 'telescope.actions'
-  local action_state = require 'telescope.actions.state'
-  local builtin = require 'telescope.builtin'
-  builtin.buffers {
-    attach_mappings = function(prompt_bufnr, map)
-      -- local opts = {
-      --   -- callback = actions.toggle_selection,
-      --   callback = function(inner_prompt_bufnr)
-      --     actions.select_default(inner_prompt_bufnr)
-      --     -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
-      --   end,
-      --   -- loop_callback = actions.send_selected_to_qflist,
-      --   -- loop_callback = actions.select_default,
-      -- }
-      -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
-      require('telescope').extensions.hop._hop(prompt_bufnr, {})
-      -- Define the action to be performed here
-      -- local perform_action = function()
-      --   local selection = action_state.get_selected_entry()
-      --   actions.close(prompt_bufnr)
-      --   print('Selected buffer: ' .. selection.bufnr) -- Replace with your desired action
-      --   -- You can add your custom logic here
-      -- end
-      --
-      -- -- Perform the action immediately
-      -- perform_action()
-      --
-      -- Return false to avoid remapping keys
-      return false
-    end,
-  }
-end
 return {
   check = function()
     vim.health.start 'kickstart.nvim'

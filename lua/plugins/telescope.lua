@@ -386,7 +386,9 @@ return {
               ['<c-j>'] = actions.move_selection_next,
               ['<c-k>'] = actions.move_selection_previous,
 
-              -- ["<C-c>"] = actions.close,
+              ['<C-c>'] = function()
+                vim.cmd [[stopinsert]]
+              end,
 
               ['<Down>'] = actions.move_selection_next,
               ['<Up>'] = actions.move_selection_previous,
@@ -527,7 +529,36 @@ return {
           ['<leader>s.'] = { builtin.oldfiles, '[S]earch Recent Files ("." for repeat)' },
           ['<leader>b'] = {
             function()
-              builtin.buffers { select_current = true }
+              builtin.buffers {
+                select_current = true,
+                attach_mappings = function(prompt_bufnr, map)
+                  vim.defer_fn(
+                    function(inner1_prompt_bufnr)
+                      -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
+                      local opts = {
+                        -- callback = actions.toggle_selection,
+                        callback = function(inner2_prompt_bufnr)
+                          actions.select_default(inner2_prompt_bufnr)
+                          -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
+                        end,
+                        -- loop_callback = actions.send_selected_to_qflist,
+                        -- loop_callback = actions.select_default,
+                      }
+                      require('telescope').extensions.hop._hop(prompt_bufnr, opts)
+                      -- require('telescope').extensions.hop._hop_loop(prompt_bufnr, opts)
+                    end,
+                    -- select_nth_entry(prompt_bufnr, 1) -- Select the first entry
+                    100
+                  )
+                  -- map({ 'i', 'n' }, '<tab>', actions.git_staging_toggle)
+                  return true -- Use Default mappings
+                end,
+                on_complete = {
+                  function(self)
+                    assert(false)
+                  end,
+                },
+              }
             end,
             'Find existing [B]uffers',
           },
@@ -557,6 +588,7 @@ return {
           },
         },
       }
+
       SetKeyMaps(mappings)
     end,
   },

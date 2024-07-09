@@ -1,6 +1,3 @@
--- Highlight when yanking (copying) text
---  Try it with `yap` in normal mode
---  See `:help vim.highlight.on_yank()`
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
@@ -400,12 +397,29 @@ local function save_buffer_path(args)
   local buffer_path = vim.api.nvim_buf_get_name(bufnr)
   if buffer_path and buffer_path ~= '' then
     table.insert(BufferPaths, buffer_path)
-    -- Inspect(BufferPaths)
-    -- Inspect(buffer_path)
   end
 end
 -- Create an autocommand to save buffer path on buffer delete
 vim.api.nvim_create_autocmd('BufDelete', {
   group = vim.api.nvim_create_augroup('SaveBufferPathOnDelete', { clear = true }),
   callback = save_buffer_path,
+})
+
+local function on_picker_open(prompt_bufnr)
+  assert(false)
+  print('Telescope picker opened with buffer number: ' .. prompt_bufnr)
+  -- You can perform additional actions here, like setting up mappings or modifying the picker
+end
+
+-- Create an auto command group for Telescope
+vim.api.nvim_create_augroup('TelescopeAutoCmd', { clear = true })
+
+-- Set up the auto command for when a Telescope prompt buffer is entered
+vim.api.nvim_create_autocmd('BufReadCmd', {
+  group = 'TelescopeAutoCmd',
+  pattern = 'TelescopePrompt',
+  callback = function()
+    local prompt_bufnr = vim.api.nvim_get_current_buf()
+    on_picker_open(prompt_bufnr)
+  end,
 })
