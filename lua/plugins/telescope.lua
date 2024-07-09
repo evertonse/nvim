@@ -31,7 +31,7 @@ local function custom_find_files()
   local displayer = entry_display.create {
     separator = ' ',
     items = {
-      { width = 2 }, -- Adjust based on your preference
+      { width = 1 }, -- Adjust based on your preference
       { remaining = false },
     },
   }
@@ -39,7 +39,8 @@ local function custom_find_files()
   local find_command = {
     'rg',
     '--files',
-    '--no-hidden',
+    '--hidden',
+    '-u', -- single unrestrict show git ignored files
     '--glob',
     '!.git/*',
     '--glob',
@@ -51,16 +52,28 @@ local function custom_find_files()
     '--glob',
     '!*.png',
   }
-
+  local previewers = require 'telescope.previewers'
+  local conf = require('telescope.config').values
   -- NOTE: I'm returning a function because we load all requires in the outer func than we back into the inner function
   -- that way  we don't need to require telescope modules anymore than once
   return function()
     pickers
       .new({}, {
 
-        buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
+        layout_config = {
+          width = 0.65, -- percentage of screen width
+          preview_cutoff = 125, -- Ensure previewer always most times
+        },
+        -- sorter = conf.generic_sorter {},
+        -- sorter = sorters.get_fuzzy_file(),
+        sorter = sorters.get_fzy_sorter(),
+
+        previewer = conf.qflist_previewer {},
+        -- previewer = previewers.cat.new {}, -- Ugly
         -- previewer = require('telescope.previewers').builtin.new {},
-        debounce = 2,
+        -- buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
+
+        debounce = 10,
         prompt_title = 'Find Files (ExCyber)',
         -- finder = finders.new_oneshot_job { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--color', 'never' },
         finder = finders.new_oneshot_job(find_command, {
@@ -71,7 +84,6 @@ local function custom_find_files()
             local icon_color = icon_highlight or 'TelescopeNormal'
             return {
               display = function(display_entry)
-                -- Inspect(display_entry)
                 local display_color = true
                 if not display_color then
                   return icon .. ' ' .. display_entry.path
@@ -88,7 +100,6 @@ local function custom_find_files()
             }
           end,
         }),
-        sorter = sorters.get_fuzzy_file(),
         -- Set up the display to include devicons
         attach_mappings = function(prompt_bufnr, map)
           local initial_mode = 'i'
@@ -96,7 +107,7 @@ local function custom_find_files()
             if initial_mode == 'i' then
               vim.schedule(function()
                 vim.cmd [[startinsert]]
-                vim.api.nvim_put({ '' }, '', true, true)
+                -- vim.api.nvim_put({ '' }, '', true, true)
               end)
               -- local symbol = action_state.get_selected_entry()
               -- actions.close(prompt_bufnr)

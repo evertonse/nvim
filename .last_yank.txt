@@ -1,1 +1,1 @@
-initial_mode
+            Inspect(entry)
