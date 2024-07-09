@@ -19,6 +19,125 @@ local select_nth_entry = function(nth)
   end
 end
 
+local function custom_find_files()
+  -- Define the displayer configuration using entry_display.create()
+  local actions = require 'telescope.actions'
+  local action_state = require 'telescope.actions.state'
+  local pickers = require 'telescope.pickers'
+  local finders = require 'telescope.finders'
+  local sorters = require 'telescope.sorters'
+  local devicons = require 'nvim-web-devicons'
+  local entry_display = require 'telescope.pickers.entry_display'
+  local displayer = entry_display.create {
+    separator = ' ',
+    items = {
+      { width = 2 }, -- Adjust based on your preference
+      { remaining = false },
+    },
+  }
+
+  local find_command = {
+    'rg',
+    '--files',
+    '--no-hidden',
+    '--glob',
+    '!.git/*',
+    '--glob',
+    '!__pycache__/*',
+    '--glob',
+    '!venv/*',
+    '--glob',
+    '!*.pdf',
+    '--glob',
+    '!*.png',
+  }
+
+  -- NOTE: I'm returning a function because we load all requires in the outer func than we back into the inner function
+  -- that way  we don't need to require telescope modules anymore than once
+  return function()
+    pickers
+      .new({}, {
+
+        buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
+        -- previewer = require('telescope.previewers').builtin.new {},
+        debounce = 2,
+        prompt_title = 'Find Files (ExCyber)',
+        -- finder = finders.new_oneshot_job { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--color', 'never' },
+        finder = finders.new_oneshot_job(find_command, {
+
+          entry_maker = function(entry)
+            local filename = vim.fn.fnamemodify(entry, ':t')
+            local icon, icon_highlight = devicons.get_icon(filename, nil, { default = true })
+            local icon_color = icon_highlight or 'TelescopeNormal'
+            return {
+              display = function(display_entry)
+                -- Inspect(display_entry)
+                local display_color = true
+                if not display_color then
+                  return icon .. ' ' .. display_entry.path
+                else
+                  return displayer {
+                    { icon, icon_color }, -- Icon with color
+                    { ' ' .. display_entry.path, 'TelescopeNormal' }, -- File name with default color
+                  }
+                end
+              end,
+              ordinal = entry,
+              value = entry,
+              path = entry,
+            }
+          end,
+        }),
+        sorter = sorters.get_fuzzy_file(),
+        -- Set up the display to include devicons
+        attach_mappings = function(prompt_bufnr, map)
+          local initial_mode = 'i'
+          if true then
+            if initial_mode == 'i' then
+              vim.schedule(function()
+                vim.cmd [[startinsert]]
+                vim.api.nvim_put({ '' }, '', true, true)
+              end)
+              -- local symbol = action_state.get_selected_entry()
+              -- actions.close(prompt_bufnr)
+            else
+              vim.schedule(function()
+                vim.cmd [[stopinsert]]
+              end)
+            end
+
+            return true
+          end
+          -- Automatically select the first entry when the picker opens
+          vim.defer_fn(
+            function(inner1_prompt_bufnr)
+              -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
+              local opts = {
+                -- callback = actions.toggle_selection,
+                callback = function(inner2_prompt_bufnr)
+                  actions.select_default(inner2_prompt_bufnr)
+                  -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
+                end,
+                -- loop_callback = actions.send_selected_to_qflist,
+                -- loop_callback = actions.select_default,
+              }
+              require('telescope').extensions.hop._hop(prompt_bufnr, opts)
+              -- require('telescope').extensions.hop._hop_loop(prompt_bufnr, opts)
+            end,
+            -- select_nth_entry(prompt_bufnr, 1) -- Select the first entry
+            100
+          )
+
+          -- Optional: Map additional keys if needed
+          map('i', '<C-f>', function()
+            -- select_nth_entry(prompt_bufnr, 1)
+          end)
+        end,
+      })
+      :find()
+  end
+end
+
 local telescope_hop = function(prompt_bufnr, opts)
   local picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
   local actions = require 'telescope.actions'
@@ -268,8 +387,11 @@ return {
       require('telescope').setup {
         pickers = {
           find_files = {
+            debounce = 20,
+            -- find_command = { 'fd', '--type', 'file', '--hidden', '--no-ignore', '--exclude', '.git', '--color=never' },
+            -- find_command = { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--exclude', '__pycache__', '--color=never' },
+            -- find_command = { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--exclude', 'venv', '--exclude', '__pycache__', '--color=never' },
 
-            find_command = { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--color=never' },
             -- entry_maker = function(entry)
             --   -- Customize the display of each entry
             --   local icon = ' ' -- Example icon (you can use any icon here)
@@ -283,27 +405,32 @@ return {
             --   }
             -- end,
           },
-          live_grep = {
-            find_command = { 'fd', '--type', 'f', '--hidden', '--exclude', '.git' },
-          },
+          live_grep = {},
         },
         defaults = {
           -- buffer_previewer_maker = new_maker,
           buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
-          vimgrep_arguments = {
-            'rg',
-            '-L',
-            '--color=never',
-            '--no-heading',
-            '--with-filename',
-            '--line-number',
-            '--column',
-            '--smart-case',
-          },
+          -- vimgrep_arguments = {
+          --   'rg',
+          --   '-L',
+          --   '--color=never',
+          --   '--no-heading',
+          --   '--with-filename',
+          --   '--line-number',
+          --   '--column',
+          --   '--smart-case',
+          -- },
           --פֿ
           prompt_prefix = '   ',
           selection_caret = ' ',
           entry_prefix = ' ',
+          --    selection_strategy       Available options are:
+          -- - "reset" (default)
+          -- - "follow"
+          -- - "row"
+          -- - "closest"
+          -- - "none"
+
           selection_strategy = 'closest',
           -- sorting_strategy = 'descending',
           sorting_strategy = 'ascending',
@@ -318,21 +445,24 @@ return {
             horizontal = {
               prompt_position = 'top',
               preview_width = 0.45,
-              results_width = 0.7,
+              results_width = 0.4,
               mirror = false,
             },
             vertical = {
               prompt_position = 'top',
               preview_width = 0.55,
-              results_width = 0.8,
+              results_width = 0.4,
               mirror = true,
             },
-            width = 0.87,
-            height = 0.80,
-            preview_cutoff = 170,
+            width = 0.65,
+            height = 0.65,
+            -- preview_cutoff = 70,
           },
-          file_sorter = require('telescope.sorters').get_fuzzy_file,
-          file_ignore_patterns = { 'node_modules' },
+          -- file_sorter = require('telescope.sorters').get_fuzzy_file,
+          file_sorter = require('telescope.sorters').get_fzy_sorter,
+          -- file_sorter = require('telescope.sorters').get_levenshtein_sorter,
+          -- file_sorter = require('telescope.sorters').get_substr_matcher,
+          file_ignore_patterns = { 'node_modules', '.git', '__pycache__', 'venv' },
           generic_sorter = require('telescope.sorters').get_generic_fuzzy_sorter,
           winblend = 10,
           border = {},
@@ -346,9 +476,9 @@ return {
           -- },
           color_devicons = true,
           set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
-          file_previewer = require('telescope.previewers').vim_buffer_cat.new,
-          grep_previewer = require('telescope.previewers').vim_buffer_vimgrep.new,
-          qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
+          -- file_previewer = require('telescope.previewers').vim_buffer_cat.new,
+          -- grep_previewer = require('telescope.previewers').vim_buffer_vimgrep.new,
+          -- qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
           -- Developer configurations: Not meant for general override
           mappings = {
             i = {
@@ -469,6 +599,9 @@ return {
             },
           },
         },
+        cache_picker = {
+          num_pickers = -1,
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -476,7 +609,7 @@ return {
           },
           fzf = {
             fuzzy = true, -- false will only do exact matching
-            override_generic_sorter = true, -- override the generic sorter
+            override_generic_sorter = false, -- override the generic sorter
             override_file_sorter = true, -- override the file sorter
             case_mode = 'smart_case', -- or "ignore_case" or "respect_case"
             -- the default case_mode is "smart_case"
@@ -485,7 +618,7 @@ return {
       }
 
       -- Enable Telescope extensions if they are installed
-      pcall(require('telescope').load_extension, 'fzf')
+      pcall(require('telescope').load_extension, 'fzf_native')
       -- This will load fzy_native and have it override the default file sorter
       pcall(require('telescope').load_extension, 'ui-select')
       pcall(require('telescope').load_extension 'hop')
@@ -502,10 +635,8 @@ return {
           },
           ['<leader>sk'] = { builtin.keymaps, '[S]earch [K]eymaps' },
           ['<leader>f'] = {
-            function()
+            custom_find_files() or function()
               builtin.find_files {
-                --[[hidden = true]]
-                no_ignore = true,
                 initial_mode = 'insert',
               }
             end,

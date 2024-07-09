@@ -10,6 +10,7 @@ local term_opts = { silent = true }
 local noremap_opts = { noremap = true, silent = true, nowait = true }
 local wait_opts = { noremap = true, silent = true, nowait = false }
 FULLSCREEN = false
+
 -- Define a table to store previous positions
 
 -- Function to jump within the current buffer
