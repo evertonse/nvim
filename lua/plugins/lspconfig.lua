@@ -25,7 +25,7 @@ return {
         opts = {
           -- Options related to LSP progress subsystem
           progress = {
-            poll_rate = vim.g.user.notification_poll_rate, -- How and when to poll for progress messages
+            poll_rate = vim.g.self.notification_poll_rate, -- How and when to poll for progress messages
             suppress_on_insert = true, -- Suppress new messages while in insert mode
             ignore_done_already = true, -- Ignore new tasks that are already complete
             ignore_empty_message = true, -- Ignore new tasks that don't contain a message
@@ -53,7 +53,7 @@ return {
 
           -- Options related to notification subsystem
           notification = {
-            poll_rate = vim.g.user.notification_poll_rate, -- How frequently to update and render notifications
+            poll_rate = vim.g.self.notification_poll_rate, -- How frequently to update and render notifications
             filter = vim.log.levels.INFO, -- Minimum notifications level
             -- filter = vim.log.levels.ERROR,
             history_size = 64, -- Number of removed messages to retain in history

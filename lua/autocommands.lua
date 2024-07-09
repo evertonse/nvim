@@ -126,6 +126,7 @@ vim.cmd [[autocmd TermOpen * setlocal nonumber norelativenumber signcolumn=no]]
 --
 -- Create a function to check and delete buffers
 local function clean_up_buffers()
+  assert(0)
   local buffers = vim.api.nvim_list_bufs()
 
   for _, buf in ipairs(buffers) do
@@ -141,11 +142,10 @@ local function clean_up_buffers()
   end
 end
 
--- Create an autocommand to trigger on BufEnter
--- vim.api.nvim_create_autocmd('VimEnter', {
---   group = vim.api.nvim_create_augroup('UserAutoClose', { clear = true }),
---   callback = clean_up_buffers,
--- })
+vim.api.nvim_create_autocmd('VimEnter', {
+  group = vim.api.nvim_create_augroup('UserAutoClose', { clear = true }),
+  callback = clean_up_buffers,
+})
 
 -- close quicklist after enter
 vim.cmd [[ autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>]]
@@ -362,14 +362,17 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.api.nvim_buf_set_keymap(0, 'n', '<Esc>', ':cclose<CR>', { noremap = true, silent = true })
   end,
 })
-vim.api.nvim_create_autocmd('BufWinEnter', {
+
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = vim.api.nvim_create_augroup('1', { clear = true }),
   callback = function()
     vim.cmd [[set formatoptions-=cro]]
     local buf = vim.api.nvim_get_current_buf()
     -- TelescopeResults
 
     -- 'TelescopePrompt',TelescopeResults
-    if vim.bo[buf].filetype == 'TelescopeResults' then
+    if vim.bo[buf].filetype == 'TelescopePrompt' then
+      assert(false, vim.inspect(vim.bo[buf]))
       vim.cmd [[startinsert]]
       vim.api.input "'"
     end
@@ -379,14 +382,30 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
 -- User TelescopeResumePost
 -- PickerInsert
 vim.api.nvim_create_autocmd('User', {
-  pattern = 'TelescopeResumePost',
-  -- pattern = 'PickerInsert',
+  -- pattern = 'TelescopeResumePost',
+  pattern = 'PickerInsert',
   callback = function(what)
+    assert(false)
     Inspect(what)
-    assert(0)
     -- vim.cmd [[insert]]
     -- vim.api.input "'"
     if vim.api.nvim_get_mode() == 'n' then
     end
   end,
+})
+
+-- Create an autocommand group for our buffer delete event
+local function save_buffer_path(args)
+  local bufnr = args.buf
+  local buffer_path = vim.api.nvim_buf_get_name(bufnr)
+  if buffer_path and buffer_path ~= '' then
+    table.insert(BufferPaths, buffer_path)
+    -- Inspect(BufferPaths)
+    -- Inspect(buffer_path)
+  end
+end
+-- Create an autocommand to save buffer path on buffer delete
+vim.api.nvim_create_autocmd('BufDelete', {
+  group = vim.api.nvim_create_augroup('SaveBufferPathOnDelete', { clear = true }),
+  callback = save_buffer_path,
 })

@@ -255,10 +255,10 @@ return {
         },
       }
       -- `/` cmdline setup.
-      local _ = not vim.g.user.wilder and cmp.setup.cmdline('/', search_opts)
-      local _ = not vim.g.user.wilder and cmp.setup.cmdline('?', search_opts)
+      local _ = not vim.g.self.wilder and cmp.setup.cmdline('/', search_opts)
+      local _ = not vim.g.self.wilder and cmp.setup.cmdline('?', search_opts)
       -- `:` cmdline setup.
-      local _ = not vim.g.user.wilder
+      local _ = not vim.g.self.wilder
         and cmp.setup.cmdline(':', {
           autocomplete = false,
           enabled = function()

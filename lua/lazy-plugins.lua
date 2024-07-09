@@ -22,7 +22,7 @@ local lazy_config = {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
-    icons = vim.g.user.nerd_font and {
+    icons = vim.g.self.nerd_font and {
       ft = '',
       lazy = '󰂠',
       loaded = '',
@@ -242,7 +242,7 @@ require('lazy').setup({
   require 'plugins.live-command',
 
   require 'plugins.guess-indent',
-  require('plugins.' .. vim.g.user.session_plugin),
+  require('plugins.' .. vim.g.self.session_plugin),
   require 'plugins.alternate-toggle',
   require 'plugins.aerial',
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement

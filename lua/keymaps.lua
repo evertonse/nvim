@@ -26,16 +26,12 @@ end
 -- add this table only when you want to disable default keys
 -- TIPS `:map <key>` to see all keys with that prefix
 
--- redirect output of command to scratch buffer
--- Create a table to store buffer paths
-local buffer_paths = {}
--- Function to save the current buffer path and delete the buffer
-local function save_and_delete_buffer()
-  local current_buffer = vim.api.nvim_get_current_buf()
-  local current_path = vim.api.nvim_buf_get_name(current_buffer)
-  if current_path and current_path ~= '' then
-    table.insert(buffer_paths, current_path)
-  end
+local function delete_buffer()
+  -- local current_buffer = vim.api.nvim_get_current_buf()
+  -- local current_path = vim.api.nvim_buf_get_name(current_buffer)
+  -- if current_path and current_path ~= '' then
+  --   table.insert(vim.g.user.buffer_paths, current_path)
+  -- end
   vim.cmd 'Bdelete!'
 end
 
@@ -86,7 +82,7 @@ end
 
 -- Function to reopen the most recently saved buffer path
 local function reopen_last_buffer()
-  local last_buffer_path = table.remove(buffer_paths)
+  local last_buffer_path = table.remove(BufferPaths)
   if last_buffer_path then
     vim.cmd('edit ' .. last_buffer_path)
   else
@@ -665,7 +661,7 @@ M.general = {
 
     ['<leader>w'] = { ':w<CR>', noremap_opts },
     ['<leader>q'] = { ':q<CR>', noremap_opts },
-    ['<leader>c'] = { save_and_delete_buffer, noremap_opts },
+    ['<leader>c'] = { delete_buffer, noremap_opts },
     ['<leader>C'] = { reopen_last_buffer, noremap_opts },
     -- ["<leader>c"]     = { ":bd!<CR>",  noremap_opts },
 

@@ -27,7 +27,7 @@ local surround_opts = { 'mini.surround', 'vim-surround' }
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-vim.g.user = {
+vim.g.self = {
   icons = true,
   nerd_font = true,
   transparency = true,
@@ -37,7 +37,10 @@ vim.g.user = {
   session_plugin = session_opts[2], --NOTE: Better note Idk, bugs with Telescope sometimes
   mini_pick = false,
   notification_poll_rate = 40,
+  -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
 }
+
+BufferPaths = {}
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'

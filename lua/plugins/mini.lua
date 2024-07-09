@@ -11,8 +11,8 @@ return {
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 } -- see :help MiniAi.config
-      local _ = vim.g.user.mini_ai and require('mini.git').setup {}
-      local _ = vim.g.user.mini_pick and require('mini.pick').setup {} -- telescope alternative
+      local _ = vim.g.self.mini_ai and require('mini.git').setup {}
+      local _ = vim.g.self.mini_pick and require('mini.pick').setup {} -- telescope alternative
 
       require('mini.align').setup {
         -- see :help mini.align
@@ -138,7 +138,7 @@ return {
       end
 
       statusline.setup {
-        use_icons = vim.g.user.nerd_font,
+        use_icons = vim.g.self.nerd_font,
         set_vim_settings = false,
       }
 
@@ -173,7 +173,7 @@ return {
       statusline.section_fileinfo = function(args)
         local lspstring = lsp_servers_attached()
         if lspstring ~= '' then
-          lspstring = (vim.g.user.icons and '󰰎 ' or '') .. lspstring
+          lspstring = (vim.g.self.icons and '󰰎 ' or '') .. lspstring
         end
         return recording_mode() .. lspstring .. old_section_fileinfo(args)
       end
