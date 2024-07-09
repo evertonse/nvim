@@ -347,6 +347,15 @@ local check_version = function()
   end
 end
 
+function ReverseTable(tbl)
+  local size = #tbl
+  local reversed = {}
+  for i = size, 1, -1 do
+    table.insert(reversed, tbl[i])
+  end
+  return reversed
+end
+
 local check_external_reqs = function()
   -- Basic utils: `git`, `make`, `unzip`
   for _, exe in ipairs { 'git', 'make', 'unzip', 'rg' } do

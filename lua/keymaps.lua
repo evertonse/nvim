@@ -33,8 +33,6 @@ local function close_buffers_except_current_only_in_this_tab(right)
   require('scope.core').revalidate() -- Gotta fill the cache
   local buffers = require('scope.core').cache[current_tab]
 
-  Inspect(buffers)
-
   for i, buf in ipairs(buffers) do
     local check_for_difference = buf ~= current_buf
     local check_for_tabs_on_right = buf > current_buf
@@ -51,7 +49,6 @@ local function close_buffers_except_current_only_in_this_tab(right)
     end
   end
   require('scope.core').revalidate()
-  Inspect(buffers)
 end
 
 -- add this table only when you want to disable default keys
@@ -379,54 +376,64 @@ end
 
 -- Function to jump to previous or next location within the current buffer
 -- Function to get the current index in the jumplist
-local function get_current_jumplist_index()
-  local current_pos = vim.fn.getpos '.'
-  local jump_list = vim.fn.getjumplist()[1]
+-- Initialize jumplist index
+local current_jump_index = 0
 
-  for index, jump in ipairs(jump_list) do
-    if jump.bufnr == current_pos[1] and jump.lnum == current_pos[2] and jump.col == current_pos[3] then
-      return index
-    end
-  end
-  return nil
+local function get_jumplist()
+  local jumplist = vim.fn.getjumplist()[1]
+  return ReverseTable(jumplist)
 end
 
--- Function to jump within the current buffer
-jumplist_current_index = 1
-local function jump_within_buffer(direction)
-  local current_buf = vim.api.nvim_get_current_buf()
-  local jump_list = {}
-  local unfiltered_jump_list = vim.fn.getjumplist()[1]
-  for i = #unfiltered_jump_list, 1, -1 do
-    local jump = unfiltered_jump_list[i]
-    if jump.bufnr == current_buf then
-      table.insert(jump_list, jump)
+local function update_current_jump_index(offset)
+  local jumplist = get_jumplist()
+
+  local new_index = current_jump_index + offset
+  -- If current position is not found in jumplist, adjust index based on direction
+  if current_jump_index > #jumplist then
+    new_index = #jumplist
+  elseif current_jump_index < 1 then
+    new_index = 1
+  end
+
+  current_jump_index = new_index
+end
+
+local function jump_to_next_in_same_buffer()
+  local jumplist = get_jumplist()
+  update_current_jump_index(1)
+
+  for i = current_jump_index, #jumplist do
+    local curr_bufnr = vim.api.nvim_get_current_buf()
+    local jump = jumplist[i]
+    if jump.bufnr == curr_bufnr then
+      -- vim.api.nvim_set_current_buf(jump.bufnr)
+      local win = vim.api.nvim_get_current_win()
+      vim.api.nvim_win_set_cursor(win, { jump.lnum, jump.col })
+      -- vim.fn.cursor(jump.lnum, jump.col)
+      current_jump_index = i
+      print('jumped' .. vim.inspect { jump.lnum, jump.col, current_jump_index })
+      return
     end
   end
+  print 'No next jumps in the current buffer.'
+end
 
-  local step = (direction == 'back') and 1 or -1
-  local curr_index = jumplist_current_index
+local function jump_to_prev_in_same_buffer()
+  local jumplist = get_jumplist()
+  update_current_jump_index(-1)
 
-  local new_index = curr_index + step
-  if curr_index >= 1 and curr_index <= #jump_list then
-    local jump = jump_list[curr_index]
-    jumplist_current_index = new_index
-    vim.api.nvim_win_set_cursor(0, { jump.lnum, jump.col })
+  for i = current_jump_index, 1, -1 do
+    local curr_bufnr = vim.api.nvim_get_current_buf()
+    local jump = jumplist[i]
+    if jumplist[i].bufnr == vim.api.nvim_get_current_buf() then
+      -- vim.fn.cursor(jumplist[i].lnum, jumplist[i].col)
+      local win = vim.api.nvim_get_current_win()
+      vim.api.nvim_win_set_cursor(win, { jump.lnum, jump.col })
+      current_jump_index = i
+      return
+    end
   end
-  ShowStringAndWait(
-    'jumplist_current_index = '
-      .. vim.inspect(jumplist_current_index)
-      .. 'new_index = '
-      .. vim.inspect(new_index)
-      .. ' unfiltered_jump_list = '
-      .. vim.inspect(unfiltered_jump_list)
-      .. 'jump_list = '
-      .. vim.inspect(jump_list)
-      .. '#jump_list = '
-      .. vim.inspect(#jump_list)
-      .. '#vim.fn.getjumplist()[1] = '
-      .. vim.inspect(#vim.fn.getjumplist()[1])
-  )
+  print 'No previous jumps in the current buffer.'
 end
 
 M.general = {
@@ -456,15 +463,15 @@ M.general = {
 
     ['<Esc>'] = { '<cmd>noh <CR>', 'Clear highlights' },
 
-    ['<c-0>'] = {
+    ['8'] = {
       function()
-        jump_within_buffer 'back'
+        jump_to_next_in_same_buffer()
       end,
       [[jump_within_buffer 'back']],
     },
-    ['<c-9>'] = {
+    ['9'] = {
       function()
-        jump_within_buffer 'foward'
+        jump_to_prev_in_same_buffer()
       end,
       [[jump_within_buffer 'foward']],
     },

@@ -154,15 +154,6 @@ vim.cmd [[
 " let g:mdip_imgname = 'image'
 ]]
 
-local function reverse_table(tbl)
-  local size = #tbl
-  local reversed = {}
-  for i = size, 1, -1 do
-    table.insert(reversed, tbl[i])
-  end
-  return reversed
-end
-
 local yank_history = {}
 local function capture_yank()
   local yanked_text = vim.fn.getreg '"'
