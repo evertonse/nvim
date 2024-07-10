@@ -694,14 +694,6 @@ return { -- Fuzzy Finder (files, lsp, etc)
           '[S]earch [H]elp',
         },
         ['<leader>sk'] = { builtin.keymaps, '[S]earch [K]eymaps' },
-        ['<leader>f'] = {
-          custom_find_files() or function()
-            builtin.find_files {
-              initial_mode = 'insert',
-            }
-          end,
-          '[S]earch [F]iles',
-        },
         ['<leader>st'] = { builtin.builtin, '[S]earch [S]elect Telescope' },
         ['<leader>sg'] = {
           function()
@@ -786,6 +778,17 @@ return { -- Fuzzy Finder (files, lsp, etc)
         },
       },
     }
+
+    if not OnWindows() then
+      mappings.n['<leader>f'] = {
+        custom_find_files() or function()
+          builtin.find_files {
+            initial_mode = 'insert',
+          }
+        end,
+        '[S]earch [F]iles',
+      }
+    end
 
     SetKeyMaps(mappings)
     local pickers = require 'telescope.builtin'

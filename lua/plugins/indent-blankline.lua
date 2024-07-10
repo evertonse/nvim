@@ -13,7 +13,7 @@ return {
   -- event = 'User FilePost',
   opts = {
     -- debounce = 512,
-    debounce = 256,
+    debounce = 128,
     indent = {
       -- char = '▏',
       -- char = '⏐',

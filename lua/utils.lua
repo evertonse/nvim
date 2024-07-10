@@ -64,7 +64,7 @@ SetKeyMaps = function(mapping_table)
   end
 end
 
-local on_windows = function()
+OnWindows = function()
   local os_name = vim.loop.os_uname().sysname
   local os_version = vim.loop.os_uname().version
   return os_name == 'Windows_NT' or os_version:match 'Windows'
