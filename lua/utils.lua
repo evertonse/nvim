@@ -1,4 +1,6 @@
-function show_lines_with_numbers()
+BufferPaths = {}
+
+function _TestExtMarks()
   -- Create a new buffer
   local buf = vim.api.nvim_create_buf(false, true)
 
@@ -71,7 +73,7 @@ OnWindows = function()
 end
 
 -- Function to customize entry display and handle selection by number
-function number_entry_picker()
+function _TestNumbPicker()
   -- Ensure Telescope is installed
   require 'telescope'
   local pickers = require 'telescope.pickers'
@@ -282,7 +284,6 @@ end
 -- but helps people determine if their system is setup correctly.
 --
 --]]
-
 local check_version = function()
   local verstr = string.format('%s.%s.%s', vim.version().major, vim.version().minor, vim.version().patch)
   if not vim.version.cmp then
@@ -320,13 +321,31 @@ local check_external_reqs = function()
   return true
 end
 
+local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
+local surround_opts = { 'mini.surround', 'vim-surround' }
+local file_tree_opts = { 'nvim-tree', 'neo-tree' }
+vim.g.self = {
+
+  icons = true,
+  nerd_font = true,
+  transparency = true,
+  theme = 'pastel',
+  wilder = false,
+  inc_rename = true,
+  session_plugin = session_opts[2], --NOTE: Better note Idk, bugs with Telescope sometimes
+  mini_pick = true,
+  notification_poll_rate = 40,
+  file_tree = file_tree_opts[OnWindows() and 1 or 2],
+  -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
+}
+
 return {
   check = function()
     vim.health.start 'kickstart.nvim'
 
     vim.health.info [[NOTE: Not every warning is a 'must-fix' in `:checkhealth`
 
-  Fix only warnings for plugins and languages you intend to use.
+    Fix only warnings for plugins and languages you intend to use.
     Mason will give warnings for languages that are not installed.
     You do not need to install, unless you want to use those languages!]]
 

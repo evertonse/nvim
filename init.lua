@@ -22,26 +22,6 @@
 --    [ ] Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
 --    [ ] REFACTOR: Make all keymaps in keymaps, and require 'keymaps'.telescope for example in plugin site
 
-local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
-local surround_opts = { 'mini.surround', 'vim-surround' }
-
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-vim.g.self = {
-  icons = true,
-  nerd_font = true,
-  transparency = true,
-  theme = 'pastel',
-  wilder = false,
-  inc_rename = true,
-  session_plugin = session_opts[2], --NOTE: Better note Idk, bugs with Telescope sometimes
-  mini_pick = true,
-  notification_poll_rate = 40,
-  -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
-}
-
-BufferPaths = {}
-
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
 
