@@ -8,7 +8,8 @@ return {
   tag = 'v3.7.1',
   -- event = 'VimEnter',
   event = 'BufReadPost',
-  enable = true,
+  -- enable = true,
+  lazy = false,
   -- event = 'User FilePost',
   opts = {
     debounce = 512,

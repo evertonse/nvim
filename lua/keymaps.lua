@@ -382,7 +382,8 @@ local current_jump_index = 0
 
 local function get_jumplist()
   local jumplist = vim.fn.getjumplist()[1]
-  return ReverseTable(jumplist)
+  -- return ReverseTable(jumplist)
+  return jumplist
 end
 
 local function update_current_jump_index(offset)
@@ -399,42 +400,44 @@ local function update_current_jump_index(offset)
   current_jump_index = new_index
 end
 
-local function jump_to_next_in_same_buffer()
+local jump_within_buffer = function(prev)
   local jumplist = get_jumplist()
-  update_current_jump_index(1)
+  update_current_jump_index(prev and -1 or 1)
 
-  for i = current_jump_index, #jumplist do
-    local curr_bufnr = vim.api.nvim_get_current_buf()
+  local starting = current_jump_index
+  local ending = prev and 1 or #jumplist
+  local step = prev and -1 or 1
+  local curr_bufnr = vim.api.nvim_get_current_buf()
+  for i = starting, ending, step do
     local jump = jumplist[i]
+    Inspect {
+      step = step,
+      ending = ending,
+      current_jump_index = current_jump_index,
+      buf = jump.bufnr,
+      nr_jmplist = #jumplist,
+    }
     if jump.bufnr == curr_bufnr then
-      -- vim.api.nvim_set_current_buf(jump.bufnr)
+      -- vim.fn.cursor(jumplist[i].lnum, jumplist[i].col)
       local win = vim.api.nvim_get_current_win()
-      vim.api.nvim_win_set_cursor(win, { jump.lnum, jump.col })
-      -- vim.fn.cursor(jump.lnum, jump.col)
+      -- vim.api.nvim_win_set_cursor(win, { jump.lnum, jump.col })
       current_jump_index = i
-      print('jumped' .. vim.inspect { jump.lnum, jump.col, current_jump_index })
-      return
+      return true
     end
   end
-  print 'No next jumps in the current buffer.'
+  return false
 end
 
 local function jump_to_prev_in_same_buffer()
-  local jumplist = get_jumplist()
-  update_current_jump_index(-1)
-
-  for i = current_jump_index, 1, -1 do
-    local curr_bufnr = vim.api.nvim_get_current_buf()
-    local jump = jumplist[i]
-    if jumplist[i].bufnr == vim.api.nvim_get_current_buf() then
-      -- vim.fn.cursor(jumplist[i].lnum, jumplist[i].col)
-      local win = vim.api.nvim_get_current_win()
-      vim.api.nvim_win_set_cursor(win, { jump.lnum, jump.col })
-      current_jump_index = i
-      return
-    end
+  if jump_within_buffer(true) == false then
+    print 'No previous jumps in the current buffer.'
   end
-  print 'No previous jumps in the current buffer.'
+end
+
+local function jump_to_next_in_same_buffer()
+  if jump_within_buffer(false) == false then
+    print 'No next jumps in the current buffer.'
+  end
 end
 
 M.general = {
