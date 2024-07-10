@@ -12,7 +12,8 @@ return {
   lazy = false,
   -- event = 'User FilePost',
   opts = {
-    debounce = 512,
+    -- debounce = 512,
+    debounce = 256,
     indent = {
       -- char = '▏',
       -- char = '⏐',
