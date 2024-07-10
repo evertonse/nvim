@@ -63,3 +63,20 @@ require 'lazy-bootstrap'
 require 'lazy-plugins'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
+
+-- require('telescope.builtin').resume()
+-- local prompt_bufnr = vim.api.nvim_get_current_buf()
+--
+-- -- | Event                           | Description                                             |
+-- -- | ------------------------------- | ------------------------------------------------------- |
+-- -- | `User TelescopeFindPre`         | Do it before Telescope creates all the floating windows |
+-- -- | `User TelescopePreviewerLoaded` | Do it after Telescope previewer window is created       |
+-- -- | `User TelescopeResumePost`      | Do it after Telescope resume action is fully completed  |
+--
+-- vim.api.nvim_create_autocmd('User TelescopeFindPre', {
+--   buffer = prompt_bufnr,
+--   once = true,
+--   callback = function()
+--     print 'User TelescopeResumePost works'
+--   end,
+-- })

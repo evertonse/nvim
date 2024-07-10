@@ -367,21 +367,6 @@ vim.api.nvim_create_autocmd('BufEnter', {
   end,
 })
 
--- User TelescopeResumePost
--- PickerInsert
-vim.api.nvim_create_autocmd('User', {
-  -- pattern = 'TelescopeResumePost',
-  pattern = 'PickerInsert',
-  callback = function(what)
-    assert(false)
-    Inspect(what)
-    -- vim.cmd [[insert]]
-    -- vim.api.input "'"
-    if vim.api.nvim_get_mode() == 'n' then
-    end
-  end,
-})
-
 -- Create an autocommand group for our buffer delete event
 local function save_buffer_path(args)
   local bufnr = args.buf
@@ -394,23 +379,4 @@ end
 vim.api.nvim_create_autocmd('BufDelete', {
   group = vim.api.nvim_create_augroup('SaveBufferPathOnDelete', { clear = true }),
   callback = save_buffer_path,
-})
-
-local function on_picker_open(prompt_bufnr)
-  assert(false)
-  print('Telescope picker opened with buffer number: ' .. prompt_bufnr)
-  -- You can perform additional actions here, like setting up mappings or modifying the picker
-end
-
--- Create an auto command group for Telescope
-vim.api.nvim_create_augroup('TelescopeAutoCmd', { clear = true })
-
--- Set up the auto command for when a Telescope prompt buffer is entered
-vim.api.nvim_create_autocmd('BufReadCmd', {
-  group = 'TelescopeAutoCmd',
-  pattern = 'TelescopePrompt',
-  callback = function()
-    local prompt_bufnr = vim.api.nvim_get_current_buf()
-    on_picker_open(prompt_bufnr)
-  end,
 })
