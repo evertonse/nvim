@@ -4,8 +4,24 @@
 -- you do for a plugin at the top level, you can do for a dependency.
 --
 -- Use the `dependencies` key to specify the dependencies of a particular plugin
-local commit_working_path_support = 'bfcc7d5c6f12209139f175e6123a7b7de6d9c18a'
-local commit_working_path_support_branch = 'master'
+
+local them = {
+  repo = 'nvim-telescope/telescope.nvim',
+  commit_working_path_support = 'bfcc7d5c6f12209139f175e6123a7b7de6d9c18a',
+  commit_working_path_support_branch = 'master',
+}
+
+local self = {
+  repo = 'evertonse/telescope.nvim',
+  commit_working_path_support = '964e776d04ae9c9924b2536dffc299125703d103',
+  commit_working_path_support_branch = 'master',
+}
+
+local using = {
+  repo = self.repo,
+  commit_working_path_support = self.commit_working_path_support_branch,
+  commit_working_path_support_branch = self.commit_working_path_support_branch,
+}
 
 local select_nth_entry = function(nth)
   return function(prompt_bufnr)
@@ -288,12 +304,13 @@ local function custom_entry_maker(entry, index)
 end
 
 return { -- Fuzzy Finder (files, lsp, etc)
-  'nvim-telescope/telescope.nvim',
+
+  using.repo,
   event = 'VimEnter',
-  lazy = false,
-  tag = '0.1.8',
-  branch = commit_working_path_support_branch,
-  commit = commit_working_path_support,
+  -- lazy = false,
+  -- tag = '0.1.8',
+  branch = using.commit_working_path_support_branch,
+  commit = using.commit_working_path_support,
   dependencies = {
     'nvim-lua/plenary.nvim',
     { -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -795,4 +812,45 @@ return { -- Fuzzy Finder (files, lsp, etc)
     })
   end,
 }
--- vim: ts=2 sts=2 sw=2 et
+-- # Description
+--
+-- Allows `attach_mappings` function to be defined in ``telescope.defaults`` that will be used as default for all pickers
+-- If you define `attach_mappings` on specific picker, that'll be used instead.
+--
+-- Use case is that it was needed to perform some operations using ``prompt_bufnr`` as soon as the picker started.
+-- It was ideal to perform that for all pickers and just override when necessary, but saw no way of doing that.
+-- Example:
+--
+-- ```lua
+-- -- Defaulting to turn off winbleding specifically on the prompt window, (everything else was on windblend 20)
+--       defaults = {
+--
+--         attach_mappings = function(prompt_bufnr, map)
+--           local prompt_win = vim.fn.bufwinid(prompt_bufnr)
+--           if prompt_win ~= -1 then
+--             vim.schedule(function()
+--               vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
+--             end)
+--           end
+--           return true
+--         end,
+--         ...
+-- ```
+--
+-- # Testing
+-- Should see 'We are balling' when a picker is opened.
+-- ```lua
+-- require('telescope').setup {
+--   defaults = {
+--     attach_mappings = function(prompt_bufnr, map)
+--       local prompt_win = vim.fn.bufwinid(prompt_bufnr)
+--       if prompt_win ~= -1 then
+--         vim.schedule(function()
+--           print 'We are balling'
+--         end)
+--       end
+--       return true
+--     end,
+--   },
+-- }
+-- ```
