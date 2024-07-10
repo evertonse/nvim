@@ -102,6 +102,12 @@ local function custom_find_files()
         }),
         -- Set up the display to include devicons
         attach_mappings = function(prompt_bufnr, map)
+          local prompt_win = vim.fn.bufwinid(prompt_bufnr)
+          if prompt_win ~= -1 then
+            vim.schedule(function()
+              vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
+            end)
+          end
           local initial_mode = 'i'
           if true then
             if initial_mode == 'i' then
@@ -477,7 +483,6 @@ return {
           generic_sorter = require('telescope.sorters').get_generic_fuzzy_sorter,
           winblend = 10,
           border = {},
-
           -- borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
           borderchars = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
           -- borderchars = {
