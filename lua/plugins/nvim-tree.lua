@@ -194,11 +194,9 @@ return {
           git = {
             -- 󰀨󰗖󰕗󰰜󱖔󰁢󰪥󰮍󱍸󰊰󰮎󰗖
             -- unstaged = '✗', -- "",
-            added = '+', -- or "✚", but this is redundant info if you use git_status_colors on the name
             unstaged = '-',
             staged = '✓', --"S",
             unmerged = '', --"",
-            conflict = '',
             renamed = '➜',
             -- untracked = '★', --"U",
             untracked = '?',

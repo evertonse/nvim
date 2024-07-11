@@ -1,2 +1,1 @@
-  local width = vim.o.columns
-  local height = vim.o.lines
+    --                          • `│`
