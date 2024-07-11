@@ -1,3 +1,1 @@
-      open_file = {
-        resize_window = true,
-      },
+local api = require 'nvim-tree.api'

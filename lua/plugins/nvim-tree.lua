@@ -1,3 +1,32 @@
+-- Function to delete all selected files
+local function delete_selected_files()
+  local api = require 'nvim-tree.api'
+  -- Bulk delete marked files
+  api.marks.bulk.delete()
+  -- Clear marks after deletion
+  api.marks.clear()
+end
+
+-- Function to mark all files in the visual selection
+local function mark_selected_files()
+  local api = require 'nvim-tree.api'
+  -- Get the current visual selection
+  local start_pos = vim.fn.getpos "'<"
+  local end_pos = vim.fn.getpos "'>"
+
+  -- Make sure the selection is in the correct order
+  if start_pos[2] > end_pos[2] then
+    start_pos, end_pos = end_pos, start_pos
+  end
+
+  -- Iterate over the selected lines and mark the files
+  for line_num = start_pos[2], end_pos[2] do
+    local node = api.tree.get_node_under_cursor(line_num)
+    if node and node.absolute_path then
+      api.marks.toggle(node)
+    end
+  end
+end
 local function nvimtree_on_attach(bufnr)
   local api = require 'nvim-tree.api'
 
@@ -26,6 +55,10 @@ local function nvimtree_on_attach(bufnr)
   -- BEGIN_DEFAULT_ON_ATTACH
 
   local map = vim.keymap.set
+  vim.keymap.set('n', 'bd', api.marks.bulk.delete, opts 'Delete Bookmarked')
+  vim.keymap.set('n', 'bt', api.marks.bulk.trash, opts 'Trash Bookmarked')
+  vim.keymap.set('n', 'bmv', api.marks.bulk.move, opts 'Move Bookmarked')
+
   vim.keymap.set('n', 'C-]', api.tree.change_root_to_node, opts 'CD')
   vim.keymap.set('n', '<C-e>', api.node.open.replace_tree_buffer, opts 'Open: In Place')
   vim.keymap.set('n', 'K', api.node.show_info_popup, opts 'Info')
