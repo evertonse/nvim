@@ -153,18 +153,15 @@ local file_tree_toggle = function(opts)
   end
 end
 
--- Function to show show neo-tree or open if not already opened
-function show_neotree() end
-
 local old_neotree_bufnr
-function hide_neotree()
+function toggle_neo_tree()
   -- Get the window ID of the Neo-tree buffer
   local bufname = vim.fn.bufname 'neo-tree'
   local bufnr = vim.fn.bufnr(bufname)
   if old_neotree_bufnr ~= nil then
     print('about to show old_neotree_bufnr' .. old_neotree_bufnr)
-    vim.cmd('sbuffer ' .. bufnr)
-    return
+    -- vim.cmd('sbuffer ' .. bufnr)
+    return vim.api.nvim_open_win(bufnr, true, {})
   end
   local winnr = vim.fn.bufwinnr(bufname)
   local tree_winid = vim.fn.win_getid(winnr)
@@ -840,7 +837,7 @@ M.general = {
     ['<S-Down>'] = { '<C-o>v<Down>', noremap_opts },
     ['<S-Left>'] = { '<Left><C-o>v', noremap_opts },
     ['<S-Right>'] = { '<C-o>v', noremap_opts },
-    ['<C-c>'] = { '<Esc>', noremap_opts },
+    -- ['<C-c>'] = { '<Esc>', noremap_opts },
     ['<M-U>'] = { '<C-o><C-r>' },
   },
   -- Visual --

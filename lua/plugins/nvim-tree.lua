@@ -1,4 +1,7 @@
+local HEIGHT_PADDING = 20
+local WIDTH_PADDING = 10
 -- Function to delete all selected files
+
 local function delete_selected_files()
   local api = require 'nvim-tree.api'
   -- Bulk delete marked files
@@ -27,6 +30,7 @@ local function mark_selected_files()
     end
   end
 end
+
 local function nvimtree_on_attach(bufnr)
   local api = require 'nvim-tree.api'
 
@@ -55,6 +59,10 @@ local function nvimtree_on_attach(bufnr)
   -- BEGIN_DEFAULT_ON_ATTACH
 
   local map = vim.keymap.set
+  vim.keymap.set({ 'v', 'x' }, 'D', function()
+    mark_selected_files()
+    delete_selected_files()
+  end, opts 'Delete Bookmarked')
   vim.keymap.set('n', 'bd', api.marks.bulk.delete, opts 'Delete Bookmarked')
   vim.keymap.set('n', 'bt', api.marks.bulk.trash, opts 'Trash Bookmarked')
   vim.keymap.set('n', 'bmv', api.marks.bulk.move, opts 'Move Bookmarked')
@@ -97,11 +105,15 @@ local function nvimtree_on_attach(bufnr)
   vim.keymap.set('n', 'I', api.tree.toggle_gitignore_filter, opts 'Toggle Git Ignore')
 
   vim.keymap.set('n', 'J', api.node.navigate.sibling.last, opts 'Last Sibling')
-  vim.keymap.set('n', 'K', api.node.navigate.sibling.first, opts 'First Sibling')
+  if false then
+    vim.keymap.set('n', 'K', api.node.navigate.sibling.first, opts 'First Sibling')
+    vim.keymap.set('n', 'o', api.node.open.edit, opts 'Open')
+    vim.keymap.set('n', 'O', api.node.open.no_window_picker, opts 'Open: No Window Picker')
+    -- You will need to insert "your code goes here" for any mappings with a custom action_cb
+    vim.keymap.set('n', 'Y', api.fs.copy.absolute_path, opts 'Copy Absolute Path')
+    vim.keymap.set('n', '<BS>', api.tree.change_root_to_parent, opts 'Close Directory')
+  end
   vim.keymap.set('n', 'm', api.marks.toggle, opts 'Toggle Bookmark')
-
-  -- vim.keymap.set('n', 'o', api.node.open.edit, opts 'Open')
-  -- vim.keymap.set('n', 'O', api.node.open.no_window_picker, opts 'Open: No Window Picker')
 
   vim.keymap.set('n', 'p', api.fs.paste, opts 'Paste')
   vim.keymap.set('n', 'P', api.node.navigate.parent, opts 'Parent Directory')
@@ -118,16 +130,12 @@ local function nvimtree_on_attach(bufnr)
 
   -- Mappings migrated from view.mappings.list
   vim.keymap.set('n', '<leader>y', api.fs.copy.filename, opts 'Copy Name')
-  -- vim.keymap.set("n", "gy", api.fs.copy.filename, opts "Copy Name")
   vim.keymap.set('n', 'y', api.fs.copy.node, opts 'Copy')
   vim.keymap.set('n', 'Y', api.fs.copy.relative_path, opts 'Copy Relative Path')
-  -- vim.keymap.set("n", "Y", api.fs.copy.absolute_path, opts "Copy Absolute Path")
-  -- You will need to insert "your code goes here" for any mappings with a custom action_cb
+  vim.keymap.set('n', 'gy', api.fs.copy.filename, opts 'Copy Name')
   vim.keymap.set('n', 'l', edit_or_open, opts 'Open: No Window Picker')
 
   vim.keymap.set('n', '<CR>', api.node.open.no_window_picker, opts 'Open: No Window Picker')
-
-  --vim.keymap.set('n', '<BS>',  api.tree.change_root_to_parent,        opts('Close Directory'))
 
   vim.keymap.set('n', 'o', api.tree.change_root_to_node, opts 'Open: No Window Picker')
   vim.keymap.set('n', 'O', api.tree.change_root_to_parent, opts 'Close Directory')
@@ -138,15 +146,80 @@ local function nvimtree_on_attach(bufnr)
   -- end, opts "Go back to previous Window")
   vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts 'Close Directory')
   -- vim.keymap.set('n', 'v', api.node.open.vertical, opts 'Open: Vertical Split')
-
-  --vim.cmd('colorscheme vs')
+  require('float-preview').attach_nvimtree(bufnr)
 end
 
 return {
   'nvim-tree/nvim-tree.lua',
   cmd = 'NvimTreeToggle',
   dependencies = {
-    'b0o/nvim-tree-preview.lua',
+    {
+      'b0o/nvim-tree-preview.lua',
+      enabled = false,
+    },
+    {
+      'JMarkin/nvim-tree.lua-float-preview',
+      lazy = true,
+      -- default
+      opts = {
+        -- Whether the float preview is enabled by default. When set to false, it has to be "toggled" on.
+        toggled_on = true,
+        -- wrap nvimtree commands
+        wrap_nvimtree_commands = true,
+        -- lines for scroll
+        scroll_lines = 20,
+        -- window config
+        window = {
+          style = 'minimal',
+          relative = 'win',
+          border = 'rounded',
+          wrap = false,
+          trim_height = false,
+          open_win_config = function()
+            local screen_w = vim.opt.columns:get()
+            local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
+            local window_w = math.floor((screen_w - WIDTH_PADDING * 2 - 1) / 2)
+            local window_h = screen_h - HEIGHT_PADDING * 2
+            local center_x = window_w + WIDTH_PADDING + 30
+            local center_y = ((vim.opt.lines:get() - window_h) / 2) - vim.opt.cmdheight:get()
+
+            return {
+              style = 'minimal',
+              relative = 'editor',
+              border = 'single',
+              zindex = 4000,
+              row = center_y,
+              col = center_x,
+              width = window_w,
+              height = window_h,
+            }
+          end,
+        },
+        mapping = {
+          -- scroll down float buffer
+          down = { '<C-d>' },
+          -- scroll up float buffer
+          up = { '<C-e>', '<C-u>' },
+          -- enable/disable float windows
+          toggle = { '<C-x>' },
+        },
+        -- hooks if return false preview doesn't shown
+        hooks = {
+          pre_open = function(path)
+            -- if file > 5 MB or not text -> not preview
+            local size = require('float-preview.utils').get_size(path)
+            if type(size) ~= 'number' then
+              return false
+            end
+            local is_text = require('float-preview.utils').is_text(path)
+            return size < 5 and is_text
+          end,
+          post_open = function(bufnr)
+            return true
+          end,
+        },
+      },
+    },
     'nvim-lua/plenary.nvim',
   },
   -- version = '*',

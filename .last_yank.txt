@@ -1,1 +1,1 @@
-old_neotree_bufnr
+          ['<CR>'] = 'Confirm',
