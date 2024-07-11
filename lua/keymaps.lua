@@ -143,7 +143,7 @@ local file_tree_toggle = function(opts)
       require('nvim-tree.api').tree.toggle {
         find_file = opts.focus,
       }
-      local tree_win_id = vim.fn.win_getid(vim.fn.win_getid(vim.fn.bufwinnr(vim.fn.bufname 'NvimTree')))
+      local tree_win_id = vim.fn.win_getid(vim.fn.bufwinnr(vim.fn.bufname 'NvimTree'))
 
       if tree_win_id ~= -1 and require('nvim-tree.api').tree.is_visible() then
         -- Set the window to floating mode with centered position
@@ -153,13 +153,28 @@ local file_tree_toggle = function(opts)
   end
 end
 
--- Function to hide Neo-tree buffer without closing it
+-- Function to show show neo-tree or open if not already opened
+function show_neotree() end
+
+local old_neotree_bufnr
 function hide_neotree()
   -- Get the window ID of the Neo-tree buffer
-  local tree_win_id = vim.fn.win_getid(vim.fn.win_getid(vim.fn.bufwinnr(vim.fn.bufname 'neo-tree')))
-  Inspect(tree_win_id)
-  if tree_win_id ~= -1 then
-    vim.api.nvim_win_hide(tree_win_id)
+  local bufname = vim.fn.bufname 'neo-tree'
+  local bufnr = vim.fn.bufnr(bufname)
+  if old_neotree_bufnr ~= nil then
+    print('about to show old_neotree_bufnr' .. old_neotree_bufnr)
+    vim.cmd('sbuffer ' .. bufnr)
+    return
+  end
+  local winnr = vim.fn.bufwinnr(bufname)
+  local tree_winid = vim.fn.win_getid(winnr)
+
+  print(' bufnr=' .. bufnr .. ' winnr=' .. winnr .. '\nbufname=' .. bufname .. '\ntree_winid=' .. tree_winid)
+  if tree_winid ~= -1 and winnr ~= 1 then
+    if old_neotree_bufnr == nil then
+      old_neotree_bufnr = bufnr
+    end
+    vim.api.nvim_win_hide(tree_winid)
   end
 end
 
