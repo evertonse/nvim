@@ -325,7 +325,7 @@ local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persist
 local surround_opts = { 'mini.surround', 'vim-surround' }
 local file_tree_opts = { 'nvim-tree', 'neo-tree' }
 vim.g.self = {
-
+  use_minipick_on_windows = false,
   icons = true,
   nerd_font = true,
   transparency = true,
@@ -335,7 +335,7 @@ vim.g.self = {
   session_plugin = session_opts[2], --NOTE: Better note Idk, bugs with Telescope sometimes
   mini_pick = true,
   notification_poll_rate = 40,
-  file_tree = file_tree_opts[OnWindows() and 1 or 1],
+  file_tree = file_tree_opts[OnWindows() and 1 or 2],
   -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
 }
 
