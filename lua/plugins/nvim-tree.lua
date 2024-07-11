@@ -28,7 +28,7 @@ local function nvimtree_on_attach(bufnr)
   local map = vim.keymap.set
   vim.keymap.set('n', 'C-]', api.tree.change_root_to_node, opts 'CD')
   vim.keymap.set('n', '<C-e>', api.node.open.replace_tree_buffer, opts 'Open: In Place')
-  vim.keymap.set('n', '<C-k>', api.node.show_info_popup, opts 'Info')
+  vim.keymap.set('n', 'K', api.node.show_info_popup, opts 'Info')
   vim.keymap.set('n', '<C-r>', api.fs.rename_sub, opts 'Rename: Omit Filename')
   vim.keymap.set('n', '<C-t>', api.node.open.tab, opts 'Open: New Tab')
   vim.keymap.set('n', '<C-v>', api.node.open.vertical, opts 'Open: Vertical Split')
@@ -105,7 +105,6 @@ local function nvimtree_on_attach(bufnr)
   -- end, opts "Go back to previous Window")
   vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts 'Close Directory')
   -- vim.keymap.set('n', 'v', api.node.open.vertical, opts 'Open: Vertical Split')
-  vim.keymap.del('n', '<C-k>', opts 'Info')
 
   --vim.cmd('colorscheme vs')
 end
@@ -124,7 +123,7 @@ return {
     root_dirs = {},
     prefer_startup_root = false,
     reload_on_bufenter = false,
-    respect_buf_cwd = true,
+    respect_buf_cwd = false,
     select_prompts = true,
 
     on_attach = nvimtree_on_attach,
@@ -149,10 +148,10 @@ return {
     sync_root_with_cwd = true,
 
     update_focused_file = {
-      enable = false, -- Enable it to always start with cursor at your file
-      update_cwd = true, -- uncomment this line to make update cwd when focusing a tab
+      enable = true, -- Enable it to always start with cursor at your file
+      update_cwd = false, -- uncomment this line to make update cwd when focusing a tab
       update_root = {
-        enable = true,
+        enable = false,
       },
     },
 
