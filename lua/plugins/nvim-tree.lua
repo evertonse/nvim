@@ -7,7 +7,7 @@ local function nvimtree_on_attach(bufnr)
 
   local function edit_or_open()
     local node = api.tree.get_node_under_cursor()
-    if not OnWindow() then
+    if not OnWindows() then
       api.tree.reload()
     end
     if node.nodes ~= nil then
