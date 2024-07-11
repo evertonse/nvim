@@ -7,7 +7,7 @@ local function nvimtree_on_attach(bufnr)
 
   local function edit_or_open()
     local node = api.tree.get_node_under_cursor()
-    if not OnWindows() then
+    if false then
       api.tree.reload()
     end
     if node.nodes ~= nil then
@@ -26,7 +26,7 @@ local function nvimtree_on_attach(bufnr)
   -- BEGIN_DEFAULT_ON_ATTACH
 
   local map = vim.keymap.set
-  vim.keymap.set('n', 'sC-]s', api.tree.change_root_to_node, opts 'CD')
+  vim.keymap.set('n', 'C-]', api.tree.change_root_to_node, opts 'CD')
   vim.keymap.set('n', '<C-e>', api.node.open.replace_tree_buffer, opts 'Open: In Place')
   vim.keymap.set('n', '<C-k>', api.node.show_info_popup, opts 'Info')
   vim.keymap.set('n', '<C-r>', api.fs.rename_sub, opts 'Rename: Omit Filename')
@@ -66,8 +66,10 @@ local function nvimtree_on_attach(bufnr)
   vim.keymap.set('n', 'J', api.node.navigate.sibling.last, opts 'Last Sibling')
   vim.keymap.set('n', 'K', api.node.navigate.sibling.first, opts 'First Sibling')
   vim.keymap.set('n', 'm', api.marks.toggle, opts 'Toggle Bookmark')
-  vim.keymap.set('n', 'o', api.node.open.edit, opts 'Open')
-  vim.keymap.set('n', 'O', api.node.open.no_window_picker, opts 'Open: No Window Picker')
+
+  -- vim.keymap.set('n', 'o', api.node.open.edit, opts 'Open')
+  -- vim.keymap.set('n', 'O', api.node.open.no_window_picker, opts 'Open: No Window Picker')
+
   vim.keymap.set('n', 'p', api.fs.paste, opts 'Paste')
   vim.keymap.set('n', 'P', api.node.navigate.parent, opts 'Parent Directory')
   vim.keymap.set('n', 'q', api.tree.close, opts 'Close')
@@ -91,8 +93,10 @@ local function nvimtree_on_attach(bufnr)
   vim.keymap.set('n', 'l', edit_or_open, opts 'Open: No Window Picker')
 
   vim.keymap.set('n', '<CR>', api.node.open.no_window_picker, opts 'Open: No Window Picker')
-  vim.keymap.set('n', 'o', api.tree.change_root_to_node, opts 'Open: No Window Picker')
+
   --vim.keymap.set('n', '<BS>',  api.tree.change_root_to_parent,        opts('Close Directory'))
+
+  vim.keymap.set('n', 'o', api.tree.change_root_to_node, opts 'Open: No Window Picker')
   vim.keymap.set('n', 'O', api.tree.change_root_to_parent, opts 'Close Directory')
 
   vim.keymap.set('n', '<leader>c', api.tree.close, opts 'Close')
@@ -100,7 +104,7 @@ local function nvimtree_on_attach(bufnr)
   --   vim.cmd ":wincmd p"
   -- end, opts "Go back to previous Window")
   vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts 'Close Directory')
-  vim.keymap.set('n', 'v', api.node.open.vertical, opts 'Open: Vertical Split')
+  -- vim.keymap.set('n', 'v', api.node.open.vertical, opts 'Open: Vertical Split')
   vim.keymap.del('n', '<C-k>', opts 'Info')
 
   --vim.cmd('colorscheme vs')
@@ -115,6 +119,13 @@ return {
   },
   -- version = '*',
   opts = {
+    hijack_netrw = true,
+    hijack_unnamed_buffer_when_opening = true,
+    root_dirs = {},
+    prefer_startup_root = false,
+    reload_on_bufenter = false,
+    respect_buf_cwd = true,
+    select_prompts = true,
 
     on_attach = nvimtree_on_attach,
     git = {
@@ -131,36 +142,63 @@ return {
       },
     },
     disable_netrw = true,
-    hijack_netrw = true,
 
     open_on_tab = true,
     hijack_cursor = false,
 
-    update_cwd = true,
+    sync_root_with_cwd = true,
 
     update_focused_file = {
       enable = false, -- Enable it to always start with cursor at your file
-      update_cwd = false, -- uncomment this line to make update cwd when focusing a tab
-      -- update_cwd = false,
-    },
-
-    filters = {
-      dotfiles = true,
-      custom = {},
+      update_cwd = true, -- uncomment this line to make update cwd when focusing a tab
+      update_root = {
+        enable = true,
+      },
     },
 
     renderer = {
+      add_trailing = true,
+      group_empty = false,
+      full_name = true,
+      root_folder_label = ':~:s?$?/..?',
+      special_files = { 'Cargo.toml', 'Makefile', 'README.md', 'readme.md' },
+
+      symlink_destination = true,
+      highlight_diagnostics = 'none',
+      highlight_opened_files = 'none',
+      highlight_modified = 'none',
+      highlight_bookmarks = 'none',
+      highlight_clipboard = 'name',
+
+      indent_width = 2,
       -- root_folder_label = true,
       -- root_folder_modifier = ':t',
-      highlight_git = true,
+      highlight_git = 'none',
       icons = {
-        git_placement = 'before',
+        web_devicons = {
+          file = {
+            enable = true,
+            color = true,
+          },
+          folder = {
+            enable = false,
+            color = true,
+          },
+        },
+
+        git_placement = 'after',
         modified_placement = 'after',
-        webdev_colors = true,
+        diagnostics_placement = 'signcolumn',
+        bookmarks_placement = 'signcolumn',
+        padding = ' ',
+        symlink_arrow = ' ➛ ',
+
         show = {
           file = true,
           folder = true,
-          folder_arrow = true,
+          diagnostics = true,
+          bookmarks = true,
+          folder_arrow = false,
           git = true,
           modified = true,
         },
@@ -176,8 +214,8 @@ return {
             symlink_open = '',
             -- arrow_open = '',
             -- arrow_closed = '',
-            arrow_open = '',
-            arrow_closed = '',
+            arrow_open = ' ',
+            arrow_closed = ' ',
           },
 
           -- neotree examples = {
@@ -207,32 +245,62 @@ return {
           },
         },
       },
-      highlight_opened_files = 'none',
-
       indent_markers = {
         enable = true,
-        icons = {
-          corner = '└',
-          edge = '│',
-          item = '│',
-          bottom = '─',
-          -- none = ' ',
-          none = '▕',
-        },
+        -- icons = {
+        --   corner = '└',
+        --   edge = '│',
+        --   -- edge = '▕',
+        --   item = '│',
+        --   -- item = '▕',
+        --   bottom = '─',
+        --   none = ' ',
+        --   -- none = '▕',
+        --   -- none = '│',
+        -- },
       },
+    },
+
+    hijack_directories = {
+      enable = true,
+      auto_open = true,
+    },
+    modified = {
+      enable = false,
+      show_on_dirs = true,
+      show_on_open_dirs = true,
+    },
+    filters = {
+      enable = true,
+      git_ignored = true,
+      dotfiles = true,
+      git_clean = false,
+      no_buffer = false,
+      no_bookmark = false,
+      custom = {},
+      exclude = {},
     },
 
     diagnostics = {
       enable = true,
-      show_on_dirs = true,
+      show_on_dirs = false,
+      show_on_open_dirs = true,
+      debounce_delay = 50,
+      severity = {
+        min = vim.diagnostic.severity.HINT,
+        max = vim.diagnostic.severity.ERROR,
+      },
       icons = {
-        hint = '',
+        hint = '',
         info = '',
         warning = '',
         error = '',
       },
     },
     view = {
+      debounce_delay = 5,
+      preserve_window_proportions = true,
+
       float = {
         enable = true,
         quit_on_focus_loss = false,

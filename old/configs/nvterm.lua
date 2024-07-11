@@ -1,5 +1,5 @@
 --https://github.com/NvChad/nvterm
-local status_ok, nvterm = pcall(require, "nvterm")
+local status_ok, nvterm = pcall(require, 'nvterm')
 if not status_ok then
   return false
 end
@@ -10,20 +10,20 @@ nvterm.setup {
     list = {},
     type_opts = {
       float = {
-        relative = "editor",
+        relative = 'editor',
         row = 0.3,
         col = 0.25,
         width = 0.4,
         height = 0.55,
-        border = "single",
+        border = 'single',
       },
       horizontal = {
-        location = "rightbelow",
+        location = 'rightbelow',
         split_ratio = 0.5,
-        relative = "editor",
-        border = "single",
+        relative = 'editor',
+        border = 'single',
       },
-      vertical = { location = "rightbelow", split_ratio = 0.55 },
+      vertical = { location = 'rightbelow', split_ratio = 0.55 },
     },
   },
   behavior = {
@@ -36,58 +36,58 @@ nvterm.setup {
   },
 }
 
-local terminal = require "nvterm.terminal"
+local terminal = require 'nvterm.terminal'
 
-local toggle_modes = { "n", "t" }
+local toggle_modes = { 'n', 't' }
 local mappings = {
   {
     toggle_modes,
-    "<A-h>",
+    '<A-h>',
     function()
-      terminal.toggle "horizontal"
+      terminal.toggle 'horizontal'
     end,
   },
   {
     toggle_modes,
-    "<A-o>",
+    '<A-o>',
     function()
-      terminal.toggle "vertical"
+      terminal.toggle 'vertical'
     end,
   },
   {
     toggle_modes,
-    "<A-i>",
+    '<A-i>',
     function()
-      terminal.toggle "float"
+      terminal.toggle 'float'
     end,
   },
   {
     toggle_modes,
-    "<F5>",
+    '<F5>',
     function()
-      terminal.send("make run -j 3 > make.log &", "float")
+      terminal.send('make run -j 3 > make.log &', 'float')
       -- terminal.send("make -j 3 &" .. vim.fn.expand "%", "float")
     end,
   },
   {
-    { "n" },
-    "<leader><A-h>",
+    { 'n' },
+    '<leader><A-h>',
     function()
-      terminal.new "horizontal"
+      terminal.new 'horizontal'
     end,
   },
   {
-    { "n" },
-    "<leader><A-v>",
+    { 'n' },
+    '<leader><A-v>',
     function()
-      terminal.new "vertical"
+      terminal.new 'vertical'
     end,
   },
   {
-    { "n" },
-    "<leader><A-i>",
+    { 'n' },
+    '<leader><A-i>',
     function()
-      terminal.new "float"
+      terminal.new 'float'
     end,
   },
 }

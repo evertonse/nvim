@@ -199,6 +199,11 @@ return {
       },
       nesting_rules = {},
       filesystem = {
+        bind_to_cwd = true, -- true creates a 2-way binding between vim's cwd and neo-tree's root
+        cwd_target = {
+          sidebar = 'tab', -- sidebar is when position = left or right
+          current = 'window', -- current is when position = current
+        },
 
         filtered_items = {
           visible = false, -- when true, they will just be displayed differently than normal items
@@ -226,7 +231,7 @@ return {
         follow_current_file = {
           enabled = false, -- This will find and focus the file in the active buffer every time
           --               -- the current file is changed while the tree is open.
-          leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+          leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
         },
         group_empty_dirs = true, -- when true, empty folders will be grouped together
 
@@ -280,10 +285,10 @@ return {
         follow_current_file = {
           enabled = false, -- This will find and focus the file in the active buffer every time
           --              -- the current file is changed while the tree is open.
-          leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+          leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
         },
         group_empty_dirs = true, -- when true, empty folders will be grouped together
-        show_unloaded = true,
+        show_unloaded = false,
         window = {
           mappings = {
             ['bd'] = 'buffer_delete',

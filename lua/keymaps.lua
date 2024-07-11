@@ -154,16 +154,12 @@ local file_tree_toggle = function(opts)
 end
 
 -- Function to hide Neo-tree buffer without closing it
-local function hide_neotree()
+function hide_neotree()
   -- Get the window ID of the Neo-tree buffer
-  local neotree_bufnr = vim.fn.bufnr 'Neotree'
-  if neotree_bufnr ~= -1 then
-    -- Get the window ID containing the Neo-tree buffer
-    local win_id = vim.fn.bufwinnr(neotree_bufnr)
-    if win_id ~= -1 then
-      -- Hide the window
-      vim.api.nvim_win_hide(win_id)
-    end
+  local tree_win_id = vim.fn.win_getid(vim.fn.win_getid(vim.fn.bufwinnr(vim.fn.bufname 'neo-tree')))
+  Inspect(tree_win_id)
+  if tree_win_id ~= -1 then
+    vim.api.nvim_win_hide(tree_win_id)
   end
 end
 

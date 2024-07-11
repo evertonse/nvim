@@ -261,6 +261,8 @@ require('lazy').setup({
 
   require 'plugins.guess-indent',
   require('plugins.' .. vim.g.self.session_plugin),
+  require 'plugins.neo-tree',
+  require 'plugins.nvim-tree',
   require 'plugins.alternate-toggle',
   require 'plugins.aerial',
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
