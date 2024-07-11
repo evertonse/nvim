@@ -1,1 +1,8 @@
-    --                          • `│`
+      mappings.n['<leader>f'] = {
+        custom_find_files() or function()
+          builtin.find_files {
+            initial_mode = 'insert',
+          }
+        end,
+        '[S]earch [F]iles',
+      }
