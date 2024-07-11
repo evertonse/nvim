@@ -802,18 +802,18 @@ return { -- Fuzzy Finder (files, lsp, etc)
       },
     }
 
-    if not OnWindows() and vim.g.self.use_minipick_on_windows then
+    if OnWindows() and vim.g.self.use_minipick_on_windows then
+      mappings.n['<leader>f'] = {
+        ':Pick files<CR>',
+        '[S]earch [F]iles',
+      }
+    else
       mappings.n['<leader>f'] = {
         custom_find_files() or function()
           builtin.find_files {
             initial_mode = 'insert',
           }
         end,
-        '[S]earch [F]iles',
-      }
-    else
-      mappings.n['<leader>f'] = {
-        ':Pick files<CR>',
         '[S]earch [F]iles',
       }
     end
