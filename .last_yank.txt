@@ -1,1 +1,3 @@
-NvimTree
+      open_file = {
+        resize_window = true,
+      },
