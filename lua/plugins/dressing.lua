@@ -10,7 +10,7 @@ return {
           ['<CR>'] = 'Confirm',
         },
         i = {
-          ['<C-c>'] = 'Close',
+          ['<esc>'] = 'Close',
           ['<CR>'] = 'Confirm',
           ['<Up>'] = 'HistoryPrev',
           ['<Down>'] = 'HistoryNext',

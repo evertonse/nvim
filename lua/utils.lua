@@ -72,6 +72,21 @@ OnWindows = function()
   return os_name == 'Windows_NT' or os_version:match 'Windows'
 end
 
+OnSlowPath = function()
+  local cwd = vim.fn.getcwd()
+
+  local prefixes = { '/mnt/c', '/mnt/d' }
+
+  -- Iterate over the prefixes and check if cwd starts with any of them
+  for _, prefix in ipairs(prefixes) do
+    if cwd:sub(1, #prefix) == prefix then
+      return true
+    end
+  end
+
+  return false
+end
+
 -- Function to customize entry display and handle selection by number
 function _TestNumbPicker()
   -- Ensure Telescope is installed

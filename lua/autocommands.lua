@@ -362,7 +362,6 @@ vim.api.nvim_create_autocmd('BufEnter', {
     if vim.bo[buf].filetype == 'TelescopePrompt' then
       assert(false, vim.inspect(vim.bo[buf]))
       vim.cmd [[startinsert]]
-      vim.api.input "'"
     end
   end,
 })

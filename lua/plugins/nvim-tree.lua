@@ -1,18 +1,72 @@
 local HEIGHT_PADDING = 20
 local WIDTH_PADDING = 10
 -- Function to delete all selected files
+-- -- Function to mark all files in the visual selection
+
+function mark_selected_files(bufnr)
+  local api = require 'nvim-tree.api'
+  local lib = require 'nvim-tree.lib'
+  -- Ensure visual mode is active and retrieve the visual selection range
+  -- Get the buffer number
+
+  -- api.marks.clear()
+  -- vim.api.nvim_input [[gv]]
+
+  vim.api.nvim_feedkeys([[:]] .. vim.api.nvim_replace_termcodes('<CR>', true, false, true), 'c', true) --blocking
+  -- vim.api.nvim_feedkeys([[:<CR>]], 'c', true) --blocking
+  -- vim.api.nvim_command 'normal! gv'
+  -- Retrieve the visual selection marks
+  vim.schedule(function()
+    local start_pos = vim.api.nvim_buf_get_mark(bufnr, '<')
+    local end_pos = vim.api.nvim_buf_get_mark(bufnr, '>')
+
+    -- Ensure marks are correctly retrieved
+    if start_pos[1] == 0 or end_pos[1] == 0 then
+      print(vim.inspect(vim.fn.getpos "'<") .. 'Failed to retrieve visual selection marks. Please try again.')
+      return
+    end
+
+    -- Make sure the selection is in the correct order
+    if start_pos[1] > end_pos[1] then
+      start_pos, end_pos = end_pos, start_pos
+    end
+    print('nvim-tree marked from ' .. start_pos[1] .. ' to ' .. end_pos[1])
+    -- Inspect { start_pos[1], end_pos[1] }
+
+    -- Iterate over the selected lines and mark the files
+    for line_num = start_pos[1], end_pos[1] do
+      -- Move to the specific line
+      vim.api.nvim_win_set_cursor(0, { line_num, 0 })
+      -- Get the node under cursor
+      local node = lib.get_node_at_cursor()
+      -- If a valid node is found, toggle its mark
+      if node then
+        api.marks.toggle(node)
+      end
+    end
+    if true then
+      return
+    end
+  end)
+end
 
 local function delete_selected_files()
   local api = require 'nvim-tree.api'
   -- Bulk delete marked files
-  api.marks.bulk.delete()
-  -- Clear marks after deletion
-  api.marks.clear()
+
+  vim.schedule(function()
+    api.marks.bulk.delete()
+    -- Clear marks after deletion
+    api.marks.clear()
+  end)
 end
 
 -- Function to mark all files in the visual selection
-local function mark_selected_files()
+local function mark_selected_files2()
   local api = require 'nvim-tree.api'
+  local lib = require 'nvim-tree.lib'
+  api.marks.clear()
+
   -- Get the current visual selection
   local start_pos = vim.fn.getpos "'<"
   local end_pos = vim.fn.getpos "'>"
@@ -24,13 +78,18 @@ local function mark_selected_files()
 
   -- Iterate over the selected lines and mark the files
   for line_num = start_pos[2], end_pos[2] do
-    local node = api.tree.get_node_under_cursor(line_num)
+    -- Move the cursor to the current line
+    vim.api.nvim_win_set_cursor(0, { line_num, 0 })
+
+    -- Get the node under the cursor
+    local node = api.tree.get_node_at_cursor()
+
+    -- If a valid node is found, toggle its mark
     if node and node.absolute_path then
       api.marks.toggle(node)
     end
   end
 end
-
 local function nvimtree_on_attach(bufnr)
   local api = require 'nvim-tree.api'
 
@@ -59,8 +118,9 @@ local function nvimtree_on_attach(bufnr)
   -- BEGIN_DEFAULT_ON_ATTACH
 
   local map = vim.keymap.set
-  vim.keymap.set({ 'v', 'x' }, 'D', function()
-    mark_selected_files()
+  vim.keymap.set({ 'v' }, 'D', function()
+    api.marks.clear()
+    mark_selected_files(bufnr)
     delete_selected_files()
   end, opts 'Delete Bookmarked')
   vim.keymap.set('n', 'bd', api.marks.bulk.delete, opts 'Delete Bookmarked')
@@ -146,7 +206,9 @@ local function nvimtree_on_attach(bufnr)
   -- end, opts "Go back to previous Window")
   vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts 'Close Directory')
   -- vim.keymap.set('n', 'v', api.node.open.vertical, opts 'Open: Vertical Split')
-  require('float-preview').attach_nvimtree(bufnr)
+  if not OnSlowPath() then
+    require('float-preview').attach_nvimtree(bufnr)
+  end
 end
 
 return {
@@ -356,17 +418,18 @@ return {
       },
       indent_markers = {
         enable = true,
-        -- icons = {
-        --   corner = '└',
-        --   edge = '│',
-        --   -- edge = '▕',
-        --   item = '│',
-        --   -- item = '▕',
-        --   bottom = '─',
-        --   none = ' ',
-        --   -- none = '▕',
-        --   -- none = '│',
-        -- },
+        icons = {
+          corner = '└',
+          -- corner = '└',
+          edge = '│',
+          -- edge = '▕',
+          item = '│',
+          -- item = '▕',
+          bottom = '─',
+          none = ' ',
+          -- none = '▕',
+          -- none = '│',
+        },
       },
     },
 
@@ -407,6 +470,9 @@ return {
       },
     },
     view = {
+      centralize_selection = true,
+      cursorline = true,
+
       debounce_delay = 5,
       preserve_window_proportions = true,
 

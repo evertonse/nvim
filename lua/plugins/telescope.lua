@@ -810,7 +810,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
       }
     else
       mappings.n['<leader>f'] = {
-        not on_windows and custom_find_files() or function()
+        (not OnSlowPath() and not on_windows) and custom_find_files() or function()
           builtin.find_files {
             initial_mode = 'insert',
           }
