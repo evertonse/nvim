@@ -52,7 +52,27 @@ local function custom_find_files()
     },
   }
 
-  local find_command = {
+  local fd_command = {
+    'fd',
+    '--type',
+    'f', -- Only show files
+    '--hidden', -- Search hidden files
+    '--exclude',
+    '.git', -- Exclude .git directory
+    '--exclude',
+    '__pycache__', -- Exclude __pycache__ directory
+    '--exclude',
+    'venv', -- Exclude venv directory
+    '--exclude',
+    '*.pdf', -- Exclude PDF files
+    '--exclude',
+    '*.png', -- Exclude PNG files
+    '--color',
+    'never', -- Do not use color output
+    '--no-ignore-vcs', -- Show files ignored by VCS
+  }
+
+  local rg_command = {
     'rg',
     '--color=never',
     '--no-heading',
@@ -74,6 +94,9 @@ local function custom_find_files()
     '--glob',
     '!*.png',
   }
+
+  local find_command = fd_command
+  -- local find_command = rg_command
   local previewers = require 'telescope.previewers'
   local conf = require('telescope.config').values
   -- NOTE: I'm returning a function because we load all requires in the outer func than we back into the inner function
@@ -95,7 +118,7 @@ local function custom_find_files()
         -- previewer = require('telescope.previewers').builtin.new {},
         -- buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
 
-        debounce = 10,
+        debounce = 100,
         prompt_title = 'Find Files (ExCyber)',
         -- finder = finders.new_oneshot_job { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--color', 'never' },
         finder = finders.new_oneshot_job(find_command, {

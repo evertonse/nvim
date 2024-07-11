@@ -250,7 +250,7 @@ require('lazy').setup({
   { 'uga-rosa/ccc.nvim', event = 'VeryLazy' },
 
   require 'plugins.oil',
-  require 'plugins.neo-tree', -- NOTE: Slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
+  require('plugins.' .. vim.g.self.file_tree), -- NOTE: Slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
   -- require 'plugins.nnn', -- NOTE: works fine but needs better NNN configurations with tui-preview plugin ,
   -- require 'plugins.lf', -- NOTE: Appear to bugout with my toggleterm config
   require 'plugins.colorizer',

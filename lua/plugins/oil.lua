@@ -5,8 +5,8 @@ return {
   opts = {},
   config = function(_, opts)
     local on_windows = OnWindows()
-    if on_windows then
-      vim.keymap.set('n', '<leader>f', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+    if on_windows and vim.g.self.file_tree == 'oil' then
+      vim.keymap.set('n', '<leader>e', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
     end
 
     require('oil').setup {
@@ -78,7 +78,8 @@ return {
         ['<C-l>'] = 'actions.refresh',
         ['O'] = 'actions.parent',
         ['h'] = 'actions.parent',
-        ['o'] = { 'actions.cd', opts = { scope = 'tab' }, desc = ':tcd to the current oil directory' },
+        -- ['o'] = { 'actions.cd', opts = { scope = 'tab' }, desc = ':tcd to the current oil directory' },
+        ['o'] = { 'actions.cd' },
         ['-'] = 'actions.parent',
         ['_'] = 'actions.open_cwd',
         ['`'] = 'actions.cd',

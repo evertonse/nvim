@@ -28,7 +28,7 @@ require 'utils'
 -- [[ Setting options ]]
 require 'options'
 
--- XXX might be useful `vim.fn.defer`
+-- NOTE: might be useful `vim.fn.defer`
 vim.schedule(function()
   require 'autocommands'
 end)

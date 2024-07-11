@@ -107,13 +107,17 @@ end
 return {
   'nvim-tree/nvim-tree.lua',
   cmd = 'NvimTreeToggle',
+  dependencies = {
+    'b0o/nvim-tree-preview.lua',
+    'nvim-lua/plenary.nvim',
+  },
   -- version = '*',
   opts = {
 
     on_attach = nvimtree_on_attach,
     git = {
       enable = true,
-      ignore = false,
+      ignore = true,
       timeout = 200,
     },
     filesystem_watchers = {
@@ -127,26 +131,26 @@ return {
     disable_netrw = true,
     hijack_netrw = true,
 
-    open_on_tab = false,
+    open_on_tab = true,
     hijack_cursor = false,
 
     update_cwd = true,
 
     update_focused_file = {
-      enable = false,
-      -- update_cwd = true, -- uncomment this line to make update cwd when focusing a tab
-      update_cwd = false,
+      enable = false, -- Enable it to always start with cursor at your file
+      update_cwd = false, -- uncomment this line to make update cwd when focusing a tab
+      -- update_cwd = false,
     },
 
     filters = {
-      dotfiles = false,
+      dotfiles = true,
       custom = {},
     },
 
     renderer = {
-      root_folder_label = false,
-      root_folder_modifier = ':t',
-      highlight_git = false,
+      -- root_folder_label = true,
+      -- root_folder_modifier = ':t',
+      highlight_git = true,
       icons = {
         git_placement = 'before',
         modified_placement = 'after',
@@ -168,16 +172,36 @@ return {
             open = '', --"",
             symlink = '', --"",
             symlink_open = '',
-            arrow_open = '',
-            arrow_closed = '',
+            -- arrow_open = '',
+            -- arrow_closed = '',
+            arrow_open = '',
+            arrow_closed = '',
           },
+
+          -- neotree examples = {
+          --   -- Change type
+          --   added = '+', -- or "✚", but this is redundant info if you use git_status_colors on the name
+          --   modified = '', -- or "", but this is redundant info if you use git_status_colors on the name
+          --   deleted = '✖', -- this can only be used in the git_status source
+          --   renamed = '󰁕', -- this can only be used in the git_status source Status type
+          --   -- untracked = "",
+          --   untracked = '?',
+          --   ignored = '',
+          --   unstaged = '-',
+          --   staged = '',
+          --   conflict = '',
+          -- },
           git = {
             -- 󰀨󰗖󰕗󰰜󱖔󰁢󰪥󰮍󱍸󰊰󰮎󰗖
-            unstaged = '✗', -- "",
+            -- unstaged = '✗', -- "",
+            added = '+', -- or "✚", but this is redundant info if you use git_status_colors on the name
+            unstaged = '-',
             staged = '✓', --"S",
             unmerged = '', --"",
+            conflict = '',
             renamed = '➜',
-            untracked = '★', --"U",
+            -- untracked = '★', --"U",
+            untracked = '?',
             deleted = '',
             ignored = '◌',
           },
@@ -187,6 +211,14 @@ return {
 
       indent_markers = {
         enable = true,
+        icons = {
+          corner = '└',
+          edge = '│',
+          item = '│',
+          bottom = '─',
+          -- none = ' ',
+          none = '▕',
+        },
       },
     },
 
@@ -201,6 +233,20 @@ return {
       },
     },
     view = {
+      float = {
+        enable = true,
+        quit_on_focus_loss = false,
+        open_win_config = {
+          relative = 'editor',
+          width = vim.opt.columns:get(),
+          -- center_x = (screen_w - _width) / 2
+          -- center_y = (vim.opt.lines:get() - _height) / 2
+          height = math.floor((vim.opt.lines:get() - vim.opt.cmdheight:get()) * 0.75),
+          bufpos = { 100, 100 },
+          -- row = 0.5,
+          -- col = 0.5,
+        },
+      },
       width = 38,
       side = 'left',
       number = false,

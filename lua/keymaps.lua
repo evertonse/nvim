@@ -64,35 +64,86 @@ local function delete_buffer()
   vim.cmd 'Bdelete!'
 end
 
-local neo_tree_reveal_toggle = function()
+local file_tree_reveal_toggle = function()
+  local width = vim.o.columns
+  local height = vim.o.lines
+  local float_opts = {
+    relative = 'editor',
+    width = math.floor(width * 0.6),
+    height = math.floor(height * 0.6),
+    row = math.floor((height - math.floor(height * 0.6)) / 2),
+    col = math.floor((width - math.floor(width * 0.6)) / 2),
+    border = 'single',
+  }
+
   local reveal_file = vim.fn.expand '%:p'
+
   if reveal_file == '' then
     reveal_file = vim.fn.getcwd()
   else
     local f = io.open(reveal_file, 'r')
     if f then
-      f.close(f)
+      f:close()
     else
       reveal_file = vim.fn.getcwd()
     end
   end
-  require('neo-tree.command').execute {
-    action = 'focus', -- OPTIONAL, this is the default value
-    source = 'filesystem', -- OPTIONAL, this is the default value
-    position = 'float',
-    toggle = true,
-    reveal_file = reveal_file, -- path to file or folder to reveal
-    reveal_force_cwd = false, -- change cwd without asking if needed
-  }
+
+  if vim.g.self.file_tree == 'oil' then
+  elseif vim.g.self.file_tree == 'neo-tree' then
+    require('neo-tree.command').execute {
+      action = 'focus', -- OPTIONAL, this is the default value
+      source = 'filesystem', -- OPTIONAL, this is the default value
+      position = 'float',
+      toggle = true,
+      reveal_file = reveal_file, -- path to file or folder to reveal
+      reveal_force_cwd = false, -- change cwd without asking if needed
+    }
+  elseif vim.g.self.file_tree == 'nvim-tree' then
+    require('nvim-tree.api').tree.toggle {
+      find_file = true,
+      -- find_file_update_cwd = true,
+      -- update_focused_file = {
+      --   enable = true,
+      --   update_cwd = false,
+      -- },
+    }
+    local tree_win_id = vim.fn.win_getid(vim.fn.win_getid(vim.fn.bufwinnr(vim.fn.bufname 'NvimTree')))
+    if tree_win_id ~= -1 and require('nvim-tree.api').tree.is_visible() then
+      -- Set the window to floating mode with centered position
+      vim.api.nvim_win_set_config(tree_win_id, float_opts)
+    end
+  end
 end
 
-local neo_tree_toggle = function()
-  require('neo-tree.command').execute {
-    action = 'focus', -- OPTIONAL, this is the default value
-    source = 'filesystem', -- OPTIONAL, this is the default value
-    position = 'float',
-    toggle = true,
+local file_tree_toggle = function()
+  local width = vim.o.columns
+  local height = vim.o.lines
+  local float_opts = {
+    relative = 'editor',
+    width = math.floor(width * 0.6),
+    height = math.floor(height * 0.6),
+    row = math.floor((height - math.floor(height * 0.6)) / 2),
+    col = math.floor((width - math.floor(width * 0.6)) / 2),
+    border = 'single',
   }
+
+  if vim.g.self.file_tree == 'neo-tree' then
+    require('neo-tree.command').execute {
+      action = 'focus', -- OPTIONAL, this is the default value
+      source = 'filesystem', -- OPTIONAL, this is the default value
+      position = 'float',
+      toggle = true,
+    }
+  elseif vim.g.self.file_tree == 'nvim-tree' then
+    require('nvim-tree.api').tree.toggle {}
+    local tree_win_id = vim.fn.win_getid(vim.fn.win_getid(vim.fn.bufwinnr(vim.fn.bufname 'NvimTree')))
+
+    if tree_win_id ~= -1 and require('nvim-tree.api').tree.is_visible() then
+      -- Set the window to floating mode with centered position
+      vim.api.nvim_win_set_config(tree_win_id, float_opts)
+    end
+  end
 end
 
 -- Function to hide Neo-tree buffer without closing it
@@ -489,8 +540,8 @@ M.general = {
     },
     ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS>]], '[R]eplace [W]ord' },
     -->> neo-tree
-    ['<leader>e'] = { neo_tree_toggle, 'Toggle neo tree' },
-    ['<leader>E'] = { neo_tree_reveal_toggle, 'Toggle neo tree' },
+    ['<leader>e'] = { file_tree_toggle, 'Toggle neo tree' },
+    ['<leader>E'] = { file_tree_reveal_toggle, 'Toggle neo tree' },
 
     -->> NNN picker
     -- ['<leader>e'] = { '<cmd> NnnPicker <CR>', 'NNN Floating Window' },
