@@ -44,6 +44,7 @@ vim.cmd [[
   
   "autocmd FileType python :setlocal tabstop=4 shiftwidth=4 expandtab
   "autocmd FileType lua :setlocal tabstop=2 shiftwidth=2 expandtab
+  autocmd FileType cpp :setlocal tabstop=4 shiftwidth=4 expandtab
 
 
 
@@ -177,7 +178,7 @@ vim.api.nvim_create_autocmd('CmdwinEnter', {
     vim.api.nvim_buf_set_keymap(0, 'i', '<CR>', '<C-c><CR>', { noremap = true, silent = true })
 
     if vim.api.nvim_get_mode().mode == 'n' then
-      vim.api.nvim_input 'a'
+      vim.api.nvim_input 'i'
     end
 
     local close_completion = false
@@ -348,6 +349,7 @@ vim.api.nvim_create_autocmd('FileType', {
   callback = function()
     -- map <Esc> to close quickfix window
     vim.api.nvim_buf_set_keymap(0, 'n', '<Esc>', ':cclose<CR>', { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(0, 'n', 'q', ':cclose<CR>', { noremap = true, silent = true })
   end,
 })
 
