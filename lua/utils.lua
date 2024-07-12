@@ -354,6 +354,27 @@ vim.g.self = {
   -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
 }
 
+local function change_to_nvim_config_dir()
+  local config_dir = ''
+  if vim.fn.has 'win32' == 1 then
+    config_dir = vim.fn.expand '$LOCALAPPDATA/nvim'
+  else
+    config_dir = vim.fn.expand '~/.config/nvim'
+  end
+
+  if vim.fn.isdirectory(config_dir) == 1 then
+    vim.cmd('tcd ' .. config_dir)
+    print('Changed directory to: ' .. config_dir)
+  else
+    print 'Neovim configuration directory not found.'
+  end
+end
+
+vim.api.nvim_create_user_command('OpenConfig', change_to_nvim_config_dir, {})
+
+-- Optional: You can also map this to a keybinding, for example:
+vim.api.nvim_set_keymap('n', '<leader>cd', ':ChangeToConfigDir<CR>', { noremap = true, silent = true })
+
 return {
   check = function()
     vim.health.start 'kickstart.nvim'

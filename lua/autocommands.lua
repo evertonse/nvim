@@ -335,9 +335,7 @@ end
 
 -- Autocommand to save the last yanked text before exiting Neovim
 vim.api.nvim_create_autocmd('VimLeavePre', {
-  callback = function()
-    save_last_yank()
-  end,
+  callback = save_last_yank,
 })
 
 -- Autocommand to load the last yanked text when entering Neovim
