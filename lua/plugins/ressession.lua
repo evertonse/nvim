@@ -24,7 +24,7 @@ return {
     },
     -- Show more detail about the sessions when selecting one to load.
     -- Disable if it causes lag.
-    load_detail = true,
+    load_detail = false,
     -- List order ["modification_time", "creation_time", "filename"]
     load_order = 'modification_time',
     -- override default filter
@@ -53,7 +53,7 @@ return {
         enable_in_tab = true,
       },
       -- NOTE: I don't wanna save quicklist
-      -- quickfix = false,
+      -- quickfix = true,
     },
   },
   config = function(_, opts)

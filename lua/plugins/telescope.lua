@@ -68,7 +68,11 @@ local function custom_find_files()
     '--exclude',
     '*.png', -- Exclude PNG files
     '--exclude',
-    '*.~', -- Exclude backupfile
+    '*.bin',
+    '--exclude',
+    '*.exe',
+    '--exclude',
+    '*~', -- Exclude backupfile
     '--color',
     'never', -- Do not use color output
     '--no-ignore-vcs', -- Show files ignored by VCS
@@ -94,9 +98,13 @@ local function custom_find_files()
     '--glob',
     '!*.pdf',
     '--glob',
-    '!*.~', -- backup files
+    '!*~', -- backup files
     '--glob',
     '!*.png',
+    '--glob',
+    '!*.bin',
+    '--glob',
+    '!*.exe',
   }
 
   local find_command = fd_command
@@ -122,7 +130,7 @@ local function custom_find_files()
         -- previewer = require('telescope.previewers').builtin.new {},
         -- buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
 
-        debounce = 100,
+        debounce = 200,
         prompt_title = 'Find Files (ExCyber)',
         -- finder = finders.new_oneshot_job { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--color', 'never' },
         finder = finders.new_oneshot_job(find_command, {
@@ -453,7 +461,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
     require('telescope').setup {
       pickers = {
         find_files = {
-          debounce = 20,
+          debounce = 25,
           -- find_command = { 'fd', '--type', 'file', '--hidden', '--no-ignore', '--exclude', '.git', '--color=never' },
           -- find_command = { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--exclude', '__pycache__', '--color=never' },
           -- find_command = { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--exclude', 'venv', '--exclude', '__pycache__', '--color=never' },
