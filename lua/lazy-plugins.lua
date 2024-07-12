@@ -208,15 +208,13 @@ require('lazy').setup({
   {
     'mbbill/undotree',
     enabled = true,
+    lazy = false,
     event = 'BufEnter',
-    key = { {
-      'n',
-      '<leader>ut',
-      function()
+    config = function(self, opts)
+      vim.keymap.set('n', '<leader>ut', function()
         vim.cmd [[UndotreeToggle]]
-      end,
-      '[U]ndotree [T]oggle',
-    } },
+      end, { desc = '[U]ndotree [T]oggle' })
+    end,
   },
   {
     'gennaro-tedesco/nvim-peekup',
