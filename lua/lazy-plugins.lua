@@ -87,6 +87,7 @@ local lazy_config = {
 
 -- NOTE: Where you install your plugins.
 require('lazy').setup({
+
   -- NOTE :h event for valid  vim events, there are some only in neovim like LspDetach
 
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
@@ -148,6 +149,8 @@ require('lazy').setup({
   -- require 'plugins.wilder',
   --
   -- require 'plugins.fine-cmdline',
+
+  require 'plugins.codewindow',
 
   require 'plugins.neogit',
 
