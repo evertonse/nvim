@@ -204,6 +204,7 @@ require('lazy').setup({
 
   --------------------------------------
 
+  require 'plugins.bufjump',
   {
     'mbbill/undotree',
     enabled = true,
