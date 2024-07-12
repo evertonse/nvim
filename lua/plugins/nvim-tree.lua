@@ -216,7 +216,7 @@ return {
   cmd = 'NvimTreeToggle',
   dependencies = {
     {
-      'b0o/nvim-tree-preview.lua',
+      'b0o/nvim-tree-preview.lua', -- dont work with float
       enabled = false,
     },
     {
@@ -234,7 +234,7 @@ return {
         window = {
           style = 'minimal',
           relative = 'win',
-          border = 'rounded',
+          border = 'single',
           wrap = false,
           trim_height = false,
           open_win_config = function()
@@ -320,7 +320,7 @@ return {
     sync_root_with_cwd = true,
 
     update_focused_file = {
-      enable = true, -- Enable it to always start with cursor at your file
+      enable = false, -- Enable it to always start with cursor at your file
       update_cwd = false, -- uncomment this line to make update cwd when focusing a tab
       update_root = {
         enable = true,

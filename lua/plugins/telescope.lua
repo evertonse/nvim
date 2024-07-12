@@ -558,7 +558,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
         file_sorter = require('telescope.sorters').get_fzy_sorter,
         -- file_sorter = require('telescope.sorters').get_levenshtein_sorter,
         -- file_sorter = require('telescope.sorters').get_substr_matcher,
-        file_ignore_patterns = { 'node_modules', '.git', '__pycache__', 'venv' },
+        file_ignore_patterns = { 'node_modules', '.git', '__pycache__', 'venv', '%.png', '%.bin', '%.exe', '~$' },
         generic_sorter = require('telescope.sorters').get_generic_fuzzy_sorter,
         winblend = 10,
         border = {},
@@ -696,6 +696,8 @@ return { -- Fuzzy Finder (files, lsp, etc)
       },
       cache_picker = {
         num_pickers = -1,
+        limit_entry = 4000,
+        ignore_empty_prompt = true,
       },
       extensions = {
         ['ui-select'] = {

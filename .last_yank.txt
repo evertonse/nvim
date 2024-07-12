@@ -1,1 +1,1 @@
-<leader>
+    file_ignore_patterns = { 

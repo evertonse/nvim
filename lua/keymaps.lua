@@ -119,14 +119,23 @@ end
 local file_tree_toggle = function(opts)
   -- opts.height_percentage, opts.width_percentage, opts.focus
   return function()
+    opts.width_max = opts.width_max or 100
+    opts.height_max = opts.height_max or 120
+
     local total_width = vim.o.columns
     local total_height = vim.o.lines
+
+    local width = math.max(opts.width_min, math.floor(total_width * opts.width_percentage))
+    local height = math.max(opts.height_min, math.floor(total_height * opts.height_percentage))
+    width = math.min(width, opts.width_max)
+    height = math.min(height, opts.height_max)
+
     local float_opts = {
       relative = 'editor',
-      width = math.max(opts.width_min, math.floor(total_width * opts.width_percentage)),
-      height = math.max(opts.height_min, math.floor(total_height * opts.height_percentage)),
-      row = math.floor((total_height - math.floor(total_height * 0.65)) / 2),
-      col = math.floor((total_width - math.floor(total_width * 0.6)) / 2),
+      width = width,
+      height = height,
+      row = math.floor((total_height - math.floor(total_height * 0.69)) / 2),
+      col = math.floor((total_width - math.floor(total_width * 0.55)) / 2),
       border = 'single',
     }
 
@@ -150,6 +159,8 @@ local file_tree_toggle = function(opts)
         vim.api.nvim_win_set_config(tree_win_id, float_opts)
       end
     end
+
+    vim.api.nvim_win_set_option(0, 'winblend', 20)
   end
 end
 
@@ -552,10 +563,10 @@ M.general = {
     ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS>]], '[R]eplace [W]ord' },
     -->> neo-tree
     ['<leader>e'] = {
-      file_tree_toggle { width_min = 70, height_min = 23, focus = false, width_percentage = 0.55, height_percentage = 0.65 },
+      file_tree_toggle { width_min = 55, height_min = 28, focus = false, width_percentage = 0.45, height_percentage = 0.65 },
       'Toggle neo tree',
     },
-    ['<leader>E'] = { file_tree_toggle { width_min = 70, height_min = 23, focus = true, width_percentage = 0.55, height_percentage = 0.65 }, 'Toggle neo tree' },
+    ['<leader>E'] = { file_tree_toggle { width_min = 55, height_min = 28, focus = true, width_percentage = 0.45, height_percentage = 0.65 }, 'Toggle neo tree' },
 
     -->> NNN picker
     -- ['<leader>e'] = { '<cmd> NnnPicker <CR>', 'NNN Floating Window' },
