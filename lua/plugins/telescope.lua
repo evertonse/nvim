@@ -67,6 +67,8 @@ local function custom_find_files()
     '*.pdf', -- Exclude PDF files
     '--exclude',
     '*.png', -- Exclude PNG files
+    '--exclude',
+    '*.~', -- Exclude backupfile
     '--color',
     'never', -- Do not use color output
     '--no-ignore-vcs', -- Show files ignored by VCS
@@ -91,6 +93,8 @@ local function custom_find_files()
     '!venv/*',
     '--glob',
     '!*.pdf',
+    '--glob',
+    '!*.~', -- backup files
     '--glob',
     '!*.png',
   }
