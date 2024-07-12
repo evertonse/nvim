@@ -470,24 +470,32 @@ local jump_within_buffer = function(prev)
   local jumplist = get_jumplist()
   update_current_jump_index(prev and -1 or 1)
 
+  local cmd = prev and '<c-o>' or '<c-i>'
+
   local starting = current_jump_index
   local ending = prev and 1 or #jumplist
   local step = prev and -1 or 1
   local curr_bufnr = vim.api.nvim_get_current_buf()
+  local jump_count = 0
   for i = starting, ending, step do
     local jump = jumplist[i]
-    Inspect {
-      step = step,
-      ending = ending,
-      current_jump_index = current_jump_index,
-      buf = jump.bufnr,
-      nr_jmplist = #jumplist,
-    }
+    jump_count = jump_count + 1
     if jump.bufnr == curr_bufnr then
       -- vim.fn.cursor(jumplist[i].lnum, jumplist[i].col)
-      local win = vim.api.nvim_get_current_win()
+      -- local win = vim.api.nvim_get_current_win()
       -- vim.api.nvim_win_set_cursor(win, { jump.lnum, jump.col })
+
+      print(tostring(math.abs(current_jump_index - i)) .. cmd)
+      vim.api.nvim_input(tostring(math.abs(current_jump_index - i)) .. cmd)
+
       current_jump_index = i
+      -- Inspect {
+      --   step = step,
+      --   ending = ending,
+      --   current_jump_index = current_jump_index,
+      --   buf = jump.bufnr,
+      --   count_jmplist = #jumplist,
+      -- }
       return true
     end
   end
@@ -495,13 +503,13 @@ local jump_within_buffer = function(prev)
 end
 
 local function jump_to_prev_in_same_buffer()
-  if jump_within_buffer(true) == false then
+  if jump_within_buffer(false) == false then
     print 'No previous jumps in the current buffer.'
   end
 end
 
 local function jump_to_next_in_same_buffer()
-  if jump_within_buffer(false) == false then
+  if jump_within_buffer(true) == false then
     print 'No next jumps in the current buffer.'
   end
 end
@@ -533,18 +541,6 @@ M.general = {
 
     ['<Esc>'] = { '<cmd>noh <CR>', 'Clear highlights' },
 
-    ['8'] = {
-      function()
-        jump_to_next_in_same_buffer()
-      end,
-      [[jump_within_buffer 'back']],
-    },
-    ['9'] = {
-      function()
-        jump_to_prev_in_same_buffer()
-      end,
-      [[jump_within_buffer 'foward']],
-    },
     -->> ToggleTerm
     ['<A-i>'] = {
       function()
