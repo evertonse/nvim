@@ -290,9 +290,9 @@ return {
     hijack_netrw = true,
     hijack_unnamed_buffer_when_opening = false,
     root_dirs = {},
-    prefer_startup_root = false,
+    prefer_startup_root = true,
     reload_on_bufenter = false,
-    respect_buf_cwd = false,
+    respect_buf_cwd = true,
     select_prompts = true,
 
     on_attach = nvimtree_on_attach,
@@ -312,7 +312,7 @@ return {
         restrict_above_cwd = false,
       },
     },
-    disable_netrw = true,
+    disable_netrw = false,
 
     open_on_tab = true,
     hijack_cursor = false,
@@ -320,7 +320,7 @@ return {
     sync_root_with_cwd = true,
 
     update_focused_file = {
-      enable = false, -- Enable it to always start with cursor at your file
+      enable = true, -- Enable it to always start with cursor at your file
       update_cwd = false, -- uncomment this line to make update cwd when focusing a tab
       update_root = {
         enable = true,

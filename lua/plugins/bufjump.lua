@@ -16,11 +16,11 @@ return {
     end, opts)
     vim.keymap.set('n', '<C-O>', function()
       require('bufjump').backward_same_buf()
-      print 'going in the same buffer'
+      print 'Jump backward in the same buffer'
     end, opts)
     vim.keymap.set('n', '<C-I>', function()
-      print 'going in the same buffer'
       require('bufjump').forward_same_buf()
+      print 'Jump forward in the same buffer'
     end, opts)
   end,
 }
