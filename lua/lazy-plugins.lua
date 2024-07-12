@@ -84,9 +84,12 @@ local lazy_config = {
     },
   },
 }
--- NOTE: Here is where you install your plugins.
+
+-- NOTE: Where you install your plugins.
 require('lazy').setup({
-  -- :h event for valid  vim events, there are some only in neovim like LspDetach
+  -- NOTE :h event for valid  vim events, there are some only in neovim like LspDetach
+
+  { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   { 'tpope/vim-sleuth', lazy = false, enabled = false }, -- Detect tabstop and shiftwidth automatically
   { 'yorickpeterse/nvim-pqf', enabled = false }, -- Nicer Quick List
 
@@ -97,11 +100,8 @@ require('lazy').setup({
   --
   --  This is equivalent to:
   --    require('Comment').setup({})
-
   -- "gc" to comment visual regions/lines
-  -- require 'plugins.Comment',
-  { 'moll/vim-bbye', lazy = false, enabled = true },
-  -- lazy.nvim
+
   {
     'filipdutescu/renamer.nvim',
     branch = 'master',
@@ -139,16 +139,10 @@ require('lazy').setup({
     lazy = false,
     enabled = false,
   },
+
+  require 'plugins.Comment',
+  require 'plugins.scope',
   -- require 'plugins.tabby',
-  {
-    'tiagovla/scope.nvim',
-    config = function()
-      require('scope').setup {}
-    end,
-    lazy = false,
-    event = 'VeryLazy',
-    enabled = true,
-  },
   -- require 'plugins.tabline',
   --
   -- require 'plugins.wilder',
@@ -257,16 +251,15 @@ require('lazy').setup({
   require 'plugins.colorizer',
   require 'plugins.better-scape',
   require 'plugins.noice',
-  { 'bfredl/nvim-incnormal', enabled = false, event = 'BufEnter' }, -- NOTE:live-command if better
+  { 'bfredl/nvim-incnormal', enabled = true, event = 'BufEnter' }, -- NOTE:live-command if better
   require 'plugins.live-command',
-
+  { 'moll/vim-bbye', lazy = false, enabled = true },
   require 'plugins.guess-indent',
   require('plugins.' .. vim.g.self.session_plugin),
   require 'plugins.neo-tree',
   require 'plugins.nvim-tree',
   require 'plugins.alternate-toggle',
   require 'plugins.aerial',
-  { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
