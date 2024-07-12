@@ -290,9 +290,9 @@ return {
     hijack_netrw = true,
     hijack_unnamed_buffer_when_opening = false,
     root_dirs = {},
-    prefer_startup_root = true,
+    prefer_startup_root = false,
     reload_on_bufenter = false,
-    respect_buf_cwd = true,
+    respect_buf_cwd = false,
     select_prompts = true,
 
     on_attach = nvimtree_on_attach,
@@ -305,10 +305,10 @@ return {
       enable = true,
     },
     actions = {
-      use_system_clipboard = true,
+      use_system_clipboard = false,
       change_dir = {
         enable = true,
-        global = false,
+        global = true,
         restrict_above_cwd = false,
       },
     },
