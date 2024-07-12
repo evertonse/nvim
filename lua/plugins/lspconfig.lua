@@ -6,10 +6,10 @@ return {
     'neovim/nvim-lspconfig',
     -- lazy = false,
     -- event = 'VimEnter',
-    event = 'VimEnter',
+    -- event = 'VimEnter',
     -- event = 'VeryLazy',
     -- event = 'BufEnter',
-    -- event = 'BufReadPost',
+    event = { 'BufReadPost', 'BufNewFile' },
     -- event = 'BufReadCmd', -- NOTE: It hangs in the first opned buffer for some reason? I thought it was just an event
 
     dependencies = {
