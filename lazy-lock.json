@@ -1,4 +1,5 @@
 {
+  "Comment.nvim": { "branch": "master", "commit": "e30b7f2008e52442154b66f7c519bfd2f1e32acb" },
   "LuaSnip": { "branch": "master", "commit": "ce0a05ab4e2839e1c48d072c5236cce846a387bc" },
   "aerial.nvim": { "branch": "master", "commit": "db0af491ff13c18a966ce2f9ac7f5211aec000a7" },
   "alternate-toggler": { "branch": "main", "commit": "819800304d3e8e575fd6aa461a8bcf2217e1cfb6" },
@@ -41,6 +42,7 @@
   "nvim-dap-go": { "branch": "main", "commit": "3999f0744e80d2dba5775189fc7c7a5e9846053e" },
   "nvim-dap-ui": { "branch": "master", "commit": "754104da429457bff733444a3048bc8296daf775" },
   "nvim-hlslens": { "branch": "main", "commit": "1db56afda3e85791a14b096e483dfda699dd9163" },
+  "nvim-incnormal": { "branch": "master", "commit": "858bea100ef33f455193958f964bbe3a95a15a77" },
   "nvim-lint": { "branch": "master", "commit": "efc6fc83f0772283e064c53a8f9fb5645bde0bc0" },
   "nvim-lsp-file-operations": { "branch": "master", "commit": "92a673de7ecaa157dd230d0128def10beb56d103" },
   "nvim-lspconfig": { "branch": "master", "commit": "cf97d2485fc3f6d4df1b79a3ea183e24c272215e" },

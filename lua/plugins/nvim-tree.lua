@@ -206,7 +206,7 @@ local function nvimtree_on_attach(bufnr)
   -- end, opts "Go back to previous Window")
   vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts 'Close Directory')
   -- vim.keymap.set('n', 'v', api.node.open.vertical, opts 'Open: Vertical Split')
-  if not OnSlowPath() then
+  if not OnSlowPath() and not OnWindows() then
     require('float-preview').attach_nvimtree(bufnr)
   end
 end
