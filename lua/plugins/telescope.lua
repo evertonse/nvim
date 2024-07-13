@@ -723,6 +723,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
     -- See `:help telescope.builtin`
     local builtin = require 'telescope.builtin'
     local mappings = {
+      v = {},
       n = {
         ['<leader>hs'] = {
           function()
@@ -830,6 +831,16 @@ return { -- Fuzzy Finder (files, lsp, etc)
           }
         end,
         '[S]earch [F]iles',
+      }
+      mappings.v['<leader>f'] = {
+        function()
+          vim.cmd [["ay]]
+          vim.schedule(function()
+            -- mappings.n['<leader>f'][1]()
+            -- local keys = (vim.api.nvim_replace_termcodes('<C-r>', true, false, true) .. 'a')
+            -- vim.api.nvim_feedkeys(keys, 'c', true) --blocking
+          end)
+        end,
       }
     end
 

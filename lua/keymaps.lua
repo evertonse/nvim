@@ -519,10 +519,13 @@ M.general = {
     ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS>]], '[R]eplace [W]ord' },
     -->> neo-tree
     ['<leader>e'] = {
-      file_tree_toggle { width_min = 55, height_min = 28, focus = false, width_percentage = 0.45, height_percentage = 0.65 },
+      file_tree_toggle { width_min = 55, height_min = 28, focus_file = false, width_percentage = 0.45, height_percentage = 0.65 },
       'Toggle neo tree',
     },
-    ['<leader>E'] = { file_tree_toggle { width_min = 55, height_min = 28, focus = true, width_percentage = 0.45, height_percentage = 0.65 }, 'Toggle neo tree' },
+    ['<leader>E'] = {
+      file_tree_toggle { width_min = 55, height_min = 28, focus_file = true, width_percentage = 0.45, height_percentage = 0.65 },
+      'Toggle neo tree',
+    },
 
     -->> NNN picker
     -- ['<leader>e'] = { '<cmd> NnnPicker <CR>', 'NNN Floating Window' },
