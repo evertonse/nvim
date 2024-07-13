@@ -1,1 +1,1 @@
-focus_file
+ave_in_cmdline_history

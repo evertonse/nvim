@@ -35,6 +35,17 @@ local select_nth_entry = function(nth)
   end
 end
 
+local get_visual_selection = function(register_symbol)
+  register_symbol = register_symbol or '"'
+  vim.cmd('normal! "' .. register_symbol .. 'y') -- Yank the visual selection into the 'z' register
+
+  local register = vim.fn.getreg(register_symbol)
+  local selection = vim.fn.trim(register)
+  selection = selection:gsub('\n', ''):match '^%s*(.-)%s*$'
+  print('reg has : ' .. selection)
+  return selection
+end
+
 local function custom_find_files()
   -- Define the displayer configuration using entry_display.create()
   local actions = require 'telescope.actions'
@@ -113,9 +124,10 @@ local function custom_find_files()
   local conf = require('telescope.config').values
   -- NOTE: I'm returning a function because we load all requires in the outer func than we back into the inner function
   -- that way  we don't need to require telescope modules anymore than once
-  return function()
+  return function(text)
     pickers
       .new({}, {
+        default_text = text,
 
         layout_config = {
           width = 0.65, -- percentage of screen width
@@ -129,6 +141,7 @@ local function custom_find_files()
         -- previewer = previewers.cat.new {}, -- Ugly
         -- previewer = require('telescope.previewers').builtin.new {},
         -- buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
+        initial_mode = 'insert',
 
         debounce = 20,
         prompt_title = 'Find Files (ExCyber)',
@@ -165,21 +178,8 @@ local function custom_find_files()
               vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
             end)
           end
-          local initial_mode = 'i'
-          if true then
-            if initial_mode == 'i' then
-              vim.schedule(function()
-                vim.cmd [[startinsert]]
-                -- vim.api.nvim_put({ '' }, '', true, true)
-              end)
-              -- local symbol = action_state.get_selected_entry()
-              -- actions.close(prompt_bufnr)
-            else
-              vim.schedule(function()
-                vim.cmd [[stopinsert]]
-              end)
-            end
 
+          if true then
             return true
           end
           -- Automatically select the first entry when the picker opens
@@ -723,7 +723,16 @@ return { -- Fuzzy Finder (files, lsp, etc)
     -- See `:help telescope.builtin`
     local builtin = require 'telescope.builtin'
     local mappings = {
-      v = {},
+      v = {
+
+        ['<leader>F'] = {
+          function()
+            local selection = get_visual_selection()
+            builtin.live_grep { initial_mode = 'insert', default_text = selection }
+          end,
+          '[S]earch by [G]rep',
+        },
+      },
       n = {
         ['<leader>hs'] = {
           function()
@@ -825,18 +834,21 @@ return { -- Fuzzy Finder (files, lsp, etc)
       }
     else
       mappings.n['<leader>f'] = {
-        (not on_windows) and custom_find_files() or function()
-          builtin.find_files {
+        (not on_windows) and custom_find_files() or function(text)
+          text = builtin.find_files {
             initial_mode = 'insert',
+            default_text = text or '',
           }
         end,
         '[S]earch [F]iles',
       }
+
       mappings.v['<leader>f'] = {
         function()
-          vim.cmd [["ay]]
+          -- Trim any whitespace from the selection
+          local selection = get_visual_selection()
           vim.schedule(function()
-            -- mappings.n['<leader>f'][1]()
+            mappings.n['<leader>f'][1](selection)
             -- local keys = (vim.api.nvim_replace_termcodes('<C-r>', true, false, true) .. 'a')
             -- vim.api.nvim_feedkeys(keys, 'c', true) --blocking
           end)
