@@ -24,6 +24,8 @@
 --    [ ] See about make named sessions and named tabs
 --    [ ] NvimTree bulk renamed/delete and
 --    [ ] NvimTree possibly undo (working with trash)
+--    [ ] NvimTree Implement far-right icon placement
+--    [ ] NvimTree Implement open_win_config as a function
 --    [ ] What is git cherrypick?
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]

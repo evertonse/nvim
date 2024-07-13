@@ -116,7 +116,6 @@ require('lazy').setup({
     lazy = true,
     enabled = false,
   }, -- LPS Diagnostic with colors and shit
-
   {
     'iamcco/markdown-preview.nvim',
     lazy = false,
