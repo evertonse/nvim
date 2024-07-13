@@ -1,9 +1,10 @@
 return {
-  'tiagovla/scope.nvim',
+  'evertonse/scope.nvim',
+  branch = 'main',
   config = function()
     require('scope').setup {}
   end,
   lazy = false,
-  event = 'VeryLazy',
+  -- event = 'VeryLazy',
   enabled = true,
 }

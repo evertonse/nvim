@@ -3,7 +3,8 @@ return {
   lazy = false,
   dependencies = {
     {
-      'tiagovla/scope.nvim',
+      'evertonse/scope.nvim',
+      branch = 'main',
       lazy = false,
     },
   },
@@ -24,7 +25,7 @@ return {
     },
     -- Show more detail about the sessions when selecting one to load.
     -- Disable if it causes lag.
-    load_detail = false,
+    load_detail = true,
     -- List order ["modification_time", "creation_time", "filename"]
     load_order = 'modification_time',
     -- override default filter
@@ -49,7 +50,7 @@ return {
     end,
     extensions = {
       scope = {
-        -- For tab-scoped sessions, the on_save and on_load methods of extensions will be disabled by default. There is a special config argument always available that can override this:
+        --  For tab-scoped sessions, the on_save and on_load methods of extensions will be disabled by default. There is a special config argument always available that can override this:
         enable_in_tab = true,
       },
       -- NOTE: I don't wanna save quicklist

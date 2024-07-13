@@ -29,10 +29,6 @@ return {
     },
     config = function(_, opts) -- This is the function that runs, AFTER loading
       require('which-key').setup(opts)
-      -- visual mode
-      require('which-key').register({
-        ['<leader>h'] = { 'Git [H]unk' },
-      }, { mode = 'v' })
     end,
   },
 }

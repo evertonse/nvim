@@ -24,6 +24,11 @@ local function spelltoggle()
   end
 end
 
+local function delete_scoped_buffer(buf)
+  local scope = require 'scope.core'
+  scope.close_buffer {}
+end
+
 local function close_buffers_except_current_only_in_this_tab(right)
   -- local current_buf = vim.api.nvim_get_current_buf()
   -- local scope = require 'scope.utils'
@@ -61,67 +66,15 @@ local function delete_buffer()
   -- if current_path and current_path ~= '' then
   --   table.insert(vim.g.user.buffer_paths, current_path)
   -- end
-  vim.cmd 'Bdelete!'
-end
-
-local file_tree_reveal_toggle = function()
-  local width = vim.o.columns
-  local height = vim.o.lines
-  local float_opts = {
-    relative = 'editor',
-    width = math.floor(width * 0.3),
-    height = math.floor(height * 0.85),
-    row = math.floor((height - math.floor(height * 0.6)) / 2),
-    col = math.floor((width - math.floor(width * 0.6)) / 2),
-    border = 'single',
-  }
-
-  local reveal_file = vim.fn.expand '%:p'
-
-  if reveal_file == '' then
-    reveal_file = vim.fn.getcwd()
-  else
-    local f = io.open(reveal_file, 'r')
-    if f then
-      f:close()
-    else
-      reveal_file = vim.fn.getcwd()
-    end
-  end
-
-  if vim.g.self.file_tree == 'oil' then
-  elseif vim.g.self.file_tree == 'neo-tree' then
-    require('neo-tree.command').execute {
-      action = 'focus', -- OPTIONAL, this is the default value
-      source = 'filesystem', -- OPTIONAL, this is the default value
-      position = 'float',
-      toggle = true,
-      reveal_file = reveal_file, -- path to file or folder to reveal
-      reveal_force_cwd = false, -- change cwd without asking if needed
-    }
-  elseif vim.g.self.file_tree == 'nvim-tree' then
-    require('nvim-tree.api').tree.toggle {
-      find_file = true,
-      -- find_file_update_cwd = true,
-      -- update_focused_file = {
-      --   enable = true,
-      --   update_cwd = false,
-      -- },
-    }
-    local tree_win_id = vim.fn.win_getid(vim.fn.win_getid(vim.fn.bufwinnr(vim.fn.bufname 'NvimTree')))
-    if tree_win_id ~= -1 and require('nvim-tree.api').tree.is_visible() then
-      -- Set the window to floating mode with centered position
-      vim.api.nvim_win_set_config(tree_win_id, float_opts)
-    end
-  end
+  delete_scoped_buffer()
 end
 
 local file_tree_toggle = function(opts)
+  opts = opts or {}
+  opts.width_max = opts.width_max or 100
+  opts.height_max = opts.height_max or 120
   -- opts.height_percentage, opts.width_percentage, opts.focus
   return function()
-    opts.width_max = opts.width_max or 100
-    opts.height_max = opts.height_max or 120
-
     local total_width = vim.o.columns
     local total_height = vim.o.lines
 
@@ -132,12 +85,16 @@ local file_tree_toggle = function(opts)
 
     local float_opts = {
       relative = 'editor',
-      width = width,
-      height = height,
-      row = math.floor((total_height - math.floor(total_height * 0.69)) / 2),
-      col = math.floor((total_width - math.floor(total_width * 0.55)) / 2),
+      width = math.floor(width),
+      height = math.floor(height),
+      row = math.floor((total_height - math.floor(total_height * 0.69)) / 2.0),
+      col = math.floor((total_width - math.floor(total_width * 0.55)) / 2.0),
       border = 'single',
     }
+    --                     By default, `FloatBorder` highlight is used, which links
+    --                     to `WinSeparator` when not defined. It could also be
+    --                     specified by character: >
+    --                      [ ["+", "MyCorner"], ["x", "MyBorder"] ].
 
     if vim.g.self.file_tree == 'neo-tree' then
       require('neo-tree.command').execute {
@@ -145,27 +102,26 @@ local file_tree_toggle = function(opts)
         source = 'filesystem', -- OPTIONAL, this is the default value
         position = 'float',
         toggle = true,
-        reveal_file = opts.focus, -- path to file or folder to reveal
+        reveal_file = opts.focus_file, -- path to file or folder to reveal
         reveal_force_cwd = false, -- change cwd without asking if needed
       }
     elseif vim.g.self.file_tree == 'nvim-tree' then
       require('nvim-tree.api').tree.toggle {
-        find_file = opts.focus,
+        find_file = opts.focus_file,
       }
       local tree_win_id = vim.fn.win_getid(vim.fn.bufwinnr(vim.fn.bufname 'NvimTree'))
 
       if tree_win_id ~= -1 and require('nvim-tree.api').tree.is_visible() then
         -- Set the window to floating mode with centered position
         vim.api.nvim_win_set_config(tree_win_id, float_opts)
+        vim.api.nvim_win_set_option(tree_win_id, 'winblend', 8)
       end
     end
-
-    vim.api.nvim_win_set_option(0, 'winblend', 20)
   end
 end
 
 local old_neotree_bufnr
-function toggle_neo_tree()
+ToggleNeoTree = function()
   -- Get the window ID of the Neo-tree buffer
   local bufname = vim.fn.bufname 'neo-tree'
   local bufnr = vim.fn.bufnr(bufname)

@@ -8,17 +8,17 @@ return {
       on_success = nil,
     }
     local opts = { silent = true, noremap = true }
-    vim.keymap.set('n', '9', function()
+    vim.keymap.set('n', '<M-9>', function()
       require('bufjump').backward()
     end, opts)
-    vim.keymap.set('n', '8', function()
+    vim.keymap.set('n', '<M-8>', function()
       require('bufjump').forward()
     end, opts)
-    vim.keymap.set('n', '<C-O>', function()
+    vim.keymap.set('n', '<C-9>', function()
       require('bufjump').backward_same_buf()
       print 'Jump backward in the same buffer'
     end, opts)
-    vim.keymap.set('n', '<C-I>', function()
+    vim.keymap.set('n', '<C-0>', function()
       require('bufjump').forward_same_buf()
       print 'Jump forward in the same buffer'
     end, opts)

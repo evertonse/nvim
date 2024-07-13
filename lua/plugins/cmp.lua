@@ -118,11 +118,11 @@ return {
           -- @field public max_view_entries integer
 
           performance = {
-            debounce = 15,
-            throttle = 900,
+            debounce = 10,
+            throttle = 90,
             fetching_timeout = 500,
-            confirm_resolve_timeout = 900,
-            async_budget = 2,
+            confirm_resolve_timeout = 90,
+            async_budget = 3,
             max_view_entries = 30,
           },
 

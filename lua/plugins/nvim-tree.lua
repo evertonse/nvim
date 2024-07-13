@@ -3,7 +3,7 @@ local WIDTH_PADDING = 10
 -- Function to delete all selected files
 -- -- Function to mark all files in the visual selection
 
-function mark_selected_files(bufnr)
+local mark_selected_files = function(bufnr)
   local api = require 'nvim-tree.api'
   local lib = require 'nvim-tree.lib'
   -- Ensure visual mode is active and retrieve the visual selection range
@@ -61,35 +61,6 @@ local function delete_selected_files()
   end)
 end
 
--- Function to mark all files in the visual selection
-local function mark_selected_files2()
-  local api = require 'nvim-tree.api'
-  local lib = require 'nvim-tree.lib'
-  api.marks.clear()
-
-  -- Get the current visual selection
-  local start_pos = vim.fn.getpos "'<"
-  local end_pos = vim.fn.getpos "'>"
-
-  -- Make sure the selection is in the correct order
-  if start_pos[2] > end_pos[2] then
-    start_pos, end_pos = end_pos, start_pos
-  end
-
-  -- Iterate over the selected lines and mark the files
-  for line_num = start_pos[2], end_pos[2] do
-    -- Move the cursor to the current line
-    vim.api.nvim_win_set_cursor(0, { line_num, 0 })
-
-    -- Get the node under the cursor
-    local node = api.tree.get_node_at_cursor()
-
-    -- If a valid node is found, toggle its mark
-    if node and node.absolute_path then
-      api.marks.toggle(node)
-    end
-  end
-end
 local function nvimtree_on_attach(bufnr)
   local api = require 'nvim-tree.api'
 
@@ -206,7 +177,7 @@ local function nvimtree_on_attach(bufnr)
   -- end, opts "Go back to previous Window")
   vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts 'Close Directory')
   -- vim.keymap.set('n', 'v', api.node.open.vertical, opts 'Open: Vertical Split')
-  if not OnSlowPath() and not OnWindows() then
+  if not vim.g.self.enable_file_tree_preview and not OnSlowPath() and not OnWindows() then
     require('float-preview').attach_nvimtree(bufnr)
   end
 end
@@ -229,23 +200,32 @@ return {
         -- wrap nvimtree commands
         wrap_nvimtree_commands = true,
         -- lines for scroll
-        scroll_lines = 20,
+        scroll_lines = 10,
         -- window config
         window = {
           style = 'minimal',
           relative = 'win',
           border = 'single',
           wrap = false,
-          trim_height = false,
-          open_win_config = function()
+          trim_height = true,
+          open_win_config = not vim.g.self.open_win_config_recalculate_every_time and {
+            border = 'single',
+            col = 81,
+            height = 5,
+            relative = 'editor',
+            row = 19,
+            style = 'minimal',
+            width = 41,
+            zindex = 4000,
+          } or function()
             local screen_w = vim.opt.columns:get()
             local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
-            local window_w = math.floor((screen_w - WIDTH_PADDING * 2 - 1) / 2)
-            local window_h = screen_h - HEIGHT_PADDING * 2
+            local window_w = math.abs(math.floor((screen_w - WIDTH_PADDING * 2 - 1) / 2))
+            local window_h = math.abs(math.floor(screen_h - HEIGHT_PADDING * 2))
             local center_x = window_w + WIDTH_PADDING + 30
-            local center_y = ((vim.opt.lines:get() - window_h) / 2) - vim.opt.cmdheight:get()
+            local center_y = math.floor(((vim.opt.lines:get() - window_h) / 2) - vim.opt.cmdheight:get())
 
-            return {
+            local float_opts = {
               style = 'minimal',
               relative = 'editor',
               border = 'single',
@@ -255,6 +235,7 @@ return {
               width = window_w,
               height = window_h,
             }
+            return float_opts
           end,
         },
         mapping = {
@@ -276,7 +257,7 @@ return {
             local is_text = require('float-preview.utils').is_text(path)
             return size < 5 and is_text
           end,
-          post_open = function(bufnr)
+          post_open = function(_bufnr)
             return true
           end,
         },
@@ -328,6 +309,14 @@ return {
     },
 
     renderer = {
+      -- Value can be `"none"`, `"icon"`, `"name"` or `"all"`.
+      highlight_git = 'icon',
+      highlight_diagnostics = 'icon',
+      highlight_opened_files = 'none',
+      highlight_modified = 'none',
+      highlight_bookmarks = 'name',
+      highlight_clipboard = 'name',
+
       add_trailing = true,
       group_empty = false,
       full_name = true,
@@ -335,16 +324,9 @@ return {
       special_files = { 'Cargo.toml', 'Makefile', 'README.md', 'readme.md' },
 
       symlink_destination = true,
-      highlight_diagnostics = 'none',
-      highlight_opened_files = 'none',
-      highlight_modified = 'none',
-      highlight_bookmarks = 'none',
-      highlight_clipboard = 'name',
 
       indent_width = 2,
-      -- root_folder_label = true,
-      -- root_folder_modifier = ':t',
-      highlight_git = 'none',
+      root_folder_modifier = ':t',
       icons = {
         web_devicons = {
           file = {
@@ -357,7 +339,8 @@ return {
           },
         },
 
-        git_placement = 'after',
+        -- git_placement = 'after',
+        git_placement = 'signcolumn',
         modified_placement = 'after',
         diagnostics_placement = 'signcolumn',
         bookmarks_placement = 'signcolumn',
@@ -480,11 +463,12 @@ return {
         enable = true,
         quit_on_focus_loss = false,
         open_win_config = {
+          border = 'none',
           relative = 'editor',
           width = vim.opt.columns:get(),
           -- center_x = (screen_w - _width) / 2
           -- center_y = (vim.opt.lines:get() - _height) / 2
-          height = math.floor((vim.opt.lines:get() - vim.opt.cmdheight:get()) * 0.75),
+          height = math.abs(math.floor((vim.opt.lines:get() - vim.opt.cmdheight:get()) * 0.75)),
           bufpos = { 100, 100 },
           -- row = 0.5,
           -- col = 0.5,

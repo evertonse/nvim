@@ -376,6 +376,7 @@ local function save_buffer_path(args)
     table.insert(BufferPaths, buffer_path)
   end
 end
+
 -- Create an autocommand to save buffer path on buffer delete
 vim.api.nvim_create_autocmd('BufDelete', {
   group = vim.api.nvim_create_augroup('SaveBufferPathOnDelete', { clear = true }),

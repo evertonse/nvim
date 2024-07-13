@@ -130,7 +130,7 @@ local function custom_find_files()
         -- previewer = require('telescope.previewers').builtin.new {},
         -- buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
 
-        debounce = 200,
+        debounce = 20,
         prompt_title = 'Find Files (ExCyber)',
         -- finder = finders.new_oneshot_job { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--color', 'never' },
         finder = finders.new_oneshot_job(find_command, {

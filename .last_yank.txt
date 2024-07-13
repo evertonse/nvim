@@ -1,1 +1,1 @@
-    file_ignore_patterns = { 
+<M-8>

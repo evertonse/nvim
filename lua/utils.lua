@@ -250,6 +250,35 @@ Inspect = function(table)
   ShowStringAndWait(vim.inspect(table))
 end
 
+TestVirtual = function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+  -- Add ExtMarks to display numbers before each line
+  local ns_id = vim.api.nvim_create_namespace 'line_numbers'
+  for i = 1, math.min(#lines, 20) do
+    local key = 'X'
+    vim.api.nvim_buf_set_extmark(bufnr, ns_id, i - 1, 0, {
+      virt_text = { { key, 'Number' } },
+      -- • virt_text_pos : position of virtual text. Possible values:
+      --  • "eol": right after eol character (default).
+      --  • "overlay": display over the specified column, without
+      --    shifting the underlying text.
+      --  • "right_align": display right aligned in the window.
+      --  • "inline": display at the specified column, and shift the
+      --    buffer text to the right as needed.
+      -- virt_text_pos = 'overlay',
+      -- end_col = 0,
+      virt_text_pos = 'right_align',
+      -- virt_text_pos = 'inline',
+
+      -- virt_text_pos = 'eol',
+      -- hl_mode = 'blend',
+      hl_mode = 'combine',
+    })
+  end
+end
+
 ShowStringAndWait = function(input_string)
   -- Create a new buffer
   local buf = vim.api.nvim_create_buf(false, true)
@@ -349,8 +378,11 @@ vim.g.self = {
   inc_rename = true,
   session_plugin = session_opts[2], --NOTE: Better note Idk, bugs with Telescope sometimes
   mini_pick = true,
-  notification_poll_rate = 40,
+  notification_poll_rate = 80,
   file_tree = file_tree_opts[OnWindows() and 1 or 1],
+  open_win_config_recalculate_every_time = true,
+  enable_file_tree_preview = true,
+
   -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
 }
 

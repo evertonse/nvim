@@ -142,7 +142,6 @@ require('lazy').setup({
   },
 
   require 'plugins.Comment',
-  require 'plugins.scope',
   -- require 'plugins.tabby',
   -- require 'plugins.tabline',
   --
@@ -205,17 +204,8 @@ require('lazy').setup({
   --------------------------------------
 
   require 'plugins.bufjump',
-  {
-    'mbbill/undotree',
-    enabled = true,
-    lazy = false,
-    event = 'BufEnter',
-    config = function(self, opts)
-      vim.keymap.set('n', '<leader>ut', function()
-        vim.cmd [[UndotreeToggle]]
-      end, { desc = '[U]ndotree [T]oggle' })
-    end,
-  },
+
+  require 'plugins.undotree',
   {
     'gennaro-tedesco/nvim-peekup',
     enabled = false --[[Mega Slow, plus :Telescope register is almost the same]],
@@ -257,7 +247,10 @@ require('lazy').setup({
   require 'plugins.live-command',
   { 'moll/vim-bbye', lazy = false, enabled = true },
   require 'plugins.guess-indent',
+
+  require 'plugins.scope',
   require('plugins.' .. vim.g.self.session_plugin),
+
   require 'plugins.neo-tree',
   require 'plugins.nvim-tree',
   require 'plugins.alternate-toggle',
