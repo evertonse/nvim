@@ -52,22 +52,3 @@ require 'lazy-bootstrap'
 require 'lazy-plugins'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
-require('nvim-tree').setup {
-  renderer = {
-    icons = {
-      git_placement = 'right_align',
-      modified_placement = 'right_align',
-      diagnostics_placement = 'right_align',
-      bookmarks_placement = 'right_align',
-      padding = ' ',
-      show = {
-        file = true,
-        folder = true,
-        diagnostics = true,
-        bookmarks = true,
-        git = true,
-        modified = true,
-      },
-    },
-  },
-}
