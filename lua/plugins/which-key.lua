@@ -16,6 +16,7 @@
 return {
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
+    tag = 'v3.3.0',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
       ---@type false | "classic" | "modern" | "helix"
