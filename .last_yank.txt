@@ -1,1 +1,1 @@
-ave_in_cmdline_history
+'nvim-tree/nvim-tree.lua',

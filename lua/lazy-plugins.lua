@@ -156,7 +156,7 @@ require('lazy').setup({
 
   require 'plugins.git_conflict',
 
-  { 'sindrets/diffview.nvim', lazy = false },
+  require 'plugins.diffview',
   {
     'kevinhwang91/nvim-hlslens',
     lazy = false,

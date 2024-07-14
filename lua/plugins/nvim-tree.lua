@@ -1,5 +1,8 @@
 local HEIGHT_PADDING = 20
 local WIDTH_PADDING = 10
+local REPOSITORY = 'evertonse/nvim-tree.lua' -- 'nvim-tree/nvim-tree.lua',
+local BRANCH = 'feat/icon_placement-right_align'
+
 -- Function to delete all selected files
 -- -- Function to mark all files in the visual selection
 
@@ -183,7 +186,8 @@ local function nvimtree_on_attach(bufnr)
 end
 
 return {
-  'nvim-tree/nvim-tree.lua',
+  REPOSITORY,
+  branch = BRANCH,
   cmd = 'NvimTreeToggle',
   dependencies = {
     {
@@ -313,9 +317,9 @@ return {
       highlight_git = 'icon',
       highlight_diagnostics = 'icon',
       highlight_opened_files = 'none',
-      highlight_modified = 'none',
-      highlight_bookmarks = 'name',
-      highlight_clipboard = 'name',
+      highlight_modified = 'icon',
+      highlight_bookmarks = 'icon',
+      highlight_clipboard = 'icon',
 
       add_trailing = true,
       group_empty = false,
@@ -339,11 +343,15 @@ return {
           },
         },
 
-        -- git_placement = 'after',
-        git_placement = 'signcolumn',
-        modified_placement = 'after',
-        diagnostics_placement = 'signcolumn',
-        bookmarks_placement = 'signcolumn',
+        git_placement = 'right_align',
+        modified_placement = 'right_align',
+        diagnostics_placement = 'right_align',
+        bookmarks_placement = 'right_align',
+        -- git_placement = 'before',
+        -- modified_placement = 'before',
+        -- diagnostics_placement = 'before',
+        -- bookmarks_placement = 'before',
+
         padding = ' ',
         symlink_arrow = ' ➛ ',
 

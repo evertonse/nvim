@@ -22,11 +22,13 @@
 --    [ ] Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
 --    [ ] REFACTOR: Make all keymaps in keymaps, and require 'keymaps'.telescope for example in plugin site
 --    [ ] See about make named sessions and named tabs
---    [ ] NvimTree bulk renamed/delete and
+--    [ ] NvimTree bulk renamed
+--    [x] NvimTree bulk delete
 --    [ ] NvimTree possibly undo (working with trash)
---    [ ] NvimTree Implement far-right icon placement
---    [ ] NvimTree Implement open_win_config as a function
---    [ ] What is git cherrypick?
+--    [x] NvimTree implement far-right icon placement
+--    [x] NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
+--    [ ] NvimTree implement open_win_config as a function
+--    [ ] What is git cherrypick, squash and the other one?
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
@@ -43,9 +45,29 @@ end)
 require 'keymaps'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
+-- local blá
 require 'lazy-bootstrap'
 
 -- [[ Configure and install plugins ]]
 require 'lazy-plugins'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
+require('nvim-tree').setup {
+  renderer = {
+    icons = {
+      git_placement = 'right_align',
+      modified_placement = 'right_align',
+      diagnostics_placement = 'right_align',
+      bookmarks_placement = 'right_align',
+      padding = ' ',
+      show = {
+        file = true,
+        folder = true,
+        diagnostics = true,
+        bookmarks = true,
+        git = true,
+        modified = true,
+      },
+    },
+  },
+}
