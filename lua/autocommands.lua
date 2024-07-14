@@ -176,6 +176,9 @@ vim.api.nvim_create_autocmd('CmdwinEnter', {
       vim.api.nvim_buf_set_keymap(0, mode, '<C-f>', '<C-c><Down>', { noremap = true, silent = true })
     end
     vim.api.nvim_buf_set_keymap(0, 'i', '<CR>', '<C-c><CR>', { noremap = true, silent = true })
+    vim.keymap.set('i', '<C-c>', function()
+      vim.cmd [[stopinsert]]
+    end, { buffer = 0, noremap = true, silent = true })
 
     if vim.api.nvim_get_mode().mode == 'n' then
       vim.api.nvim_input 'i'

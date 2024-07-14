@@ -314,7 +314,7 @@ return {
 
     renderer = {
       -- Value can be `"none"`, `"icon"`, `"name"` or `"all"`.
-      highlight_git = 'icon',
+      highlight_git = 'all',
       highlight_diagnostics = 'icon',
       highlight_opened_files = 'none',
       highlight_modified = 'icon',
@@ -440,7 +440,8 @@ return {
       git_clean = false,
       no_buffer = false,
       no_bookmark = false,
-      custom = {},
+      -- custom = {},
+      -- custom = {"^\\.git"},
       exclude = {},
     },
 
@@ -470,17 +471,36 @@ return {
       float = {
         enable = true,
         quit_on_focus_loss = false,
-        open_win_config = {
-          border = 'none',
-          relative = 'editor',
-          width = vim.opt.columns:get(),
-          -- center_x = (screen_w - _width) / 2
-          -- center_y = (vim.opt.lines:get() - _height) / 2
-          height = math.abs(math.floor((vim.opt.lines:get() - vim.opt.cmdheight:get()) * 0.75)),
-          bufpos = { 100, 100 },
-          -- row = 0.5,
-          -- col = 0.5,
-        },
+        open_win_config = function()
+          local width_min = 55
+          local height_min = 28
+          local width_max = 75
+          local height_max = 58
+          local width_percentage = 0.45
+          local height_percentage = 0.65
+
+          local inside = function()
+            local total_width = vim.o.columns
+            local total_height = vim.o.lines
+
+            local width = math.max(width_min, math.floor(total_width * width_percentage))
+            local height = math.max(height_min, math.floor(total_height * height_percentage))
+            width = math.min(width, width_max)
+            height = math.min(height, height_max)
+
+            local float_opts = {
+              relative = 'editor',
+              width = math.floor(width),
+              height = math.floor(height),
+              row = math.floor((total_height - math.floor(total_height * 0.69)) / 2.0),
+              col = math.floor((total_width - math.floor(total_width * 0.55)) / 2.0),
+              border = 'single',
+            }
+
+            return float_opts
+          end
+          return inside()
+        end,
       },
       width = 38,
       side = 'left',
