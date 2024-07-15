@@ -67,15 +67,6 @@ end
 local function nvimtree_on_attach(bufnr)
   local api = require 'nvim-tree.api'
 
-  local tree_win_id = vim.fn.bufwinid(bufnr)
-  local win_valid = vim.api.nvim_win_is_valid(tree_win_id)
-
-  print(tree_win_id)
-  if tree_win_id ~= -1 then
-    -- vim.api.nvim_win_set_config(tree_win_id, float_opts)
-    vim.api.nvim_win_set_option(tree_win_id, 'winblend', 8)
-  end
-
   local function opts(desc)
     return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
   end
@@ -178,7 +169,6 @@ local function nvimtree_on_attach(bufnr)
   map('n', 'gy', api.fs.copy.filename, opts 'Copy Name')
   map('n', 'l', edit_or_open, opts 'Open: No Window Picker')
   map('n', 'L', function() end, opts 'Do Nothing')
-  map('n', 'H', function() end, opts 'Do Nothing')
 
   map('n', '<CR>', api.node.open.no_window_picker, opts 'Open: No Window Picker')
 
