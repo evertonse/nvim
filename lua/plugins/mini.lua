@@ -298,6 +298,7 @@ return {
             note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'MiniHipatternsNote' },
             excyber = { pattern = '%f[%w]()EXCYBER()%f[%W]', group = 'MiniHipatternsNote' },
             important = { pattern = '%f[%w]()IMPORTANT()%f[%W]', group = 'MiniHipatternsNote' },
+            done = { pattern = '%f[%w]()DONE()%f[%W]', group = 'Done' },
 
             -- Highlight hex color strings (`#rrggbb`) using that color
             hex_color = hipatterns.gen_highlighter.hex_color(),
@@ -305,8 +306,6 @@ return {
         }
       end
       mini_hipatterns_setup()
-      -- ... and there is more!
-      --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
 }
