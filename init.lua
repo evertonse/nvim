@@ -13,22 +13,22 @@
 --    [x seem the same I'll keep using mini.surround then I'll see about chaging]see if surround is better than mini.surround
 --    [x I'm using auto-session [ ] see the source code later ]:mksession
 --    [x] ui select on telescope on normal mode by typing a number
---    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
 --    [x] Mini lsp, recording
 --    [x] Create a telescope options to select from yank history
---    [ ] MORE PLUGINS https://github.com/rockerBOO/awesome-neovim#cursorline
 --    [x] Take a look at https://github.com/ggandor/leap.nvim
 --    [x] Take a look at hop.nvim
+--    [x] NvimTree bulk delete
+--    [x] NvimTree implement far-right icon placement
+--    [x] NvimTree implement open_win_config as a function
+--    [x] What is git cherrypick, squash and the other one?
+--    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
+--    [ ] MORE PLUGINS https://github.com/rockerBOO/awesome-neovim#cursorline
+--    [ ] NvimTree possibly undo (working with trash)
 --    [ ] Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
 --    [ ] REFACTOR: Make all keymaps in keymaps, and require 'keymaps'.telescope for example in plugin site
 --    [ ] See about make named sessions and named tabs
---    [ ] NvimTree bulk renamed
---    [x] NvimTree bulk delete
---    [ ] NvimTree possibly undo (working with trash)
---    [x] NvimTree implement far-right icon placement
---    [x] NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
---    [ ] NvimTree implement open_win_config as a function
---    [ ] What is git cherrypick, squash and the other one?
+--    [ ] NvimTree bulk renamed when you actually need it
+--    [ ] <3 NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
