@@ -53,6 +53,12 @@ local mark_selected_files = function(bufnr)
   end)
 end
 
+local wrap_reload = function(fn)
+  local api = require 'nvim-tree.api'
+  fn()
+  api.tree.reload()
+end
+
 local function delete_selected_files()
   local api = require 'nvim-tree.api'
   -- Bulk delete marked files
@@ -61,6 +67,7 @@ local function delete_selected_files()
     api.marks.bulk.delete()
     -- Clear marks after deletion
     api.marks.clear()
+    api.tree.reload()
   end)
 end
 
@@ -121,7 +128,7 @@ local function nvimtree_on_attach(bufnr)
   map('n', 'C', api.tree.toggle_git_clean_filter, opts 'Toggle Git Clean')
   map('n', '[c', api.node.navigate.git.prev, opts 'Prev Git')
   map('n', ']c', api.node.navigate.git.next, opts 'Next Git')
-  map('n', 'D', api.fs.remove, opts 'Delete')
+  map('n', 'D', wrap_reload(api.fs.remove), opts 'Delete')
   map('n', 'd', api.fs.cut, opts 'Cut')
   -- map("n", "D", api.fs.trash, opts "Trash")
   map('n', 'E', api.tree.expand_all, opts 'Expand All')
