@@ -359,7 +359,6 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.api.nvim_create_autocmd('BufEnter', {
   group = vim.api.nvim_create_augroup('1', { clear = true }),
   callback = function()
-    vim.cmd [[set formatoptions-=cro]]
     local buf = vim.api.nvim_get_current_buf()
     -- TelescopeResults
 

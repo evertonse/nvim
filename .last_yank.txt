@@ -1,1 +1,14 @@
-
+  local function edit_or_open()
+    local node = api.tree.get_node_under_cursor()
+    api.tree.reload()
+    if node.nodes ~= nil then
+      -- expand or collapse folder
+      api.node.open.edit()
+    else
+      -- open file
+      --api.node.open.edit()
+      api.node.open.no_window_picker()
+      -- Close the tree if file was opened
+      api.tree.close()
+    end
+  end

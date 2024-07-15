@@ -381,8 +381,7 @@ vim.g.self = {
   notification_poll_rate = 80,
   file_tree = file_tree_opts[OnWindows() and 1 or 1],
   open_win_config_recalculate_every_time = true,
-  enable_file_tree_preview = true,
-
+  enable_file_tree_preview = false,
   -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
 }
 

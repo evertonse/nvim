@@ -84,12 +84,13 @@ local file_tree_toggle = function(opts)
     end
   elseif vim.g.self.file_tree == 'nvim-tree' then
     return function()
-      require('nvim-tree.api').tree.toggle {
+      local api = require 'nvim-tree.api'
+      api.tree.toggle {
         find_file = opts.focus_file,
       }
       local tree_win_id = vim.fn.win_getid(vim.fn.bufwinnr(vim.fn.bufname 'NvimTree'))
-      if tree_win_id ~= -1 and require('nvim-tree.api').tree.is_visible() then
-        -- vim.api.nvim_win_set_config(tree_win_id, float_opts)
+      local is_valid_win = vim.api.nvim_win_is_valid(tree_win_id) and api.tree.is_visible()
+      if is_valid_win then
         vim.api.nvim_win_set_option(tree_win_id, 'winblend', 8)
       end
     end
