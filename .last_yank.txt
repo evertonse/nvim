@@ -1,1 +1,1 @@
-venv
+uga-rosa/ccc.nvim

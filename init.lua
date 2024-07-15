@@ -30,6 +30,7 @@
 --    [ ] NvimTree bulk renamed when you actually need it
 --    [ ] <3 NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
 --    [ ] Either this rcarriga/nvim-notify or noice, if too many lsp message, altough it seems that fidget be aight for some notifications
+--    [ ] Investigate .gitignore slow to type
 --
 --
 --    [ ] Maybe you'd wnat this https://github.com/kdheepak/lazygit.nvim; RN i don't see a reason to not just use lazygit on the terminal
