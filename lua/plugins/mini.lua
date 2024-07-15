@@ -2,8 +2,9 @@ return {
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
     lazy = true,
+    enabled = true,
     event = 'VimEnter',
-    cmds = { 'Pick' },
+    cmds = vim.g.self.mini_pick and { 'Pick' } or {},
     dependencies = 'nvim-tree/nvim-web-devicons',
     config = function()
       -- Better Around/Inside textobjects
@@ -20,7 +21,7 @@ return {
             async = 10,
 
             -- Delay between computation start and visual feedback about it
-            busy = 5,
+            busy = 3,
           },
           -- Keys for performing actions. See `:h MiniPick-actions`.
           mappings = {
@@ -78,47 +79,50 @@ return {
         },
       }
 
-      require('mini.map').setup {
-        -- Highlight integrations (none by default)
-        integrations = {
-          require('mini.map').gen_integration.builtin_search(),
-          require('mini.map').gen_integration.diff(),
-          require('mini.map').gen_integration.diagnostic(),
-        },
+      local mini_map_setup = function()
+        require('mini.map').setup {
+          -- Highlight integrations (none by default)
+          integrations = {
+            require('mini.map').gen_integration.builtin_search(),
+            require('mini.map').gen_integration.diff(),
+            require('mini.map').gen_integration.diagnostic(),
+          },
 
-        -- Symbols used to display data
-        symbols = {
-          -- Encode symbols. See `:h MiniMap.config` for specification and
-          -- `:h MiniMap.gen_encode_symbols` for pre-built ones.
-          -- Default: solid blocks with 3x2 resolution.
-          encode = nil,
+          -- Symbols used to display data
+          symbols = {
+            -- Encode symbols. See `:h MiniMap.config` for specification and
+            -- `:h MiniMap.gen_encode_symbols` for pre-built ones.
+            -- Default: solid blocks with 3x2 resolution.
+            encode = nil,
 
-          -- Scrollbar parts for view and line. Use empty string to disable any.
-          scroll_line = '█',
-          scroll_view = '┃',
-        },
+            -- Scrollbar parts for view and line. Use empty string to disable any.
+            scroll_line = '█',
+            scroll_view = '┃',
+          },
 
-        -- Window options
-        window = {
-          -- Whether window is focusable in normal way (with `wincmd` or mouse)
-          focusable = false,
+          -- Window options
+          window = {
+            -- Whether window is focusable in normal way (with `wincmd` or mouse)
+            focusable = false,
 
-          -- Side to stick ('left' or 'right')
-          side = 'right',
+            -- Side to stick ('left' or 'right')
+            side = 'right',
 
-          -- Whether to show count of multiple integration highlights
-          show_integration_count = true,
+            -- Whether to show count of multiple integration highlights
+            show_integration_count = true,
 
-          -- Total width
-          width = 4,
+            -- Total width
+            width = 4,
 
-          -- Value of 'winblend' option
-          winblend = 25,
+            -- Value of 'winblend' option
+            winblend = 25,
 
-          -- Z-index
-          zindex = 10,
-        },
-      }
+            -- Z-index
+            zindex = 10,
+          },
+        }
+      end
+      local _ = vim.g.self.mini_map and mini_map_setup()
 
       local _ = true
         and require('mini.tabline').setup {
@@ -191,35 +195,33 @@ return {
           symbol = '▏',
         }
 
-      -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      --
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup {
-        -- see `:h MiniSurround.config`.
-        custom_surroundings = nil,
-        mappings = {
-          add = 'sa', -- Add surrounding in Normal and Visual modes
-          delete = 'sd', -- Delete surrounding
-          find = 'sf', -- Find surrounding (to the right)
-          find_left = 'sF', -- Find surrounding (to the left)
-          highlight = 'sh', -- Highlight surrounding
-          replace = 'sc', -- Chande Surrounding
-          update_n_lines = 'sn', -- Update `n_lines`
+      local mini_surround_setup = function()
+        -- Add/delete/replace surroundings (brackets, quotes, etc.)
+        --
+        -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
+        -- - sd'   - [S]urround [D]elete [']quotes
+        -- - sr)'  - [S]urround [R]eplace [)] [']
+        require('mini.surround').setup {
+          -- see `:h MiniSurround.config`.
+          custom_surroundings = nil,
+          mappings = {
+            add = 'sa', -- Add surrounding in Normal and Visual modes
+            delete = 'sd', -- Delete surrounding
+            find = 'sf', -- Find surrounding (to the right)
+            find_left = 'sF', -- Find surrounding (to the left)
+            highlight = 'sh', -- Highlight surrounding
+            replace = 'sc', -- Chande Surrounding
+            update_n_lines = 'sn', -- Update `n_lines`
 
-          suffix_last = 'l', -- Suffix to search with "prev" method
-          suffix_next = 'n', -- Suffix to search with "next" method
-        },
-        search_method = 'cover',
-        respect_selection_type = true,
-      }
+            suffix_last = 'l', -- Suffix to search with "prev" method
+            suffix_next = 'n', -- Suffix to search with "next" method
+          },
+          search_method = 'cover',
+          respect_selection_type = true,
+        }
+      end
 
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
+      mini_surround_setup()
 
       local lsp_servers_attached = function()
         local clients = vim.lsp.get_clients { bufnr = 0 }
@@ -235,11 +237,6 @@ return {
         return table.concat(client_names, ', ') .. ' '
       end
 
-      statusline.setup {
-        use_icons = vim.g.self.nerd_font,
-        set_vim_settings = false,
-      }
-
       local function recording_mode()
         local rec_reg = vim.fn.reg_recording()
         if rec_reg ~= '' then
@@ -253,43 +250,61 @@ return {
       -- default behavior. For example, here we set the section for
       -- cursor location to LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        -- '%2l:%-2v' for LINE:COLUMN and '%3p%%' for percentage through the file
-        local function escape_status()
-          local ok, m = pcall(require, 'better_escape')
-          return ok and m.waiting and '✺ ' or ''
+      local mini_statusline_setup = function()
+        -- Simple and easy statusline.
+        --  You could remove this setup call if you don't like it,
+        --  and try some other statusline plugin
+        local statusline = require 'mini.statusline'
+        -- set use_icons to true if you have a Nerd Font
+        statusline.section_location = function()
+          -- '%2l:%-2v' for LINE:COLUMN and '%3p%%' for percentage through the file
+          local function escape_status()
+            local ok, m = pcall(require, 'better_escape')
+            return ok and m.waiting and '✺ ' or ''
+          end
+
+          return escape_status() .. '%2l:%-2v %3p%%'
         end
 
-        return escape_status() .. '%2l:%-2v %3p%%'
-      end
-
-      statusline.section_lsp = function(args)
-        return ''
-      end
-
-      local old_section_fileinfo = statusline.section_fileinfo
-      statusline.section_fileinfo = function(args)
-        local lspstring = lsp_servers_attached()
-        if lspstring ~= '' then
-          lspstring = (vim.g.self.icons and '󰰎 ' or '') .. lspstring
+        statusline.section_lsp = function(args)
+          return ''
         end
-        return recording_mode() .. lspstring .. old_section_fileinfo(args)
+
+        local old_section_fileinfo = statusline.section_fileinfo
+        statusline.section_fileinfo = function(args)
+          local lspstring = lsp_servers_attached()
+          if lspstring ~= '' then
+            lspstring = (vim.g.self.icons and '󰰎 ' or '') .. lspstring
+          end
+          return recording_mode() .. lspstring .. old_section_fileinfo(args)
+        end
+
+        statusline.setup {
+          use_icons = vim.g.self.nerd_font,
+          set_vim_settings = true,
+        }
       end
 
-      local hipatterns = require 'mini.hipatterns'
-      hipatterns.setup {
-        highlighters = {
-          -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
-          fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'MiniHipatternsFixme' },
-          hack = { pattern = '%f[%w]()HACK()%f[%W]', group = 'MiniHipatternsHack' },
-          todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'MiniHipatternsTodo' },
-          note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'MiniHipatternsNote' },
-          excyber = { pattern = '%f[%w]()EXCYBER()%f[%W]', group = 'MiniHipatternsNote' },
+      mini_statusline_setup()
 
-          -- Highlight hex color strings (`#rrggbb`) using that color
-          hex_color = hipatterns.gen_highlighter.hex_color(),
-        },
-      }
+      local mini_hipatterns_setup = function()
+        local hipatterns = require 'mini.hipatterns'
+        hipatterns.setup {
+          highlighters = {
+            -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
+            fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'MiniHipatternsFixme' },
+            hack = { pattern = '%f[%w]()HACK()%f[%W]', group = 'MiniHipatternsHack' },
+            todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'MiniHipatternsTodo' },
+            note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'MiniHipatternsNote' },
+            excyber = { pattern = '%f[%w]()EXCYBER()%f[%W]', group = 'MiniHipatternsNote' },
+            important = { pattern = '%f[%w]()IMPORTANT()%f[%W]', group = 'MiniHipatternsFixme' },
+
+            -- Highlight hex color strings (`#rrggbb`) using that color
+            hex_color = hipatterns.gen_highlighter.hex_color(),
+          },
+        }
+      end
+      mini_hipatterns_setup()
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,

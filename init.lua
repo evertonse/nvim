@@ -29,6 +29,8 @@
 --    [ ] See about make named sessions and named tabs
 --    [ ] NvimTree bulk renamed when you actually need it
 --    [ ] <3 NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
+--
+--    IMPORTANT: shit is crazy abouth treesitter combined with something else that I forgot
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
