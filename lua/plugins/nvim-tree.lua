@@ -55,8 +55,10 @@ end
 
 local wrap_reload = function(fn)
   local api = require 'nvim-tree.api'
-  fn()
-  api.tree.reload()
+  return function()
+    fn()
+    api.tree.reload()
+  end
 end
 
 local function delete_selected_files()
@@ -288,7 +290,6 @@ return {
     respect_buf_cwd = false,
     select_prompts = true,
 
-    -- on_attach = true,
     on_attach = nvimtree_on_attach,
     git = {
       enable = true,
