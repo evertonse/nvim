@@ -89,7 +89,6 @@ local lazy_config = {
 require('lazy').setup({
 
   -- NOTE :h event for valid  vim events, there are some only in neovim like LspDetach
-
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   { 'tpope/vim-sleuth', lazy = false, enabled = false }, -- Detect tabstop and shiftwidth automatically
   { 'yorickpeterse/nvim-pqf', enabled = false }, -- Nicer Quick List
@@ -157,25 +156,8 @@ require('lazy').setup({
   require 'plugins.git_conflict',
 
   require 'plugins.diffview',
-  {
-    'kevinhwang91/nvim-hlslens',
-    lazy = false,
-    config = function()
-      require('hlslens').setup()
 
-      local kopts = { noremap = true, silent = true }
-
-      vim.api.nvim_set_keymap('n', 'n', [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]], kopts)
-      vim.api.nvim_set_keymap('n', 'N', [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]], kopts)
-      vim.api.nvim_set_keymap('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], kopts)
-      vim.api.nvim_set_keymap('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], kopts)
-      vim.api.nvim_set_keymap('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], kopts)
-      vim.api.nvim_set_keymap('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], kopts)
-
-      vim.api.nvim_set_keymap('n', '<Leader>l', '<Cmd>noh<CR>', kopts)
-    end,
-  },
-
+  require 'plugins.nvim-hlslens',
   --------------------------------------
 
   require 'plugins.which-key',
@@ -215,10 +197,12 @@ require('lazy').setup({
     'phaazon/hop.nvim',
     opts = {},
     lazy = false,
+    enabled = false,
   },
   {
     'jinh0/eyeliner.nvim',
     lazy = false,
+    enabled = false,
     config = function()
       require('eyeliner').setup {
         highlight_on_key = true, -- show highlights only after keypress
@@ -233,7 +217,7 @@ require('lazy').setup({
   require 'plugins.indent-blankline',
   require 'plugins.lint',
   require 'plugins.autopairs',
-  { 'uga-rosa/ccc.nvim', event = 'VeryLazy' },
+  { 'uga-rosa/ccc.nvim', cmd = { 'CccHighlighterToggle', 'CccPick', 'CccConvert' }, event = 'VeryLazy' },
 
   require 'plugins.oil',
   require('plugins.' .. vim.g.self.file_tree), -- NOTE: Slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
@@ -260,6 +244,7 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
+  require 'plugins.spider',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et

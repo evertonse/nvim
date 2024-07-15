@@ -297,7 +297,7 @@ return {
             todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'MiniHipatternsTodo' },
             note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'MiniHipatternsNote' },
             excyber = { pattern = '%f[%w]()EXCYBER()%f[%W]', group = 'MiniHipatternsNote' },
-            important = { pattern = '%f[%w]()IMPORTANT()%f[%W]', group = 'MiniHipatternsFixme' },
+            important = { pattern = '%f[%w]()IMPORTANT()%f[%W]', group = 'MiniHipatternsNote' },
 
             -- Highlight hex color strings (`#rrggbb`) using that color
             hex_color = hipatterns.gen_highlighter.hex_color(),

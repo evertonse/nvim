@@ -290,6 +290,11 @@ return {
     },
     filesystem_watchers = {
       enable = true,
+      ignore_dirs = {
+        'node_modules',
+        'venv',
+        'queries',
+      },
     },
     actions = {
       use_system_clipboard = false,
