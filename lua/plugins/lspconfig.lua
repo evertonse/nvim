@@ -510,7 +510,11 @@ return {
       local servers = {
         bashls = {},
         --[[ OLS  https://github.com/DanielGavin/ols.gits ]]
-        ols = {},
+        ols = {
+          cmd = { '/home/excyber/.local/bin/ols' },
+          autostart = true, -- This is the important new option
+          filetypes = { 'odin' }, -- Adjust this based on your server
+        },
         ast_grep = {},
         jdtls = {},
         --[[ zig ]]
@@ -639,15 +643,25 @@ return {
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+      local setup_ols_no_matter_what = true
+      if setup_ols_no_matter_what then
+        local server_opts = servers.ols or {}
+        -- This handles overriding only values explicitly passed
+        -- by the server configuration above. Useful when disabling
+        -- certain features of an LSP (for example, turning off formatting for tsserver)
+        server_opts.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server_opts.capabilities or {})
+        require('lspconfig')['ols'].setup(server_opts)
+      end
+
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
-            local server = servers[server_name] or {}
+            local server_opts = servers[server_name] or {}
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for tsserver)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            server_opts.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server_opts.capabilities or {})
+            require('lspconfig')[server_name].setup(server_opts)
           end,
           zls = function()
             local lspconfig = require 'lspconfig'
