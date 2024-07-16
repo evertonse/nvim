@@ -2,6 +2,7 @@ local HEIGHT_PADDING = 20
 local WIDTH_PADDING = 10
 local REPOSITORY = 'evertonse/nvim-tree.lua' -- 'nvim-tree/nvim-tree.lua',
 local BRANCH = 'feat/icon_placement-right_align'
+local ALLOW_PREVIEW = vim.g.self.enable_file_tree_preview and not OnSlowPath() and not OnWindows()
 
 -- Function to delete all selected files
 -- -- Function to mark all files in the visual selection
@@ -190,7 +191,7 @@ local function nvimtree_on_attach(bufnr)
   -- end, opts "Go back to previous Window")
   map('n', 'h', api.node.navigate.parent_close, opts 'Close Directory')
   -- vim.keymap.set('n', 'v', api.node.open.vertical, opts 'Open: Vertical Split')
-  if vim.g.self.enable_file_tree_preview and not OnSlowPath() and not OnWindows() then
+  if ALLOW_PREVIEW then
     require('float-preview').attach_nvimtree(bufnr)
   end
 end
@@ -206,6 +207,7 @@ return {
     },
     {
       'JMarkin/nvim-tree.lua-float-preview',
+      enabled = ALLOW_PREVIEW,
       lazy = true,
       -- default
       opts = {
@@ -313,8 +315,8 @@ return {
       },
     },
     disable_netrw = true,
-    open_on_tab = false,
-    hijack_cursor = true,
+    open_on_tab = true,
+    hijack_cursor = false,
 
     sync_root_with_cwd = true,
 

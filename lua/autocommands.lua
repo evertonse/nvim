@@ -171,10 +171,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.api.nvim_create_autocmd('CmdwinEnter', {
   pattern = '*',
   callback = function()
+    pcall(vim.cmd, 'TSBufDisable all')
     local modes = { 'i', 'n' }
     for _, mode in ipairs(modes) do
       vim.api.nvim_buf_set_keymap(0, mode, '<C-f>', '<C-c><Down>', { noremap = true, silent = true })
     end
+    vim.keymap.set({ 'x', 'v', 'n' }, '<CR>', '<CR>', { buffer = 0, noremap = true, silent = true })
     vim.api.nvim_buf_set_keymap(0, 'i', '<CR>', '<C-c><CR>', { noremap = true, silent = true })
     vim.keymap.set('i', '<C-c>', function()
       vim.cmd [[stopinsert]]

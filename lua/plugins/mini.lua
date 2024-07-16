@@ -220,7 +220,6 @@ return {
           respect_selection_type = true,
         }
       end
-
       mini_surround_setup()
 
       local lsp_servers_attached = function()
@@ -284,7 +283,6 @@ return {
           set_vim_settings = true,
         }
       end
-
       mini_statusline_setup()
 
       local mini_hipatterns_setup = function()
