@@ -39,9 +39,10 @@
 --    IMPORTANT: WSL `CMP` is rather slow if searches through the whole windows path,
 --    My fix was to disable a bunch of file watcher and set dynamicRegistration = false to vairous
 --    lspconfig default capabilities. Another fix is to set /etc/wsl.conf such as below (maybe even set enabled interop to false)
---    [interop]
---    enabled = true
---    appendWindowsPath = false
+--        [interop]
+--        enabled = true
+--        appendWindowsPath = false
+--    IMPORTANT: Conform is responsable for autoformat, but WHYY ? Why do I need that instead of just a autocommand?
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'

@@ -388,3 +388,10 @@ vim.api.nvim_create_autocmd('BufDelete', {
   group = vim.api.nvim_create_augroup('SaveBufferPathOnDelete', { clear = true }),
   callback = save_buffer_path,
 })
+
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+  pattern = { 'odin' },
+  callback = function()
+    vim.b.autoformat = false
+  end,
+})

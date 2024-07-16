@@ -514,6 +514,7 @@ return {
           cmd = { '/home/excyber/.local/bin/ols' },
           autostart = true, -- This is the important new option
           filetypes = { 'odin' }, -- Adjust this based on your server
+          autoformat = false,
         },
         ast_grep = {},
         jdtls = {},

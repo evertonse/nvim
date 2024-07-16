@@ -383,6 +383,7 @@ vim.g.self = {
   file_tree = file_tree_opts[OnWindows() and 1 or 1],
   open_win_config_recalculate_every_time = true,
   enable_file_tree_preview = false,
+  dont_format = { c = true, cpp = true, odin = true, python = true },
   -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
 }
 
