@@ -1,1 +1,10 @@
-      vim.api.nvim_get_current_line
+        documentLink = { dynamicRegistration = false },
+        colorProvider = { dynamicRegistration = false },
+      })
+
+      -- capabilities.textDocument.sync = {
+      --   openClose = false,
+      --   change = 2, -- Incremental sync
+      --   willSave = false,
+      --   willSaveWaitUntil = false,
+      --   save = false,

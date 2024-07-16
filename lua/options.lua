@@ -188,7 +188,7 @@ vim.cmd ':set more'
 -- vim.cmd ':set ttyfast' -- Lazy Redraw
 vim.cmd [[ :set iskeyword-=- ]]
 vim.cmd [[ :set backup ]]
--- vim.cmd ':set clipboard=""'
+vim.cmd ':set clipboard=""'
 
 local on_wsl = function()
   local output = vim.fn.systemlist 'uname -r'
