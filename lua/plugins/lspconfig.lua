@@ -644,7 +644,7 @@ return {
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       local setup_ols_no_matter_what = true
-      if setup_ols_no_matter_what then
+      if setup_ols_no_matter_what and not OnWindows() then
         local server_opts = servers.ols or {}
         -- This handles overriding only values explicitly passed
         -- by the server configuration above. Useful when disabling
