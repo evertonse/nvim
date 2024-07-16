@@ -662,8 +662,8 @@ return { -- Fuzzy Finder (files, lsp, etc)
 
             ['l'] = actions.select_default,
 
-            ['<C-x>'] = actions.select_horizontal,
-            ['<C-v>'] = actions.select_vertical,
+            ['s'] = actions.select_horizontal,
+            ['v'] = actions.select_vertical,
             ['<C-t>'] = actions.select_tab,
 
             ['<Tab>'] = actions.toggle_selection + actions.move_selection_worse,

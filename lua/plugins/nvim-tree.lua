@@ -1,8 +1,15 @@
 local HEIGHT_PADDING = 20
 local WIDTH_PADDING = 10
 local REPOSITORY = 'evertonse/nvim-tree.lua' -- 'nvim-tree/nvim-tree.lua',
-local BRANCH = 'feat/icon_placement-right_align'
+-- local BRANCH = 'feat/icon_placement-right_align'
+local BRANCH = 'master'
 local ALLOW_PREVIEW = vim.g.self.enable_file_tree_preview and not OnSlowPath() and not OnWindows()
+local WIDTH_MIN = 55
+local HEIGHT_MIN = 28
+local WIDTH_MAX = 75
+local HEIGHT_MAX = 58
+local WIDTH_PERCENTAGE = 0.45
+local HEIGHT_PERCENTAGE = 0.65
 
 -- Function to delete all selected files
 -- -- Function to mark all files in the visual selection
@@ -191,6 +198,12 @@ local function nvimtree_on_attach(bufnr)
   -- end, opts "Go back to previous Window")
   map('n', 'h', api.node.navigate.parent_close, opts 'Close Directory')
   -- vim.keymap.set('n', 'v', api.node.open.vertical, opts 'Open: Vertical Split')
+
+  map('v', 'K', function()
+    local node = api.tree.get_node_under_cursor()
+    Inspect(node)
+  end, opts 'Info')
+
   if ALLOW_PREVIEW then
     require('float-preview').attach_nvimtree(bufnr)
   end
@@ -208,7 +221,7 @@ return {
     {
       'JMarkin/nvim-tree.lua-float-preview',
       enabled = ALLOW_PREVIEW,
-      lazy = true,
+      lazy = false,
       -- default
       opts = {
         -- Whether the float preview is enabled by default. When set to false, it has to be "toggled" on.
@@ -285,7 +298,7 @@ return {
   opts = {
 
     hijack_netrw = true,
-    hijack_unnamed_buffer_when_opening = true,
+    hijack_unnamed_buffer_when_opening = false,
     root_dirs = {},
     prefer_startup_root = true,
     reload_on_bufenter = false,
@@ -333,7 +346,8 @@ return {
       highlight_git = 'all',
       highlight_diagnostics = 'icon',
       highlight_opened_files = 'none',
-      highlight_modified = 'icon',
+      highlight_modified = 'name',
+      highlight_hidden = 'all',
       highlight_bookmarks = 'icon',
       highlight_clipboard = 'icon',
 
@@ -361,6 +375,7 @@ return {
 
         git_placement = 'right_align',
         modified_placement = 'right_align',
+        hidden_placement = 'right_align',
         diagnostics_placement = 'right_align',
         bookmarks_placement = 'right_align',
         -- git_placement = 'before',
@@ -376,6 +391,7 @@ return {
           folder = true,
           diagnostics = true,
           bookmarks = true,
+          hidden = false,
           folder_arrow = false,
           git = true,
           modified = true,
@@ -383,6 +399,7 @@ return {
         glyphs = {
           default = '󰈚', --"",
           symlink = '',
+          hidden = '󰜌',
           folder = {
             default = '',
             empty = '',
@@ -486,36 +503,26 @@ return {
 
       float = {
         enable = true,
-        quit_on_focus_loss = false,
+        quit_on_focus_loss = false, -- TODO: On slow path does it lag if this is true? Test it
         open_win_config = function()
-          local width_min = 55
-          local height_min = 28
-          local width_max = 75
-          local height_max = 58
-          local width_percentage = 0.45
-          local height_percentage = 0.65
+          local total_width = vim.o.columns
+          local total_height = vim.o.lines
 
-          local inside = function()
-            local total_width = vim.o.columns
-            local total_height = vim.o.lines
+          local width = math.max(WIDTH_MIN, math.floor(total_width * WIDTH_PERCENTAGE))
+          local height = math.max(HEIGHT_MIN, math.floor(total_height * HEIGHT_PERCENTAGE))
+          width = math.min(width, WIDTH_MAX)
+          height = math.min(height, HEIGHT_MAX)
 
-            local width = math.max(width_min, math.floor(total_width * width_percentage))
-            local height = math.max(height_min, math.floor(total_height * height_percentage))
-            width = math.min(width, width_max)
-            height = math.min(height, height_max)
+          local float_opts = {
+            relative = 'editor',
+            width = math.floor(width),
+            height = math.floor(height),
+            row = math.floor((total_height - math.floor(total_height * 0.69)) / 2.0),
+            col = math.floor((total_width - math.floor(total_width * 0.55)) / 2.0),
+            border = 'single',
+          }
 
-            local float_opts = {
-              relative = 'editor',
-              width = math.floor(width),
-              height = math.floor(height),
-              row = math.floor((total_height - math.floor(total_height * 0.69)) / 2.0),
-              col = math.floor((total_width - math.floor(total_width * 0.55)) / 2.0),
-              border = 'single',
-            }
-
-            return float_opts
-          end
-          return inside()
+          return float_opts
         end,
       },
       width = 38,

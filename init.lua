@@ -35,6 +35,13 @@
 --
 --    [ ] Maybe you'd wnat this https://github.com/kdheepak/lazygit.nvim; RN i don't see a reason to not just use lazygit on the terminal
 --    IMPORTANT: shit is crazy abouth treesitter combined with something else that I forgot
+--
+--    IMPORTANT: WSL `CMP` is rather slow if searches through the whole windows path,
+--    My fix was to disable a bunch of file watcher and set dynamicRegistration = false to vairous
+--    lspconfig default capabilities. Another fix is to set /etc/wsl.conf such as below (maybe even set enabled interop to false)
+--    [interop]
+--    enabled = true
+--    appendWindowsPath = false
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'

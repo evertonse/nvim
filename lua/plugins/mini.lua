@@ -304,6 +304,7 @@ return {
         }
       end
       mini_hipatterns_setup()
+      local _ = TERRIBLE and require('mini.completion').setup()
     end,
   },
 }

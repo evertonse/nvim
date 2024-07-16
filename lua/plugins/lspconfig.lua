@@ -233,8 +233,8 @@ return {
           -- Make sure to replace '<leader>r' with the keybinding of your choice.
           map('<leader>lf', vim.lsp.buf.format, 'Ranged [L]sp [F]formatting', 'v')
 
-          vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-          vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
+          map('[d', vim.diagnostic.goto_prev, 'Go to previous [D]iagnostic message')
+          map(']d', vim.diagnostic.goto_next, 'Go to next [D]iagnostic message')
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -270,7 +270,7 @@ return {
           -- This may be unwanted, since they displace some of your code
           if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
             map('<leader>lth', function()
-              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(nil))
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
             end, '[L]SP [T]oggle Inlay [H]ints')
           end
         end,
@@ -281,27 +281,206 @@ return {
       --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
-      -- Got this config from NvChad versio 2.5
-      capabilities.textDocument.completion.completionItem = {
-        documentationFormat = { 'markdown', 'plaintext' },
-        snippetSupport = true,
-        preselectSupport = true,
-        insertReplaceSupport = true,
-        labelDetailsSupport = true,
-        deprecatedSupport = true,
-        commitCharactersSupport = true,
-        tagSupport = { valueSet = { 1 } },
-        resolveSupport = {
-          properties = {
-            'documentation',
-            'detail',
-            'additionalTextEdits',
+      local cmp_ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
+      if cmp_ok then
+        capabilities = vim.tbl_deep_extend('force', capabilities, cmp_nvim_lsp.default_capabilities())
+      end
+
+      capabilities.workspace = vim.tbl_deep_extend('force', capabilities.workspace, {
+        executeCommand = { dynamicRegistration = false },
+        symbol = {
+          dynamicRegistration = false,
+        },
+        configuration = true,
+        didChangeConfiguration = {
+          dynamicRegistration = false,
+        },
+        workspaceFolders = true,
+        applyEdit = true,
+        workspaceEdit = {
+          resourceOperations = { 'rename', 'create', 'delete' },
+        },
+        semanticTokens = {
+          refreshSupport = true,
+        },
+        didChangeWatchedFiles = {
+          dynamicRegistration = false,
+          relativePatternSupport = false,
+        },
+        inlayHint = {
+          refreshSupport = true,
+        },
+      })
+
+      capabilities.textDocument = vim.tbl_deep_extend('force', capabilities.textDocument, {
+        diagnostic = {
+          dynamicRegistration = false,
+        },
+        inlayHint = {
+          dynamicRegistration = true,
+          resolveSupport = {
+            properties = {
+              'textEdits',
+              'tooltip',
+              'location',
+              'command',
+            },
           },
         },
-      }
+        semanticTokens = {
+          dynamicRegistration = true,
+          tokenTypes = {
+            'namespace',
+            'type',
+            'class',
+            'enum',
+            'interface',
+            'struct',
+            'typeParameter',
+            'parameter',
+            'variable',
+            'property',
+            'enumMember',
+            'event',
+            'function',
+            'method',
+            'macro',
+            'keyword',
+            'modifier',
+            'comment',
+            'string',
+            'number',
+            'regexp',
+            'operator',
+            'decorator',
+          },
+          tokenModifiers = {
+            'declaration',
+            'definition',
+            'readonly',
+            'static',
+            'deprecated',
+            'abstract',
+            'async',
+            'modification',
+            'documentation',
+            'defaultLibrary',
+          },
+          formats = { 'relative' },
+          requests = {
+            -- TODO(jdrouhard): Add support for this
+            range = false,
+            full = { delta = true },
+          },
+
+          overlappingTokenSupport = true,
+          -- TODO(jdrouhard): Add support for this
+          multilineTokenSupport = false,
+          serverCancelSupport = false,
+          augmentsSyntaxTokens = true,
+        },
+        synchronization = {
+          dynamicRegistration = false,
+
+          willSave = true,
+          willSaveWaitUntil = true,
+
+          -- Send textDocument/didSave after saving (BufWritePost)
+          didSave = true,
+        },
+        codeAction = {
+          dynamicRegistration = true,
+
+          isPreferredSupport = true,
+          dataSupport = true,
+          resolveSupport = {
+            properties = { 'edit' },
+          },
+        },
+        formatting = {
+          dynamicRegistration = true,
+        },
+        rangeFormatting = {
+          dynamicRegistration = true,
+        },
+        completion = {
+          dynamicRegistration = false,
+          completionItem = {
+            documentationFormat = { 'markdown', 'plaintext' },
+            snippetSupport = true,
+            preselectSupport = true,
+            insertReplaceSupport = true,
+            labelDetailsSupport = false,
+            deprecatedSupport = false,
+            commitCharactersSupport = false,
+            tagSupport = { valueSet = { 1 } },
+            resolveSupport = {
+              properties = {
+                'documentation',
+                'detail',
+                'additionalTextEdits',
+              },
+            },
+          },
+          completionList = {
+            itemDefaults = {
+              'editRange',
+              'insertTextFormat',
+              'insertTextMode',
+              'data',
+            },
+          },
+
+          -- TODO(tjdevries): Implement this
+          contextSupport = false,
+        },
+        declaration = {
+          linkSupport = true,
+        },
+        definition = {
+          linkSupport = true,
+          dynamicRegistration = true,
+        },
+        implementation = {
+          linkSupport = true,
+        },
+        typeDefinition = {
+          linkSupport = true,
+        },
+        hover = {
+          dynamicRegistration = true,
+        },
+        signatureHelp = {
+          dynamicRegistration = false,
+        },
+        references = {
+          dynamicRegistration = false,
+        },
+        documentHighlight = {
+          dynamicRegistration = false,
+        },
+        documentSymbol = {
+          dynamicRegistration = false,
+          hierarchicalDocumentSymbolSupport = true,
+        },
+        rename = {
+          dynamicRegistration = true,
+          prepareSupport = true,
+        },
+        publishDiagnostics = {
+          relatedInformation = true,
+          dataSupport = true,
+        },
+        callHierarchy = {
+          dynamicRegistration = false,
+        },
+        codeLens = { dynamicRegistration = false },
+        documentLink = { dynamicRegistration = false },
+        colorProvider = { dynamicRegistration = false },
+      })
+
       -- capabilities.textDocument.sync = {
-      --   openClose = true,
+      --   openClose = false,
       --   change = 2, -- Incremental sync
       --   willSave = false,
       --   willSaveWaitUntil = false,
@@ -318,34 +497,6 @@ return {
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
 
-      -- Define the capabilities you want to disable
-      local disabled_capabilities = {
-        textDocument = {
-          completion = { dynamicRegistration = false },
-          hover = { dynamicRegistration = false },
-          signatureHelp = { dynamicRegistration = false },
-          references = { dynamicRegistration = false },
-          documentHighlight = { dynamicRegistration = false },
-          documentSymbol = { dynamicRegistration = false },
-          formatting = { dynamicRegistration = false },
-          rangeFormatting = { dynamicRegistration = false },
-          onTypeFormatting = { dynamicRegistration = false },
-          definition = { dynamicRegistration = false },
-          codeAction = { dynamicRegistration = false },
-          codeLens = { dynamicRegistration = false },
-          documentLink = { dynamicRegistration = false },
-          colorProvider = { dynamicRegistration = false },
-          rename = { dynamicRegistration = false },
-          publishDiagnostics = { dynamicRegistration = false },
-        },
-        workspace = {
-          didChangeConfiguration = { dynamicRegistration = false },
-          didChangeWatchedFiles = { dynamicRegistration = false },
-          symbol = { dynamicRegistration = false },
-          executeCommand = { dynamicRegistration = false },
-        },
-      }
-
       -- Merge default capabilities with disabled capabilities
       local basedpyright_capabilities = vim.tbl_deep_extend('force', capabilities, {})
       basedpyright_capabilities.textDocument.publishDiagnostics = {
@@ -353,8 +504,9 @@ return {
         tagSupport = {
           valueSet = {}, -- Disable tag support
         },
+        dynamicRegistration = false,
       }
-      basedpyright_capabilities.textDocument.publishDiagnostics = { dynamicRegistration = false }
+
       local servers = {
         bashls = {},
         --[[ OLS  https://github.com/DanielGavin/ols.gits ]]

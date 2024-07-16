@@ -4,6 +4,7 @@ return {
     'hrsh7th/nvim-cmp',
     event = { 'VimEnter', 'InsertEnter' },
     lazy = false,
+    enabled = true,
     dependencies = {
       -- Snippet Engine & its associated nvim-cmp source
       {
@@ -107,146 +108,156 @@ return {
         cmp.config.compare.recently_used:add_entry(event.entry)
       end)
 
-      local _ = true
-        and cmp.setup {
-          -- @class cmp.PerformanceConfig
-          -- @field public debounce integer
-          -- @field public throttle integer
-          -- @field public fetching_timeout integer
-          -- @field public confirm_resolve_timeout integer
-          -- @field public async_budget integer Maximum time (in ms) an async function is allowed to run during one step of the event loop.
-          -- @field public max_view_entries integer
+      cmp.setup {
+        -- @class cmp.PerformanceConfig
+        -- @field public debounce integer
+        -- @field public throttle integer
+        -- @field public fetching_timeout integer
+        -- @field public confirm_resolve_timeout integer
+        -- @field public async_budget integer Maximum time (in ms) an async function is allowed to run during one step of the event loop.
+        -- @field public max_view_entries integer
 
-          performance = {
-            debounce = 10,
-            throttle = 90,
-            fetching_timeout = 500,
-            confirm_resolve_timeout = 90,
-            async_budget = 3,
-            max_view_entries = 30,
-          },
+        performance = {
+          debounce = 5,
+          throttle = 25,
+          fetching_timeout = 200,
+          confirm_resolve_timeout = 90,
+          async_budget = 2,
+          max_view_entries = 20,
+        },
 
-          sorting = {
-            priority_weight = 1.2,
-            comparators = {
-              -- cmp.score_offset, -- not good at all
-              cmp.config.compare.locality,
-              cmp.config.compare.exact,
-              cmp.config.compare.recently_used,
+        sorting = {
+          priority_weight = 1.2,
+          comparators = {
+            -- cmp.score_offset, -- not good at all
+            cmp.config.compare.locality,
+            cmp.config.compare.exact,
+            cmp.config.compare.recently_used,
 
-              function(e1, e2)
-                local k1 = CompletionItemKind[e1:get_kind()]
-                local k2 = CompletionItemKind[e2:get_kind()]
-                if k1 < k2 then
-                  return true
-                end
+            function(e1, e2)
+              local k1 = CompletionItemKind[e1:get_kind()]
+              local k2 = CompletionItemKind[e2:get_kind()]
+              if k1 < k2 then
+                return true
+              end
+              return false
+            end,
+            -- cmp.scopes, -- what?
+            cmp.config.compare.kind,
+            cmp.config.compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
+            function(entry1, entry2) -- Underscore :D
+              local _, entry1_under = entry1.completion_item.label:find '^_+'
+              local _, entry2_under = entry2.completion_item.label:find '^_+'
+              entry1_under = entry1_under or 0
+              entry2_under = entry2_under or 0
+              if entry1_under > entry2_under then
                 return false
-              end,
-              -- cmp.scopes, -- what?
-              cmp.config.compare.kind,
-              cmp.config.compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
-              cmp.config.compare.order,
-              -- compare.sort_text,
-              -- compare.exact,
-              -- compare.length, -- useless
-              cmp.config.compare.offset,
-              -- cmp.config.compare.sort_text,
-              cmp.config.compare.length,
-              cmp.config.compare.order,
-            },
+              elseif entry1_under < entry2_under then
+                return true
+              end
+            end,
+            cmp.config.compare.order,
+            -- compare.sort_text,
+            -- compare.exact,
+            -- compare.length, -- useless
+            cmp.config.compare.offset,
+            -- cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
           },
-          formatting = {
-            format = lspkind.cmp_format {
-              mode = 'symbol', -- show only symbol annotations
-              maxwidth = 45, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-              -- can also be a function to dynamically calculate max width such as
-              -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
-              ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-              show_labelDetails = false, -- show labelDetails in menu. Disabled by default
+        },
+        formatting = {
+          format = lspkind.cmp_format {
+            mode = 'symbol', -- show only symbol annotations
+            maxwidth = 45, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+            -- can also be a function to dynamically calculate max width such as
+            -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
+            ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+            show_labelDetails = false, -- show labelDetails in menu. Disabled by default
 
-              -- The function below will be called before any actual modifications from lspkind
-              -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
-              before = function(entry, vim_item)
-                return vim_item
-              end,
-            },
-          },
-          snippet = {
-            expand = function(args)
-              luasnip.lsp_expand(args.body)
+            -- The function below will be called before any actual modifications from lspkind
+            -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
+            before = function(entry, vim_item)
+              return vim_item
             end,
           },
-          -- completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
-          completion = { completeopt = 'menu,menuone,noinsert,preview' },
-          -- experimental = {
-          --   ghost_text = true, -- optional, can help show inline suggestions
-          -- },
+        },
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
+        },
+        -- completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
+        completion = { completeopt = 'menu,menuone,noinsert,preview' },
+        -- experimental = {
+        --   ghost_text = true, -- optional, can help show inline suggestions
+        -- },
 
-          -- For an understanding of why these mappings were
-          -- chosen, you will need to read `:help ins-completion`
+        -- For an understanding of why these mappings were
+        -- chosen, you will need to read `:help ins-completion`
+        --
+        -- No, but seriously. Please read `:help ins-completion`, it is really good!
+        mapping = cmp.mapping.preset.insert {
+          -- Select the [n]ext item
+          ['<C-n>'] = cmp.mapping.select_next_item(),
+          -- Select the [p]revious item
+          ['<C-p>'] = cmp.mapping.select_prev_item(),
+
+          ['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up
+          ['<C-d>'] = cmp.mapping.scroll_docs(4), -- Down
+
+          -- Scroll the documentation window [b]ack / [f]orward
+          -- ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+          -- ['<C-f>'] = cmp.mapping.scroll_docs(4),
+
+          -- Accept ([y]es) the completion.
+          --  This will auto-import if your LSP supports it.
+          --  This will expand snippets if the LSP sent a snippet.
+          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<C-\\>'] = cmp.mapping.confirm { select = true },
+          ['|'] = cmp.mapping.confirm { select = true },
+
+          -- If you prefer more traditional completion keymaps,
+          -- you can uncomment the following lines
+          --['<CR>'] = cmp.mapping.confirm { select = true },
+          --['<Tab>'] = cmp.mapping.select_next_item(),
+          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
+
+          -- Manually trigger a completion from nvim-cmp.
+          --  Generally you don't need this, because nvim-cmp will display
+          --  completions whenever it has completion options available.
+          ['<C-Space>'] = cmp.mapping.complete {},
+
+          -- Think of <c-l> as moving to the right of your snippet expansion.
+          --  So if you have a snippet that's like:
+          --  function $name($args)
+          --    $body
+          --  end
           --
-          -- No, but seriously. Please read `:help ins-completion`, it is really good!
-          mapping = cmp.mapping.preset.insert {
-            -- Select the [n]ext item
-            ['<C-n>'] = cmp.mapping.select_next_item(),
-            -- Select the [p]revious item
-            ['<C-p>'] = cmp.mapping.select_prev_item(),
+          -- <c-l> will move you to the right of each of the expansion locations.
+          -- <c-h> is similar, except moving you backwards.
+          ['<C-l>'] = cmp.mapping(function()
+            if luasnip.expand_or_locally_jumpable() then
+              luasnip.expand_or_jump()
+            end
+          end, { 'i', 's' }),
+          ['<C-h>'] = cmp.mapping(function()
+            if luasnip.locally_jumpable(-1) then
+              luasnip.jump(-1)
+            end
+          end, { 'i', 's' }),
 
-            ['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up
-            ['<C-d>'] = cmp.mapping.scroll_docs(4), -- Down
-
-            -- Scroll the documentation window [b]ack / [f]orward
-            -- ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-            -- ['<C-f>'] = cmp.mapping.scroll_docs(4),
-
-            -- Accept ([y]es) the completion.
-            --  This will auto-import if your LSP supports it.
-            --  This will expand snippets if the LSP sent a snippet.
-            ['<C-y>'] = cmp.mapping.confirm { select = true },
-            ['<C-\\>'] = cmp.mapping.confirm { select = true },
-            ['|'] = cmp.mapping.confirm { select = true },
-
-            -- If you prefer more traditional completion keymaps,
-            -- you can uncomment the following lines
-            --['<CR>'] = cmp.mapping.confirm { select = true },
-            --['<Tab>'] = cmp.mapping.select_next_item(),
-            --['<S-Tab>'] = cmp.mapping.select_prev_item(),
-
-            -- Manually trigger a completion from nvim-cmp.
-            --  Generally you don't need this, because nvim-cmp will display
-            --  completions whenever it has completion options available.
-            ['<C-Space>'] = cmp.mapping.complete {},
-
-            -- Think of <c-l> as moving to the right of your snippet expansion.
-            --  So if you have a snippet that's like:
-            --  function $name($args)
-            --    $body
-            --  end
-            --
-            -- <c-l> will move you to the right of each of the expansion locations.
-            -- <c-h> is similar, except moving you backwards.
-            ['<C-l>'] = cmp.mapping(function()
-              if luasnip.expand_or_locally_jumpable() then
-                luasnip.expand_or_jump()
-              end
-            end, { 'i', 's' }),
-            ['<C-h>'] = cmp.mapping(function()
-              if luasnip.locally_jumpable(-1) then
-                luasnip.jump(-1)
-              end
-            end, { 'i', 's' }),
-
-            -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
-            --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
-          },
-          sources = {
-            { name = 'nvim_lsp' },
-            { name = 'luasnip' },
-            { name = 'path' },
-            { name = 'buffer' },
-            -- { name = 'cmdline' },
-          },
-        }
+          -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
+          --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
+        },
+        sources = {
+          { name = 'nvim_lsp' },
+          { name = 'luasnip' },
+          { name = 'path' },
+          { name = 'buffer' },
+          -- { name = 'cmdline' },
+        },
+      }
       local search_opts = {
         mapping = cmp.mapping.preset.cmdline(),
         completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },

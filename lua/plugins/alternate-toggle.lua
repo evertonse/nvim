@@ -6,8 +6,15 @@ return {
     require('alternate-toggler').setup {
       alternates = {
         ['=='] = '!=',
+        ['!='] = '==',
+        ['and'] = 'or',
+        ['or'] = 'and',
+
         ['else'] = 'elif',
+        ['elif'] = 'if',
+        ['if'] = 'else',
         ['true'] = 'false',
+        ['false'] = 'true',
       },
     }
 
