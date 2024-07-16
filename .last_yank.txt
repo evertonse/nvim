@@ -1,1 +1,24 @@
-ALLOW
+vim.api.nvim_create_autocmd('CmdwinEnter', {
+  pattern = '*',
+  once = false,
+  callback = function()
+    local modes = { 'i', 'n' }
+    for _, mode in ipairs(modes) do
+      vim.api.nvim_buf_set_keymap(0, mode, '<C-f>', '<C-c><Down>', { noremap = true, silent = true })
+    end
+    vim.keymap.set({ 'x', 'v', 'n' }, '<CR>', '<CR>', { buffer = 0, noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(0, 'i', '<CR>', '<C-c><CR>', { noremap = true, silent = true })
+    vim.keymap.set('i', '<C-c>', function()
+      vim.cmd [[stopinsert]]
+    end, { buffer = 0, noremap = true, silent = true })
+
+    if vim.api.nvim_get_mode().mode == 'n' then
+      vim.api.nvim_input 'i'
+    end
+
+    local close_completion = false
+    if close_completion then
+      vim.cmd [[pclose]]
+    end
+  end,
+})

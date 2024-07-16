@@ -168,10 +168,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = capture_yank,
 })
 
+-- TODO: Make it come back to the line it once was, probably have to
+-- delete lê
 vim.api.nvim_create_autocmd('CmdwinEnter', {
   pattern = '*',
+  once = false,
   callback = function()
-    pcall(vim.cmd, 'TSBufDisable all')
     local modes = { 'i', 'n' }
     for _, mode in ipairs(modes) do
       vim.api.nvim_buf_set_keymap(0, mode, '<C-f>', '<C-c><Down>', { noremap = true, silent = true })
