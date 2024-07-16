@@ -317,7 +317,7 @@ return {
           dynamicRegistration = false,
         },
         inlayHint = {
-          dynamicRegistration = true,
+          dynamicRegistration = false,
           resolveSupport = {
             properties = {
               'textEdits',
@@ -328,7 +328,7 @@ return {
           },
         },
         semanticTokens = {
-          dynamicRegistration = true,
+          dynamicRegistration = false,
           tokenTypes = {
             'namespace',
             'type',
@@ -600,6 +600,7 @@ return {
           -- cmd = {...},
           -- filetypes = { ...},
           -- capabilities = {},
+          dynamicRegistration = false,
           settings = {
             Lua = {
               completion = {

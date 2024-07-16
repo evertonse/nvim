@@ -12,7 +12,7 @@ local WIDTH_PERCENTAGE = 0.45
 local HEIGHT_PERCENTAGE = 0.65
 
 -- Function to delete all selected files
--- -- Function to mark all files in the visual selection
+-- Function to mark all files in the visual selection
 
 local mark_selected_files = function(bufnr)
   local api = require 'nvim-tree.api'
