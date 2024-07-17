@@ -4,7 +4,7 @@
 --    [- Could not doit ] configure noice cmdline to enable normal mode on it
 --    [x Working fine ] setup inc-rename to work with noice
 --    [x] checkout tabby for neovim and other
---    [x ] config oil.nvim to test it's performance
+--    [x] config oil.nvim to test it's performance
 --    [x] configure mini.surround to surround word with quotes similar to le nvim.surround
 --    [x] check keymaps
 --    [x win32-yank-bin as the culprit]check why shit be slow these days when moving arround
@@ -40,20 +40,23 @@
 --    [ ] nvinca something like that
 --
 --
---    [ ] Maybe you'd wnat this https://github.com/kdheepak/lazygit.nvim; RN i don't see a reason to not just use lazygit on the terminal
+--    NOTE: Maybe you'd wnat this https://github.com/kdheepak/lazygit.nvim;
+--          RN i don't see a reason to not just use lazygit on the terminal
+--
 --    IMPORTANT: shit is crazy abouth treesitter combined with something else that I forgot
 --
 --    IMPORTANT: WSL `CMP` is rather slow if searches through the whole windows path,
---    My fix was to disable a bunch of file watcher and set dynamicRegistration = false to vairous
---    lspconfig default capabilities. Another fix is to set /etc/wsl.conf such as below (maybe even set enabled interop to false)
---        [interop]
---        enabled = true
---        appendWindowsPath = false
+--               My fix was to disable a bunch of file watcher and set dynamicRegistration = false to vairous
+--               lspconfig default capabilities. Another fix is to set /etc/wsl.conf such as below (maybe even set enabled interop to false)
+--                   [interop]
+--                   enabled = true
+--                   appendWindowsPath = false
 --
 --    IMPORTANT: Conform is responsable for autoformat, but WHYY ? Why do I need that instead of just a autocommand?
 --
---    IMPORTANT: Highlight float windows can only wither have winblend or background "none", but not both as it bugs out
+--    IMPORTANT (17-07-2024): Highlight float windows can only wither have winblend or background "none", but not both as it bugs out
 --               see: https://github.com/rcarriga/nvim-notify/issues/47#issuecomment-1003326053
+--               see: https://github.com/neovim/neovim/issues/18576
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'

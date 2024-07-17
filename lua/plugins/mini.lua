@@ -304,6 +304,7 @@ return {
         }
       end
       mini_hipatterns_setup()
+      local TERRIBLE = false -- just for emphasis, at least on wsl
       local _ = TERRIBLE and require('mini.completion').setup()
     end,
   },
