@@ -34,6 +34,7 @@
 --    [ ] Scope: Clean up and fix PR by pushing
 --    [ ] Colorscheme: Clean up and make it receive opts for transparancy
 --    [ ] Alacritty: change this BS of copying with crtl+shift+v, and remove crlt+y mapping
+--    [ ] Alacritty: Make it open on wsl
 --    [ ] Either this rcarriga/nvim-notify or noice, if too many lsp message, altough it seems that fidget be aight for some notifications
 --    [ ] Investigate .gitignore slow to type
 --    [ ] nvinca something like that
