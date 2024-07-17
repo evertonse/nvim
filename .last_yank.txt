@@ -1,1 +1,1 @@
-    vim.cmd [[:set laststatus=3]]
+IMPORTANT

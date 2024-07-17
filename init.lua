@@ -57,8 +57,12 @@
 --    IMPORTANT (17-07-2024): Highlight float windows can only wither have winblend or background "none", but not both as it bugs out
 --               see: https://github.com/rcarriga/nvim-notify/issues/47#issuecomment-1003326053
 --               see: https://github.com/neovim/neovim/issues/18576
---               support for sixel image on terminal: https://github.com/alacritty/alacritty/pull/4763
---                    with this we might just do alot no  wiht neovim neoorg and stuff?
+--    IMPORTANT COPILOT like https://github.com/b0o/supermaven-nvim
+--    [ ] Alacritty grasphics: support for sixel image on terminal: https://github.com/alacritty/alacritty/pull/4763 with this we might just do alot no  wiht neovim neoorg and stuff?
+--    [ ] VScode like preview: https://github.com/DNLHC/glance.nvim
+--    [ ] Read semantic HL (priority): https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316
+--    [ ] LaTeX replacemente for sure, made in rust from ground up: https://github.com/typst/typst
+--    NOTE: use (in visual mode) :!<shell_command><cr> output to buffer, or :redir @a :cmd and then :redir END to get the output of command into the `a` register
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
