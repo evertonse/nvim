@@ -1,1 +1,7 @@
- -- This is the important new option
+    -- TELESCOPE THINGY
+    -- TelescopeBorder = {
+    --     -- fg = c.editor.Front,
+    --     link = 'Normal',
+    --     -- bg = c.editor.Back,
+    -- },
+

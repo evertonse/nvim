@@ -26,7 +26,11 @@ end
 
 local function delete_scoped_buffer(buf)
   local scope = require 'scope.core'
-  scope.close_buffer {}
+  scope.close_buffer {
+    delete_function = function()
+      vim.cmd [[Bdelete!]]
+    end,
+  }
 end
 
 local function close_buffers_except_current_only_in_this_tab(right)
