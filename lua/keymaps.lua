@@ -96,6 +96,8 @@ local file_tree_toggle = function(opts)
       local is_valid_win = vim.api.nvim_win_is_valid(tree_win_id) and api.tree.is_visible()
       if is_valid_win then
         vim.api.nvim_win_set_option(tree_win_id, 'winblend', 8)
+        -- Set the highlight group for this window
+        vim.api.nvim_set_hl(tree_win_id, 'FloatBorder', { bg = '#FFFFFF' })
       end
     end
   end

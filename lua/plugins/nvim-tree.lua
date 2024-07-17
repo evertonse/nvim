@@ -234,7 +234,7 @@ return {
         window = {
           style = 'minimal',
           relative = 'win',
-          border = 'single',
+          border = vim.g.self.is_transparent and 'none' or 'single',
           wrap = false,
           trim_height = true,
           open_win_config = not vim.g.self.open_win_config_recalculate_every_time and {
@@ -257,7 +257,8 @@ return {
             local float_opts = {
               style = 'minimal',
               relative = 'editor',
-              border = 'single',
+              border = vim.g.self.is_transparent and 'none' or 'single',
+              -- border = 'single',
               zindex = 4000,
               row = center_y,
               col = center_x,
@@ -519,7 +520,8 @@ return {
             height = math.floor(height),
             row = math.floor((total_height - math.floor(total_height * 0.69)) / 2.0),
             col = math.floor((total_width - math.floor(total_width * 0.55)) / 2.0),
-            border = 'single',
+
+            border = vim.g.self.is_transparent and 'solid' or 'single',
           }
 
           return float_opts
