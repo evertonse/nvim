@@ -84,7 +84,7 @@ return {
 
             -- Options related to the notification window and buffer
             window = {
-              normal_hl = 'Normal', -- Base highlight group in the notification window
+              normal_hl = 'DiagnosticUnnecessary', -- Base highlight group in the notification window
               winblend = vim.g.self.is_transparent and 0 or 20, -- Background color opacity in the notification window
               border = 'none', -- Border around the notification window
               zindex = 12345, -- Stacking priority of the notification window

@@ -1,11 +1,13 @@
 return {
   'kwkarlwang/bufjump.nvim',
   event = 'VeryLazy',
+  keys = {},
   config = function()
     require('bufjump').setup {
-      -- forward_key = '<C-n>',
-      -- backward_key = '<C-p>',
-      on_success = nil,
+      forward_key = false,
+      backward_key = false,
+      forward_same_buf_key = false,
+      backward_same_buf_key = false,
     }
     local opts = { silent = true, noremap = true }
     vim.keymap.set('n', '<M-9>', function()

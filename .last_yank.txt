@@ -1,1 +1,3 @@
-vim.g.self.is_transparent and 0 or 20
+      Normal = {
+        guibg = '<VALUE-HERE>',
+      },

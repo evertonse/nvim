@@ -16,6 +16,16 @@ return {
   event = 'VimEnter',
   version = '*',
   opts = {
+    highlights = {
+      -- highlights which map to a highlight group name and a table of it's values
+      -- NOTE: this is only a subset of values, any group placed here will be set for the terminal window split
+      NormalFloat = {
+        link = 'Normal',
+      },
+      FloatBorder = {
+        link = 'FloatBorder',
+      },
+    },
     close_on_exit = true,
     persist_size = false,
     -- on_close = hook_term_open,
