@@ -21,7 +21,6 @@ return {
       winblend = vim.g.self.is_transparent and 25
     end
 
-    Inspect { bg, winblend }
     require('incline').setup {
       window = {
         options = {

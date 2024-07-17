@@ -257,7 +257,7 @@ return {
             local float_opts = {
               style = 'minimal',
               relative = 'editor',
-              border = vim.g.self.is_transparent and 'none' or 'single',
+              border = vim.g.self.is_transparent and 'single' or 'single',
               -- border = 'single',
               zindex = 4000,
               row = center_y,
@@ -499,7 +499,7 @@ return {
       centralize_selection = true,
       cursorline = true,
 
-      debounce_delay = 5,
+      debounce_delay = 15,
       preserve_window_proportions = true,
 
       float = {
@@ -521,7 +521,7 @@ return {
             row = math.floor((total_height - math.floor(total_height * 0.69)) / 2.0),
             col = math.floor((total_width - math.floor(total_width * 0.55)) / 2.0),
 
-            border = vim.g.self.is_transparent and 'solid' or 'single',
+            border = vim.g.self.is_transparent and 'single' or 'single',
           }
 
           return float_opts
