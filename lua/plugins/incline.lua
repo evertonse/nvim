@@ -23,7 +23,7 @@ return {
         local ft_icon, ft_color = devicons.get_icon_color(filename)
         local modified = vim.bo[props.buf].modified
         local res = {
-          ft_icon and { '', ft_icon, '', guibg = vim.g.self.is_transparent and 'None' or ft_color, guifg = vim.g.self.is_transparent and ft_color or 'None' }
+          ft_icon and { '', ft_icon, ' ', guibg = vim.g.self.is_transparent and 'None' or ft_color, guifg = vim.g.self.is_transparent and ft_color or 'None' }
             or '',
           '',
           { filename, gui = modified and 'bold,italic' or 'bold' },
@@ -33,7 +33,7 @@ return {
         if props.focused then
           for _, item in ipairs(navic.get_data(props.buf) or {}) do
             table.insert(res, {
-              { '>', group = 'NavicSeparator' },
+              { ' >', group = 'NavicSeparator' },
               { item.icon, group = 'NavicIcons' .. item.type },
               { item.name, group = 'NavicText' },
             })

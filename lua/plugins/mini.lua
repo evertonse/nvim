@@ -282,6 +282,7 @@ return {
           use_icons = vim.g.self.nerd_font,
           set_vim_settings = true,
         }
+        vim.cmd [[:set laststatus=3]]
       end
       mini_statusline_setup()
 
