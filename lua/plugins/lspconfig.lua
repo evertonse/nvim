@@ -91,7 +91,7 @@ return {
               max_width = 0, -- Maximum width of the notification window
               max_height = 0, -- Maximum height of the notification window
               x_padding = 1, -- Padding from right edge of window boundary
-              y_padding = 0, -- Padding from bottom edge of window boundary
+              y_padding = 1, -- Padding from bottom edge of window boundary
               align = 'bottom', -- How to align the notification window
               relative = 'win', -- What the notification window position is relative to
             },

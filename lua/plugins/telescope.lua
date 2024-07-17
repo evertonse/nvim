@@ -560,7 +560,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
         -- file_sorter = require('telescope.sorters').get_substr_matcher,
         file_ignore_patterns = { 'node_modules', '.git', '__pycache__', 'venv', '%.png', '%.bin', '%.exe', '~$' },
         generic_sorter = require('telescope.sorters').get_generic_fuzzy_sorter,
-        winblend = 10,
+        winblend = 0,
         border = {},
         -- borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
         borderchars = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
@@ -881,45 +881,3 @@ return { -- Fuzzy Finder (files, lsp, etc)
     })
   end,
 }
--- # Description
---
--- Allows `attach_mappings` function to be defined in ``telescope.defaults`` that will be used as default for all pickers
--- If you define `attach_mappings` on specific picker, that'll be used instead.
---
--- Use case is that it was needed to perform some operations using ``prompt_bufnr`` as soon as the picker started.
--- It was ideal to perform that for all pickers and just override when necessary, but saw no way of doing that.
--- Example:
---
--- ```lua
--- -- Defaulting to turn off winbleding specifically on the prompt window, (everything else was on windblend 20)
---       defaults = {
---
---         attach_mappings = function(prompt_bufnr, map)
---           local prompt_win = vim.fn.bufwinid(prompt_bufnr)
---           if prompt_win ~= -1 then
---             vim.schedule(function()
---               vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
---             end)
---           end
---           return true
---         end,
---         ...
--- ```
---
--- # Testing
--- Should see 'We are balling' when a picker is opened.
--- ```lua
--- require('telescope').setup {
---   defaults = {
---     attach_mappings = function(prompt_bufnr, map)
---       local prompt_win = vim.fn.bufwinid(prompt_bufnr)
---       if prompt_win ~= -1 then
---         vim.schedule(function()
---           print 'We are balling'
---         end)
---       end
---       return true
---     end,
---   },
--- }
--- ```
