@@ -28,7 +28,12 @@
 --    [ ] REFACTOR: Make all keymaps in keymaps, and require 'keymaps'.telescope for example in plugin site
 --    [ ] See about make named sessions and named tabs
 --    [ ] NvimTree bulk renamed when you actually need it
---    [ ] <3 NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
+--    [x] <3 NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
+--    [ ] NvimTree implement amount of dotfiles per directory similar to neo-tree
+--    [ ] NvimTree create separate PR for exposing NvimTreeFloatBorder
+--    [ ] Scope: Clean up and fix PR by pushing
+--    [ ] Colorscheme: Clean up and make it receive opts for transparancy
+--    [ ] Alacritty: change this BS of copying with crtl+shift+v, and remove crlt+y mapping
 --    [ ] Either this rcarriga/nvim-notify or noice, if too many lsp message, altough it seems that fidget be aight for some notifications
 --    [ ] Investigate .gitignore slow to type
 --    [ ] nvinca something like that
