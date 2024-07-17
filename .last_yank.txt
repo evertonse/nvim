@@ -1,1 +1,1 @@
-"SmiteshP/nvim-navic",
+    vim.cmd [[:set laststatus=3]]

@@ -57,6 +57,8 @@
 --    IMPORTANT (17-07-2024): Highlight float windows can only wither have winblend or background "none", but not both as it bugs out
 --               see: https://github.com/rcarriga/nvim-notify/issues/47#issuecomment-1003326053
 --               see: https://github.com/neovim/neovim/issues/18576
+--               support for sixel image on terminal: https://github.com/alacritty/alacritty/pull/4763
+--                    with this we might just do alot no  wiht neovim neoorg and stuff?
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
@@ -65,9 +67,7 @@ require 'utils'
 require 'options'
 
 -- NOTE: might be useful `vim.fn.defer`
-vim.schedule(function()
-  require 'autocommands'
-end)
+require 'autocommands'
 --
 -- [[ Basic Keymaps ]]
 require 'keymaps'

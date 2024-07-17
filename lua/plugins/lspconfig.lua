@@ -19,8 +19,7 @@ return {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       { 'antosha417/nvim-lsp-file-operations', config = true },
 
-      { 'SmiteshP/nvim-navic' },
-
+      { 'SmiteshP/nvim-navic', opts = { lsp = { auto_attach = true } } },
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       {

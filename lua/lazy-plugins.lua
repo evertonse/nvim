@@ -48,7 +48,7 @@ local lazy_config = {
     -- Additionally gathers stats about all package.loaders
     loader = false,
     -- Track each new require in the Lazy profiling tab
-    require = true,
+    require = false,
   },
   performance = {
     rtp = {
@@ -245,6 +245,7 @@ require('lazy').setup({
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
   require 'plugins.spider',
+  require 'plugins.incline',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et
