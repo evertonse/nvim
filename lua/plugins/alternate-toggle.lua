@@ -3,25 +3,33 @@ return {
   lazy = false,
   event = 'BufReadPost',
   config = function()
-    require('alternate-toggler').setup {
-      alternates = {
-        ['=='] = '!=',
-        ['!='] = '==',
-        ['and'] = 'or',
-        ['or'] = 'and',
+    local cycles = {
+      { '==', '!=' },
+      { 'and', 'or' },
+      { 'true', 'false' },
+      { 'if', 'else', 'elseif' },
+      { '1', '2', '3' },
+    }
 
-        ['else'] = 'elif',
-        ['elif'] = 'if',
-        ['if'] = 'else',
-        ['true'] = 'false',
-        ['false'] = 'true',
-      },
+    local alternates = {}
+
+    for _, cycle in ipairs(cycles) do
+      for i = 1, #cycle - 1, 1 do
+        alternates[cycle[i]] = cycle[i + 1]
+      end
+      alternates[cycle[#cycle]] = cycle[1]
+    end
+
+    require('alternate-toggler').setup {
+      alternates = alternates,
     }
 
     vim.keymap.set(
       'n',
       '<C-x>', -- <space><space>
-      require('alternate-toggler').toggleAlternate
+      function()
+        require('alternate-toggler').toggleAlternate()
+      end
     )
   end,
 }

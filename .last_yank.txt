@@ -1,1 +1,1 @@
-solid
+      Inspect(cycle)

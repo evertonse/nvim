@@ -46,6 +46,9 @@ return {
     },
     config = function(_, opts) -- This is the function that runs, AFTER loading
       require('which-key').setup(opts)
+      -- vim.api.nvim_set_hl(0, 'WhichKeyNormal', { link = 'NormalFloatWinblend' })
+      vim.api.nvim_set_hl(0, 'WhichKeyNormal', { link = 'FloatBorderWinblend' })
+      vim.api.nvim_set_hl(0, 'WhichKeyBorder', { link = 'FloatBorderWinblend' })
     end,
   },
 }
