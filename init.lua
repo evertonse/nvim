@@ -43,6 +43,7 @@
 --        enabled = true
 --        appendWindowsPath = false
 --    IMPORTANT: Conform is responsable for autoformat, but WHYY ? Why do I need that instead of just a autocommand?
+--    IMPORTANT: Highlight float windows can only wither have winblend or background "none", but not both as it bugs out
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
