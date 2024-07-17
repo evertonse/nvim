@@ -23,7 +23,7 @@ return {
       ---@type false | "classic" | "modern" | "helix"
       preset = 'helix',
       delay = function(ctx)
-        return ctx.plugin and 0 or 120
+        return ctx.plugin and 0 or 200
       end,
       win = {
         -- don't allow the popup to overlap with the cursor
@@ -40,7 +40,7 @@ return {
         -- Additional vim.wo and vim.bo options
         bo = {},
         wo = {
-          winblend = 16, -- value between 0-100 0 for fully opaque and 100 for fully transparent
+          winblend = 25, -- value between 0-100 0 for fully opaque and 100 for fully transparent
         },
       },
     },

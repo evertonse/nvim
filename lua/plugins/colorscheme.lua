@@ -7,7 +7,7 @@ return {
     'evertonse/colorscheme.nvim',
     priority = 2000, -- Make sure to load this before all the other start plugins.
     lazy = false,
-    pin = false, -- don't update
+    pin = false, -- if true don't update
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
@@ -18,5 +18,11 @@ return {
       -- vim.cmd.hi 'Comment gui=none'
     end,
   },
+} or {
+  'b0o/lavi.nvim',
+  dependencies = { 'rktjmp/lush.nvim' },
+  config = function()
+    vim.cmd [[colorscheme lavi]]
+  end,
 }
 -- vim: ts=2 sts=2 sw=2 et

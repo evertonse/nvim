@@ -25,7 +25,7 @@ return { --https://github.com/andymass/vim-matchup
 
     vim.g.matchup_disable_virtual_text = 1
 
-    -- NOTE: WLags a lot with treesitter highlighting IDK WHY
+    -- NOTE: Lags a lot with treesitter highlighting IDK WHY
     vim.g.matchup_matchparen_enabled = 1
 
     vim.g.matchup_surround_enabled = 1 -- Surround motions
@@ -38,7 +38,8 @@ return { --https://github.com/andymass/vim-matchup
     -- vim.g.matchup_delim_noskips = 1 -- " recognize symbols within comments
     -- vim.g.matchup_delim_noskips = 2 -- " don't recognize anything in comments
 
-    -- To configure the number of lines to search in either direction while using motions and text objects. Does not apply to match highlighting (see g:matchup_matchparen_stopline instead).
+    -- To configure the number of lines to search in either direction while using motions and text objects.
+    -- Does not apply to match highlighting (see g:matchup_matchparen_stopline instead).
     vim.g.matchup_delim_stopline = 1500
 
     -- Matching does not work when lines are too far apart.

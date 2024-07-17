@@ -1,1 +1,1 @@
-winhighlight
+"SmiteshP/nvim-navic",
