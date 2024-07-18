@@ -22,9 +22,24 @@ return {
     end
 
     require('incline').setup {
+      hide = {
+        cursorline = true,
+        focused_win = false,
+        only_win = false,
+      },
       window = {
+        overlap = {
+          borders = true,
+          statusline = true,
+          tabline = false,
+          winbar = true,
+        },
         options = {
           winblend = winblend,
+        },
+        placement = {
+          horizontal = 'right',
+          vertical = 'top',
         },
         padding = 0,
         margin = { horizontal = 0, vertical = 0 },

@@ -70,14 +70,13 @@ require 'utils'
 -- [[ Setting options ]]
 require 'options'
 
--- NOTE: might be useful `vim.fn.defer`
+-- NOTE: might be useful `vim.fn.defer` or `vim.schedule`
 require 'autocommands'
---
+
 -- [[ Basic Keymaps ]]
 require 'keymaps'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
--- local blá
 require 'lazy-bootstrap'
 
 -- [[ Configure and install plugins ]]

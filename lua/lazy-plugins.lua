@@ -236,7 +236,6 @@ require('lazy').setup({
 
   require 'plugins.neo-tree',
   require 'plugins.nvim-tree',
-  require 'plugins.alternate-toggle',
   require 'plugins.aerial',
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -246,6 +245,7 @@ require('lazy').setup({
   -- { import = 'custom.plugins' },
   require 'plugins.spider',
   require 'plugins.incline',
+  require 'plugins.cycler',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et
