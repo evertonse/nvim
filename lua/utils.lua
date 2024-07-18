@@ -365,16 +365,6 @@ local check_external_reqs = function()
   return true
 end
 
-local local_cycles = {
-  { '==', '!=' },
-  { 'true', 'false' },
-  { 'if', 'else', 'cock' },
-  { 'and', 'or' },
-  { '1', '2', '3' },
-}
-
-local DEBUG = {}
-
 local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
 local surround_opts = { 'mini.surround', 'vim-surround' }
 local file_tree_opts = { 'nvim-tree', 'neo-tree' }
@@ -394,7 +384,13 @@ vim.g.self = {
   open_win_config_recalculate_every_time = true,
   enable_file_tree_preview = false,
   dont_format = { c = true, cpp = true, odin = true, python = true },
-  cycles = local_cycles,
+  cycles = {
+    { '==', '!=' },
+    { 'true', 'false' },
+    { 'if', 'else', 'cock' },
+    { 'and', 'or' },
+    { '1', '2', '3' },
+  },
   -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
 }
 
