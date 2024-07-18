@@ -181,27 +181,12 @@ require('lazy').setup({
   require 'plugins.treesitter',
 
   require 'plugins.dap',
-  {
-    'hinell/move.nvim',
-    lazy = false,
-    config = function()
-      local opts = { noremap = true, silent = true }
-      -- Normal-mode commands
-      vim.keymap.set('n', '<A-k>', ':MoveLine 1<CR>', opts)
-      vim.keymap.set('n', '<A-j>', ':MoveLine -1<CR>', opts)
-      vim.keymap.set('n', '<A-h>', ':MoveWord -1<CR>', opts)
-      vim.keymap.set('n', '<A-l>', ':MoveWord 1<CR>', opts)
 
-      -- Visual-mode commands
-      vim.keymap.set('x', '<A-k>', ':MoveBlock 1<CR>', opts)
-      vim.keymap.set('x', '<A-j>', ':MoveBlock -1<CR>', opts)
-      vim.keymap.set('v', '<A-h>', ':MoveHBlock -1<CR>', opts)
-      vim.keymap.set('v', '<A-l>', ':MoveHBlock 1<CR>', opts)
-    end,
-  },
+  require 'plugins.move',
+
   {
     'chrisgrieser/nvim-various-textobjs',
-    --alternative: XXiaoA/ns-textobject.nvim
+    --alternative: 'XXiaoA/ns-textobject.nvim'
     lazy = false,
     opts = { useDefaultKeymaps = true },
   },
@@ -218,7 +203,6 @@ require('lazy').setup({
     -- snake_case s
     -- UPPER_CASE u
     -- path/case  /
-
     config = true,
   },
   --------------------------------------
@@ -283,21 +267,12 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
-  require 'plugins.spider' or require 'plugins.neowords',
+  require 'plugins.spider' and false or require 'plugins.neowords',
   require 'plugins.improved-ft',
   require 'plugins.incline',
   require 'plugins.cycler',
   require 'plugins.snap',
-  {
-    'j-morano/buffer_manager.nvim',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-    },
-    config = function()
-      require('buffer_manager').setup {}
-      vim.keymap.set('n', 'Bm', ':lua require("buffer_manager.ui").toggle_quick_menu()', { noremap = true, silent = true })
-    end,
-  },
+  require 'plugins.bufmanager',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et

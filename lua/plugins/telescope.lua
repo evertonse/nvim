@@ -175,7 +175,7 @@ local function custom_find_files()
           local prompt_win = vim.fn.bufwinid(prompt_bufnr)
           if prompt_win ~= -1 then
             vim.schedule(function()
-              vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
+              -- vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
             end)
           end
 
@@ -465,19 +465,6 @@ return { -- Fuzzy Finder (files, lsp, etc)
           -- find_command = { 'fd', '--type', 'file', '--hidden', '--no-ignore', '--exclude', '.git', '--color=never' },
           -- find_command = { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--exclude', '__pycache__', '--color=never' },
           -- find_command = { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--exclude', 'venv', '--exclude', '__pycache__', '--color=never' },
-
-          -- entry_maker = function(entry)
-          --   -- Customize the display of each entry
-          --   local icon = ' ' -- Example icon (you can use any icon here)
-          --   local display = icon .. entry
-          --   -- assert(false)
-          --
-          --   return {
-          --     value = entry,
-          --     ordinal = entry,
-          --     display = display,
-          --   }
-          -- end,
         },
         live_grep = {},
       },
@@ -487,7 +474,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
           local prompt_win = vim.fn.bufwinid(prompt_bufnr)
           if prompt_win ~= -1 then
             vim.schedule(function()
-              vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
+              -- vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
             end)
           end
           return true
@@ -791,7 +778,9 @@ return { -- Fuzzy Finder (files, lsp, etc)
         -- Slightly advanced example of overriding default behavior and theme
         ['<leader>/'] = {
           function() -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-            builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown { winblend = 10, previewer = false, initial_mode = 'insert' })
+            builtin.current_buffer_fuzzy_find(
+              require('telescope.themes').get_dropdown { winblend = vim.g.self.is_transparent and 0 or 10, previewer = false, initial_mode = 'insert' }
+            )
           end,
           '[/] Fuzzily search in current buffer',
         },
@@ -862,7 +851,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
 
         vim.defer_fn(function()
           local prompt_win = vim.fn.bufwinid(prompt_bufnr)
-          vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
+          -- vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
           -- Inspect(prompt_win)
         end, 100)
         -- Inspect { args, prompt_win }

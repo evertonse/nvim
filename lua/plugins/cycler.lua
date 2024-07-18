@@ -7,12 +7,8 @@ return {
       cycles = vim.g.self.cycles,
     }
 
-    vim.keymap.set(
-      'n',
-      '<C-x>', -- <space><space>
-      function()
-        require('cycler').cycle()
-      end
-    )
+    vim.keymap.set('n', '<C-x>', function()
+      require('cycler').cycle()
+    end)
   end,
 }
