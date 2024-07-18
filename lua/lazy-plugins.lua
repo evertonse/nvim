@@ -89,6 +89,9 @@ local lazy_config = {
 require('lazy').setup({
 
   -- NOTE :h event for valid  vim events, there are some only in neovim like LspDetach
+  { 'uga-rosa/ccc.nvim', cmd = { 'CccHighlighterToggle', 'CccPick', 'CccConvert' }, event = 'VeryLazy' },
+  { 'bfredl/nvim-incnormal', enabled = true, event = 'BufEnter' }, -- NOTE:live-command if better
+  { 'moll/vim-bbye', lazy = false, enabled = true },
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   { 'tpope/vim-sleuth', lazy = false, enabled = false }, -- Detect tabstop and shiftwidth automatically
   { 'yorickpeterse/nvim-pqf', enabled = false }, -- Nicer Quick List
@@ -138,6 +141,27 @@ require('lazy').setup({
     lazy = false,
     enabled = false,
   },
+  {
+    'chrisgrieser/nvim-various-textobjs',
+    --alternative: 'XXiaoA/ns-textobject.nvim'
+    lazy = false,
+    opts = { useDefaultKeymaps = true },
+  },
+
+  {
+    'gregorias/coerce.nvim',
+    tag = 'v2.2',
+    -- Case       Key
+    -- camelCase  c
+    -- dot.case   d
+    -- kebab-case k
+    -- n12e       n
+    -- PascalCase p
+    -- snake_case s
+    -- UPPER_CASE u
+    -- path/case  /
+    config = true,
+  },
 
   require 'plugins.Comment',
   -- require 'plugins.tabby',
@@ -163,6 +187,7 @@ require('lazy').setup({
   require 'plugins.which-key',
 
   require 'plugins.telescope',
+  -- require 'plugins.telescope-debug',
 
   require 'plugins.lspconfig',
 
@@ -182,30 +207,9 @@ require('lazy').setup({
 
   require 'plugins.dap',
 
-  require 'plugins.move',
-
-  {
-    'chrisgrieser/nvim-various-textobjs',
-    --alternative: 'XXiaoA/ns-textobject.nvim'
-    lazy = false,
-    opts = { useDefaultKeymaps = true },
-  },
-
-  {
-    'gregorias/coerce.nvim',
-    tag = 'v2.2',
-    -- Case       Key
-    -- camelCase  c
-    -- dot.case   d
-    -- kebab-case k
-    -- n12e       n
-    -- PascalCase p
-    -- snake_case s
-    -- UPPER_CASE u
-    -- path/case  /
-    config = true,
-  },
   --------------------------------------
+
+  require 'plugins.move',
 
   require 'plugins.bufjump',
 
@@ -240,7 +244,6 @@ require('lazy').setup({
   require 'plugins.indent-blankline',
   require 'plugins.lint',
   require 'plugins.autopairs',
-  { 'uga-rosa/ccc.nvim', cmd = { 'CccHighlighterToggle', 'CccPick', 'CccConvert' }, event = 'VeryLazy' },
 
   require 'plugins.oil',
   require('plugins.' .. vim.g.self.file_tree), -- NOTE: Slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
@@ -250,9 +253,8 @@ require('lazy').setup({
   require 'plugins.colorizer',
   require 'plugins.better-scape',
   require 'plugins.noice',
-  { 'bfredl/nvim-incnormal', enabled = true, event = 'BufEnter' }, -- NOTE:live-command if better
   require 'plugins.live-command',
-  { 'moll/vim-bbye', lazy = false, enabled = true },
+
   require 'plugins.guess-indent',
 
   require 'plugins.scope',

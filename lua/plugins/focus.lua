@@ -6,7 +6,7 @@ return {
   config = function()
     require('focus').setup {
       enable = true, -- Enable module
-      commands = false, -- Create Focus commands
+      commands = true, -- Create Focus commands
       autoresize = {
         enable = true, -- Enable or disable auto-resizing of splits
         width = 0, -- Force width for the focused window
@@ -45,11 +45,11 @@ return {
       group = augroup,
 
       callback = function(_)
-        if vim.tbl_contains(ignore_buftypes, vim.bo.buftype) then
-          vim.w.focus_disable = true
-          print('Disable focus autoresize for BufType' .. vim.bo.buftype)
+        local is_floating = vim.api.nvim_win_get_config(0).relative ~= ''
+        if vim.tbl_contains(ignore_buftypes, vim.bo.buftype) or is_floating then
+          vim.b.focus_disable = true
         else
-          vim.w.focus_disable = false
+          vim.b.focus_disable = false
         end
       end,
       desc = 'Disable focus autoresize for BufType',
@@ -58,14 +58,48 @@ return {
     vim.api.nvim_create_autocmd('FileType', {
       group = augroup,
       callback = function(_)
-        if vim.tbl_contains(ignore_filetypes, vim.bo.filetype) then
+        local is_floating = vim.api.nvim_win_get_config(0).relative ~= ''
+        if vim.tbl_contains(ignore_filetypes, vim.bo.filetype) or is_floating then
           vim.b.focus_disable = true
-          print('Disable focus autoresize for FileType' .. vim.bo.filetype)
         else
           vim.b.focus_disable = false
         end
       end,
       desc = 'Disable focus autoresize for FileType',
+    })
+
+    -- NOTE: All this code is to not fuckup column placement of code when going into a floating window
+    local previous_win = {
+      id = -1,
+      config = nil,
+    }
+    vim.api.nvim_create_autocmd({ 'WinLeave' }, {
+      group = augroup,
+      callback = function(args)
+        local is_floating = vim.api.nvim_win_get_config(0).relative ~= ''
+        if not is_floating then
+          previous_win.config = vim.api.nvim_win_get_config(0)
+          previous_win.id = vim.api.nvim_get_current_win()
+        end
+      end,
+    })
+    -- vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+    vim.api.nvim_create_autocmd({ 'WinEnter' }, {
+      group = augroup,
+      callback = function(args)
+        local DEBUG = false
+        local is_floating = vim.api.nvim_win_get_config(0).relative ~= ''
+        local is_valid_win = vim.api.nvim_win_is_valid(previous_win.id)
+        if is_floating and is_valid_win then
+          if DEBUG then
+            vim.fn.confirm(vim.inspect(previous_win))
+          end
+          -- vim.api.nvim_win_set_config(previous_win.id, previous_win.config)
+          vim.api.nvim_win_set_option(previous_win.id, 'signcolumn', vim.opt.signcolumn:get())
+          vim.api.nvim_win_set_option(previous_win.id, 'relativenumber', vim.opt.relativenumber:get())
+          vim.api.nvim_win_set_option(previous_win.id, 'number', vim.opt.number:get())
+        end
+      end,
     })
   end,
 }

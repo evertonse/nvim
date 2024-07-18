@@ -41,16 +41,18 @@ vim.cmd [[
     setlocal shiftwidth=4
   endfunction
   autocmd FileType odin call Odin_settings()
-  
+
   "autocmd FileType python :setlocal tabstop=4 shiftwidth=4 expandtab
   "autocmd FileType lua :setlocal tabstop=2 shiftwidth=2 expandtab
   autocmd FileType cpp :setlocal tabstop=4 shiftwidth=4 expandtab
+
+  autocmd FileType Telescope* setlocal nocursorline
 
 
 
   augroup _auto_resize
     autocmd!
-    autocmd VimResized * tabdo wincmd = 
+    autocmd VimResized * tabdo wincmd=
   augroup end
 
 

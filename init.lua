@@ -1,17 +1,17 @@
 -- TODO:
---    [x disabled for now, kinda buggy even with tmux optios ] zen mode needs better interection zindex with neotree
---    [x oil.nvim i think ] find faster neotree for windows
---    [- Could not doit ] configure noice cmdline to enable normal mode on it
---    [x Working fine ] setup inc-rename to work with noice
+--    [x](edit: disabled for now, kinda buggy even with tmux optios ) zen mode needs better interection zindex with neotree
+--    [x](edit: oil.nvim i think) find faster neotree for windows
+--    [-](edit: Could not do it) configure noice cmdline to enable normal mode on it
+--    [x](edit: Working fine) setup inc-rename to work with noice
 --    [x] checkout tabby for neovim and other
 --    [x] config oil.nvim to test it's performance
 --    [x] configure mini.surround to surround word with quotes similar to le nvim.surround
 --    [x] check keymaps
---    [x win32-yank-bin as the culprit]check why shit be slow these days when moving arround
---    [x done ] check 'c' mapping for mini plugin
---    [x Some other time ] see about this ---@field public performance?  done cmp.PerformanceConfig
---    [x seem the same I'll keep using mini.surround then I'll see about chaging]see if surround is better than mini.surround
---    [x I'm using auto-session [ ] see the source code later ]:mksession
+--    [x](edit: win32-yank-bin as the culprit) check why shit be slow these days when moving arround
+--    [x](edit: done) check 'c' mapping for mini plugin
+--    [x](edit: Some other time) see about this ---@field public performance?  done cmp.PerformanceConfig
+--    [x](edit: seem the same I'll keep using mini.surround then I'll see about chagin)see if surround is better than mini.surround
+--    [x](edit: I'm using auto-session) see the source code later ]:mksession
 --    [x] ui select on telescope on normal mode by typing a number
 --    [x] Mini lsp, recording
 --    [x] Create a telescope options to select from yank history
@@ -23,8 +23,8 @@
 --    [x] What is git cherrypick, squash and the other one?
 --    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
 --    [ ] MORE PLUGINS https://github.com/rockerBOO/awesome-neovim#cursorline
---    [ ] NvimTree possibly undo (working with trash)
---    [ ] Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
+--    [ ] NvimTree: possibly undo (working with trash)
+--    [ ] TELESCOPE: Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
 --    [ ] REFACTOR: Make all keymaps in keymaps, and require 'keymaps'.telescope for example in plugin site
 --    [ ] See about make named sessions and named tabs
 --    [ ] NvimTree bulk renamed when you actually need it
@@ -33,17 +33,20 @@
 --    [ ] NvimTree create separate PR for exposing NvimTreeFloatBorder
 --    [ ] Scope: Clean up and fix PR by pushing
 --    [ ] Colorscheme: Clean up and make it receive opts for transparancy
---    [ ] Alacritty: change this BS of copying with crtl+shift+v, and remove crlt+y mapping
---    [ ] Alacritty: Make it open on wsl
+--    [x] Alacritty: change this BS of copying with crtl+shift+v, and remove crlt+y mapping
+--    [x] Alacritty: Make it open on wsl
 --    [ ] Either this rcarriga/nvim-notify or noice, if too many lsp message, altough it seems that fidget be aight for some notifications
---    [ ] Investigate .gitignore slow to type
---    [ ] nvinca something like that
+--    [ ] FIX: goto diagnostic bug
+--
+--    [ ] INVESTIGATE .gitignore slow to type on big code paths
+--    [ ] INVESTIGATE Snap on big code bases is it actually faster?
+--    [x](edit: found le incline good) nvinca something like that
 --
 --
 --    NOTE: Maybe you'd wnat this https://github.com/kdheepak/lazygit.nvim;
 --          RN i don't see a reason to not just use lazygit on the terminal
 --
---    IMPORTANT: shit is crazy abouth treesitter combined with something else that I forgot
+--    IMPORTANT: shit is crazy abouth treesitter combined with something else that I forgot (edit: vim-matchup is the thing)
 --
 --    IMPORTANT: WSL `CMP` is rather slow if searches through the whole windows path,
 --               My fix was to disable a bunch of file watcher and set dynamicRegistration = false to vairous
@@ -52,17 +55,21 @@
 --                   enabled = true
 --                   appendWindowsPath = false
 --
---    IMPORTANT: Conform is responsable for autoformat, but WHYY ? Why do I need that instead of just a autocommand?
+--    IMPORTANT: Conform is responsable for autoformat, but WHYY, Why do I need that instead of just a autocommand?
 --
 --    IMPORTANT (17-07-2024): Highlight float windows can only wither have winblend or background "none", but not both as it bugs out
 --               see: https://github.com/rcarriga/nvim-notify/issues/47#issuecomment-1003326053
 --               see: https://github.com/neovim/neovim/issues/18576
 --    IMPORTANT COPILOT like https://github.com/b0o/supermaven-nvim
---    [ ] Alacritty grasphics: support for sixel image on terminal: https://github.com/alacritty/alacritty/pull/4763 with this we might just do alot no  wiht neovim neoorg and stuff?
+--    [ ] Alacritty graphics: support for sixel image on terminal: https://github.com/alacritty/alacritty/pull/4763 with this we might just do alot no  wiht neovim neoorg and stuff?
 --    [ ] VScode like preview: https://github.com/DNLHC/glance.nvim
 --    [ ] Read semantic HL (priority): https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316
---    [ ] LaTeX replacemente for sure, made in rust from ground up: https://github.com/typst/typst
---    NOTE: use (in visual mode) :!<shell_command><cr> output to buffer, or :redir @a :cmd and then :redir END to get the output of command into the `a` register
+--    [ ] LaTeX replacement for sure, made in rust from ground up: https://github.com/typst/typst
+--    [x] DONE: Make the telescope prompt background not black
+--    [ ] FIX: focus when chaging into tree not change line number of previously focused window and stuff
+--
+--     NOTE: use (in visual mode) :!<shell_command><cr> output to buffer,
+--    or :redir @a :cmd and then :redir END to get the output of command into the `a` register
 --    awesome list: https://github.com/rockerBOO/awesome-neovim
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]

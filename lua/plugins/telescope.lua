@@ -175,7 +175,7 @@ local function custom_find_files()
           local prompt_win = vim.fn.bufwinid(prompt_bufnr)
           if prompt_win ~= -1 then
             vim.schedule(function()
-              -- vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
+              vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
             end)
           end
 
@@ -474,7 +474,8 @@ return { -- Fuzzy Finder (files, lsp, etc)
           local prompt_win = vim.fn.bufwinid(prompt_bufnr)
           if prompt_win ~= -1 then
             vim.schedule(function()
-              -- vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
+              vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
+              vim.api.nvim_get_hl_ns { winid = prompt_win }
             end)
           end
           return true
@@ -767,7 +768,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
                 return true -- Use Default mappings
               end,
               on_complete = {
-                function(self)
+                function(_self)
                   assert(false)
                 end,
               },
@@ -851,7 +852,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
 
         vim.defer_fn(function()
           local prompt_win = vim.fn.bufwinid(prompt_bufnr)
-          -- vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
+          vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
           -- Inspect(prompt_win)
         end, 100)
         -- Inspect { args, prompt_win }
