@@ -260,6 +260,7 @@ require('lazy').setup({
 
   require 'plugins.oil',
   require('plugins.' .. vim.g.self.file_tree), -- NOTE: Slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
+  require 'plugins.yazi',
   -- require 'plugins.nnn', -- NOTE: works fine but needs better NNN configurations with tui-preview plugin ,
   -- require 'plugins.lf', -- NOTE: Appear to bugout with my toggleterm config
   require 'plugins.colorizer',
