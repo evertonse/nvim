@@ -27,6 +27,8 @@
 --    [ ] TELESCOPE: Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
 --    [ ] REFACTOR: Make all keymaps in keymaps, and require 'keymaps'.telescope for example in plugin site
 --    [ ] See about make named sessions and named tabs
+--    [ ] See about reordering/managing buffers
+--    [ ] MARKS: better marks per project visualization and managiong (harpoon2, grapple, portal, marks.nvim, etc...)
 --    [ ] NvimTree bulk renamed when you actually need it
 --    [x] <3 NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
 --    [ ] NvimTree implement amount of dotfiles per directory similar to neo-tree
@@ -63,10 +65,10 @@
 --    IMPORTANT COPILOT like https://github.com/b0o/supermaven-nvim
 --    [ ] Alacritty graphics: support for sixel image on terminal: https://github.com/alacritty/alacritty/pull/4763 with this we might just do alot no  wiht neovim neoorg and stuff?
 --    [ ] VScode like preview: https://github.com/DNLHC/glance.nvim
---    [ ] Read semantic HL (priority): https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316
+--    [ ] Read semantic HL (see about priority of hl): https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316
 --    [ ] LaTeX replacement for sure, made in rust from ground up: https://github.com/typst/typst
 --    [x] DONE: Make the telescope prompt background not black
---    [ ] FIX: focus when chaging into tree not change line number of previously focused window and stuff
+--    [x] DONE: focus when chaging into tree not change line number of previously focused window and stuff
 --
 --     NOTE: use (in visual mode) :!<shell_command><cr> output to buffer,
 --    or :redir @a :cmd and then :redir END to get the output of command into the `a` register
