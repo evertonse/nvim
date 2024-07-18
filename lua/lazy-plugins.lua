@@ -273,6 +273,7 @@ require('lazy').setup({
   require 'plugins.cycler',
   require 'plugins.snap',
   require 'plugins.bufmanager',
+  require 'plugins.cybu',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et
