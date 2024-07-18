@@ -63,6 +63,7 @@
 --    [ ] Read semantic HL (priority): https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316
 --    [ ] LaTeX replacemente for sure, made in rust from ground up: https://github.com/typst/typst
 --    NOTE: use (in visual mode) :!<shell_command><cr> output to buffer, or :redir @a :cmd and then :redir END to get the output of command into the `a` register
+--    awesome list: https://github.com/rockerBOO/awesome-neovim
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'

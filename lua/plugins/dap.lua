@@ -13,7 +13,10 @@ return {
   dependencies = {
     -- Creates a beautiful debugger UI
     'rcarriga/nvim-dap-ui',
+    'sakhnik/nvim-gdb', -- gbd wrapper
 
+    'Weissle/persistent-breakpoints.nvim',
+    'ofirgall/goto-breakpoints.nvim',
     -- Required dependency for nvim-dap-ui
     'nvim-neotest/nvim-nio',
 

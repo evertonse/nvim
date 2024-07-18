@@ -92,7 +92,8 @@ require('lazy').setup({
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
   { 'tpope/vim-sleuth', lazy = false, enabled = false }, -- Detect tabstop and shiftwidth automatically
   { 'yorickpeterse/nvim-pqf', enabled = false }, -- Nicer Quick List
-
+  { 'rktjmp/playtime.nvim', enabled = true }, -- Nicer Quick List
+  require 'plugins.focus',
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -101,7 +102,6 @@ require('lazy').setup({
   --  This is equivalent to:
   --    require('Comment').setup({})
   -- "gc" to comment visual regions/lines
-
   {
     'filipdutescu/renamer.nvim',
     branch = 'master',
@@ -180,8 +180,47 @@ require('lazy').setup({
 
   require 'plugins.treesitter',
 
-  require 'plugins.debug',
+  require 'plugins.dap',
+  {
+    'hinell/move.nvim',
+    lazy = false,
+    config = function()
+      local opts = { noremap = true, silent = true }
+      -- Normal-mode commands
+      vim.keymap.set('n', '<A-k>', ':MoveLine 1<CR>', opts)
+      vim.keymap.set('n', '<A-j>', ':MoveLine -1<CR>', opts)
+      vim.keymap.set('n', '<A-h>', ':MoveWord -1<CR>', opts)
+      vim.keymap.set('n', '<A-l>', ':MoveWord 1<CR>', opts)
 
+      -- Visual-mode commands
+      vim.keymap.set('x', '<A-k>', ':MoveBlock 1<CR>', opts)
+      vim.keymap.set('x', '<A-j>', ':MoveBlock -1<CR>', opts)
+      vim.keymap.set('v', '<A-h>', ':MoveHBlock -1<CR>', opts)
+      vim.keymap.set('v', '<A-l>', ':MoveHBlock 1<CR>', opts)
+    end,
+  },
+  {
+    'chrisgrieser/nvim-various-textobjs',
+    --alternative: XXiaoA/ns-textobject.nvim
+    lazy = false,
+    opts = { useDefaultKeymaps = true },
+  },
+
+  {
+    'gregorias/coerce.nvim',
+    tag = 'v2.2',
+    -- Case       Key
+    -- camelCase  c
+    -- dot.case   d
+    -- kebab-case k
+    -- n12e       n
+    -- PascalCase p
+    -- snake_case s
+    -- UPPER_CASE u
+    -- path/case  /
+
+    config = true,
+  },
   --------------------------------------
 
   require 'plugins.bufjump',
@@ -243,9 +282,21 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
-  require 'plugins.spider',
+  require 'plugins.spider' or require 'plugins.neowords',
+  require 'plugins.improved-ft',
   require 'plugins.incline',
   require 'plugins.cycler',
+  require 'plugins.snap',
+  {
+    'j-morano/buffer_manager.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    config = function()
+      require('buffer_manager').setup {}
+      vim.keymap.set('n', 'Bm', ':lua require("buffer_manager.ui").toggle_quick_menu()', { noremap = true, silent = true })
+    end,
+  },
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et

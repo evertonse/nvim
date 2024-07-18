@@ -286,6 +286,7 @@ return {
       end
       mini_statusline_setup()
 
+      require('mini.trailspace').setup()
       local mini_hipatterns_setup = function()
         local hipatterns = require 'mini.hipatterns'
         hipatterns.setup {
