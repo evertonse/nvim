@@ -282,6 +282,15 @@ return {
       --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+      local autocomplete_alternative_ok, autocomplete_alternative_capabilities = pcall(require, 'autocomplete.capabilities')
+      if autocomplete_alternative_ok then
+        capabilities = vim.tbl_deep_extend('force', capabilities, autocomplete_alternative_capabilities)
+        vim.keymap.set('i', '<CR>', function()
+          return vim.fn.pumvisible() ~= 0 and '<C-e><CR>' or '<CR>'
+        end, { expr = true, replace_keycodes = true })
+      end
+
       local cmp_ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
       if cmp_ok then
         capabilities = vim.tbl_deep_extend('force', capabilities, cmp_nvim_lsp.default_capabilities())

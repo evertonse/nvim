@@ -277,6 +277,11 @@ require('lazy').setup({
   require 'plugins.bufmanager',
   require 'plugins.cybu',
   require 'plugins.img-clip',
+  require 'plugins.marks', -- alternative: https://github.com/desdic/marlin.nvim
+  require 'plugins.trailblazer', -- alternative: https://github.com/desdic/marlin.nvim
+
+  require 'plugins.portal',
+  --BUGGY: require 'plugins.autocomplete',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et

@@ -39,6 +39,8 @@
 --    [x] Alacritty: change this BS of copying with crtl+shift+v, and remove crlt+y mapping
 --    [x] Alacritty: Make it open on wsl
 --    [ ] Either this rcarriga/nvim-notify or noice, if too many lsp message, altough it seems that fidget be aight for some notifications
+--    [ ] KEYMAP MARKS: check for global marks per directory right? or is it for .git , check that about the plugin marks.nvim at some point
+--    [ ] KEYMAP MARKS: keymaps for global marks could also be lowercase if we press shift couldn't it? See if you need some time from now
 --    [ ] FIX: goto diagnostic bug
 --
 --    [ ] GOTTA TOGGLE comment better

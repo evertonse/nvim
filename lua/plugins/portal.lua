@@ -3,6 +3,7 @@
 -- Another thing to consider is that harpoon is getting a sequel (2)
 return {
   'cbochs/portal.nvim',
+  lazy = false,
   -- Optional dependencies
   dependencies = {
     'cbochs/grapple.nvim',

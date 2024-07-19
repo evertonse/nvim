@@ -15,7 +15,7 @@ return {
     extras = {
       named_parameters = true,
     },
-    hl_priority = 1000,
+    hl_priority = 10000,
     excluded_argnames = {
       declarations = {
         python = { 'self', 'cls' },
@@ -31,7 +31,7 @@ return {
     performance = {
       parse_delay = 1,
       slow_parse_delay = 10,
-      max_iterations = 20,
+      max_iterations = 200,
       max_concurrent_partial_parses = 30,
       debounce = {
         partial_parse = 3,
