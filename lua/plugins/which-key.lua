@@ -16,13 +16,24 @@
 return {
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
-    tag = 'v3.3.0',
+    tag = 'v3.10.0',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     enabled = true,
+    keys = {
+      {
+        '<leader>?',
+
+        function()
+          require('which-key').show { global = false }
+        end,
+        desc = 'Buffer Local Keymaps (which-key)',
+      },
+    },
     opts = {
       ---@type false | "classic" | "modern" | "helix"
       preset = 'helix',
       delay = function(ctx)
+        local _ = false and vim.fn.confirm(tostring(ctx.plugin))
         return ctx.plugin and 0 or 50
       end,
       win = {

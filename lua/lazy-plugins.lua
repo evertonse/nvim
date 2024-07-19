@@ -272,7 +272,7 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
-  require 'plugins.spider' and false or require 'plugins.neowords',
+  true and require 'plugins.spider' or require 'plugins.neowords',
   require 'plugins.improved-ft',
   require 'plugins.incline',
   require 'plugins.cycler',

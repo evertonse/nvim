@@ -2,6 +2,7 @@
 return {
   'mikavilpas/yazi.nvim',
   event = 'VeryLazy',
+  -- docs: https://yazi-rs.github.io/docs/quick-start/
 
   keys = {
     -- 👇 in this section, choose your own keymappings!

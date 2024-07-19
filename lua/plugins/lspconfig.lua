@@ -22,9 +22,9 @@ return {
       {
         'sontungexpt/better-diagnostic-virtual-text',
         lazy = true,
+        enabled = true or TOO_MANY_RANDOM_KEYBOARD_INTERRUPT_ERRORS,
         event = 'LspAttach',
         config = function(_, opts)
-          vim.diagnostic.config { virtual_text = false }
           require('better-diagnostic-virtual-text').setup {}
         end,
       },
@@ -724,9 +724,10 @@ return {
       }
       -- NOTE: Idk if this is global ??
       vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-        virtual_text = true,
+        virtual_text = false,
       })
       vim.diagnostic.config {
+        virtual_text = false,
         update_in_insert = false,
         float = {
           focusable = false,
