@@ -14,7 +14,7 @@ return {
     },
     {
       -- Open in the current working directory
-      '<leader>cw',
+      '<leader>_',
       function()
         require('yazi').yazi(nil, vim.fn.getcwd())
       end,
