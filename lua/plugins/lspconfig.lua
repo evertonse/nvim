@@ -19,6 +19,15 @@ return {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       { 'antosha417/nvim-lsp-file-operations', config = true },
 
+      {
+        'sontungexpt/better-diagnostic-virtual-text',
+        lazy = true,
+        event = 'LspAttach',
+        config = function(_, opts)
+          vim.diagnostic.config { virtual_text = false }
+          require('better-diagnostic-virtual-text').setup {}
+        end,
+      },
       { 'SmiteshP/nvim-navic', opts = { lsp = { auto_attach = true } } },
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
@@ -286,6 +295,14 @@ return {
       local autocomplete_alternative_ok, autocomplete_alternative_capabilities = pcall(require, 'autocomplete.capabilities')
       if autocomplete_alternative_ok then
         capabilities = vim.tbl_deep_extend('force', capabilities, autocomplete_alternative_capabilities)
+        vim.keymap.set('i', '<CR>', function()
+          return vim.fn.pumvisible() ~= 0 and '<C-e><CR>' or '<CR>'
+        end, { expr = true, replace_keycodes = true })
+      end
+
+      local epo_ok, epo = pcall(require, 'epo')
+      if epo_ok then
+        capabilities = vim.tbl_deep_extend('force', capabilities, epo.register_cap())
         vim.keymap.set('i', '<CR>', function()
           return vim.fn.pumvisible() ~= 0 and '<C-e><CR>' or '<CR>'
         end, { expr = true, replace_keycodes = true })

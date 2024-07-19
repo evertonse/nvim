@@ -189,11 +189,14 @@ require('lazy').setup({
   require 'plugins.telescope',
   -- require 'plugins.telescope-debug',
 
+  -- BUGGY: require 'plugins.autocomplete',
+  -- BUGGY: require 'plugins.epo',
+
+  require 'plugins.cmp',
+
   require 'plugins.lspconfig',
 
   require 'plugins.conform',
-
-  require 'plugins.cmp',
 
   require 'plugins.colorscheme',
 
@@ -281,7 +284,6 @@ require('lazy').setup({
   require 'plugins.trailblazer', -- alternative: https://github.com/desdic/marlin.nvim
 
   require 'plugins.portal',
-  --BUGGY: require 'plugins.autocomplete',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et
