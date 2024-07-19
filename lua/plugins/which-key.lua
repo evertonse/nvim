@@ -23,24 +23,24 @@ return {
       ---@type false | "classic" | "modern" | "helix"
       preset = 'helix',
       delay = function(ctx)
-        return ctx.plugin and 0 or 200
+        return ctx.plugin and 0 or 50
       end,
       win = {
         -- don't allow the popup to overlap with the cursor
-        no_overlap = true,
+        no_overlap = false,
         -- width = 1,
         -- height = { min = 4, max = 25 },
         -- col = 0,
         -- row = math.huge,
         border = 'none',
-        padding = { 1, 0 }, -- extra window padding [top/bottom, right/left]
+        padding = { 0, 0 }, -- extra window padding [top/bottom, right/left]
         title = false,
         title_pos = 'center',
         zindex = 1000,
         -- Additional vim.wo and vim.bo options
         bo = {},
         wo = {
-          winblend = 25, -- value between 0-100 0 for fully opaque and 100 for fully transparent
+          winblend = 19, -- value between 0-100 0 for fully opaque and 100 for fully transparent
         },
       },
     },
