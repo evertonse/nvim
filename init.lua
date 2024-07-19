@@ -33,12 +33,15 @@
 --    [x] <3 NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
 --    [ ] NvimTree implement amount of dotfiles per directory similar to neo-tree
 --    [ ] NvimTree create separate PR for exposing NvimTreeFloatBorder
+--    [ ] NvimTree Fix focus file to change cwd if necessary
 --    [ ] Scope: Clean up and fix PR by pushing
 --    [ ] Colorscheme: Clean up and make it receive opts for transparancy
 --    [x] Alacritty: change this BS of copying with crtl+shift+v, and remove crlt+y mapping
 --    [x] Alacritty: Make it open on wsl
 --    [ ] Either this rcarriga/nvim-notify or noice, if too many lsp message, altough it seems that fidget be aight for some notifications
 --    [ ] FIX: goto diagnostic bug
+--
+--    [ ] GOTTA TOGGLE comment better
 --
 --    [ ] INVESTIGATE .gitignore slow to type on big code paths
 --    [ ] INVESTIGATE Snap on big code bases is it actually faster?

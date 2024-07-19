@@ -1,1 +1,14 @@
-relative
+    local ignore_filetypes = { 'neo-tree', 'NvimTree' }
+    vim.api.nvim_create_autocmd('FileType', {
+      group = augroup,
+      callback = function(_)
+        local is_floating = vim.api.nvim_win_get_config(0).relative ~= ''
+        if vim.tbl_contains(ignore_filetypes, vim.bo.filetype) or is_floating then
+          vim.b.focus_disable = true
+          print('recognized focus filetype = ' .. vim.bo.filetype)
+        else
+          vim.b.focus_disable = false
+        end
+      end,
+      desc = 'Disable focus autoresize for FileType',
+    })

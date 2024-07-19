@@ -276,6 +276,7 @@ require('lazy').setup({
   require 'plugins.snap',
   require 'plugins.bufmanager',
   require 'plugins.cybu',
+  require 'plugins.img-clip',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et
