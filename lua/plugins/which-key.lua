@@ -60,6 +60,14 @@ return {
       -- vim.api.nvim_set_hl(0, 'WhichKeyNormal', { link = 'NormalFloatWinblend' })
       vim.api.nvim_set_hl(0, 'WhichKeyNormal', { link = 'FloatBorderWinblend' })
       vim.api.nvim_set_hl(0, 'WhichKeyBorder', { link = 'FloatBorderWinblend' })
+      require('which-key').add {
+        { '<leader>c', group = '[C]lose' },
+        -- { '<leader>d', group = '[D]ocument' },
+        -- { '<leader>r', group = '[R]ename' },
+        -- { '<leader>s', group = '[S]earch' },
+        -- { '<leader>w', group = '[W]orkspace' },
+        { '<leader>t', group = '[T]ab' },
+      }
     end,
   },
 }

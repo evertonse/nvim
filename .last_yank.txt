@@ -1,1 +1,7 @@
-        vim.api. 
+      -- capabilities.textDocument.sync = {
+      --   openClose = false,
+      --   change = 2, -- Incremental sync
+      --   willSave = false,
+      --   willSaveWaitUntil = false,
+      --   save = false,
+      -- }

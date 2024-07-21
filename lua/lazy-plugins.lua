@@ -284,6 +284,7 @@ require('lazy').setup({
   require 'plugins.trailblazer', -- alternative: https://github.com/desdic/marlin.nvim
 
   require 'plugins.portal',
+  require 'plugins.cmdbuf',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et

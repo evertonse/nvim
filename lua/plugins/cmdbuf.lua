@@ -1,5 +1,6 @@
 return {
   'notomo/cmdbuf.nvim',
+  lazy = false,
   config = function()
     vim.keymap.set('n', 'q:', function()
       require('cmdbuf').split_open(vim.o.cmdwinheight)

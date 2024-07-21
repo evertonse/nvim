@@ -22,7 +22,7 @@ return {
       {
         'sontungexpt/better-diagnostic-virtual-text',
         lazy = true,
-        enabled = true or TOO_MANY_RANDOM_KEYBOARD_INTERRUPT_ERRORS,
+        enabled = false and TOO_MANY_RANDOM_KEYBOARD_INTERRUPT_ERRORS,
         event = 'LspAttach',
         config = function(_, opts)
           require('better-diagnostic-virtual-text').setup {}
@@ -396,7 +396,7 @@ return {
           formats = { 'relative' },
           requests = {
             -- TODO(jdrouhard): Add support for this
-            range = false,
+            range = true,
             full = { delta = true },
           },
 
@@ -505,14 +505,6 @@ return {
         documentLink = { dynamicRegistration = false },
         colorProvider = { dynamicRegistration = false },
       })
-
-      -- capabilities.textDocument.sync = {
-      --   openClose = false,
-      --   change = 2, -- Incremental sync
-      --   willSave = false,
-      --   willSaveWaitUntil = false,
-      --   save = false,
-      -- }
 
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -642,9 +634,9 @@ return {
               diagnostics = { disable = { 'missing-fields' } },
               workspace = {
                 -- Make the server aware of Neovim runtime files
-                library = vim.api.nvim_get_runtime_file('', true),
+                -- library = vim.api.nvim_get_runtime_file('', true),
                 -- Someone wrote this helps if Lua Lsp is asking whether to create luassert.
-                checkThirdParty = false,
+                checkThirdParty = true,
               },
               -- Do not send telemetry data containing a randomized but unique identifier.
               telemetry = {

@@ -97,7 +97,7 @@ return { -- Highlight, edit, and navigate code
       disable = { 'ruby' }, -- optional, list of language that will be disabled
       -- [options]
     },
-    ensure_installed = { 'bash', 'c', 'python', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+    ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
     -- Autoinstall languages that are not installed
     auto_install = true,
     indent = { enable = true, disable = { 'ruby' } },

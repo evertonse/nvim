@@ -44,6 +44,8 @@
 --    [ ] FIX: goto diagnostic bug
 --
 --    [ ] GOTTA TOGGLE comment better
+--    [ ] I'm opening another fucked window in focus.nvim, straight what now?
+--    [ ] 'visual' <leader>F need to scape '(' to '\('
 --
 --    [ ] INVESTIGATE .gitignore slow to type on big code paths
 --    [ ] INVESTIGATE Snap on big code bases is it actually faster?
@@ -99,3 +101,41 @@ require 'lazy-bootstrap'
 require 'lazy-plugins'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
+-- vim.api.nvim_set_keymap('n', '<leader>vt', ':lua SetVirtualTextBelowCurrentLine()<CR>', { noremap = true, silent = true })
+
+function SetVirtualTextBelowCurrentLine()
+  local buf = vim.api.nvim_get_current_buf()
+
+  local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+  local target_line = current_line + 1
+  local namespace = vim.api.nvim_create_namespace 'example_namespace'
+
+  vim.api.nvim_buf_set_extmark(buf, namespace, target_line, 0, {
+    virt_text = { { 'This is virtual text\n', 'Comment' } },
+    virt_text_pos = 'eol',
+  })
+end
+
+function InsertVirtualTextBelowCurrentLine()
+  -- Get the current buffer
+
+  local buf = vim.api.nvim_get_current_buf()
+
+  -- Get the current line number (0-indexed)
+  local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+
+  -- Define the line below the current line
+  local target_line = current_line + 1
+
+  -- Insert an empty line below the current line
+  vim.api.nvim_buf_set_lines(buf, target_line, target_line, false, { '' })
+
+  -- Define the namespace for the extmark
+  local namespace = vim.api.nvim_create_namespace 'example_namespace'
+
+  -- Set an extmark with virtual text on the new empty line
+  vim.api.nvim_buf_set_extmark(buf, namespace, target_line, 0, {
+    virt_text = { { 'This is virtual text', 'Comment' } },
+    virt_text_pos = 'overlay',
+  })
+end
