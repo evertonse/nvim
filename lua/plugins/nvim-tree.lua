@@ -349,7 +349,7 @@ return {
     },
 
     renderer = {
-      full_name = false,
+      full_name = true,
       -- Value can be `"none"`, `"icon"`, `"name"` or `"all"`.
       highlight_git = 'name',
       highlight_diagnostics = 'icon',
@@ -384,11 +384,7 @@ return {
         modified_placement = 'right_align',
         hidden_placement = 'right_align',
         diagnostics_placement = 'right_align',
-        bookmarks_placement = 'right_align',
-        -- git_placement = 'before',
-        -- modified_placement = 'before',
-        -- diagnostics_placement = 'before',
-        -- bookmarks_placement = 'before',
+        bookmarks_placement = 'before',
 
         padding = ' ',
         symlink_arrow = ' ➛ ',
