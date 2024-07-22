@@ -42,6 +42,7 @@
 --    [ ] KEYMAP MARKS: check for global marks per directory right? or is it for .git , check that about the plugin marks.nvim at some point
 --    [ ] KEYMAP MARKS: keymaps for global marks could also be lowercase if we press shift couldn't it? See if you need some time from now
 --    [ ] Nvimtree: make selection mode leave cursor at the last position before leaving
+--    [ ] incline.nvim: Experiment reverse order and set percentage of file scrolling in the filename
 --    [ ] FIX: goto diagnostic bug
 --
 --    [ ] GOTTA TOGGLE comment better
