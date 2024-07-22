@@ -387,8 +387,10 @@ vim.g.self = {
   cycles = {
     { '==', '!=' },
     { 'true', 'false' },
-    { 'if', 'else', 'cock' },
+    { 'if', 'else', 'elseif' },
     { 'and', 'or' },
+    { 'off', 'on' },
+    { 'yes', 'no' },
     { '1', '2', '3' },
   },
   -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap

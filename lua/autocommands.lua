@@ -221,6 +221,9 @@ local telescope_yank_history = function()
         -- results = reverse_table(yank_history),
         results = yank_history,
         entry_maker = function(entry)
+          if not entry then
+            return {}
+          end
           local width = vim.api.nvim_win_get_width(0) - 4 -- Adjust as needed
           local newline_index = math.max(string.find(entry, '\n', 1, true) - 1, 0)
           -- Clamp to the nearest newline if found, or clamp to the specified width
