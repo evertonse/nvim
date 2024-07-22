@@ -243,8 +243,13 @@ return {
           -- Make sure to replace '<leader>r' with the keybinding of your choice.
           map('<leader>lf', vim.lsp.buf.format, 'Ranged [L]sp [F]formatting', 'v')
 
-          map('[d', vim.diagnostic.goto_prev, 'Go to previous [D]iagnostic message')
-          map(']d', vim.diagnostic.goto_next, 'Go to next [D]iagnostic message')
+          map('[d', function()
+            vim.diagnostic.jump { count = -1, float = true }
+          end, 'Go to previous [D]iagnostic message')
+
+          map(']d', function()
+            vim.diagnostic.jump { count = 1, float = true }
+          end, 'Go to next [D]iagnostic message')
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed
@@ -702,6 +707,9 @@ return {
             local lspconfig = require 'lspconfig'
             lspconfig.lua_ls.setup {
               capabilities = capabilities,
+              -- on_attach = function(client, bufnr)
+              --   vim.lsp.completion.enable(true, client, 0, { autotrigger = true })
+              -- end,
               settings = {
                 Lua = {
                   runtime = { version = 'Lua 5.1' },

@@ -28,6 +28,8 @@ vim.cmd [[
     autocmd!
     autocmd FileType markdown setlocal wrap
     autocmd FileType markdown setlocal spell
+    autocmd FileType markdown nnoremap j gj
+    autocmd FileType markdown nnoremap k gk
   augroup end
 
   augroup _tex
@@ -395,5 +397,16 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
   pattern = { 'odin' },
   callback = function()
     vim.b.autoformat = false
+  end,
+})
+
+vim.api.nvim_create_autocmd('CompleteDone', {
+  callback = function()
+    local reason = vim.api.nvim_get_vvar('event').reason --- @type string
+    if reason == 'accept' then
+      local completed_item = vim.api.nvim_get_vvar 'completed_item'
+      print(vim.inspect(completed_item))
+      print(vim.json.encode(completed_item))
+    end
   end,
 })

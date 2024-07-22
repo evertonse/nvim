@@ -139,3 +139,12 @@ function InsertVirtualTextBelowCurrentLine()
     virt_text_pos = 'overlay',
   })
 end
+
+-- require('nvim-tree').setup {
+--   renderer = {
+--     full_name = true,
+--     icons = {
+--       git_placement = 'right_align',
+--     },
+--   },
+-- }

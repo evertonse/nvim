@@ -112,7 +112,13 @@ local function nvimtree_on_attach(bufnr)
     mark_selected_files(bufnr)
     delete_selected_files()
   end, opts 'Delete Bookmarked')
+  map({ 'v' }, 'v', function()
+    mark_selected_files(bufnr)
+  end, opts 'Delete Bookmarked')
+
+  map('n', '<Esc>', api.marks.clear, opts 'Unmark Bookmarke')
   ---------------- START_DEFAULT_ON_ATTACH ----------------
+  -- api.marks.clear()
   map('n', 'bd', api.marks.bulk.delete, opts 'Delete Bookmarked')
   map('n', 'bt', api.marks.bulk.trash, opts 'Trash Bookmarked')
   map('n', 'bmv', api.marks.bulk.move, opts 'Move Bookmarked')
@@ -343,18 +349,18 @@ return {
     },
 
     renderer = {
+      full_name = false,
       -- Value can be `"none"`, `"icon"`, `"name"` or `"all"`.
-      highlight_git = 'all',
+      highlight_git = 'name',
       highlight_diagnostics = 'icon',
       highlight_opened_files = 'none',
-      highlight_modified = 'name',
+      highlight_modified = 'all',
       highlight_hidden = 'all',
       highlight_bookmarks = 'icon',
       highlight_clipboard = 'icon',
 
       add_trailing = true,
       group_empty = false,
-      full_name = true,
       root_folder_label = ':~:s?$?/..?',
       special_files = { '.*', 'Cargo.toml', 'Makefile', 'README.md', 'readme.md' },
 
