@@ -22,7 +22,7 @@
 --    [x] NvimTree implement open_win_config as a function
 --    [x] What is git cherrypick, squash and the other one?
 --    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
---    [ ] MORE PLUGINS https://github.com/rockerBOO/awesome-neovim#cursorline
+--    [x](edit: did checkout) MORE PLUGINS https://github.com/rockerBOO/awesome-neovim#cursorline
 --    [ ] NvimTree: possibly undo (working with trash)
 --    [ ] TELESCOPE: Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
 --    [ ] REFACTOR: Make all keymaps in keymaps, and require 'keymaps'.telescope for example in plugin site
@@ -41,6 +41,7 @@
 --    [ ] Either this rcarriga/nvim-notify or noice, if too many lsp message, altough it seems that fidget be aight for some notifications
 --    [ ] KEYMAP MARKS: check for global marks per directory right? or is it for .git , check that about the plugin marks.nvim at some point
 --    [ ] KEYMAP MARKS: keymaps for global marks could also be lowercase if we press shift couldn't it? See if you need some time from now
+--    [ ] Nvimtree: make selection mode leave cursor at the last position before leaving
 --    [ ] FIX: goto diagnostic bug
 --
 --    [ ] GOTTA TOGGLE comment better
