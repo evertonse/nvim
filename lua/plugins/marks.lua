@@ -5,7 +5,7 @@ return {
     require('marks').setup {
       -- Set default_mappings = false in the setup function if you don't want to have these mapped
       -- whether to map keybinds or not. default true
-      default_mappings = true,
+      default_mappings = false,
       -- which builtin marks to show. default {}
       builtin_marks = { '.', '<', '>', '^' },
       -- whether movements cycle back to the beginning/end of buffer. default true
