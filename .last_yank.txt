@@ -1,12 +1,1 @@
-l
---    [ ] Either this rcarriga/nvim-notify or noice, if too many lsp message, altough it seems that fidget be aight for some notifications
---    [ ] KEYMAP MARKS: check for global marks per directory right? or is it for .git , check that about the plugin marks.nvim at some point
---    [ ] KEYMAP MARKS: keymaps for global marks could also be lowercase if we press shift couldn't it? See if you need some time from now
---    [ ] Nvimtree: make selection mode leave cursor at the last position before leaving
---    [ ] FIX: goto diagnostic bug
---
---    [ ] GOTTA TOGGLE comment better
---    [ ] I'm opening another fucked window in focus.nvim, straight what now?
---    [ ] 'visual' <leader>F need to scape '(' to '\('
---
---    [ ] INVESTIGATE .gitignore slow to type on big code paths
+res_item

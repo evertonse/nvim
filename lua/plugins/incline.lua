@@ -59,6 +59,8 @@ return {
         },
       },
       render = function(props)
+        local REVERSE = true
+
         local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
         if filename == '' then
           filename = '[No Name]'
@@ -73,24 +75,32 @@ return {
         }
         if props.focused then
           for _, item in ipairs(navic.get_data(props.buf) or {}) do
-            table.insert(res, {
-              { ' > ' },
+            local res_item = {
               { item.icon },
               { item.name },
-            })
-            vim.api.nvim_set_hl(0, 'NavicIconsField', { default = true, bg = 'NONE', fg = '#ffffff' })
-            vim.api.nvim_set_hl(0, 'NavicIconsConstructor', { default = true, bg = '#000000', fg = '#ffffff' })
-            vim.api.nvim_set_hl(0, 'NavicIconsEnum', { default = true, bg = '#000000', fg = '#ffffff' })
-            vim.api.nvim_set_hl(0, 'NavicIconsInterface', { default = true, bg = '#000000', fg = '#ffffff' })
-            vim.api.nvim_set_hl(0, 'NavicIconsFunction', { default = true, bg = '#000000', fg = '#ffffff' })
-            vim.api.nvim_set_hl(0, 'NavicIconsVariable', { default = true, bg = '#000000', fg = '#ffffff' })
-            vim.api.nvim_set_hl(0, 'NavicIconsConstant', { default = true, bg = '#000000', fg = '#ffffff' })
+            }
+
+            if REVERSE then
+              table.insert(res_item, { ' < ' })
+            else
+              table.insert(res_item, 0, { ' > ' })
+            end
+
+            table.insert(res, res_item)
           end
+          -- vim.api.nvim_set_hl(0, 'NavicIconsField', { default = true, bg = 'NONE', fg = '#ffffff' })
+          -- vim.api.nvim_set_hl(0, 'NavicIconsConstructor', { default = true, bg = '#000000', fg = '#ffffff' })
+          -- vim.api.nvim_set_hl(0, 'NavicIconsEnum', { default = true, bg = '#000000', fg = '#ffffff' })
+          -- vim.api.nvim_set_hl(0, 'NavicIconsInterface', { default = true, bg = '#000000', fg = '#ffffff' })
+          -- vim.api.nvim_set_hl(0, 'NavicIconsFunction', { default = true, bg = '#000000', fg = '#ffffff' })
+          -- vim.api.nvim_set_hl(0, 'NavicIconsVariable', { default = true, bg = '#000000', fg = '#ffffff' })
+          -- vim.api.nvim_set_hl(0, 'NavicIconsConstant', { default = true, bg = '#000000', fg = '#ffffff' })
         end
         table.insert(res, '')
-        return res
+        return REVERSE and ReverseTable(res) or res
       end,
     }
+
     vim.cmd [[:set laststatus=3]]
   end,
   -- Optional: Lazy load Incline

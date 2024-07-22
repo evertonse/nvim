@@ -398,7 +398,6 @@ local current_jump_index = 0
 
 local function get_jumplist()
   local jumplist = vim.fn.getjumplist()[1]
-  -- return ReverseTable(jumplist)
   return jumplist
 end
 
