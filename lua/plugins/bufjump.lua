@@ -20,7 +20,7 @@ return {
       require('bufjump').backward_same_buf()
       print 'Jump backward in the same buffer'
     end, opts)
-    vim.keymap.set('n', '<C-0>', function()
+    vim.keymap.set('n', '<C-8>', function()
       require('bufjump').forward_same_buf()
       print 'Jump forward in the same buffer'
     end, opts)
