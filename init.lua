@@ -51,6 +51,7 @@
 --
 --    [ ] INVESTIGATE .gitignore slow to type on big code paths
 --    [ ] INVESTIGATE Snap on big code bases is it actually faster?
+--    [ ] AUTOCMD Enter terminal remove the lines and shit, autoquit when
 --    [x](edit: found le incline good) nvinca something like that
 --
 --
