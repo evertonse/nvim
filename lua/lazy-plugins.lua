@@ -160,6 +160,7 @@ require('lazy').setup({
     -- snake_case s
     -- UPPER_CASE u
     -- path/case  /
+    lazy = false,
     config = true,
   },
 

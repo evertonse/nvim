@@ -120,34 +120,17 @@ function SetVirtualTextBelowCurrentLine()
 end
 
 function InsertVirtualTextBelowCurrentLine()
-  -- Get the current buffer
-
   local buf = vim.api.nvim_get_current_buf()
 
-  -- Get the current line number (0-indexed)
   local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1
 
-  -- Define the line below the current line
-  local target_line = current_line + 1
+  local target_line = current_line
 
-  -- Insert an empty line below the current line
-  vim.api.nvim_buf_set_lines(buf, target_line, target_line, false, { '' })
-
-  -- Define the namespace for the extmark
   local namespace = vim.api.nvim_create_namespace 'example_namespace'
 
-  -- Set an extmark with virtual text on the new empty line
   vim.api.nvim_buf_set_extmark(buf, namespace, target_line, 0, {
-    virt_text = { { 'This is virtual text', 'Comment' } },
-    virt_text_pos = 'overlay',
+    virt_lines = { { { 'This is virtual line above current one', 'Comment' } } },
+    virt_lines_above = true,
+    virt_lines_leftcol = false,
   })
 end
-
--- require('nvim-tree').setup {
---   renderer = {
---     full_name = true,
---     icons = {
---       git_placement = 'right_align',
---     },
---   },
--- }
