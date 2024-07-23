@@ -85,6 +85,7 @@ return {
         if is_floating and is_valid_win then
           if DEBUG then
             vim.fn.confirm(vim.inspect(previous_win))
+            vim.cmd [[setlocal ]]
           end
           local win_id = previous_win.id
           -- vim.api.nvim_win_set_config(previous_win.id, previous_win.config)

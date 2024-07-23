@@ -475,6 +475,10 @@ return { -- Fuzzy Finder (files, lsp, etc)
           if prompt_win ~= -1 then
             vim.schedule(function()
               vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
+              vim.api.nvim_win_set_option(prompt_win, 'signcolumn', 'no')
+              vim.api.nvim_win_set_option(prompt_win, 'relativenumber', false)
+              vim.api.nvim_win_set_option(prompt_win, 'number', false)
+
               vim.api.nvim_get_hl_ns { winid = prompt_win }
             end)
           end
@@ -517,19 +521,19 @@ return { -- Fuzzy Finder (files, lsp, etc)
         layout_config = {
           horizontal = {
             prompt_position = 'top',
-            preview_width = 0.45,
+            preview_width = 0.55,
             results_width = 0.4,
             mirror = false,
           },
           vertical = {
             prompt_position = 'top',
-            preview_width = 0.55,
+            preview_width = 0.25,
             results_width = 0.4,
             mirror = true,
           },
-          width = 0.65,
+          width = 0.45,
           height = 0.65,
-          -- preview_cutoff = 70,
+          preview_cutoff = 1000,
         },
         -- file_sorter = require('telescope.sorters').get_fuzzy_file,
         file_sorter = require('telescope.sorters').get_fzy_sorter,

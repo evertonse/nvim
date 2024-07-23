@@ -889,7 +889,8 @@ M.general = {
 
     ['<C-x>'] = { vim.api.nvim_replace_termcodes('<C-\\><C-N>', true, true, true), 'Escape terminal mode' },
     -- ["<C-c>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal with Crtl + c which my be strange to do since crtl+c already means something" },
-    -- ['<C-w>'] = { vim.api.nvim_replace_termcodes('<C-\\><C-N>', true, true, true), 'Escape terminal mode' },
+    ['<C-f>'] = { vim.api.nvim_replace_termcodes('<C-W>', true, true, true), 'Avance to next word completion in term' },
+    ['<C-w>'] = { vim.api.nvim_replace_termcodes('<C-\\><C-w>', false, false, false), 'Escape terminal mode' },
     ['<A-o>'] = {
       function()
         last_terminal_mode = 'i'
