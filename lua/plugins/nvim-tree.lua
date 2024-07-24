@@ -112,7 +112,8 @@ local function nvimtree_on_attach(bufnr)
     mark_selected_files(bufnr)
     delete_selected_files()
   end, opts 'Delete Bookmarked')
-  map({ 'v' }, 'v', function()
+
+  map({ 'v' }, '<Esc>', function()
     mark_selected_files(bufnr)
   end, opts 'Delete Bookmarked')
 
@@ -384,7 +385,7 @@ return {
         modified_placement = 'right_align',
         hidden_placement = 'right_align',
         diagnostics_placement = 'right_align',
-        bookmarks_placement = 'before',
+        bookmarks_placement = 'signcolumn',
 
         padding = ' ',
         symlink_arrow = ' ➛ ',

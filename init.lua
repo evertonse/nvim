@@ -34,6 +34,8 @@
 --    [ ] NvimTree implement amount of dotfiles per directory similar to neo-tree
 --    [ ] NvimTree create separate PR for exposing NvimTreeFloatBorder
 --    [ ] NvimTree Fix focus file to change cwd if necessary
+--    [ ] NvimTree: Make current indent line diferent than the rest like mini.indent
+--    [ ] NvimTree: Make when going back a dir move cursor to last folder (or even keep opened the folder that were opened like neotree)
 --    [ ] Scope: Clean up and fix PR by pushing
 --    [ ] Colorscheme: Clean up and make it receive opts for transparancy
 --    [x] Alacritty: change this BS of copying with crtl+shift+v, and remove crlt+y mapping

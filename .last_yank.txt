@@ -1,1 +1,1 @@
-(#set! "priority" 101)
+        ['<C-l>'] = 'actions.select',
