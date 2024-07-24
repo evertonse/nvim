@@ -4,9 +4,9 @@ return {
   -- Adjust these values to your liking
   opts = {
     lang = 'en',
-    auto_save_trailblazer_state_on_exit = false,
-    auto_load_trailblazer_state_on_enter = false,
-    custom_session_storage_dir = '', -- i.e. "~/trail_blazer_sessions/"
+    auto_save_trailblazer_state_on_exit = true,
+    auto_load_trailblazer_state_on_enter = true,
+    custom_session_storage_dir = (os.getenv 'HOME' or '') .. '/.local/share/trail_blazer_sessions/', -- i.e. "~/trail_blazer_sessions/"
     trail_options = {
       -- The trail mark priority sets the global render priority of trail marks in the sign/number
       -- column as well as the highlights within the text (e.g. Treesitter sets a value of 100).
@@ -35,13 +35,13 @@ return {
       current_trail_mark_list_type = 'quickfix', -- currently only quickfix lists are supported
       trail_mark_list_rows = 10, -- number of rows to show in the trail mark list
       verbose_trail_mark_select = true, -- print current mode notification on mode change
-      mark_symbol = '•', --  will only be used if trail_mark_symbol_line_indicators_enabled = true
-      newest_mark_symbol = '⬤', -- disable this mark symbol by setting its value to ""
-      cursor_mark_symbol = '⬤', -- disable this mark symbol by setting its value to ""
-      next_mark_symbol = '⬤', -- disable this mark symbol by setting its value to ""
-      previous_mark_symbol = '⬤', -- disable this mark symbol by setting its value to ""
+      mark_symbol = '.', --  will only be used if trail_mark_symbol_line_indicators_enabled = true
+      newest_mark_symbol = '•', -- disable this mark symbol by setting its value to ""
+      cursor_mark_symbol = '•', -- disable this mark symbol by setting its value to ""
+      next_mark_symbol = '•', -- disable this mark symbol by setting its value to ""
+      previous_mark_symbol = '•', -- disable this mark symbol by setting its value to ""
       multiple_mark_symbol_counters_enabled = true,
-      number_line_color_enabled = true,
+      number_line_color_enabled = false,
       trail_mark_in_text_highlights_enabled = true,
       trail_mark_symbol_line_indicators_enabled = false, -- show indicators for all trail marks in symbol column
       symbol_line_enabled = true,
@@ -64,7 +64,7 @@ return {
       -- continuing to peek move in the current selection mode order. This effectively disables
       -- the "current trail mark cursor" to which you would otherwise move first before continuing
       -- to move through your trail mark stack.
-      move_to_nearest_before_peek = false,
+      move_to_nearest_before_peek = true,
       move_to_nearest_before_peek_motion_directive_up = 'fpath_up', -- "up", "fpath_up" -> For more information see section "TrailBlazerMoveToNearest Motion Directives"
       move_to_nearest_before_peek_motion_directive_down = 'fpath_down', -- "down", "fpath_down" -> For more information see section "TrailBlazerMoveToNearest Motion Directives"
       move_to_nearest_before_peek_dist_type = 'lin_char_dist', -- "man_dist", "lin_char_dist" -> Manhattan Distance or Linear Character Distance
@@ -78,20 +78,20 @@ return {
       -- "TrailBlazerTrailMarkStackSortModeChanged"
     },
 
-    mappings = { -- rename this to "force_mappings" to completely override default mappings and not merge with them
+    force_mappings = { -- rename this to "force_mappings" instead of "mappings" to completely override default mappings and not merge with them
       nv = { -- Mode union: normal & visual mode. Can be extended by adding i, x, ...
         motions = {
-          new_trail_mark = '<leader><A-n>',
-          track_back = '<leader><A-o>',
-          peek_move_next_down = '<leader><A-J>',
-          peek_move_previous_up = '<leader><A-K>',
-          move_to_nearest = '<leader><A-n>',
-          toggle_trail_mark_list = '<leader><A-m>',
+          new_trail_mark = '<leader>m',
+          track_back = '<leader><C-o>',
+          peek_move_next_down = '<C-n>',
+          peek_move_previous_up = '<C-p>',
+          move_to_nearest = '<leader><C-n>',
+          toggle_trail_mark_list = '<leader><C-ddm>',
         },
         actions = {
           delete_all_trail_marks = '<A-L>',
-          paste_at_last_trail_mark = '<A-p>',
-          paste_at_all_trail_marks = '<A-P>',
+          -- paste_at_last_trail_mark = '<A-p>',
+          -- paste_at_all_trail_marks = '<A-P>',
           set_trail_mark_select_mode = '<A-t>',
           switch_to_next_trail_mark_stack = '<A-.>',
           switch_to_previous_trail_mark_stack = '<A-,>',
@@ -112,7 +112,8 @@ return {
 
       nv = {
         motions = {
-          qf_motion_move_trail_mark_stack_cursor = '<CR>',
+          -- qf_motion_move_trail_mark_stack_cursor = '<CR>',
+          qf_motion_move_trail_mark_stack_cursor = '<l>',
         },
         actions = {
           qf_action_delete_trail_mark_selection = 'd',
@@ -130,7 +131,28 @@ return {
       },
     },
     -- Your custom highlight group overrides go here
-    -- hl_groups = {}
+    hl_groups = {
+      TrailBlazerTrailMark = {
+        -- You can add any valid highlight group attribute to this table
+        guifg = 'White',
+        guibg = 'none',
+        gui = 'bold',
+      },
+      TrailBlazerTrailMarkNext = {
+        guifg = 'Green',
+        guibg = 'none',
+        gui = 'bold',
+      },
+      TrailBlazerTrailMarkPrevious = {
+        guifg = 'Black',
+        guibg = 'none',
+      },
+      TrailBlazerTrailMarkCursor = {
+        guifg = 'Black',
+        guibg = 'Orange',
+        gui = 'bold',
+      },
+    },
   },
   config = function(_, opts)
     require('trailblazer').setup(opts)

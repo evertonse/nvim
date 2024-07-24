@@ -1,1 +1,1 @@
-        ['<C-l>'] = 'actions.select',
+vim.diagnostic.jump { count = -1, float = true }

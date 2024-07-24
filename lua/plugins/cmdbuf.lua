@@ -28,6 +28,7 @@ return {
           end)
           :totable()
         vim.api.nvim_buf_set_lines(args.buf, 0, -1, false, lines)
+        vim.api.nvim_input 'G'
       end,
     })
 

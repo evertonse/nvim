@@ -1331,7 +1331,7 @@ local setup_marks_to_always_globals = function()
   end
 end
 
-setup_marks_to_always_globals()
+local _ = false and setup_marks_to_always_globals()
 
 SetKeyMaps(M.disabled)
 SetKeyMaps(M.general)
