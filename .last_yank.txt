@@ -1,1 +1,1 @@
-            vim.cmd [[TrailBlazerLoadSession .trail.tbsv]]
+save_trailblazer_state_from_file

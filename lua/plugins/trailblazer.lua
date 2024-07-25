@@ -4,8 +4,8 @@ return {
   -- Adjust these values to your liking
   opts = {
     lang = 'en',
-    auto_save_trailblazer_state_on_exit = true,
-    auto_load_trailblazer_state_on_enter = true,
+    auto_save_trailblazer_state_on_exit = false,
+    auto_load_trailblazer_state_on_enter = false,
     -- custom_session_storage_dir = (os.getenv 'HOME' or '') .. '/.local/share/trail_blazer_sessions/', -- i.e. "~/trail_blazer_sessions/"
     custom_session_storage_dir = '~/local/share/trailblazer/',
     trail_options = {

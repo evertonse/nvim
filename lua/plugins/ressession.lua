@@ -83,18 +83,24 @@ return {
         vim.cmd 'cclose'
       end
     end
+
+    local trail_path = './.trail.tbsv'
     vim.api.nvim_create_autocmd('VimEnter', {
       callback = function()
         -- Only load the session if nvim was started with no args
         if vim.fn.argc(-1) == 0 then
           -- Save these to a different directory, so our manual sessions don't get polluted
           resession.load(vim.fn.getcwd(), { dir = 'session', silence_errors = true })
-          vim.schedule(function()
-            pcall(vim.cmd, [[TrailBlazerLoadSession .trail.tbsv]])
-          end)
           -- resession.load 'last'
           vim.cmd [[stopinsert]]
         end
+
+        vim.schedule(function()
+          local ok = pcall(require('trailblazer').load_trailblazer_state_from_file, trail_path)
+          if not ok then
+            error("Couldn't load trailblazer session from" .. trail_path .. '.')
+          end
+        end)
       end,
       nested = true,
     })
@@ -102,9 +108,10 @@ return {
       callback = function()
         close_quickfix()
         resession.save(vim.fn.getcwd(), { dir = 'session', notify = true })
-        vim.schedule(function()
-          pcall(vim.cmd, [[TrailBlazerSaveSession .trail.tbsv]])
-        end)
+        local ok = pcall(require('trailblazer').save_trailblazer_state_to_file, trail_path)
+        if not ok then
+          vim.fn.confirm("Couldn't save trailblazer session to" .. trail_path .. '.')
+        end
         -- resession.save 'last'
       end,
     })
