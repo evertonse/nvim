@@ -5,6 +5,9 @@
 --
 -- Use the `dependencies` key to specify the dependencies of a particular plugin
 
+local preview_width = 0.61
+local results_width = 1.0 - preview_width
+
 local them = {
   repo = 'nvim-telescope/telescope.nvim',
   commit_working_path_support = 'bfcc7d5c6f12209139f175e6123a7b7de6d9c18a',
@@ -521,19 +524,19 @@ return { -- Fuzzy Finder (files, lsp, etc)
         layout_config = {
           horizontal = {
             prompt_position = 'top',
-            preview_width = 0.45,
-            results_width = 0.2,
+            preview_width = preview_width,
+            results_width = results_width,
             mirror = false,
           },
           vertical = {
             prompt_position = 'top',
-            preview_width = 0.45,
-            results_width = 0.35,
+            preview_width = preview_width,
+            results_width = results_width,
             mirror = true,
           },
-          width = 0.55,
-          height = 0.65,
-          preview_cutoff = 85,
+          width = 0.89,
+          height = 0.75,
+          preview_cutoff = 75,
         },
         -- file_sorter = require('telescope.sorters').get_fuzzy_file,
         file_sorter = require('telescope.sorters').get_fzy_sorter,

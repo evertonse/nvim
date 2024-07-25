@@ -33,23 +33,32 @@ local function delete_scoped_buffer(buf)
   }
 end
 
-local function close_buffers_except_current_only_in_this_tab(right)
-  -- local current_buf = vim.api.nvim_get_current_buf()
-  -- local scope = require 'scope.utils'
-  -- local buffers = scope.get_valid_buffers()
-
+local function close_buffers_by_operation(operation)
   local current_buf = vim.api.nvim_get_current_buf()
   local current_tab = vim.api.nvim_get_current_tabpage()
+
   require('scope.core').revalidate() -- Gotta fill the cache
-  local buffers = require('scope.core').cache[current_tab]
+  local buffers = require('scope.utils').get_valid_buffers() or require('scope.core').cache[current_tab]
+  local ok = function(_)
+    return false
+  end
+
+  if operation == 'all' then
+    ok = function(buf)
+      return buf ~= current_buf
+    end
+  elseif operation == 'right' then
+    ok = function(buf)
+      return buf > current_buf
+    end
+  elseif operation == 'left' then
+    ok = function(buf)
+      return buf < current_buf
+    end
+  end
 
   for i, buf in ipairs(buffers) do
-    local check_for_difference = buf ~= current_buf
-    local check_for_tabs_on_right = buf > current_buf
-    local ok = (right and check_for_tabs_on_right) or (not right and check_for_difference)
-    -- local ok = check_for_tabs_on_right
-
-    if ok then
+    if ok(buf) then
       -- Check if the buffer is listed and loaded before deleting
       vim.api.nvim_buf_set_option(buf, 'buflisted', false)
       if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted then
@@ -641,13 +650,24 @@ M.general = {
     --
     -- ["Q"]             = { "qq", "Record MACRO on q register" },
 
-    ['<leader>x'] = {
+    ['<leader>xl'] = {
       function()
-        close_buffers_except_current_only_in_this_tab(true)
+        close_buffers_by_operation 'right'
       end,
       'close all buffers to the right of current one',
     },
-    ['<leader>X'] = { close_buffers_except_current_only_in_this_tab, 'close all buffers expect current one' },
+    ['<leader>xh'] = {
+      function()
+        close_buffers_by_operation 'left'
+      end,
+      'close all buffers to the left of current one',
+    },
+    ['<leader>xa'] = {
+      function()
+        close_buffers_by_operation 'all'
+      end,
+      'close all buffers expect current one',
+    },
 
     -- save
     ['<C-s>'] = { '<cmd> w <CR>', 'Save file' },
