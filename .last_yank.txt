@@ -1,1 +1,1 @@
-    ['<leader>X'] = { close_buffers_by_operation, },
+            vim.cmd [[TrailBlazerLoadSession .trail.tbsv]]

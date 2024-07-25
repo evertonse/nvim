@@ -6,7 +6,8 @@ return {
     lang = 'en',
     auto_save_trailblazer_state_on_exit = true,
     auto_load_trailblazer_state_on_enter = true,
-    custom_session_storage_dir = (os.getenv 'HOME' or '') .. '/.local/share/trail_blazer_sessions/', -- i.e. "~/trail_blazer_sessions/"
+    -- custom_session_storage_dir = (os.getenv 'HOME' or '') .. '/.local/share/trail_blazer_sessions/', -- i.e. "~/trail_blazer_sessions/"
+    custom_session_storage_dir = '~/local/share/trailblazer/',
     trail_options = {
       -- The trail mark priority sets the global render priority of trail marks in the sign/number
       -- column as well as the highlights within the text (e.g. Treesitter sets a value of 100).
