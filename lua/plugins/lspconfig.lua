@@ -724,18 +724,17 @@ return {
       }
       -- NOTE: Idk if this is global ??
       vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-        virtual_text = false,
+        virtual_text = true,
       })
 
       vim.diagnostic.config {
         virtual_text = true,
         update_in_insert = false,
         float = {
-          source = 'always',
-          focusable = false,
+          focusable = true,
           style = 'minimal',
-          -- border = 'rounded',
-          -- source = 'always',
+          border = 'single',
+          source = 'always',
           header = '',
           prefix = '',
         },

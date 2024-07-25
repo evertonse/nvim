@@ -22,6 +22,7 @@
   "cycler.nvim": { "branch": "main", "commit": "002ee679001c3b34823da728c672047665117178" },
   "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },
   "dressing.nvim": { "branch": "master", "commit": "6741f1062d3dc6e4755367a7e9b347b553623f04" },
+  "dropbar.nvim": { "branch": "master", "commit": "6567d50fd792056e2001663f5cd4d8bfb6840604" },
   "fidget.nvim": { "branch": "main", "commit": "d855eed8a06531a7e8fd0684889b2943f373c469" },
   "focus.nvim": { "branch": "master", "commit": "8e356ea49ade35fefe81575e26e2cc1e07cfcba3" },
   "git-conflict.nvim": { "branch": "main", "commit": "bfd9fe6fba9a161fc199771d85996236a0d0faad" },

@@ -189,7 +189,7 @@ vim.api.nvim_create_autocmd('CmdwinEnter', {
     end, { buffer = 0, noremap = true, silent = true })
 
     if vim.api.nvim_get_mode().mode == 'n' then
-      vim.api.nvim_input 'i'
+      vim.api.nvim_input 'a'
     end
 
     local close_completion = false

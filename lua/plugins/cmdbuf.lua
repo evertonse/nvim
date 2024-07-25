@@ -1,6 +1,6 @@
 return {
   'notomo/cmdbuf.nvim',
-  lazy = false,
+  lazy = true,
   config = function()
     vim.keymap.set('n', 'q:', function()
       require('cmdbuf').split_open(vim.o.cmdwinheight)
@@ -28,9 +28,6 @@ return {
           end)
           :totable()
         vim.api.nvim_buf_set_lines(args.buf, 0, -1, false, lines)
-        vim.schedule(function()
-          vim.api.nvim_input 'G'
-        end)
       end,
     })
 

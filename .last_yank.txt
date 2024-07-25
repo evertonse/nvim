@@ -1,1 +1,1 @@
-vim.diagnostic.jump { count = -1, float = true }
+rounded

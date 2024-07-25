@@ -275,7 +275,7 @@ require('lazy').setup({
   -- { import = 'custom.plugins' },
   true and require 'plugins.spider' or require 'plugins.neowords',
   require 'plugins.improved-ft',
-  require 'plugins.incline',
+  require 'plugins.dropbar' or require 'plugins.incline',
   require 'plugins.cycler',
   require 'plugins.snap',
   require 'plugins.bufmanager',

@@ -757,8 +757,10 @@ M.general = {
     ['x'] = { '"_x', noremap_opts },
     -- ['s'] = { '"_s', noremap_opts }, -- Were using surround so this key must go
     ['ge'] = { 'G', noremap_opts },
-    ['gh'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move big left', { expr = true } },
-    ['gl'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move big right', { expr = true } },
+    ['gh'] = { '0', 'Move big left', { expr = true } },
+    ['gl'] = { '$', 'Move big right', { expr = true } },
+    ['gH'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move left', { expr = true } },
+    ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
   },
 
   i = {
@@ -793,8 +795,12 @@ M.general = {
     ['<leader>n'] = { ':norm ', 'normal keys insertion', { expr = true } },
     ['<Up>'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },
     ['<Down>'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
-    ['gh'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move big left', { expr = true } },
-    ['gl'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move big right', { expr = true } },
+
+    ['gh'] = { '0', 'Move big left', { expr = true } },
+    ['gl'] = { '$', 'Move big right', { expr = true } },
+    ['gH'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move left', { expr = true } },
+    ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
+
     ['j'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
     ['k'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },
 
@@ -852,8 +858,12 @@ M.general = {
   x = {
     ['<Up>'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },
     ['<Down>'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
-    ['gh'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move big left', { expr = true } },
-    ['gl'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move big right', { expr = true } },
+
+    ['gh'] = { '0', 'Move big left', { expr = true } },
+    ['gl'] = { '$', 'Move big right', { expr = true } },
+    ['gH'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move left', { expr = true } },
+    ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
+
     ['j'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
     ['k'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },
     -- Don't copy the replaced text after pasting in visual mode

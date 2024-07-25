@@ -44,7 +44,9 @@
 --    [ ] KEYMAP MARKS: check for global marks per directory right? or is it for .git , check that about the plugin marks.nvim at some point
 --    [ ] KEYMAP MARKS: keymaps for global marks could also be lowercase if we press shift couldn't it? See if you need some time from now
 --    [ ] Nvimtree: make selection mode leave cursor at the last position before leaving
---    [ ] incline.nvim: Experiment reverse order and set percentage of file scrolling in the filename
+--    [x] incline.nvim: Experiment reverse order
+--    [ ] incline.nvim: and set percentage of file scrolling in the filename
+--    [ ] breadtrail.nvim: plugin idea
 --    [ ] FIX: goto diagnostic bug
 --
 --    [ ] GOTTA TOGGLE comment better
@@ -83,7 +85,7 @@
 --    [x] DONE: focus when chaging into tree not change line number of previously focused window and stuff
 --    [ ] TEX: Check If I like that for TCC : https://github.com/jakewvincent/texmagic.nvim
 --
---     NOTE: use (in visual mode) :!<shell_command><cr> output to buffer,
+--     NOTE: Use (in VISUAL MODE) :'<,'>!<shell_command><cr> output to buffer,
 --    or :redir @a :cmd and then :redir END to get the output of command into the `a` register
 --    awesome list: https://github.com/rockerBOO/awesome-neovim
 
