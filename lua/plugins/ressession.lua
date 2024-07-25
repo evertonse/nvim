@@ -90,7 +90,7 @@ return {
           -- Save these to a different directory, so our manual sessions don't get polluted
           resession.load(vim.fn.getcwd(), { dir = 'session', silence_errors = true })
           vim.schedule(function()
-            vim.cmd [[TrailBlazerLoadSession .trail.tbsv]]
+            pcall(vim.cmd, [[TrailBlazerLoadSession .trail.tbsv]])
           end)
           -- resession.load 'last'
           vim.cmd [[stopinsert]]
@@ -103,7 +103,7 @@ return {
         close_quickfix()
         resession.save(vim.fn.getcwd(), { dir = 'session', notify = true })
         vim.schedule(function()
-          vim.cmd [[TrailBlazerSaveSession .trail.tbsv]]
+          pcall(vim.cmd, [[TrailBlazerSaveSession .trail.tbsv]])
         end)
         -- resession.save 'last'
       end,
