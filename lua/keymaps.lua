@@ -745,8 +745,6 @@ M.general = {
     ['N'] = { 'Nzzzv', noremap_opts },
     ['J'] = { 'mzJ`z', noremap_opts },
 
-    ['[d'] = { vim.diagnostic.goto_prev, noremap_opts },
-    [']d'] = { vim.diagnostic.goto_next, noremap_opts },
     ['U'] = { '<C-r>' },
     --['<leader>re']     ={  'yW:%s/<C-r>*/<C-r>*/gc<Left><Left><Left><Down>',  noremap_opts},
     ['<leader>re'] = { ':%s///g<Left><Left><Left><Down>', noremap_opts },
@@ -758,7 +756,7 @@ M.general = {
     -- ['s'] = { '"_s', noremap_opts }, -- Were using surround so this key must go
     ['ge'] = { 'G', noremap_opts },
     ['gh'] = { '0', 'Move big left', { expr = true } },
-    ['gl'] = { '$', 'Move big right', { expr = true } },
+    ['gl'] = { '"$"', 'Move big right', { expr = true } },
     ['gH'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move left', { expr = true } },
     ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
   },
@@ -797,7 +795,7 @@ M.general = {
     ['<Down>'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
 
     ['gh'] = { '0', 'Move big left', { expr = true } },
-    ['gl'] = { '$', 'Move big right', { expr = true } },
+    ['gl'] = { '"$"', 'Move big right', { expr = true } },
     ['gH'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move left', { expr = true } },
     ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
 
@@ -860,7 +858,7 @@ M.general = {
     ['<Down>'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
 
     ['gh'] = { '0', 'Move big left', { expr = true } },
-    ['gl'] = { '$', 'Move big right', { expr = true } },
+    ['gl'] = { '"$"', 'Move big right', { expr = true } },
     ['gH'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move left', { expr = true } },
     ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
 
