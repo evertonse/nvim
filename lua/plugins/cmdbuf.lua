@@ -28,7 +28,9 @@ return {
           end)
           :totable()
         vim.api.nvim_buf_set_lines(args.buf, 0, -1, false, lines)
-        vim.api.nvim_input 'G'
+        vim.schedule(function()
+          vim.api.nvim_input 'G'
+        end)
       end,
     })
 
