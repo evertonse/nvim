@@ -84,6 +84,7 @@
 --    [x] DONE: Make the telescope prompt background not black
 --    [x] DONE: focus when chaging into tree not change line number of previously focused window and stuff
 --    [ ] TEX: Check If I like that for TCC : https://github.com/jakewvincent/texmagic.nvim
+--    [ ] Check alternative for marks or fixit youself
 --
 --     NOTE: Use (in VISUAL MODE) :'<,'>!<shell_command><cr> output to buffer,
 --    or :redir @a :cmd and then :redir END to get the output of command into the `a` register

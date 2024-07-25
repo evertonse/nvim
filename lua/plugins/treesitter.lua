@@ -15,7 +15,8 @@ local disable_treesitter_when = function(lang, bufnr)
   local too_big = vim.api.nvim_buf_line_count(bufnr) > 50000
   local buf_name = vim.fn.expand '%'
   local is_binary = vim.bo.filetype == 'bin'
-  if is_binary or vim.bo.filetype == 'tmux' or too_big or lang == 'conf' or string.find(buf_name, 'tmux%-') then
+  local is_odin = vim.bo.filetype == 'odin'
+  if is_odin or is_binary or vim.bo.filetype == 'tmux' or too_big or lang == 'conf' or string.find(buf_name, 'tmux%-') then
     return true
   end
 end
@@ -35,7 +36,7 @@ return { -- Highlight, edit, and navigate code
     highlight = {
       enable = true,
       disable = disable_treesitter_when,
-      additional_vim_regex_highlighting = { 'ruby' },
+      additional_vim_regex_highlighting = { 'ruby', 'odin' },
     },
 
     incremental_selection = {
@@ -113,15 +114,28 @@ return { -- Highlight, edit, and navigate code
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
     --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    -- Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
+    -- Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
+    -- Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 
     vim.treesitter.language.register('c', '*.cl')
     vim.treesitter.language.register('c', '*.h')
     vim.treesitter.language.register('c', '.h')
     vim.treesitter.language.register('c', 'cl')
+    vim.treesitter.language.register('brdf', 'glsls')
+    -- vim.treesitter.language.register('odin', '*.c')
+
     -- local treesitter_parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+    -- treesitter_parser_config.odin = {
+    --   install_info = {
+    --     url = 'https://github.com/ap29600/tree-sitter-odin',
+    --     branch = 'main',
+    --     files = { 'src/parser.c' },
+    --   },
+    --   filetype = 'odin',
+    -- }
+    -- vim.treesitter.language.register('odin', '*.odin')
+
     -- treesitter_parser_config.templ = {
     --   install_info = {
     --     url = 'https://github.com/vrischmann/tree-sitter-templ.git',

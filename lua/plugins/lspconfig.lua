@@ -250,6 +250,10 @@ return {
           map(']d', function()
             vim.diagnostic.jump { count = 1, float = true }
           end, 'Go to next [D]iagnostic message')
+
+          map('[d', ':lua vim.diagnostic.jump { count = -1, float = true }', 'Go to previous [D]iagnostic message')
+          map(']d', ':lua vim.diagnostic.jump { count = 1, float = true }', 'Go to next [D]iagnostic message')
+
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           --    See `:help CursorHold` for information about when this is executed

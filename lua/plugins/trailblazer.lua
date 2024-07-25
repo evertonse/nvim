@@ -41,10 +41,10 @@ return {
       cursor_mark_symbol = '•', -- disable this mark symbol by setting its value to ""
       next_mark_symbol = '•', -- disable this mark symbol by setting its value to ""
       previous_mark_symbol = '•', -- disable this mark symbol by setting its value to ""
-      multiple_mark_symbol_counters_enabled = true,
-      number_line_color_enabled = false,
-      trail_mark_in_text_highlights_enabled = true,
-      trail_mark_symbol_line_indicators_enabled = false, -- show indicators for all trail marks in symbol column
+      multiple_mark_symbol_counters_enabled = false,
+      number_line_color_enabled = true,
+      trail_mark_in_text_highlights_enabled = false,
+      trail_mark_symbol_line_indicators_enabled = true, -- show indicators for all trail marks in symbol column
       symbol_line_enabled = true,
       default_trail_mark_stacks = {
         -- this is the list of trail mark stacks that will be created by default. Add as many

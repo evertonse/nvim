@@ -111,6 +111,7 @@ local function nvimtree_on_attach(bufnr)
     api.marks.clear()
     mark_selected_files(bufnr)
     delete_selected_files()
+    api.tree.reload()
   end, opts 'Delete Bookmarked')
 
   map({ 'v' }, '<Esc>', function()

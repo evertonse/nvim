@@ -1,1 +1,1 @@
-save_trailblazer_state_from_file
+    require('nvim-treesitter.install').ensure_installed { 'odin' }
