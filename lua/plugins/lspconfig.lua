@@ -173,7 +173,7 @@ return {
           -- for LSP related items. It sets the mode, buffer and description for us each time.
           local map = function(keys, func, desc, mode)
             mode = mode or 'n'
-            vim.keymap.set(mode, keys, func, { expr = true, buffer = event.buf, desc = 'LSP: ' .. desc })
+            vim.keymap.set(mode, keys, func, { noremap = true, expr = true, buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
           -- Jump to the definition of the word under your cursor.
@@ -251,8 +251,8 @@ return {
             vim.diagnostic.jump { count = 1, float = true }
           end, 'Go to next [D]iagnostic message')
 
-          map('[d', ':lua vim.diagnostic.jump { count = -1, float = true }', 'Go to previous [D]iagnostic message')
-          map(']d', ':lua vim.diagnostic.jump { count = 1, float = true }', 'Go to next [D]iagnostic message')
+          map('[d', ':lua vim.diagnostic.jump { count = -1, float = true }<cr>', 'Go to previous [D]iagnostic message')
+          map(']d', ':lua vim.diagnostic.jump { count = 1, float = true }<cr>', 'Go to next [D]iagnostic message')
 
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.

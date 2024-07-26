@@ -20,6 +20,7 @@ local disable_treesitter_when = function(lang, bufnr)
     return true
   end
 end
+-- NOTE: custom parser -> https://github.com/nvim-treesitter/nvim-treesitter/issues/2241
 
 return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
