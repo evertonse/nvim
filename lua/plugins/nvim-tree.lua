@@ -471,6 +471,10 @@ return {
       show_on_dirs = true,
       show_on_open_dirs = true,
     },
+    live_filter = {
+      prefix = '> ',
+      always_show_folders = true,
+    },
     filters = {
       enable = true,
       git_ignored = true,
@@ -479,8 +483,9 @@ return {
       no_buffer = false,
       no_bookmark = false,
       -- custom = {},
-      -- custom = {"^\\.git"},
-      exclude = {},
+      -- TODO: Make `exclude` / `custom` be a function based on node as well ok ?
+      custom = { '^\\.git' },
+      exclude = { '*~' },
     },
 
     diagnostics = {
