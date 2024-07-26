@@ -195,8 +195,6 @@ require('lazy').setup({
 
   require 'plugins.cmp',
 
-  require 'plugins.lspconfig',
-
   require 'plugins.conform',
 
   require 'plugins.colorscheme',
@@ -285,6 +283,7 @@ require('lazy').setup({
   require 'plugins.trailblazer',
   require 'plugins.portal',
   require 'plugins.cmdbuf',
+  require 'plugins.lspconfig',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et

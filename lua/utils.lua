@@ -57,7 +57,10 @@ SetKeyMaps = function(mapping_table)
     for mode in modes:gmatch '.' do
       for key, mapping in pairs(mappings) do
         if mapping == '' then
-          pcall(vim.keymap.del, { mode, key })
+          local ok = pcall(vim.keymap.del, mode, key)
+          if ok and DEBUG then
+            vim.fn.confirm('Deleted key = ' .. key .. ' in mode = ' .. vim.inspect(mode))
+          end
         else
           set(mode, key, mapping)
         end

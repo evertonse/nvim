@@ -245,7 +245,7 @@ M.disabled = {
     ['<leader>x'] = '',
     ['<S-b>'] = '',
     -- lspconfig
-    ['d]'] = '',
+    [']d'] = '',
     ['[d'] = '',
     ['<leader>gt'] = '',
     ['<leader>cm'] = '',
@@ -1327,7 +1327,8 @@ local setup_marks_to_always_globals = function()
       local buffer_name = vim.fn.bufname(existing_mark[1])
       local line_number = existing_mark[2]
       -- Prompt the user for confirmation
-      local response = vim.fn.confirm("Mark '" .. mark .. "' " .. buffer_name .. ':' .. line_number .. '  already exists.\nOverwrite?', '&yes\n&no', 2)
+      local response =
+        vim.fn.confirm("Mark '" .. mark .. "' " .. buffer_name .. ':' .. line_number .. '  already exists.\nOverwrite?', '&yes\n&no', 2)
       if response ~= 1 then
         return
       end

@@ -4,7 +4,7 @@ return {
   { -- LSP Configuration & Plugins
     -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
     'neovim/nvim-lspconfig',
-    -- lazy = false,
+    lazy = false,
     -- event = 'VimEnter',
     -- event = 'VimEnter',
     -- event = 'VeryLazy',
@@ -171,9 +171,10 @@ return {
           --
           -- In this case, we create a function that lets us more easily define mappings specific
           -- for LSP related items. It sets the mode, buffer and description for us each time.
-          local map = function(keys, func, desc, mode)
+          local map = function(keys, func, desc, mode, opts)
             mode = mode or 'n'
-            vim.keymap.set(mode, keys, func, { noremap = true, expr = true, buffer = event.buf, desc = 'LSP: ' .. desc })
+            opts = vim.tbl_deep_extend('force', { noremap = true, expr = true, buffer = event.buf, desc = 'LSP: ' .. desc }, opts or {})
+            vim.keymap.set(mode, keys, func, opts)
           end
 
           -- Jump to the definition of the word under your cursor.
@@ -243,16 +244,21 @@ return {
           -- Make sure to replace '<leader>r' with the keybinding of your choice.
           map('<leader>lf', vim.lsp.buf.format, 'Ranged [L]sp [F]formatting', 'v')
 
-          map('[d', function()
-            vim.diagnostic.jump { count = -1, float = true }
-          end, 'Go to previous [D]iagnostic message')
+          map(
+            '[d',
+            ':lua vim.diagnostic.jump ({ count = -1, float = true })<cr>',
+            'Go to previous [D]iagnostic message',
+            'n',
+            { noremap = true, expr = false, buffer = 0 }
+          )
 
-          map(']d', function()
-            vim.diagnostic.jump { count = 1, float = true }
-          end, 'Go to next [D]iagnostic message')
-
-          map('[d', ':lua vim.diagnostic.jump { count = -1, float = true }<cr>', 'Go to previous [D]iagnostic message')
-          map(']d', ':lua vim.diagnostic.jump { count = 1, float = true }<cr>', 'Go to next [D]iagnostic message')
+          map(
+            ']d',
+            ':lua vim.diagnostic.jump ({ count = 1, float = true })<cr>',
+            'Go to next [D]iagnostic message',
+            'n',
+            { noremap = true, expr = false, buffer = 0 }
+          )
 
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.

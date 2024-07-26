@@ -484,8 +484,10 @@ return {
       no_bookmark = false,
       -- custom = {},
       -- TODO: Make `exclude` / `custom` be a function based on node as well ok ?
-      custom = { '^\\.git' },
-      exclude = { '*~' },
+      custom = { '^\\.git', '.*~' },
+      -- custom = { '^%.git', '.*~+' },
+
+      -- exclude = { '*~' },
     },
 
     diagnostics = {
