@@ -121,8 +121,46 @@ local function custom_find_files()
     '!*.exe',
   }
 
-  local find_command = fd_command
-  -- local find_command = rg_command
+  local find_command = {
+    'find',
+    '.',
+    '-type',
+    'f',
+    '-not',
+    '-path',
+    '*/.git/*',
+    '-not',
+    '-path',
+    '*/__pycache__/*',
+    '-not',
+    '-path',
+    '*/venv/*',
+    '-not',
+    '-name',
+    '*.pdf',
+    '-not',
+    '-name',
+    '*.png',
+    '-not',
+    '-name',
+    '*.bin',
+    '-not',
+    '-name',
+    '*.exe',
+    '-not',
+    '-name',
+    '*~',
+  }
+
+  local cmds = { fd_command, rg_command, find_command }
+  local chosen_command = { 'find' }
+  for _, cmd in ipairs(cmds) do
+    local is_executable = vim.loop.fs_access(vim.fn.exepath(cmd[1]), 'X') or (vim.fn.executable(cmd[1]) == 1)
+    if is_executable then
+      chosen_command = cmd
+    end
+  end
+
   local previewers = require 'telescope.previewers'
   local conf = require('telescope.config').values
   -- NOTE: I'm returning a function because we load all requires in the outer func than we back into the inner function
@@ -149,7 +187,7 @@ local function custom_find_files()
         debounce = 20,
         prompt_title = 'Find Files (ExCyber)',
         -- finder = finders.new_oneshot_job { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--color', 'never' },
-        finder = finders.new_oneshot_job(find_command, {
+        finder = finders.new_oneshot_job(chosen_command, {
 
           entry_maker = function(entry)
             local filename = vim.fn.fnamemodify(entry, ':t')
@@ -786,9 +824,11 @@ return { -- Fuzzy Finder (files, lsp, etc)
         -- Slightly advanced example of overriding default behavior and theme
         ['<leader>/'] = {
           function() -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-            builtin.current_buffer_fuzzy_find(
-              require('telescope.themes').get_dropdown { winblend = vim.g.self.is_transparent and 0 or 10, previewer = false, initial_mode = 'insert' }
-            )
+            builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+              winblend = vim.g.self.is_transparent and 0 or 10,
+              previewer = false,
+              initial_mode = 'insert',
+            })
           end,
           '[/] Fuzzily search in current buffer',
         },

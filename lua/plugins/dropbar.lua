@@ -79,6 +79,7 @@ return {
   'Bekaboo/dropbar.nvim',
   -- optional, but required for fuzzy finder support
   lazy = false,
+  enabled = vim.fn.has 'nvim-0.10' == 1,
   opts = {
     sources = {
       treesitter = {

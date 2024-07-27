@@ -351,6 +351,18 @@ return {
     },
 
     renderer = {
+      -- hidden_display_function = 'none',
+      hidden_display_function = function(hidden_count)
+        local total_count = 0
+        for reason, count in pairs(hidden_count) do
+          total_count = total_count + count
+        end
+
+        if total_count > 0 then
+          return '> ' .. tostring(total_count) .. ' le hidden'
+        end
+        return nil
+      end,
       full_name = true,
       -- Value can be `"none"`, `"icon"`, `"name"` or `"all"`.
       highlight_git = 'name',

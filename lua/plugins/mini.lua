@@ -1,3 +1,5 @@
+local nvim_ok_version = vim.version().major > 0 or (vim.version().major == 0 and vim.version().minor >= 10)
+
 return {
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
@@ -222,19 +224,39 @@ return {
       end
       mini_surround_setup()
 
-      local lsp_servers_attached = function()
-        local clients = vim.lsp.get_clients { bufnr = 0 }
-        if next(clients) == nil then
-          return ''
-        end
+      -- Use older API for Neovim versions lower than 0.10
 
-        local client_names = {}
-        for _, client in pairs(clients) do
-          table.insert(client_names, client.name)
-        end
+      local lsp_servers_attached = nvim_ok_version
+          and function()
+            local clients = vim.lsp.get_clients { bufnr = 0 }
+            if next(clients) == nil then
+              return ''
+            end
 
-        return table.concat(client_names, ', ') .. ' '
-      end
+            local client_names = {}
+            for _, client in pairs(clients) do
+              table.insert(client_names, client.name)
+            end
+
+            return table.concat(client_names, ', ') .. ' '
+          end
+        or function()
+          if true then
+            return ''
+          end
+          local clients = vim.lsp.buf_get_clients(0)
+          if next(clients) == nil then
+            return ''
+          end
+
+          local client_names = {}
+          for _, client in pairs(clients) do
+            table.insert(client_names, tostring(client.name))
+            Inspect(client)
+          end
+
+          return table.concat(client_names, ', ') .. ' '
+        end
 
       local function recording_mode()
         local rec_reg = vim.fn.reg_recording()
@@ -254,6 +276,7 @@ return {
         --  You could remove this setup call if you don't like it,
         --  and try some other statusline plugin
         local statusline = require 'mini.statusline'
+
         -- set use_icons to true if you have a Nerd Font
         statusline.section_location = function()
           -- '%2l:%-2v' for LINE:COLUMN and '%3p%%' for percentage through the file

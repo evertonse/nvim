@@ -162,7 +162,12 @@ local options = {
 vim.opt.diffopt:append 'linematch:50'
 
 for k, v in pairs(options) do
-  vim.opt[k] = v
+  local ok = pcall(function()
+    vim.opt[k] = v
+  end)
+  if not ok then
+    vim.notify('opt: ' .. tostring(k) .. ' not valid', vim.log.levels.WARN)
+  end
 end
 vim.opt.shortmess:append 'saAtilmnrxwWoOtTIFcC' -- flags to shorten vim messages, see :help 'shortmess'
 vim.opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages

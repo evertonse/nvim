@@ -1,6 +1,7 @@
 return {
   'camspiers/snap',
   lazy = false,
+  enabled = vim.version().minor >= 10,
   dependencies = { 'camspiers/luarocks', opts = { rocks = { 'fzy' } } },
   config = function()
     local snap = require 'snap'
