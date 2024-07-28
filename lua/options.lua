@@ -7,24 +7,24 @@
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 
-local o, opt = vim.o, vim.opt
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-vim.g.loaded_perl_provider = 0
-vim.g.loaded_ruby_provider = 0
-vim.g.loaded_node_provider = 0
-vim.g.loaded_python_provider = 0
-vim.g.loaded_python3_provider = 0
-vim.opt.fillchars:append { eob = ' ' }
+local o, opt, g = vim.o, vim.opt, vim.g
+g.mapleader = ' '
+g.maplocalleader = ' '
+g.loaded_perl_provider = 0
+g.loaded_ruby_provider = 0
+g.loaded_node_provider = 0
+g.loaded_python_provider = 0
+g.loaded_python3_provider = 0
+opt.fillchars:append { eob = ' ' }
 
 vim.loader.enable()
 vim.o.cursorlineopt = 'both' -- to enable cursorline
 vim.o.wildmenu = false -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
--- vim.opt.wildmode = 'list:longest,list:full' -- for : stuff
-vim.opt.wildmode = 'list:longest' -- for : stuff
-vim.opt.wildignore:append { '.javac', 'node_modules', '*.pyc' }
-vim.opt.wildignore:append { '.aux', '.out', '.toc' } -- LaTeX
-vim.opt.wildignore:append {
+-- opt.wildmode = 'list:longest,list:full' -- for : stuff
+opt.wildmode = 'list:longest' -- for : stuff
+opt.wildignore:append { '.javac', 'node_modules', '*.pyc' }
+opt.wildignore:append { '.aux', '.out', '.toc' } -- LaTeX
+opt.wildignore:append {
   '.o',
   '.obj',
   '.dll',
@@ -44,22 +44,22 @@ vim.opt.wildignore:append {
   '.orig',
 }
 
-vim.opt.suffixesadd:append { '.java', '.rs' } -- search for suffexes using gf
+opt.suffixesadd:append { '.java', '.rs' } -- search for suffexes using gf
 
 -- vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
 -- vim.o.sessionoptions = 'buffers,curdir,folds,help,tabpages,winsize,winpos'
-vim.opt.sessionoptions = { -- XXX: required for scope.nvim
+opt.sessionoptions = { -- XXX: required for scope.nvim
   'buffers',
   'tabpages',
   'globals',
 }
 
 -- Preview substitutions live, as you type!
-vim.opt.inccommand = 'nosplit' -- NO spliting the windows to see preview
--- vim.opt.inccommand = 'split'
+opt.inccommand = 'nosplit' -- NO spliting the windows to see preview
+-- opt.inccommand = 'split'
 
 -- Show which line your cursor is on
-vim.opt.cursorline = true
+opt.cursorline = true
 
 local g = vim.g
 
@@ -153,13 +153,6 @@ local options = {
   breakindent = true,
 }
 
--- Leader key
-if vim.g.mapleader == nil then
-  vim.g.mapleader = ' ' -- Use space as the one and only true Leader key
-end
-
--- General
-
 o.undofile = true -- Enable persistent undo (see also `:h undodir`)
 
 o.backup = false -- Don't store backup while overwriting the file
@@ -180,14 +173,6 @@ o.infercase = true -- Infer letter cases for a richer built-in keyword completio
 
 o.virtualedit = 'block' -- Allow going past the end of line in visual block mode
 o.formatoptions = 'qjl1' -- Don't autoformat comments
-
--- Neovim version dependent
-if vim.fn.has 'nvim-0.9' == 1 then
-  opt.shortmess:append 'WcC' -- Reduce command line messages
-  o.splitkeep = 'screen' -- Reduce scroll during window split
-else
-  opt.shortmess:append 'Wc' -- Reduce command line messages
-end
 
 if vim.fn.has 'nvim-0.10' == 0 then
   o.termguicolors = true -- Enable gui colors
@@ -216,7 +201,7 @@ if vim.fn.exists 'syntax_on' ~= 1 then
   vim.cmd [[syntax enable]]
 end
 
-vim.opt.diffopt:append 'linematch:50'
+opt.diffopt:append 'linematch:50'
 
 for k, v in pairs(options) do
   local ok = pcall(function()
@@ -228,20 +213,28 @@ for k, v in pairs(options) do
     end)
   end
 end
-vim.opt.shortmess:append 'saAtilmnrxwWoOtTIFcC' -- flags to shorten vim messages, see :help 'shortmess'
-vim.opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages
-vim.opt.iskeyword:append '-' -- hyphenated words recognized by searches
+opt.iskeyword:append '-' -- hyphenated words recognized by searches
+
+-- Neovim version dependent
+opt.shortmess:append 'saAtilmnrxwWoOtTIFcC' -- flags to shorten vim messages, see :help 'shortmess'
+opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages
+if vim.fn.has 'nvim-0.9' == 1 then
+  opt.shortmess:append 'WcC' -- Reduce command line messages
+else
+  opt.shortmess:append 'Wc' -- Reduce command line messages
+end
+o.splitkeep = 'screen' -- Reduce scroll during window split
 
 -- see :h fo-table
-vim.opt.formatoptions:append 'n'
+opt.formatoptions:append 'n'
 vim.cmd 'set formatoptions=qrn1coj'
-vim.opt.formatoptions:remove { 'c', 'r', 'o' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
+opt.formatoptions:remove { 'c', 'r', 'o' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
 vim.cmd [[:set formatoptions-=cro ]]
 
-vim.opt.runtimepath:remove '/vimfiles' -- separate vim plugins from neovim in case vim still in use
+opt.runtimepath:remove '/vimfiles' -- separate vim plugins from neovim in case vim still in use
 
 -- Set the directory for undo files
-vim.opt.undodir = (os.getenv 'HOME' or '') .. '/.local/share/nvim'
+opt.undodir = (os.getenv 'HOME' or '') .. '/.local/share/nvim'
 
 -- [[ Setting vim cmds ]]
 vim.cmd ':set display-=msgsep'
