@@ -191,9 +191,11 @@ M.disabled = {
   i = {
     ['<Tab>'] = '',
     ['<S-Tab>'] = '',
+    ['<C-<space>>'] = '',
   },
   n = {
     ['<C-a>'] = '',
+    ['<C-<Space>>'] = '',
     ['K'] = '', -- disable search for `man` pages, too slow
     ['<leader>D'] = '',
     ['<S-tab>'] = '',

@@ -226,7 +226,7 @@ return {
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
-          ['<C-Space>'] = cmp.mapping.complete {},
+          ['<C-space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }), --['<C-space>'] = cmp.mapping.complete(),
 
           -- Think of <c-l> as moving to the right of your snippet expansion.
           --  So if you have a snippet that's like:
@@ -260,7 +260,7 @@ return {
       }
       local search_opts = {
         mapping = cmp.mapping.preset.cmdline(),
-        completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
+        completion = { completeopt = 'menu,menuone,noinsert,noselect,preview', autocomplete = false },
         sources = {
           { name = 'buffer' },
         },
