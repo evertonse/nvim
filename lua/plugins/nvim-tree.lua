@@ -492,11 +492,9 @@ return {
       git_clean = false,
       no_buffer = false,
       no_bookmark = false,
-      -- custom = {},
       -- TODO: Make `exclude` / `custom` be a function based on node as well ok ?
-      custom = { '^\\.git', '.*~' },
-      -- custom = { '^%.git', '.*~+' },
-
+      custom = { '.*~' },
+      -- custom = { '^\\.git', '.*~' },
       -- exclude = { '*~' },
     },
 

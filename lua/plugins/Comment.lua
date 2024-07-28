@@ -1,3 +1,5 @@
+local comment_line_prefix = 'gc'
+local comment_block_prefix = 'gb'
 return {
   'numToStr/Comment.nvim',
   lazy = false,
@@ -11,16 +13,16 @@ return {
     ---LHS of toggle mappings in NORMAL mode
     toggler = {
       ---Line-comment toggle keymap
-      line = 'gC',
+      line = comment_line_prefix,
       ---Block-comment toggle keymap
-      block = 'gbc',
+      block = comment_block_prefix,
     },
     ---LHS of operator-pending mappings in NORMAL and VISUAL mode
     opleader = {
       ---Line-comment keymap
-      line = 'gC',
+      line = comment_line_prefix,
       ---Block-comment keymap
-      block = 'gb',
+      block = comment_block_prefix,
     },
     ---LHS of extra mappings
     extra = {
@@ -44,4 +46,23 @@ return {
     ---Function to call after (un)comment
     post_hook = nil,
   },
+  config = function(_, opts)
+    local api = require 'Comment.api'
+    local config = require('Comment.config'):get()
+
+    require('Comment').setup(opts)
+
+    vim.keymap.set('x', 'gc', function()
+      local mode = vim.fn.mode()
+      print(mode)
+      local esc = vim.api.nvim_replace_termcodes('<ESC>', true, false, true)
+
+      vim.api.nvim_feedkeys(esc, 'nx', false)
+      if mode == 'V' or mode == 'n' then
+        api.toggle.linewise(vim.fn.visualmode())
+      elseif mode == 'v' or mode == '<C-v>' or mode == '<C-q>' then
+        api.toggle.blockwise(vim.fn.visualmode())
+      end
+    end, { noremap = true, silent = true })
+  end,
 }

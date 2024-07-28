@@ -149,22 +149,7 @@ require('lazy').setup({
     opts = { useDefaultKeymaps = true },
   },
 
-  {
-    'gregorias/coerce.nvim',
-    tag = 'v2.2',
-    -- Case       Key
-    -- camelCase  c
-    -- dot.case   d
-    -- kebab-case k
-    -- n12e       n
-    -- PascalCase p
-    -- snake_case s
-    -- UPPER_CASE u
-    -- path/case  /
-    lazy = false,
-    config = true,
-  },
-
+  require 'plugins.coerce',
   require 'plugins.Comment',
   -- require 'plugins.tabby',
   -- require 'plugins.tabline',
