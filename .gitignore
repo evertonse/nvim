@@ -4,5 +4,5 @@ test.sh
 *.tbsv
 nvim
 **~
-
+.last_yank.txt
 spell/

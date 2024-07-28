@@ -178,10 +178,10 @@ if vim.fn.has 'nvim-0.10' == 0 then
   o.termguicolors = true -- Enable gui colors
 end
 
-o.pumblend = 10 -- Make builtin completion menus slightly transparent
+o.pumblend = vim.g.self.is_transparent and 0 or 10 -- Make builtin completion menus slightly transparent
 
 o.pumheight = 10 -- Make popup menu smaller
-o.winblend = 10 -- Make floating windows slightly transparent
+o.winblend = vim.g.self.is_transparent and 0 or 10 -- Make floating windows slightly transparent
 
 -- NOTE: Having `tab` present is needed because `^I` will be shown if
 -- omitted (documented in `:h listchars`).
@@ -190,16 +190,15 @@ o.winblend = 10 -- Make floating windows slightly transparent
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
-opt.list = false -- set to true to see whitespace
--- opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-opt.listchars = { tab = '» ', trail = ' ', nbsp = '␣' }
-o.listchars = 'tab:> ,extends:…,precedes:…,nbsp:␣' -- Define which helper symbols to show
 o.list = true -- Show some helper symbols
+-- opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+opt.listchars = { extends = '…', tab = '» ', trail = ' ', nbsp = '␣' }
+-- o.listchars = 'tab:> ,,precedes:…,nbsp:␣' -- Define which helper symbols to show
 
 -- Enable syntax highlighting if it wasn't already (as it is time consuming)
-if vim.fn.exists 'syntax_on' ~= 1 then
-  vim.cmd [[syntax enable]]
-end
+--if vim.fn.exists 'syntax_on' ~= 1 then
+--vim.cmd [[syntax enable]]
+--end
 
 opt.diffopt:append 'linematch:50'
 
@@ -227,7 +226,7 @@ o.splitkeep = 'screen' -- Reduce scroll during window split
 
 -- see :h fo-table
 opt.formatoptions:append 'n'
-vim.cmd 'set formatoptions=qrn1coj'
+vim.cmd [[set formatoptions=qrn1coj]]
 opt.formatoptions:remove { 'c', 'r', 'o' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
 vim.cmd [[:set formatoptions-=cro ]]
 

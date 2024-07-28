@@ -97,6 +97,7 @@ require 'utils'
 require 'options'
 
 -- NOTE: might be useful `vim.fn.defer` or `vim.schedule`
+-- [[ Autocommands ]]
 require 'autocommands'
 
 -- [[ Basic Keymaps ]]
