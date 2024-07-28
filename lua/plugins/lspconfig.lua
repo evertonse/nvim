@@ -1,3 +1,5 @@
+local is_nvim_11_or_higher = vim.version().major > 0 or (vim.version().major == 0 and vim.version().minor >= 11)
+
 -- NOTE: read below for intructions
 --    https://vonheikemen.github.io/devlog/tools/neovim-lsp-client-guide/
 return {
@@ -131,7 +133,7 @@ return {
 
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
-      { 'folke/neodev.nvim', opts = {} },
+      { 'folke/neodev.nvim', enabled = true, opts = {} },
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -246,7 +248,8 @@ return {
 
           map(
             '[d',
-            ':lua vim.diagnostic.jump ({ count = -1, float = true })<cr>',
+            is_nvim_11_or_higher and ':lua vim.diagnostic.jump({ count = -1, float = true })<cr>'
+              or ':lua vim.diagnostic.goto_prev({ float = true })<cr>',
             'Go to previous [D]iagnostic message',
             'n',
             { noremap = true, expr = false, buffer = 0 }
@@ -254,7 +257,8 @@ return {
 
           map(
             ']d',
-            ':lua vim.diagnostic.jump ({ count = 1, float = true })<cr>',
+            is_nvim_11_or_higher and ':lua vim.diagnostic.jump({ count = 1, float = true })<cr>'
+              or ':lua vim.diagnostic.goto_next({ float = true })<cr>',
             'Go to next [D]iagnostic message',
             'n',
             { noremap = true, expr = false, buffer = 0 }

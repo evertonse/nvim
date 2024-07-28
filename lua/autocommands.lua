@@ -367,6 +367,7 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+local excyber = vim.api.nvim_create_augroup('1', { clear = true })
 vim.api.nvim_create_autocmd('BufEnter', {
   group = vim.api.nvim_create_augroup('1', { clear = true }),
   callback = function()
@@ -413,3 +414,27 @@ vim.api.nvim_create_autocmd('CompleteDone', {
     end
   end,
 })
+
+local au = function(event, pattern, callback, desc, augroup)
+  vim.api.nvim_create_autocmd(event, { group = augroup or excyber, pattern = pattern, callback = callback, desc = desc })
+end
+
+au(
+  'ModeChanged',
+  -- Show relative numbers only when they matter (linewise and blockwise
+  -- selection) and 'number' is set (avoids horizontal flickering)
+  '*:[V\x16]*',
+  function()
+    vim.wo.relativenumber = vim.wo.number
+  end,
+  'Show relative line numbers'
+)
+au(
+  'ModeChanged',
+  '[V\x16]*:*',
+  -- Hide relative numbers when neither linewise/blockwise mode is on
+  function()
+    vim.wo.relativenumber = string.find(vim.fn.mode(), '^[V\22]') ~= nil
+  end,
+  'Hide relative line numbers'
+)

@@ -144,6 +144,7 @@ require('lazy').setup({
   {
     'chrisgrieser/nvim-various-textobjs',
     --alternative: 'XXiaoA/ns-textobject.nvim'
+    enabled = false,
     lazy = false,
     opts = { useDefaultKeymaps = true },
   },
@@ -273,7 +274,7 @@ require('lazy').setup({
   -- { import = 'custom.plugins' },
   true and require 'plugins.spider' or require 'plugins.neowords',
   require 'plugins.improved-ft',
-  require 'plugins.dropbar' or require 'plugins.incline',
+  (vim.fn.has 'nvim-0.10' == 1) and require 'plugins.dropbar' or require 'plugins.incline',
   require 'plugins.cycler',
   require 'plugins.snap',
   require 'plugins.bufmanager',

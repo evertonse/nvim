@@ -7,6 +7,7 @@
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 
+local o, opt = vim.o, vim.opt
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.loaded_perl_provider = 0
@@ -53,13 +54,6 @@ vim.opt.sessionoptions = { -- XXX: required for scope.nvim
   'globals',
 }
 
--- Sets how neovim will display certain whitespace characters in the editor.
---  See `:help 'list'`
---  and `:help 'listchars'`
-vim.opt.list = false -- set to true to see whitespace
--- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-vim.opt.listchars = { tab = '» ', trail = ' ', nbsp = '␣' }
-
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'nosplit' -- NO spliting the windows to see preview
 -- vim.opt.inccommand = 'split'
@@ -96,11 +90,10 @@ g.netrw_winsize = 25
 
 local options = {
   laststatus = 3,
-  backup = false, -- creates a backup file
   -- clipboard = nil, -- allows neovim to access the system clipboard
   clipboard = '',
   cmdheight = 1, -- more space in the neovim command line for displaying messages
-  completeopt = { 'menuone', 'noselect', 'popup' }, -- mostly just for cmp
+  completeopt = { 'noinsert', 'menuone', 'noselect', 'popup' }, -- mostly just for cmp
   conceallevel = 0, -- so that `` is visible in markdown files
   fileencoding = 'utf-8', -- the encoding written to a file
   hlsearch = true, -- highlight all matches on previous search pattern
@@ -119,6 +112,7 @@ local options = {
   timeoutlen = 100, -- time to wait for a mapped sequence to complete (in milliseconds)
   undofile = true, -- enable persistent undo
   updatetime = 10, -- faster completion (4000ms default)
+  backup = false, -- creates a backup file
   writebackup = false, -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
 
   expandtab = true, -- convert tabs to spaces
@@ -159,6 +153,69 @@ local options = {
   breakindent = true,
 }
 
+-- Leader key
+if vim.g.mapleader == nil then
+  vim.g.mapleader = ' ' -- Use space as the one and only true Leader key
+end
+
+-- General
+
+o.undofile = true -- Enable persistent undo (see also `:h undodir`)
+
+o.backup = false -- Don't store backup while overwriting the file
+o.writebackup = false -- Don't store backup while overwriting the file
+
+vim.cmd 'filetype plugin indent on' -- Enable all filetype plugins
+
+-- Appearance
+
+o.ruler = false -- Don't show cursor position in command line
+o.showmode = false -- Don't show mode in command line
+o.wrap = false -- Display long lines as just one line
+
+o.signcolumn = 'yes' -- Always show sign column (otherwise it will shift text)
+o.fillchars = 'eob: ' -- Don't show `~` outside of buffer
+
+o.infercase = true -- Infer letter cases for a richer built-in keyword completion
+
+o.virtualedit = 'block' -- Allow going past the end of line in visual block mode
+o.formatoptions = 'qjl1' -- Don't autoformat comments
+
+-- Neovim version dependent
+if vim.fn.has 'nvim-0.9' == 1 then
+  opt.shortmess:append 'WcC' -- Reduce command line messages
+  o.splitkeep = 'screen' -- Reduce scroll during window split
+else
+  opt.shortmess:append 'Wc' -- Reduce command line messages
+end
+
+if vim.fn.has 'nvim-0.10' == 0 then
+  o.termguicolors = true -- Enable gui colors
+end
+
+o.pumblend = 10 -- Make builtin completion menus slightly transparent
+
+o.pumheight = 10 -- Make popup menu smaller
+o.winblend = 10 -- Make floating windows slightly transparent
+
+-- NOTE: Having `tab` present is needed because `^I` will be shown if
+-- omitted (documented in `:h listchars`).
+-- Having it equal to a default value should be less intrusive.
+
+-- Sets how neovim will display certain whitespace characters in the editor.
+--  See `:help 'list'`
+--  and `:help 'listchars'`
+opt.list = false -- set to true to see whitespace
+-- opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+opt.listchars = { tab = '» ', trail = ' ', nbsp = '␣' }
+o.listchars = 'tab:> ,extends:…,precedes:…,nbsp:␣' -- Define which helper symbols to show
+o.list = true -- Show some helper symbols
+
+-- Enable syntax highlighting if it wasn't already (as it is time consuming)
+if vim.fn.exists 'syntax_on' ~= 1 then
+  vim.cmd [[syntax enable]]
+end
+
 vim.opt.diffopt:append 'linematch:50'
 
 for k, v in pairs(options) do
@@ -175,13 +232,13 @@ vim.opt.shortmess:append 'saAtilmnrxwWoOtTIFcC' -- flags to shorten vim messages
 vim.opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages
 vim.opt.iskeyword:append '-' -- hyphenated words recognized by searches
 
+-- see :h fo-table
+vim.opt.formatoptions:append 'n'
 vim.cmd 'set formatoptions=qrn1coj'
 vim.opt.formatoptions:remove { 'c', 'r', 'o' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
+vim.cmd [[:set formatoptions-=cro ]]
 
 vim.opt.runtimepath:remove '/vimfiles' -- separate vim plugins from neovim in case vim still in use
-
--- Enable persistent undo
-vim.opt.undofile = true
 
 -- Set the directory for undo files
 vim.opt.undodir = (os.getenv 'HOME' or '') .. '/.local/share/nvim'
@@ -194,7 +251,6 @@ vim.cmd ':set more'
 -- vim.cmd ':set lz' -- Lazy Redraw
 -- vim.cmd ':set ttyfast' -- Lazy Redraw
 vim.cmd [[ :set iskeyword-=- ]]
-vim.cmd [[ :set backup ]]
 vim.cmd ':set clipboard=""'
 
 local on_wsl = function()
