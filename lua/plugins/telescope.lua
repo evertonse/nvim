@@ -38,14 +38,18 @@ local select_nth_entry = function(nth)
   end
 end
 
-local get_visual_selection = function(register_symbol)
+local get_visual_selection = function(register_symbol, escaped)
   register_symbol = register_symbol or '"'
   vim.cmd('normal! "' .. register_symbol .. 'y') -- Yank the visual selection into the 'z' register
 
   local register = vim.fn.getreg(register_symbol)
   local selection = vim.fn.trim(register)
   selection = selection:gsub('\n', ''):match '^%s*(.-)%s*$'
-  print('reg has : ' .. selection)
+  if escaped then
+    selection = selection:gsub('%(', '%\\%(')
+    selection = selection:gsub('%.', '%\\%.')
+  end
+
   return selection
 end
 
@@ -751,7 +755,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
 
         ['<leader>F'] = {
           function()
-            local selection = get_visual_selection()
+            local selection = get_visual_selection('"', true)
             builtin.live_grep { initial_mode = 'insert', default_text = selection }
           end,
           '[S]earch by [G]rep',
@@ -874,7 +878,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
       mappings.v['<leader>f'] = {
         function()
           -- Trim any whitespace from the selection
-          local selection = get_visual_selection()
+          local selection = get_visual_selection('"', true)
           vim.schedule(function()
             mappings.n['<leader>f'][1](selection)
             -- local keys = (vim.api.nvim_replace_termcodes('<C-r>', true, false, true) .. 'a')

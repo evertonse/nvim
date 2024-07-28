@@ -351,7 +351,7 @@ return {
     },
 
     renderer = {
-      hidden_display = 'all',
+      hidden_display = OnSlowPath() and 'none' or 'all',
       -- hidden_display = function(hidden_count)
       --   local total_count = 0
       --   for reason, count in pairs(hidden_count) do
@@ -424,10 +424,8 @@ return {
             open = '', --"",
             symlink = '', --"",
             symlink_open = '',
-            -- arrow_open = '',
-            -- arrow_closed = '',
-            arrow_open = ' ',
-            arrow_closed = ' ',
+            arrow_open = '',
+            arrow_closed = '',
           },
 
           -- neotree examples = {

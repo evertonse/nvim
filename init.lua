@@ -139,10 +139,3 @@ function InsertVirtualTextBelowCurrentLine()
     virt_lines_leftcol = false,
   })
 end
-
--- require('nvim-tree').setup {
---   renderer = {
---     hidden_display = 'all',
---     full_name = true,
---   },
--- }
