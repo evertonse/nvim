@@ -234,7 +234,7 @@ return {
 
           -- Opens a popup that displays documentation about the word under your cursor
           --  See `:help K` for why this keymap.
-          map('K', lsp_hover_or_fallback, 'Hover Documentation')
+          map('K', (vim.version().minor >= 10) and lsp_hover_or_fallback or vim.lsp.buf.hover, 'Hover Documentation')
           -- map('K', vim.lsp.buf.hover, 'Hover Documentation')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.

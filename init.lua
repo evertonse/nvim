@@ -140,12 +140,9 @@ function InsertVirtualTextBelowCurrentLine()
   })
 end
 
-require('nvim-tree').setup {
-  renderer = {
-    hidden_display = 'all',
-    full_name = true,
-    icons = {
-      git_placement = 'right_align',
-    },
-  },
-}
+-- require('nvim-tree').setup {
+--   renderer = {
+--     hidden_display = 'all',
+--     full_name = true,
+--   },
+-- }

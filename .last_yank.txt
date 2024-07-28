@@ -1,1 +1,3 @@
- 
+    icons = {
+      git_placement = 'right_align',
+    },

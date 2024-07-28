@@ -520,7 +520,9 @@ return { -- Fuzzy Finder (files, lsp, etc)
               vim.api.nvim_win_set_option(prompt_win, 'relativenumber', false)
               vim.api.nvim_win_set_option(prompt_win, 'number', false)
 
-              vim.api.nvim_get_hl_ns { winid = prompt_win }
+              if vim.version().minor >= 10 then
+                vim.api.nvim_get_hl_ns { winid = prompt_win }
+              end
             end)
           end
           return true

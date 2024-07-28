@@ -226,37 +226,19 @@ return {
 
       -- Use older API for Neovim versions lower than 0.10
 
-      local lsp_servers_attached = nvim_ok_version
-          and function()
-            local clients = vim.lsp.get_clients { bufnr = 0 }
-            if next(clients) == nil then
-              return ''
-            end
-
-            local client_names = {}
-            for _, client in pairs(clients) do
-              table.insert(client_names, client.name)
-            end
-
-            return table.concat(client_names, ', ') .. ' '
-          end
-        or function()
-          if true then
-            return ''
-          end
-          local clients = vim.lsp.buf_get_clients(0)
-          if next(clients) == nil then
-            return ''
-          end
-
-          local client_names = {}
-          for _, client in pairs(clients) do
-            table.insert(client_names, tostring(client.name))
-            Inspect(client)
-          end
-
-          return table.concat(client_names, ', ') .. ' '
+      local lsp_servers_attached = function()
+        local clients = nvim_ok_version and vim.lsp.get_clients { bufnr = 0 } or vim.lsp.buf_get_clients(0)
+        if next(clients) == nil then
+          return ''
         end
+
+        local client_names = {}
+        for _, client in pairs(clients) do
+          table.insert(client_names, client.name)
+        end
+
+        return table.concat(client_names, ', ') .. ' '
+      end
 
       local function recording_mode()
         local rec_reg = vim.fn.reg_recording()
