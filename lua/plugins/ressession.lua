@@ -90,9 +90,11 @@ return {
         -- Only load the session if nvim was started with no args
         if vim.fn.argc(-1) == 0 then
           -- Save these to a different directory, so our manual sessions don't get polluted
-          resession.load(vim.fn.getcwd(), { dir = 'session', silence_errors = true })
-          -- resession.load 'last'
-          vim.cmd [[stopinsert]]
+          vim.schedule(function()
+            resession.load(vim.fn.getcwd(), { dir = 'session', silence_errors = true })
+            -- resession.load 'last'
+            vim.cmd [[stopinsert]]
+          end)
         end
 
         vim.schedule(function()
