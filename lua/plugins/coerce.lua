@@ -16,6 +16,7 @@ return {
     for _, mode in ipairs(default_modes) do
       mode.keymap_prefix = 'gCr'
     end
+
     require('coerce').setup {
       keymap_registry = require('coerce.keymap').keymap_registry(),
       -- The notification function used during error conditions.
