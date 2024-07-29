@@ -20,9 +20,9 @@ return {
     ---LHS of operator-pending mappings in NORMAL and VISUAL mode
     opleader = {
       ---Line-comment keymap
-      line = comment_line_prefix,
+      line = comment_line_prefix .. 'c',
       ---Block-comment keymap
-      block = comment_block_prefix,
+      block = comment_block_prefix .. 'c',
     },
     ---LHS of extra mappings
     extra = {
@@ -37,9 +37,9 @@ return {
     ---NOTE: If given `false` then the plugin won't create any mappings
     mappings = {
       ---Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
-      basic = true,
+      basic = false,
       ---Extra mapping; `gco`, `gcO`, `gcA`
-      extra = true,
+      extra = false,
     },
     ---Function to call before (un)comment
     pre_hook = nil,
@@ -52,7 +52,7 @@ return {
 
     require('Comment').setup(opts)
 
-    vim.keymap.set('x', 'gc', function()
+    vim.keymap.set({ 'v', 'x' }, 'gc', function()
       local mode = vim.fn.mode()
       print(mode)
       local esc = vim.api.nvim_replace_termcodes('<ESC>', true, false, true)

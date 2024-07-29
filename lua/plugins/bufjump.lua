@@ -1,6 +1,7 @@
 return {
   'kwkarlwang/bufjump.nvim',
   event = 'VeryLazy',
+  lazy = false,
   keys = {},
   config = function()
     require('bufjump').setup {
@@ -16,13 +17,13 @@ return {
     vim.keymap.set('n', '<M-8>', function()
       require('bufjump').forward()
     end, opts)
-    vim.keymap.set('n', '<S-9>', function()
-      require('bufjump').backward_same_buf()
+    vim.keymap.set('n', '<CS-o>', function()
       print 'Jump backward in the same buffer'
+      require('bufjump').backward_same_buf()
     end, opts)
-    vim.keymap.set('n', '<S-8>', function()
-      require('bufjump').forward_same_buf()
+    vim.keymap.set('n', '<CS-i>', function()
       print 'Jump forward in the same buffer'
+      require('bufjump').forward_same_buf()
     end, opts)
   end,
 }

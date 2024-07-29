@@ -195,6 +195,7 @@ M.disabled = {
   },
   n = {
     ['<C-a>'] = '',
+    ['gc'] = '',
     ['<C-<Space>>'] = '',
     ['K'] = '', -- disable search for `man` pages, too slow
     ['<leader>D'] = '',
@@ -266,8 +267,9 @@ M.disabled = {
 
     ['<leader>l'] = '',
   },
-  v = {
+  xvo = {
     -- comment
+    ['gc'] = '',
     ['<leader>/'] = '',
     ['<M-Down'] = '',
   },
