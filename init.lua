@@ -21,8 +21,8 @@
 --    [x] NvimTree implement far-right icon placement
 --    [x] NvimTree implement open_win_config as a function
 --    [x] What is git cherrypick, squash and the other one?
---    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
 --    [x](edit: did checkout) MORE PLUGINS https://github.com/rockerBOO/awesome-neovim#cursorline
+--    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
 --    [ ] NvimTree: possibly undo (working with trash)
 --    [ ] TELESCOPE: Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
 --    [ ] REFACTOR: Make all keymaps in keymaps, and require 'keymaps'.telescope for example in plugin site
@@ -31,11 +31,13 @@
 --    [ ] MARKS: better marks per project visualization and managiong (harpoon2, grapple, portal, marks.nvim, etc...)
 --    [ ] NvimTree bulk renamed when you actually need it
 --    [x] <3 NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
---    [ ] NvimTree implement amount of dotfiles per directory similar to neo-tree
---    [ ] NvimTree create separate PR for exposing NvimTreeFloatBorder
+--    [x] NvimTree implement amount of dotfiles per directory similar to neo-tree
+--    [x] NvimTree create separate PR for exposing NvimTreeFloatBorder
 --    [ ] NvimTree Fix focus file to change cwd if necessary
 --    [ ] NvimTree: Make current indent line diferent than the rest like mini.indent
 --    [ ] NvimTree: Make when going back a dir move cursor to last folder (or even keep opened the folder that were opened like neotree)
+--    [ ] NvimTree: Decorator on far left for SIZE of file, should be easy
+--    [ ] NvimTree: Signs deprecated when in nvim 0.11, fix
 --    [ ] Scope: Clean up and fix PR by pushing
 --    [ ] Colorscheme: Clean up and make it receive opts for transparancy
 --    [x] Alacritty: change this BS of copying with crtl+shift+v, and remove crlt+y mapping
@@ -46,16 +48,20 @@
 --    [ ] Nvimtree: make selection mode leave cursor at the last position before leaving
 --    [x] incline.nvim: Experiment reverse order
 --    [ ] incline.nvim: and set percentage of file scrolling in the filename
---    [ ] breadtrail.nvim: plugin idea
---    [ ] FIX: goto diagnostic bug
+--    [ ] breadtrail.nvim: plugin idea, simpler than trailblazer.nvim
+--    [x] DONE: goto diagnostic bug
 --
---    [ ] GOTTA TOGGLE comment better
---    [ ] I'm opening another fucked window in focus.nvim, straight what now?
---    [ ] 'visual' <leader>F need to scape '(' to '\('
+--    [x] GOTTA TOGGLE comment better
+--    [ ] Comment: better when not in visual mode
+--    [ ] Comment: make it is not supported, insert single line comment on the start of cursor, should be doable with <> registers
+--    [ ] focus.nvim: Add test for new feature
+--    [ ] focus.nvim: better test when opening two floating windows
+--    [x] 'visual' <leader>F need to scape '(' to '\('
 --
 --    [ ] INVESTIGATE .gitignore slow to type on big code paths
 --    [ ] INVESTIGATE Snap on big code bases is it actually faster?
 --    [ ] AUTOCMD Enter terminal remove the lines and shit, autoquit when
+--    [ ] marks.nvim: Check alternative for marks or fixit youself
 --    [x](edit: found le incline good) nvinca something like that
 --
 --
@@ -84,7 +90,6 @@
 --    [x] DONE: Make the telescope prompt background not black
 --    [x] DONE: focus when chaging into tree not change line number of previously focused window and stuff
 --    [ ] TEX: Check If I like that for TCC : https://github.com/jakewvincent/texmagic.nvim
---    [ ] Check alternative for marks or fixit youself
 --
 --     NOTE: Use (in VISUAL MODE) :'<,'>!<shell_command><cr> output to buffer,
 --    or :redir @a :cmd and then :redir END to get the output of command into the `a` register
