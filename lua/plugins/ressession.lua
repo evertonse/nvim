@@ -1,6 +1,7 @@
 return {
   'stevearc/resession.nvim',
   lazy = false,
+  enabled = true,
   dependencies = {
     {
       'evertonse/scope.nvim',
@@ -51,7 +52,7 @@ return {
     extensions = {
       scope = {
         --  For tab-scoped sessions, the on_save and on_load methods of extensions will be disabled by default. There is a special config argument always available that can override this:
-        enable_in_tab = true,
+        enable_in_tab = false,
       },
       -- NOTE: I don't wanna save quicklist
       -- quickfix = true,
@@ -92,7 +93,6 @@ return {
           -- Save these to a different directory, so our manual sessions don't get polluted
           vim.schedule(function()
             resession.load(vim.fn.getcwd(), { dir = 'session', silence_errors = true })
-            -- resession.load 'last'
             vim.cmd [[stopinsert]]
           end)
         end
@@ -100,7 +100,7 @@ return {
         vim.schedule(function()
           local ok = pcall(require('trailblazer').load_trailblazer_state_from_file, trail_path)
           if not ok then
-            error("Couldn't load trailblazer session from" .. trail_path .. '.')
+            vim.notify("Couldn't load trailblazer session from" .. trail_path .. '.', vim.log.levels.WARN)
           end
         end)
       end,

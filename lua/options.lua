@@ -7,6 +7,10 @@
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 
+vim.cmd [[ filetype plugin off]]
+vim.cmd [[ set omnifunc= ]]
+vim.cmd [[ :set sessionoptions-=options ]]
+
 local o, opt, g = vim.o, vim.opt, vim.g
 g.mapleader = ' '
 g.maplocalleader = ' '
@@ -54,6 +58,7 @@ opt.sessionoptions = { -- XXX: required for scope.nvim
   'globals',
 }
 
+vim.b.did_ftplugin = 1
 -- Preview substitutions live, as you type!
 opt.inccommand = 'nosplit' -- NO spliting the windows to see preview
 -- opt.inccommand = 'split'
@@ -172,7 +177,7 @@ o.fillchars = 'eob: ' -- Don't show `~` outside of buffer
 o.infercase = true -- Infer letter cases for a richer built-in keyword completion
 
 o.virtualedit = 'block' -- Allow going past the end of line in visual block mode
-o.formatoptions = 'qjl1' -- Don't autoformat comments
+opt.formatoptions = 'qjl1' -- Don't autoformat comments
 
 if vim.fn.has 'nvim-0.10' == 0 then
   o.termguicolors = true -- Enable gui colors
@@ -226,7 +231,7 @@ o.splitkeep = 'screen' -- Reduce scroll during window split
 
 -- see :h fo-table
 opt.formatoptions:append 'n'
-vim.cmd [[set formatoptions=qrn1coj]]
+vim.cmd [[set formatoptions=qrn1j]]
 opt.formatoptions:remove { 'c', 'r', 'o' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
 vim.cmd [[:set formatoptions-=cro ]]
 

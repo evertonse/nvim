@@ -368,19 +368,29 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 local excyber = vim.api.nvim_create_augroup('1', { clear = true })
-vim.api.nvim_create_autocmd('BufEnter', {
-  group = vim.api.nvim_create_augroup('1', { clear = true }),
+vim.api.nvim_create_autocmd('FileType', {
+  group = excyber,
+  pattern = '*',
   callback = function()
-    local buf = vim.api.nvim_get_current_buf()
-    -- TelescopeResults
-
-    -- 'TelescopePrompt',TelescopeResults
-    if vim.bo[buf].filetype == 'TelescopePrompt' then
-      assert(false, vim.inspect(vim.bo[buf]))
-      vim.cmd [[startinsert]]
-    end
+    -- HACK: solving with always setting this on buf enter, might be sorta slow
+    -- instead of just setting it once
+    -- vim.cmd [[set formatoptions=qrn1j]]
+    vim.cmd [[:set formatoptions-=cro ]]
   end,
 })
+
+local _ = false
+  and vim.api.nvim_create_autocmd('BufEnter', {
+    callback = function()
+      local buf = vim.api.nvim_get_current_buf()
+      -- TelescopeResults
+      -- 'TelescopePrompt',TelescopeResults
+      if vim.bo[buf].filetype == 'TelescopePrompt' then
+        assert(false, vim.inspect(vim.bo[buf]))
+        vim.cmd [[startinsert]]
+      end
+    end,
+  })
 
 -- Create an autocommand group for our buffer delete event
 local function save_buffer_path(args)

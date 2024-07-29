@@ -53,11 +53,14 @@ local lazy_config = {
   performance = {
     rtp = {
       disabled_plugins = {
+        'gzip',
+        'zip',
+        'zipPlugin',
+        'matchparen',
         '2html_plugin',
         'tohtml',
         'getscript',
         'getscriptPlugin',
-        'gzip',
         'logipat',
         'netrw',
         'netrwPlugin',
@@ -85,6 +88,10 @@ local lazy_config = {
   },
 }
 
+for _, bplugin in ipairs(lazy_config.performance.rtp.disabled_plugins) do
+  vim.g['loaded_' .. bplugin] = 1
+end
+
 -- NOTE: Where you install your plugins.
 require('lazy').setup({
 
@@ -93,7 +100,6 @@ require('lazy').setup({
   { 'bfredl/nvim-incnormal', enabled = true, event = 'BufEnter' }, -- NOTE:live-command if better
   { 'moll/vim-bbye', lazy = false, enabled = true },
   { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
-  { 'tpope/vim-sleuth', lazy = false, enabled = false }, -- Detect tabstop and shiftwidth automatically
   { 'yorickpeterse/nvim-pqf', enabled = false }, -- Nicer Quick List
   { 'rktjmp/playtime.nvim', enabled = true }, -- Nicer Quick List
   require 'plugins.focus',
@@ -151,11 +157,10 @@ require('lazy').setup({
 
   require 'plugins.coerce',
   require 'plugins.Comment',
+  {},
   -- require 'plugins.tabby',
   -- require 'plugins.tabline',
-  --
   -- require 'plugins.wilder',
-  --
   -- require 'plugins.fine-cmdline',
 
   require 'plugins.codewindow',
@@ -244,6 +249,8 @@ require('lazy').setup({
   require 'plugins.live-command',
 
   require 'plugins.guess-indent',
+  { 'tpope/vim-sleuth', lazy = false, enabled = true }, -- Detect tabstop and shiftwidth automatically
+  -- :set formatoptions-=r formatoptions-=c formatoptions-=o
 
   require 'plugins.scope',
   require('plugins.' .. vim.g.self.session_plugin),

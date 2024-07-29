@@ -2,6 +2,7 @@ return {
   { -- Autoformat
     'stevearc/conform.nvim',
     lazy = false,
+    enabled = true,
     keys = {
       {
         '<leader>lf',
