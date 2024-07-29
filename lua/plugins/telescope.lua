@@ -810,12 +810,11 @@ return { -- Fuzzy Finder (files, lsp, etc)
                 )
                 -- map({ 'i', 'n' }, '<tab>', actions.git_staging_toggle)
                 local prompt_win = vim.fn.bufwinid(prompt_bufnr)
-                if prompt_win ~= -1 then
+                if prompt_win ~= -1 and vim.api.nvim_win_is_valid(prompt_win) then
                   vim.schedule(function()
                     vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
                   end)
                 end
-
                 return true -- Use Default mappings
               end,
               on_complete = {
