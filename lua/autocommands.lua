@@ -376,6 +376,7 @@ vim.api.nvim_create_autocmd('FileType', {
     -- instead of just setting it once. This is because the runtime ftplugin is setting formatoption :P lovely
     -- vim.cmd [[set formatoptions=qrn1j]]
     -- :h ftplugin-overrule
+    vim.b.did_ftplugin = 1
     vim.cmd [[:set formatoptions-=cro ]] -- just remove this, whatever else can stay
   end,
 })

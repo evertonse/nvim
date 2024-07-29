@@ -58,7 +58,6 @@ opt.sessionoptions = { -- XXX: required for scope.nvim
   'globals',
 }
 
-vim.b.did_ftplugin = 1
 -- Preview substitutions live, as you type!
 opt.inccommand = 'nosplit' -- NO spliting the windows to see preview
 -- opt.inccommand = 'split'
