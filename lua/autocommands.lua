@@ -372,10 +372,11 @@ vim.api.nvim_create_autocmd('FileType', {
   group = excyber,
   pattern = '*',
   callback = function()
-    -- HACK: solving with always setting this on buf enter, might be sorta slow
-    -- instead of just setting it once
+    -- HACK: solving with always setting this on buf enter or filetype, might be sorta slow
+    -- instead of just setting it once. This is because the runtime ftplugin is setting formatoption :P lovely
     -- vim.cmd [[set formatoptions=qrn1j]]
-    vim.cmd [[:set formatoptions-=cro ]]
+    -- :h ftplugin-overrule
+    vim.cmd [[:set formatoptions-=cro ]] -- just remove this, whatever else can stay
   end,
 })
 
