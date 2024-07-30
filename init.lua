@@ -115,9 +115,6 @@ require 'lazy-bootstrap'
 -- [[ Configure and install plugins ]]
 require 'lazy-plugins'
 
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim.api.nvim_set_keymap('n', '<leader>vt', ':lua SetVirtualTextBelowCurrentLine()<CR>', { noremap = true, silent = true })
-
 function SetVirtualTextBelowCurrentLine()
   local buf = vim.api.nvim_get_current_buf()
 
@@ -146,3 +143,5 @@ function InsertVirtualTextBelowCurrentLine()
     virt_lines_leftcol = false,
   })
 end
+
+-- The line beneath this is called `modeline`. See `:help modeline`
