@@ -353,7 +353,8 @@ return {
     renderer = {
       size = {
         enable = true,
-        column_width = 9,
+        column_width = 10,
+        show_folder_size = not OnWsl(),
       },
       hidden_display = OnSlowPath() and 'none' or 'all',
       -- hidden_display = function(hidden_count)

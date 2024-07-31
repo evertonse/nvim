@@ -55,6 +55,8 @@ vim.cmd [[
   augroup _auto_resize
     autocmd!
     autocmd VimResized * tabdo wincmd=
+    autocmd VimResized * lua print("VimResized")
+    autocmd WinResized * lua print("WinResized")
   augroup end
 
 

@@ -75,6 +75,11 @@ OnWindows = function()
   return os_name == 'Windows_NT' or os_version:match 'Windows'
 end
 
+OnWsl = function()
+  local output = vim.fn.systemlist 'uname -r'
+  return #output > 0 and string.find(output[1], 'WSL')
+end
+
 OnSlowPath = function()
   local cwd = vim.fn.getcwd()
 
