@@ -435,12 +435,15 @@ au(
   end,
   'Show relative line numbers'
 )
+au('TermClose', '*', function()
+  vim.api.nvim_feedkeys(vim.keycode '<C-c>', 'n', true)
+end, 'Autoclose terminal when [Process Exit $num]')
 au(
   'ModeChanged',
   '[V\x16]*:*',
   -- Hide relative numbers when neither linewise/blockwise mode is on
   function()
-    vim.wo.relativenumber = string.find(vim.fn.mode(), '^[V\22]') ~= nil
+    vim.wo.relativenumber = (string.find(vim.fn.mode(), '^[V\22]') ~= nil) and vim.o.relativenumber
   end,
   'Hide relative line numbers'
 )
