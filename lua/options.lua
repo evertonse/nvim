@@ -244,7 +244,7 @@ vim.cmd ':set display-=msgsep'
 -- vim.cmd ':set display-=lastline' -- No Line on left
 vim.cmd ':set nomore'
 -- vim.cmd ':set more'
-vim.cmd ':set lz' -- Lazy Redraw
+-- vim.cmd ':set lz' -- Lazy Redraw
 -- vim.cmd ':set ttyfast' -- Lazy Redraw
 vim.cmd [[ :set iskeyword-=- ]]
 vim.cmd ':set clipboard=""'

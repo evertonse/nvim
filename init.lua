@@ -56,6 +56,7 @@
 --    [ ] Comment: make it is not supported, insert single line comment on the start of cursor, should be doable with <> registers
 --    [ ] focus.nvim: Add test for new feature
 --    [ ] focus.nvim: better test when opening two floating windows
+--    [ ] Autocmd: Use remembered last number options when switching back
 --    [x] 'visual' <leader>F need to scape '(' to '\('
 --
 --    [ ] INVESTIGATE .gitignore slow to type on big code paths
@@ -68,21 +69,22 @@
 --    NOTE: Maybe you'd wnat this https://github.com/kdheepak/lazygit.nvim;
 --          RN i don't see a reason to not just use lazygit on the terminal
 --
---    IMPORTANT: shit is crazy abouth treesitter combined with something else that I forgot (edit: vim-matchup is the thing)
+--    IMPORTANT DONE: shit is crazy abouth treesitter combined with something else that I forgot (edit: vim-matchup is the thing)
 --
---    IMPORTANT: WSL `CMP` is rather slow if searches through the whole windows path,
+--    IMPORTANT DONE: WSL `CMP` is rather slow if searches through the whole windows path,
 --               My fix was to disable a bunch of file watcher and set dynamicRegistration = false to vairous
 --               lspconfig default capabilities. Another fix is to set /etc/wsl.conf such as below (maybe even set enabled interop to false)
 --                   [interop]
 --                   enabled = true
 --                   appendWindowsPath = false
 --
---    IMPORTANT: Conform is responsable for autoformat, but WHYY, Why do I need that instead of just a autocommand?
+--    IMPORTANT DONE: Conform is responsable for autoformat, but WHYY, Why do I need that instead of just a autocommand?
 --
 --    IMPORTANT (17-07-2024): Highlight float windows can only wither have winblend or background "none", but not both as it bugs out
 --               see: https://github.com/rcarriga/nvim-notify/issues/47#issuecomment-1003326053
 --               see: https://github.com/neovim/neovim/issues/18576
 --    IMPORTANT COPILOT like https://github.com/b0o/supermaven-nvim
+--
 --    [ ] Alacritty graphics: support for sixel image on terminal: https://github.com/alacritty/alacritty/pull/4763 with this we might just do alot no  wiht neovim neoorg and stuff?
 --    [ ] VScode like preview: https://github.com/DNLHC/glance.nvim
 --    [ ] Read semantic HL (see about priority of hl): https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316

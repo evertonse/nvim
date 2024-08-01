@@ -11,10 +11,9 @@ vim.cmd [[
   augroup _general_settings
     autocmd!
     autocmd FileType qf,help,man,lspinfo nnoremap <silent> <buffer> q :close<CR> 
-    
+    autocmd FileType qf <silent> <buffer> l <CR> 
     autocmd WinEnter * setlocal cursorline
     autocmd WinLeave * setlocal nocursorline
-   " autocmd WinNew * :print "hello"
     autocmd FileType qf,nofile,help set nobuflisted
   augroup end
 
@@ -55,8 +54,8 @@ vim.cmd [[
   augroup _auto_resize
     autocmd!
     autocmd VimResized * tabdo wincmd=
-    autocmd VimResized * lua print("VimResized")
-    autocmd WinResized * lua print("WinResized")
+    " autocmd VimResized * lua print("VimResized")
+    " autocmd WinResized * lua print("WinResized")
   augroup end
 
 

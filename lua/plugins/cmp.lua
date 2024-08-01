@@ -260,7 +260,8 @@ return {
       }
       local search_opts = {
         mapping = cmp.mapping.preset.cmdline(),
-        completion = { completeopt = 'menu,menuone,noinsert,noselect,preview', autocomplete = false },
+        autocomplete = true,
+        completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
         sources = {
           { name = 'buffer' },
         },
@@ -271,7 +272,7 @@ return {
       -- `:` cmdline setup.
       local _ = not vim.g.self.wilder
         and cmp.setup.cmdline(':', {
-          autocomplete = false,
+          autocomplete = true,
           enabled = function()
             -- Set of commands where cmp will be disabled
             local disabled = {
