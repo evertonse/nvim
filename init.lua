@@ -36,7 +36,7 @@
 --    [ ] NvimTree Fix focus file to change cwd if necessary
 --    [ ] NvimTree: Make current indent line diferent than the rest like mini.indent
 --    [ ] NvimTree: Make when going back a dir move cursor to last folder (or even keep opened the folder that were opened like neotree)
---    [ ] NvimTree: Decorator on far left for SIZE of file, should be easy
+--    [x] NvimTree: Decorator on far left for SIZE of file, should be easy
 --    [ ] NvimTree: Signs deprecated when in nvim 0.11, fix
 --    [ ] Scope: Clean up and fix PR by pushing
 --    [ ] Colorscheme: Clean up and make it receive opts for transparancy

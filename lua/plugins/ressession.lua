@@ -94,6 +94,7 @@ return {
           vim.schedule(function()
             resession.load(vim.fn.getcwd(), { dir = 'session', silence_errors = true })
             vim.cmd [[stopinsert]]
+            vim.cmd [[set cmdheight=1]]
           end)
         end
 

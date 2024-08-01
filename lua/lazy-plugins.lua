@@ -249,7 +249,7 @@ require('lazy').setup({
   require 'plugins.live-command',
 
   require 'plugins.guess-indent',
-  { 'tpope/vim-sleuth', lazy = false, enabled = true }, -- Detect tabstop and shiftwidth automatically
+  { 'tpope/vim-sleuth', lazy = false, enabled = false }, -- Detect tabstop and shiftwidth automatically
   -- :set formatoptions-=r formatoptions-=c formatoptions-=o
 
   require 'plugins.scope',

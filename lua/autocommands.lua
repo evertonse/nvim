@@ -97,7 +97,7 @@ vim.cmd [[autocmd FileType bin nnoremap <F6> :%!xxd -r <CR>]]
 -- vim.cmd [[autocmd filetype python nnoremap <F5> :w <bar> exec '!python '.shellescape('%')<CR>]]
 -- vim.cmd [[autocmd filetype c nnoremap <F5> :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>]]
 -- vim.cmd [[autocmd filetype cpp nnoremap <F5> :w <bar> exec '!g++ '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>]]
-vim.cmd [[autocmd TermEnter * setlocal nonumber norelativenumber signcolumn=no]]
+vim.cmd [[autocmd TermEnter,TermOpen * setlocal nonumber norelativenumber signcolumn=no]]
 -- vim.cmd [[autocmd TermOpen * startinsert ]] -- stopinsert ]]        -- starts terminal in insert mode
 
 -- Auto command to activate virtual environment on terminal open
@@ -153,13 +153,6 @@ vim.api.nvim_create_autocmd('VimEnter', {
 -- close quicklist after enter
 vim.cmd [[ autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>]]
 
-vim.cmd [[
-" autocmd FileType markdown nmap <buffer><silent> <leader>p :call mdip#MarkdownClipboardImage()<CR>
-" there are some defaults for image directory and image name, you can change them
-" let g:mdip_imgdir = 'img'
-" let g:mdip_imgname = 'image'
-]]
-
 local yank_history = {}
 local function capture_yank()
   local yanked_text = vim.fn.getreg '"'
@@ -190,7 +183,7 @@ vim.api.nvim_create_autocmd('CmdwinEnter', {
     end, { buffer = 0, noremap = true, silent = true })
 
     if vim.api.nvim_get_mode().mode == 'n' then
-      vim.api.nvim_input 'a'
+      -- vim.api.nvim_input 'a'
     end
 
     local close_completion = false
