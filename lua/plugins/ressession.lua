@@ -98,7 +98,13 @@ return {
         end
 
         vim.schedule(function()
-          local ok = pcall(require('trailblazer').load_trailblazer_state_from_file, trail_path)
+          local ok, trail = pcall(require, 'trailblazer')
+          if not ok then
+            vim.notify("Couldn't load trailblazer session from" .. trail_path .. '.', vim.log.levels.WARN)
+            return
+          end
+
+          ok = pcall(trail.load_trailblazer_state_from_file, trail_path)
           if not ok then
             vim.notify("Couldn't load trailblazer session from" .. trail_path .. '.', vim.log.levels.WARN)
           end
@@ -110,7 +116,13 @@ return {
       callback = function()
         close_quickfix()
         resession.save(vim.fn.getcwd(), { dir = 'session', notify = true })
-        local ok = pcall(require('trailblazer').save_trailblazer_state_to_file, trail_path)
+
+        local ok, trail = pcall(require, 'trailblazer')
+        if not ok then
+          vim.notify("Couldn't load trailblazer session from" .. trail_path .. '.', vim.log.levels.WARN)
+          return
+        end
+        ok = pcall(trail.save_trailblazer_state_to_file, trail_path)
         if not ok then
           vim.fn.confirm("Couldn't save trailblazer session to" .. trail_path .. '.')
         end

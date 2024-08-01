@@ -273,8 +273,9 @@ require('lazy').setup({
   require 'plugins.cybu',
   require 'plugins.img-clip',
   require 'plugins.marks', -- alternative: https://github.com/desdic/marlin.nvim
-  require 'plugins.trailblazer',
+  -- require 'plugins.trailblazer', -- TODO : Make something simpler than this some other day
   require 'plugins.portal',
+  require 'plugins.winresize',
   require 'plugins.cmdbuf',
   require 'plugins.lspconfig',
 }, lazy_config)

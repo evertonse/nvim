@@ -1381,9 +1381,6 @@ local map = function(mode, lhs, rhs, opts)
   vim.keymap.set(mode, lhs, rhs, opts)
 end
 
--- - Paste in Visual with `P` to not copy selected text (`:h v_P`)
-map('x', 'gp', '"+P', { desc = 'Paste from system clipboard' })
-
 -- Reselect latest changed, put, or yanked text
 map(
   'n',
@@ -1502,10 +1499,6 @@ map(
   '"`[" . strpart(getregtype(), 0, 1) . "`]"',
   { expr = true, replace_keycodes = false, desc = 'Visually select changed text' }
 )
-
--- Search inside visually highlighted text. Use `silent = false` for it to
--- make effect immediately.
-map('x', '/', '<esc>/\\%V', { silent = false, desc = 'Search inside visual selection' })
 
 -- Search visually selected text (slightly better than builtins in
 -- Neovim>=0.8 but slightly worse than builtins in Neovim>=0.10)
