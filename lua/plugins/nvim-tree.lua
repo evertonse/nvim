@@ -354,7 +354,7 @@ return {
       size = {
         enable = true,
         column_width = 8,
-        width_cutoff = 12,
+        width_cutoff = 18,
         show_folder_size = not OnWsl(),
         format_unit = 'single',
       },
