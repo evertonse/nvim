@@ -23,7 +23,6 @@
 --    [x] What is git cherrypick, squash and the other one?
 --    [x](edit: did checkout) MORE PLUGINS https://github.com/rockerBOO/awesome-neovim#cursorline
 --    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
---    [ ] NvimTree: possibly undo (working with trash)
 --    [ ] TELESCOPE: Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
 --    [ ] REFACTOR: Make all keymaps in keymaps, and require 'keymaps'.telescope for example in plugin site
 --    [ ] See about make named sessions and named tabs
@@ -31,10 +30,11 @@
 --    [ ] MARKS: better marks per project visualization and managiong (harpoon2, grapple, portal, marks.nvim, etc...)
 --    [ ] NvimTree bulk renamed when you actually need it
 --    [x] <3 NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
---    [x] NvimTree implement amount of dotfiles per directory similar to neo-tree
---    [x] NvimTree create separate PR for exposing NvimTreeFloatBorder
---    [ ] NvimTree Fix focus file to change cwd if necessary
---    [ ] NvimTree: Make current indent line diferent than the rest like mini.indent
+--    [x] NvimTree: implement amount of dotfiles per directory similar to neo-tree
+--    [x] NvimTree: create separate PR for exposing NvimTreeFloatBorder
+--    [ ] NvimTree: Fix focus file to change cwd if necessary
+--    [ ] NvimTree: possibly undo (working with trash)
+--    [ ] NvimTree: Highlight current indent. Make current indent line diferent than the rest like mini.indent
 --    [ ] NvimTree: Make when going back a dir move cursor to last folder (or even keep opened the folder that were opened like neotree)
 --    [x] NvimTree: Decorator on far left for SIZE of file, should be easy
 --    [ ] NvimTree: Signs deprecated when in nvim 0.11, fix

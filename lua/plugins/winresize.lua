@@ -9,7 +9,7 @@ return {
     local resize = require('winresize').resize
     submode.create('WinResize', {
       mode = 'n',
-      enter = '<Leader>W',
+      enter = '<Leader><C-w>',
       leave = { 'q', '<ESC>' },
       default = function(register)
         register('h', function()
