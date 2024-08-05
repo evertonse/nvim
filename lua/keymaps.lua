@@ -1523,6 +1523,40 @@ end
 -- NOTE: Adding `redraw` helps with `cmdheight=0` if buffer is not modified
 map('n', '<C-S>', '<Cmd>silent! update | redraw<CR>', { desc = 'Save' })
 map({ 'i', 'x' }, '<C-S>', '<Esc><Cmd>silent! update | redraw<CR>', { desc = 'Save and go to Normal mode' })
+local positions = {}
+local current_index = 0
+
+-- Function to save the current file, line, and column
+local function save_position()
+  local buf = vim.api.nvim_get_current_buf()
+  local file = vim.api.nvim_buf_get_name(buf)
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+  table.insert(positions, { file = file, line = row, col = col })
+
+  -- Set sign in the buffer
+  vim.fn.sign_place(0, 'PositionSigns', 'PositionSign', buf, { lnum = row, priority = 10 })
+  print('Position saved: ' .. file .. ' [' .. row .. ', ' .. col .. ']')
+end
+
+-- Function to jump to the next position
+local function jump_to_next_position()
+  if #positions == 0 then
+    print 'No positions saved'
+    return
+  end
+  current_index = current_index % #positions + 1
+  local pos = positions[current_index]
+  vim.cmd('edit ' .. pos.file)
+  vim.api.nvim_win_set_cursor(0, { pos.line, pos.col })
+  print('Jumped to: ' .. pos.file .. ' [' .. pos.line .. ', ' .. pos.col .. ']')
+end
+
+-- Create sign group and sign
+vim.fn.sign_define('PositionSign', { text = '>>', texthl = 'Error', linehl = '', numhl = '' })
+
+-- Key mappings
+map('n', '<leader>m', save_position, { noremap = true, silent = true })
+map('n', '<C-n>', jump_to_next_position, { noremap = true, silent = true })
 
 SetKeyMaps(M.disabled)
 SetKeyMaps(M.general)

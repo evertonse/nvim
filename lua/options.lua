@@ -246,7 +246,7 @@ vim.cmd ':set display-=msgsep'
 -- vim.cmd ':set nomore'
 vim.cmd ':set more'
 vim.cmd ':set nolz' -- Lazy Redraw
-vim.cmd ':set ttyfast'
+-- vim.cmd ':set ttyfast'
 vim.cmd [[ :set iskeyword-=- ]]
 vim.cmd ':set clipboard=""'
 

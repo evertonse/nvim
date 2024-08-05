@@ -1,6 +1,7 @@
 return {
   'LeonHeidelbach/trailblazer.nvim',
   lazy = false,
+  enabled = false,
   -- Adjust these values to your liking
   opts = {
     lang = 'en',
