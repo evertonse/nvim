@@ -255,6 +255,10 @@ function TableDump(node)
 end
 
 Inspect = function(table)
+  vim.fn.confirm(vim.inspect(table))
+end
+
+Inspect2 = function(table)
   ShowStringAndWait(vim.inspect(table))
 end
 

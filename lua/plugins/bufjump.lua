@@ -34,9 +34,9 @@ return {
     end
     vim.keymap.set('n', '<C-S-i>', back, opts)
     vim.keymap.set('n', '<C-+>', back, opts)
-    vim.keymap.set('n', '<Esc>[73;5u', function()
-      print 'LLLOL'
-      back()
-    end, opts)
+    -- vim.keymap.set('n', '<Esc>[73;5u', function()
+    --   print 'LLLOL'
+    --   back()
+    -- end, opts)
   end,
 }

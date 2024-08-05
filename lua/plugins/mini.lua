@@ -285,13 +285,14 @@ return {
 
         statusline.setup {
           use_icons = vim.g.self.nerd_font,
-          set_vim_settings = true,
+          set_vim_settings = false,
         }
         vim.cmd [[:set laststatus=3]]
       end
       mini_statusline_setup()
 
       require('mini.trailspace').setup()
+
       local mini_hipatterns_setup = function()
         local hipatterns = require 'mini.hipatterns'
         hipatterns.setup {

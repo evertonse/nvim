@@ -1,3 +1,19 @@
+local previous_stats = {
+  laststatus = vim.opt.laststatus,
+  number = vim.wo.number,
+  relativenumber = vim.wo.relativenumber,
+  cmdheight = vim.opt.cmdheight,
+  ministatusline_disable = vim.g.ministatusline_disable,
+}
+
+local excyber = vim.api.nvim_create_augroup('1', { clear = true })
+local au = function(event, pattern, callback, desc, augroup, once)
+  vim.api.nvim_create_autocmd(
+    event,
+    { group = augroup or excyber, once = once or false, pattern = pattern, callback = callback, desc = desc }
+  )
+end
+
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
@@ -10,9 +26,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.cmd [[
   augroup _general_settings
     autocmd!
-    autocmd FileType qf,help,man,lspinfo nnoremap <silent> <buffer> q :close<CR> 
-    autocmd FileType qf <silent> <buffer> l <CR> 
-    autocmd WinEnter * setlocal cursorline
+    autocmd FileType qf,help,man,lspinfo nnoremap <silent> <buffer> q :close<CR>
+    autocmd FileType qf nnoremap <silent> <buffer> l <CR>
     autocmd WinLeave * setlocal nocursorline
     autocmd FileType qf,nofile,help set nobuflisted
   augroup end
@@ -154,6 +169,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
 vim.cmd [[ autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>]]
 
 local yank_history = {}
+
 local function capture_yank()
   local yanked_text = vim.fn.getreg '"'
   table.insert(yank_history, yanked_text)
@@ -168,30 +184,77 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- TODO: Make it come back to the line it once was, probably have to
 -- delete lê
-vim.api.nvim_create_autocmd('CmdwinEnter', {
-  pattern = '*',
-  once = false,
-  callback = function()
-    local modes = { 'i', 'n' }
-    for _, mode in ipairs(modes) do
-      vim.api.nvim_buf_set_keymap(0, mode, '<C-f>', '<C-c><Down>', { noremap = true, silent = true })
-    end
-    vim.keymap.set({ 'x', 'v', 'n' }, '<CR>', '<CR>', { buffer = 0, noremap = true, silent = true })
-    vim.api.nvim_buf_set_keymap(0, 'i', '<CR>', '<C-c><CR>', { noremap = true, silent = true })
-    vim.keymap.set('i', '<C-c>', function()
-      vim.cmd [[stopinsert]]
-    end, { buffer = 0, noremap = true, silent = true })
 
-    if vim.api.nvim_get_mode().mode == 'n' then
-      -- vim.api.nvim_input 'a'
-    end
+-- function(event, pattern, callback, desc, augroup)
 
-    local close_completion = false
-    if close_completion then
-      vim.cmd [[pclose]]
-    end
-  end,
-})
+au('WinEnter', '*', function(_)
+  vim.cmd [[setlocal cursorline]]
+end)
+
+au('CmdlineLeave', '*', function(_)
+  vim.opt.laststatus = previous_stats.laststatus
+  vim.wo.number = previous_stats.number
+  vim.wo.relativenumber = previous_stats.relativenumber
+  vim.opt.cmdheight = previous_stats.cmdheight
+  vim.g.ministatusline_disable = previous_stats.ministatusline_disable
+end)
+
+au('CmdwinEnter', '*', function(event)
+  local map = vim.keymap.set
+  previous_stats = {
+    laststatus = vim.opt.laststatus,
+    number = vim.wo.number,
+    relativenumber = vim.wo.relativenumber,
+    cmdheight = vim.opt.cmdheight,
+    ministatusline_disable = vim.g.ministatusline_disable,
+  }
+
+  vim.g.ministatusline_disable = true
+  vim.o.laststatus = 0
+  vim.o.cmdheight = 0
+  vim.wo.number = false
+  vim.wo.relativenumber = false
+
+  local ok, cmp = pcall(require, 'cmp')
+  if ok then
+    cmp.close()
+    vim.schedule(cmp.complete)
+  end
+
+  local opts = { buffer = event.buf, noremap = true, silent = true }
+
+  map({ 'i', 'n' }, '<C-f>', '<C-c><Down>', opts)
+  map('n', '<C-c>', function()
+    vim.cmd [[stopinsert]]
+  end, opts)
+
+  map({ 'x', 'v', 'n' }, '<CR>', '<CR>', opts)
+
+  map({ 'n' }, '<Esc>', function()
+    vim.cmd [[q!]]
+  end, opts)
+
+  local goto_cmd = function()
+    vim.api.nvim_input '<C-f>'
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Space><BS>', true, true, true), 'c', false)
+  end
+
+  map({ 'n' }, 'i', function()
+    goto_cmd()
+    vim.api.nvim_input '<Right><Left>'
+  end, opts)
+  map({ 'n', 'v', 'x' }, 'a', function()
+    goto_cmd()
+    vim.api.nvim_input '<Right>'
+  end, opts)
+
+  for _, letter in ipairs { 'c', 'C', 's', 'S', 'o', 'O', 'A', 'I' } do
+    map({ 'v', 'x', 'n' }, letter, function()
+      vim.api.nvim_feedkeys(letter, 'n', true)
+      vim.schedule(goto_cmd)
+    end, opts)
+  end
+end)
 
 local telescope_yank_history = function()
   local finders = require 'telescope.finders'
@@ -361,7 +424,6 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
-local excyber = vim.api.nvim_create_augroup('1', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
   group = excyber,
   pattern = '*',
@@ -371,7 +433,14 @@ vim.api.nvim_create_autocmd('FileType', {
     -- vim.cmd [[set formatoptions=qrn1j]]
     -- :h ftplugin-overrule
     vim.b.did_ftplugin = 1
-    vim.cmd [[:set formatoptions-=cro ]] -- just remove this, whatever else can stay
+    local preserve_previous = true
+
+    if not preserve_previous then
+      vim.opt.formatoptions = 'qjl1' -- Don't autoformat comments
+      return
+    end
+
+    vim.opt.formatoptions:remove { 'c', 'r', 'o', 'l' } -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
   end,
 })
 
@@ -381,6 +450,7 @@ local _ = false
       local buf = vim.api.nvim_get_current_buf()
       -- TelescopeResults
       -- 'TelescopePrompt',TelescopeResults
+
       if vim.bo[buf].filetype == 'TelescopePrompt' then
         assert(false, vim.inspect(vim.bo[buf]))
         vim.cmd [[startinsert]]
@@ -421,9 +491,11 @@ vim.api.nvim_create_autocmd('CompleteDone', {
   end,
 })
 
-local au = function(event, pattern, callback, desc, augroup)
-  vim.api.nvim_create_autocmd(event, { group = augroup or excyber, pattern = pattern, callback = callback, desc = desc })
-end
+-- LIARSSSS
+-- au(
+-- 'UserGettingBored', '*', function(event)
+--   Inspect(event)
+-- end)
 
 au(
   'ModeChanged',

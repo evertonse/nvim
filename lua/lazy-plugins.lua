@@ -88,9 +88,16 @@ local lazy_config = {
   },
 }
 
-for _, bplugin in ipairs(lazy_config.performance.rtp.disabled_plugins) do
-  vim.g['loaded_' .. bplugin] = 1
+local personally_disable_runtime_plugins = function()
+  for _, bplugin in ipairs(lazy_config.performance.rtp.disabled_plugins) do
+    if true then
+      break
+    end
+    vim.g['loaded_' .. bplugin:gsub('%..*', '')] = 1
+  end
 end
+
+personally_disable_runtime_plugins()
 
 -- NOTE: Where you install your plugins.
 require('lazy').setup({
@@ -161,7 +168,7 @@ require('lazy').setup({
   -- require 'plugins.tabby',
   -- require 'plugins.tabline',
   -- require 'plugins.wilder',
-  -- require 'plugins.fine-cmdline',
+  require 'plugins.fine-cmdline',
 
   require 'plugins.codewindow',
 
@@ -249,9 +256,8 @@ require('lazy').setup({
   require 'plugins.live-command',
 
   require 'plugins.guess-indent',
-  { 'tpope/vim-sleuth', lazy = false, enabled = false }, -- Detect tabstop and shiftwidth automatically
-  -- :set formatoptions-=r formatoptions-=c formatoptions-=o
-
+  { 'tpope/vim-sleuth', lazy = false, enabled = true }, -- Detect tabstop and shiftwidth automatically
+  -- -- :set formatoptions-=r formatoptions-=c formatoptions-=o
   require 'plugins.scope',
   require('plugins.' .. vim.g.self.session_plugin),
 
@@ -277,7 +283,9 @@ require('lazy').setup({
   require 'plugins.portal',
   require 'plugins.winresize',
   require 'plugins.cmdbuf',
-  require 'plugins.lspconfig',
+  require 'plugins.searchbox',
+  require 'plugins.multiple-cursors',
+  require 'plugins.lsp.lspconfig',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et

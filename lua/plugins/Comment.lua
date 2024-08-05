@@ -1,5 +1,5 @@
 local comment_line_prefix = 'gc'
-local comment_block_prefix = 'gb'
+local comment_block_prefix = 'gB'
 return {
   'numToStr/Comment.nvim',
   lazy = false,
@@ -22,7 +22,7 @@ return {
       ---Line-comment keymap
       line = comment_line_prefix,
       ---Block-comment keymap
-      block = comment_block_prefix .. 'c',
+      block = comment_block_prefix,
     },
     ---LHS of extra mappings
     extra = {

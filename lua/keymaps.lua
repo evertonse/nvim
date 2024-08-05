@@ -74,11 +74,6 @@ end
 -- TIPS `:map <key>` to see all keys with that prefix
 
 local function delete_buffer()
-  -- local current_buffer = vim.api.nvim_get_current_buf()
-  -- local current_path = vim.api.nvim_buf_get_name(current_buffer)
-  -- if current_path and current_path ~= '' then
-  --   table.insert(vim.g.user.buffer_paths, current_path)
-  -- end
   delete_scoped_buffer()
 end
 
@@ -838,7 +833,8 @@ M.general = {
     ['<A-j>'] = { ":m '>+1<CR>gv=gv", noremap_opts },
     ['<A-k>'] = { ":m '<-2<CR>gv=gv", noremap_opts },
 
-    ['p'] = { '"_dP', noremap_opts },
+    ['p'] = { 'P', noremap_opts },
+    -- ['P'] = { '"_P', noremap_opts },
 
     ['<C-h>'] = { 'b' },
     ['<C-l>'] = { 'e' },
@@ -1378,7 +1374,14 @@ local map = function(mode, lhs, rhs, opts)
     return
   end
   opts = vim.tbl_deep_extend('force', { silent = true }, opts or {})
-  vim.keymap.set(mode, lhs, rhs, opts)
+
+  if type(lhs) == 'table' then
+    for _, single_lhs in ipairs(lhs) do
+      vim.keymap.set(mode, single_lhs, rhs, opts)
+    end
+  else
+    vim.keymap.set(mode, lhs, rhs, opts)
+  end
 end
 
 -- Reselect latest changed, put, or yanked text
@@ -1400,6 +1403,13 @@ if vim.fn.has 'nvim-0.10' == 0 then
   map('x', '*', [[y/\V<C-R>=escape(@", '/\')<CR><CR>]], { desc = 'Search forward' })
   map('x', '#', [[y?\V<C-R>=escape(@", '?\')<CR><CR>]], { desc = 'Search backward' })
 end
+
+local back_to_cmdline_window = function()
+  vim.api.nvim_input '<C-f>'
+end
+
+map('c', { '<C-c>', 'jk', 'kk', 'kj' }, back_to_cmdline_window, { noremap = true, silent = false, desc = '' })
+
 -- Move only sideways in command mode. Using `silent = false` makes movements
 -- to be immediately shown.
 map('c', '<M-h>', '<Left>', { silent = false, desc = 'Left' })
@@ -1430,6 +1440,7 @@ map(
   '"<Cmd>vertical resize +" . v:count1 . "<CR>"',
   { expr = true, replace_keycodes = false, desc = 'Increase window width' }
 )
+
 local silent = false
 local toggle_prefix = '<leader>T'
 if type(toggle_prefix) == 'string' and toggle_prefix ~= '' then

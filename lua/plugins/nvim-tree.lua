@@ -358,24 +358,26 @@ return {
         show_folder_size = not OnWsl(),
         format_unit = 'single',
       },
-      hidden_display = OnSlowPath() and 'none' or 'all',
-      -- hidden_display = function(hidden_count)
-      --   local total_count = 0
-      --   for reason, count in pairs(hidden_count) do
-      --     total_count = total_count + count
-      --   end
+      -- hidden_display = OnSlowPath() and 'none' or 'all',
+      hidden_display = function(hidden_stats)
+        local total_count = 0
+        for reason, count in pairs(hidden_stats) do
+          total_count = total_count + count
+        end
 
-      --   if total_count > 0 then
-      --     return '> ' .. tostring(total_count) .. ' le hidden'
-      --   end
-      --   return nil
-      -- end,
+        if total_count > 0 then
+          return '(' .. tostring(total_count) .. ' hidden)'
+        end
+
+        return nil
+      end,
+
       full_name = true,
       -- Value can be `"none"`, `"icon"`, `"name"` or `"all"`.
-      highlight_git = 'name',
+      highlight_git = 'icon',
       highlight_diagnostics = 'icon',
       highlight_opened_files = 'none',
-      highlight_modified = 'all',
+      highlight_modified = 'icon',
       highlight_hidden = 'all',
       highlight_bookmarks = 'icon',
       highlight_clipboard = 'icon',
@@ -417,11 +419,12 @@ return {
           diagnostics = true,
           bookmarks = true,
           hidden = true,
-          folder_arrow = true,
+          folder_arrow = false,
           git = true,
           modified = true,
         },
         glyphs = {
+
           default = '󰈚', --"",
           symlink = '',
           hidden = '󰜌',

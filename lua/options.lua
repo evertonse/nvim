@@ -7,11 +7,12 @@
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 
-vim.cmd [[ filetype plugin off]]
-vim.cmd [[ set omnifunc= ]]
+-- vim.cmd [[ filetype plugin off]]
+-- vim.cmd [[ set omnifunc= ]]
 vim.cmd [[ :set sessionoptions-=options ]]
 
 local o, opt, g = vim.o, vim.opt, vim.g
+
 g.mapleader = ' '
 g.maplocalleader = ' '
 g.loaded_perl_provider = 0
@@ -244,8 +245,8 @@ vim.cmd ':set display-=msgsep'
 -- vim.cmd ':set display-=lastline' -- No Line on left
 -- vim.cmd ':set nomore'
 vim.cmd ':set more'
--- vim.cmd ':set lz' -- Lazy Redraw
--- vim.cmd ':set ttyfast' -- Lazy Redraw
+vim.cmd ':set nolz' -- Lazy Redraw
+vim.cmd ':set ttyfast'
 vim.cmd [[ :set iskeyword-=- ]]
 vim.cmd ':set clipboard=""'
 

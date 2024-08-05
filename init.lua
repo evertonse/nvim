@@ -29,15 +29,20 @@
 --    [ ] See about reordering/managing buffers
 --    [ ] MARKS: better marks per project visualization and managiong (harpoon2, grapple, portal, marks.nvim, etc...)
 --    [ ] NvimTree bulk renamed when you actually need it
+--    [ ] CmdLineWindow: Make so every insert char is transfered to the cmdline normally to ensure inccommand properly
+--    [ ] CmdLineWindow: Make the cmdheight be 0 when in cmdline window
 --    [x] <3 NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
 --    [x] NvimTree: implement amount of dotfiles per directory similar to neo-tree
 --    [x] NvimTree: create separate PR for exposing NvimTreeFloatBorder
 --    [ ] NvimTree: Fix focus file to change cwd if necessary
 --    [ ] NvimTree: possibly undo (working with trash)
+--    [ ] Focus: do you own focus looping through all windows that are not floating, and that's it =P
 --    [ ] NvimTree: Highlight current indent. Make current indent line diferent than the rest like mini.indent
 --    [ ] NvimTree: Make when going back a dir move cursor to last folder (or even keep opened the folder that were opened like neotree)
 --    [x] NvimTree: Decorator on far left for SIZE of file, should be easy
 --    [ ] NvimTree: Signs deprecated when in nvim 0.11, fix
+--    [ ] cmdbuf: make you own with the autocmmd you made
+--    [ ] Neovim: make cmdwin work with incpreview commands
 --    [ ] Scope: Clean up and fix PR by pushing
 --    [ ] Colorscheme: Clean up and make it receive opts for transparancy
 --    [x] Alacritty: change this BS of copying with crtl+shift+v, and remove crlt+y mapping
@@ -89,6 +94,7 @@
 --    [ ] VScode like preview: https://github.com/DNLHC/glance.nvim
 --    [ ] Read semantic HL (see about priority of hl): https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316
 --    [ ] LaTeX replacement for sure, made in rust from ground up: https://github.com/typst/typst
+--    [ ] CmdwinEnter: Make StatusNC be conceal then return to previous when leaving
 --    [x] DONE: Make the telescope prompt background not black
 --    [x] DONE: focus when chaging into tree not change line number of previously focused window and stuff
 --    [ ] TEX: Check If I like that for TCC : https://github.com/jakewvincent/texmagic.nvim
@@ -145,5 +151,3 @@ function InsertVirtualTextBelowCurrentLine()
     virt_lines_leftcol = false,
   })
 end
-
--- The line beneath this is called `modeline`. See `:help modeline`
