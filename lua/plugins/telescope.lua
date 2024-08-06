@@ -174,6 +174,8 @@ local function custom_find_files()
       .new({}, {
         default_text = text,
 
+        path_display = { 'smart' },
+
         layout_config = {
           width = 0.65, -- percentage of screen width
           preview_cutoff = 125, -- Ensure previewer always most times

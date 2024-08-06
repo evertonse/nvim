@@ -1,3 +1,52 @@
+-- Custom handler to use vim.ui.input instead of quickfix list
+local function custom_handler(err, result, ctx, config)
+  if err ~= nil then
+    vim.notify('Error: ' .. err.message, vim.log.levels.ERROR)
+    return
+  end
+
+  if result == nil or vim.tbl_isempty(result) then
+    vim.notify('No results found', vim.log.levels.INFO)
+    return
+  end
+
+  local locations = result
+  if vim.tbl_islist(result) then
+    if #result == 1 then
+      locations = result[1]
+    end
+  end
+
+  local function jump_to_location(location)
+    local uri = location.uri or location.targetUri
+    local bufnr = vim.uri_to_bufnr(uri)
+    vim.fn.bufload(bufnr)
+    local range = location.range or location.targetSelectionRange
+    local start = range.start
+    vim.api.nvim_win_set_buf(0, bufnr)
+    vim.api.nvim_win_set_cursor(0, { start.line + 1, start.character + 1 })
+  end
+
+  if vim.tbl_islist(result) and #result > 1 then
+    local choices = {}
+    for i, loc in ipairs(result) do
+      table.insert(choices, string.format('%d: %s', i, loc.uri))
+    end
+    vim.ui.input({ prompt = 'Choose a location:\n' .. table.concat(choices, '\n') .. '\n' }, function(choice)
+      if choice then
+        local index = tonumber(choice)
+        if index and result[index] then
+          jump_to_location(result[index])
+        else
+          vim.notify('Invalid choice', vim.log.levels.WARN)
+        end
+      end
+    end)
+  else
+    jump_to_location(locations)
+  end
+end
+
 -- NOTE: read below for intructions
 --    https://vonheikemen.github.io/devlog/tools/neovim-lsp-client-guide/
 return {

@@ -54,12 +54,12 @@
 --    [ ] Nvimtree: make selection mode leave cursor at the last position before leaving
 --    [x] incline.nvim: Experiment reverse order
 --    [-] edit: dont wanna do itincline.nvim: and set percentage of file scrolling in the filename
---    [ ] breadtrail.nvim: plugin idea, simpler than trailblazer.nvim
+--    [x] breadtrail.nvim: (edit: done it, but need to make signcolum better) plugin idea, simpler than trailblazer.nvim
 --    [x] DONE: goto diagnostic bug
 --
 --    [x] GOTTA TOGGLE comment better
---    [ ] Comment: better when not in visual mode
---    [ ] Comment: make it is not supported, insert single line comment on the start of cursor, should be doable with <> registers
+--    [x] Comment: better when not in visual mode
+--    [-] Comment: make it is not supported, insert single line comment on the start of cursor, should be doable with <> registers
 --    [ ] focus.nvim: Add test for new feature
 --    [ ] focus.nvim: better test when opening two floating windows
 --    [ ] Autocmd: Use remembered last number options when switching back
@@ -99,6 +99,7 @@
 --    [x] DONE: Make the telescope prompt background not black
 --    [x] DONE: focus when chaging into tree not change line number of previously focused window and stuff
 --    [ ] TEX: Check If I like that for TCC : https://github.com/jakewvincent/texmagic.nvim
+--    [ ] Nvimtree: only show folder icon if the file with gitsuff is not visible
 --    [x] DONE,HACK formatoptions being set by some plugin
 --
 --     NOTE: Use (in VISUAL MODE) :'<,'>!<shell_command><cr> output to buffer,

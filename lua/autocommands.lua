@@ -27,16 +27,10 @@ vim.cmd [[
   augroup _general_settings
     autocmd!
     autocmd FileType qf,help,man,lspinfo nnoremap <silent> <buffer> q :close<CR>
-    autocmd FileType qf nnoremap <silent> <buffer> l <CR>
     autocmd WinLeave * setlocal nocursorline
     autocmd FileType qf,nofile,help set nobuflisted
   augroup end
   
-  augroup QuickfixHorizontal
-    autocmd!
-    autocmd FileType qf wincmd J
-  augroup END
-
   augroup _git
     autocmd!
     autocmd FileType gitcommit setlocal wrap
@@ -261,17 +255,14 @@ au('VimEnter', '*', function()
 end, 'Close buffers, Load Yank, and stuff', excyber)
 
 -- close quicklist after enter
-vim.cmd [[ autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>]]
 
 local function capture_yank()
   local yanked_text = vim.fn.getreg '"'
   table.insert(yank_history, yanked_text)
 end
 
-vim.api.nvim_create_augroup('YankCapture', { clear = true })
-
 vim.api.nvim_create_autocmd('TextYankPost', {
-  group = 'YankCapture',
+  group = excyber,
   callback = capture_yank,
 })
 
@@ -444,7 +435,8 @@ local function show_yank_history_on_quick()
   end
 
   vim.fn.setqflist(qf_list)
-  vim.cmd 'horizontal copen'
+  vim.cmd 'copen'
+  -- vim.cmd 'horizontal copen'
 
   local get_selected_location_entry = function()
     local qfl = vim.fn.getqflist()
@@ -488,19 +480,17 @@ end
 vim.api.nvim_create_user_command('YankHistory', show_yank_history_on_quick, {})
 
 -- Autocmd to apply the mapping when entering the quickfix window
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'qf',
-  callback = function()
-    -- map <Esc> to close quickfix window
-    vim.api.nvim_buf_set_keymap(0, 'n', '<Esc>', ':cclose<CR>', { noremap = true, silent = true })
-    vim.api.nvim_buf_set_keymap(0, 'n', 'q', ':cclose<CR>', { noremap = true, silent = true })
-  end,
-})
-au('Filetype', 'qf', function()
+au('Filetype', 'qf', function(event)
   -- Define the quickfix command mappings
+  -- map <Esc> to close quickfix window
+
+  -- vim.cmd 'vertical topleft cwindow'
+  -- vim.cmd 'vertical'
+  vim.api.nvim_buf_set_keymap(0, 'n', '<Esc>', ':cclose<CR>', { noremap = true, silent = true })
+  vim.api.nvim_buf_set_keymap(0, 'n', 'q', ':cclose<CR>', { noremap = true, silent = true })
   local mappings = {
     ['l'] = function()
-      vim.api.nvim_input '<CR>'
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', false)
       vim.cmd 'cclose'
     end,
   }

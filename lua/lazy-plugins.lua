@@ -103,12 +103,12 @@ personally_disable_runtime_plugins()
 require('lazy').setup({
 
   -- NOTE :h event for valid  vim events, there are some only in neovim like LspDetach
-  { 'uga-rosa/ccc.nvim', cmd = { 'CccHighlighterToggle', 'CccPick', 'CccConvert' }, event = 'VeryLazy' },
+  { 'uga-rosa/ccc.nvim', cmd = { 'CccHighlighterToggle', 'CccPick', 'CccConvert' }, lazy = false, event = 'VeryLazy' },
   { 'bfredl/nvim-incnormal', enabled = true, event = 'BufEnter' }, -- NOTE:live-command if better
   { 'moll/vim-bbye', lazy = false, enabled = true },
-  { 'pteroctopus/faster.nvim', enabled = false, event = 'BufEnter' }, -- Faster j,k movement
-  { 'yorickpeterse/nvim-pqf', enabled = false }, -- Nicer Quick List
-  { 'rktjmp/playtime.nvim', enabled = true }, -- Nicer Quick List
+  { 'pteroctopus/faster.nvim', enabled = true, event = 'BufEnter' }, -- Faster j,k movement
+  { 'yorickpeterse/nvim-pqf', lazy = false, enabled = false }, -- Nicer Quick List
+  { 'rktjmp/playtime.nvim', enabled = false },
   require 'plugins.focus',
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following

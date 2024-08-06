@@ -404,6 +404,12 @@ end
 M.general = {
   -- [TERMINAL and NORMAL]
   tn = {},
+  snovx = {
+    ['gh'] = { '0', 'Move big left', { expr = true } },
+    ['gl'] = { '"$"', 'Move big right', { expr = true } },
+    ['gH'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move left', { expr = true } },
+    ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
+  },
   vnx = {
     ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' },
     ['<leader><leader>'] = { ':Norm <Down>', 'live preview of normal command' },
@@ -703,11 +709,7 @@ M.general = {
     --["<leader>p"]      = { '"_p',  noremap_opts },
     ['x'] = { '"_x', noremap_opts },
     -- ['s'] = { '"_s', noremap_opts }, -- Were using surround so this key must go
-    ['ge'] = { 'G', noremap_opts },
-    ['gh'] = { '0', 'Move big left', { expr = true } },
-    ['gl'] = { '"$"', 'Move big right', { expr = true } },
-    ['gH'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move left', { expr = true } },
-    ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
+    -- ['ge'] = { 'G', noremap_opts },
   },
 
   i = {
