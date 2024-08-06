@@ -31,10 +31,11 @@
 --    [ ] NvimTree bulk renamed when you actually need it
 --    [ ] CmdLineWindow: Make so every insert char is transfered to the cmdline normally to ensure inccommand properly
 --    [ ] CmdLineWindow: Make the cmdheight be 0 when in cmdline window
+--    [ ] LazyDraw: Set it when problems slo, meaning, on ssh, how tho?
 --    [x] <3 NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
 --    [x] NvimTree: implement amount of dotfiles per directory similar to neo-tree
 --    [x] NvimTree: create separate PR for exposing NvimTreeFloatBorder
---    [ ] NvimTree: Fix focus file to change cwd if necessary
+--    [ ] NvimTree-Important: Fix focus file to change cwd if necessary, save the cwd in stack, then pop it
 --    [ ] NvimTree: possibly undo (working with trash)
 --    [ ] Focus: do you own focus looping through all windows that are not floating, and that's it =P
 --    [ ] NvimTree: Highlight current indent. Make current indent line diferent than the rest like mini.indent
@@ -52,7 +53,7 @@
 --    [ ] KEYMAP MARKS: keymaps for global marks could also be lowercase if we press shift couldn't it? See if you need some time from now
 --    [ ] Nvimtree: make selection mode leave cursor at the last position before leaving
 --    [x] incline.nvim: Experiment reverse order
---    [ ] incline.nvim: and set percentage of file scrolling in the filename
+--    [-] edit: dont wanna do itincline.nvim: and set percentage of file scrolling in the filename
 --    [ ] breadtrail.nvim: plugin idea, simpler than trailblazer.nvim
 --    [x] DONE: goto diagnostic bug
 --
@@ -68,6 +69,7 @@
 --    [ ] INVESTIGATE Snap on big code bases is it actually faster?
 --    [ ] AUTOCMD Enter terminal remove the lines and shit, autoquit when
 --    [ ] marks.nvim: Check alternative for marks or fixit youself
+--    [ ] keymaps:
 --    [x](edit: found le incline good) nvinca something like that
 --
 --

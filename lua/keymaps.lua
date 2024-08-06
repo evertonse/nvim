@@ -143,7 +143,6 @@ local current_buffer_file_extension = function()
   return extension
 end
 
--- Define a function to handle 'k' key behavior
 local handle_k = function()
   local mode = vim.api.nvim_get_mode().mode
   if vim.v.count == 0 and mode ~= 'n' and mode ~= 'no' then
@@ -153,7 +152,6 @@ local handle_k = function()
   end
 end
 
--- Define a function to handle 'j' key behavior
 local handle_j = function()
   local mode = vim.api.nvim_get_mode().mode
   if vim.v.count == 0 and mode ~= 'n' and mode ~= 'no' then
@@ -189,6 +187,7 @@ M.disabled = {
   },
   n = {
     ['<C-a>'] = '',
+    ['gcc'] = '',
     ['gc'] = '',
     ['<C-<Space>>'] = '',
     ['K'] = '', -- disable search for `man` pages, too slow
@@ -197,8 +196,6 @@ M.disabled = {
     ['<Tab>'] = '',
     ['<C-n>'] = '',
     ['<leader>fo'] = '',
-    ['gc'] = '',
-    ['gcc'] = '',
     ['<leader>fa'] = '',
     ['<leader>fb'] = '',
     ['<leader>fc'] = '',
@@ -330,6 +327,10 @@ local grep_and_show_results = function()
 
   local results = {}
   local gg = 'grep -RrEinIH '
+  local case_sensitive = true
+  if case_sensitive then
+    gg = 'grep -RrEnIH '
+  end
 
   for _, pattern in ipairs(patterns) do
     local result = vim.fn.systemlist(gg .. vim.fn.shellescape(pattern))
@@ -398,78 +399,6 @@ local float_term_toggle = function()
   f.terminal.float_opts.width = math.max(f.width_min, math.floor(vim.o.columns * f.width_percentage))
   f.terminal.float_opts.height = math.max(f.height_min, math.floor(vim.o.lines * f.height_percentage))
   f.terminal:toggle()
-end
-
--- Function to jump to previous or next location within the current buffer
--- Function to get the current index in the jumplist
--- Initialize jumplist index
-local current_jump_index = 0
-
-local function get_jumplist()
-  local jumplist = vim.fn.getjumplist()[1]
-  return jumplist
-end
-
-local function update_current_jump_index(offset)
-  local jumplist = get_jumplist()
-
-  local new_index = current_jump_index + offset
-  -- If current position is not found in jumplist, adjust index based on direction
-  if current_jump_index > #jumplist then
-    new_index = #jumplist
-  elseif current_jump_index < 1 then
-    new_index = 1
-  end
-
-  current_jump_index = new_index
-end
-
-local jump_within_buffer = function(prev)
-  local jumplist = get_jumplist()
-  update_current_jump_index(prev and -1 or 1)
-
-  local cmd = prev and '<c-o>' or '<c-i>'
-
-  local starting = current_jump_index
-  local ending = prev and 1 or #jumplist
-  local step = prev and -1 or 1
-  local curr_bufnr = vim.api.nvim_get_current_buf()
-  local jump_count = 0
-  for i = starting, ending, step do
-    local jump = jumplist[i]
-    jump_count = jump_count + 1
-    if jump.bufnr == curr_bufnr then
-      -- vim.fn.cursor(jumplist[i].lnum, jumplist[i].col)
-      -- local win = vim.api.nvim_get_current_win()
-      -- vim.api.nvim_win_set_cursor(win, { jump.lnum, jump.col })
-
-      print(tostring(math.abs(current_jump_index - i)) .. cmd)
-      vim.api.nvim_input(tostring(math.abs(current_jump_index - i)) .. cmd)
-
-      current_jump_index = i
-      -- Inspect {
-      --   step = step,
-      --   ending = ending,
-      --   current_jump_index = current_jump_index,
-      --   buf = jump.bufnr,
-      --   count_jmplist = #jumplist,
-      -- }
-      return true
-    end
-  end
-  return false
-end
-
-local function jump_to_prev_in_same_buffer()
-  if jump_within_buffer(false) == false then
-    print 'No previous jumps in the current buffer.'
-  end
-end
-
-local function jump_to_next_in_same_buffer()
-  if jump_within_buffer(true) == false then
-    print 'No next jumps in the current buffer.'
-  end
 end
 
 M.general = {
@@ -1523,40 +1452,94 @@ end
 -- NOTE: Adding `redraw` helps with `cmdheight=0` if buffer is not modified
 map('n', '<C-S>', '<Cmd>silent! update | redraw<CR>', { desc = 'Save' })
 map({ 'i', 'x' }, '<C-S>', '<Esc><Cmd>silent! update | redraw<CR>', { desc = 'Save and go to Normal mode' })
+
 local positions = {}
 local current_index = 0
 
--- Function to save the current file, line, and column
 local function save_position()
   local buf = vim.api.nvim_get_current_buf()
   local file = vim.api.nvim_buf_get_name(buf)
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-  table.insert(positions, { file = file, line = row, col = col })
 
+  -- Check if the position already exists
+  for i, pos in ipairs(positions) do
+    if pos.file == file and pos.line == row then
+      -- Remove the position and clear the sign
+      table.remove(positions, i)
+      -- Adjust the current index
+      current_index = current_index - 1
+      vim.fn.sign_unplace('PositionSigns', { buffer = buf, id = row })
+      print('Position removed: ' .. file .. ' [' .. row .. ', ' .. col .. ']')
+      return
+    end
+  end
   -- Set sign in the buffer
-  vim.fn.sign_place(0, 'PositionSigns', 'PositionSign', buf, { lnum = row, priority = 10 })
+  table.insert(positions, { file = file, line = row, col = col })
+  vim.fn.sign_place(row, 'PositionSigns', 'PositionSign', buf, { id = row, lnum = row, priority = 10 })
   print('Position saved: ' .. file .. ' [' .. row .. ', ' .. col .. ']')
 end
 
--- Function to jump to the next position
-local function jump_to_next_position()
+local function jump_position(count)
   if #positions == 0 then
     print 'No positions saved'
     return
   end
-  current_index = current_index % #positions + 1
+  -- current_index = current_index % #positions + count
+  current_index = (current_index + count - 1) % #positions + 1
   local pos = positions[current_index]
-  vim.cmd('edit ' .. pos.file)
-  vim.api.nvim_win_set_cursor(0, { pos.line, pos.col })
+
+  local win_found = false
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if vim.api.nvim_buf_get_name(buf) == pos.file then
+      vim.api.nvim_set_current_win(win)
+      vim.api.nvim_win_set_cursor(win, { pos.line, pos.col })
+      win_found = true
+      break
+    end
+  end
+
+  -- Open the file if it's not already open in any window
+  if not win_found then
+    vim.cmd('edit ' .. pos.file)
+    for _, other in ipairs(positions) do
+      if other.file == pos.file then
+        vim.fn.sign_place(pos.row, 'PositionSigns', 'PositionSign', vim.api.nvim_get_current_buf(), { lnum = other.line, priority = 10 })
+      end
+    end
+    vim.api.nvim_win_set_cursor(0, { pos.line, pos.col })
+  end
+
   print('Jumped to: ' .. pos.file .. ' [' .. pos.line .. ', ' .. pos.col .. ']')
 end
 
 -- Create sign group and sign
-vim.fn.sign_define('PositionSign', { text = '>>', texthl = 'Error', linehl = '', numhl = '' })
+vim.fn.sign_define('PositionSign', { text = ' ', texthl = 'DiffAdd', linehl = '', numhl = '' })
 
 -- Key mappings
 map('n', '<leader>m', save_position, { noremap = true, silent = true })
-map('n', '<C-n>', jump_to_next_position, { noremap = true, silent = true })
+vim.schedule(function()
+  local submode = require 'submode'
+  submode.create('trails', {
+    mode = 'n',
+    enter = '<Leader>M',
+    leave = { 'q', '<ESC>' },
+    default = function(register)
+      register('i', function()
+        jump_position(1)
+      end)
+      register('o', function()
+        jump_position(-1)
+      end)
+      register('n', function()
+        jump_position(1)
+      end)
+      register('p', function()
+        jump_position(-1)
+      end)
+    end,
+  })
+end)
 
 SetKeyMaps(M.disabled)
 SetKeyMaps(M.general)

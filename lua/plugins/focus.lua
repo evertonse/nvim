@@ -5,7 +5,7 @@ return {
   fork_repo,
   version = false,
   lazy = false,
-  enabled = true,
+  enabled = false,
   config = function()
     local DEBUG = false
     require('focus').setup {

@@ -187,8 +187,23 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- function(event, pattern, callback, desc, augroup)
 
-au('WinEnter', '*', function(_)
-  vim.cmd [[setlocal cursorline]]
+au({ 'WinLeave', 'WinEnter' }, '*', function(_)
+  -- vim.cmd [[setlocal cursorline]]
+  -- local win_id = vim.api.nvim_get_current_win()
+  -- local buf_id = vim.api.nvim_win_get_buf(win_id)
+  -- local is_floating = vim.api.nvim_win_get_config(win_id).relative ~= ''
+  -- local is_terminal = vim.api.nvim_buf_get_option(buf_id, 'buftype') == 'terminal'
+  --
+  -- if is_floating or is_terminal then
+  --   vim.cmd [[setlocal nonumber]]
+  --   vim.cmd [[setlocal norelativenumber]]
+  --   -- Prohibit buffer changing
+  --
+  --   -- vim.api.nvim_buf_set_option(buf_id, 'modifiable', false)
+  -- else
+  --   -- If it's not a floating window or terminal, ensure buffer is modifiable
+  --   -- vim.api.nvim_buf_set_option(buf_id, 'modifiable', true)
+  -- end
 end)
 
 au('CmdlineLeave', '*', function(_)
@@ -209,6 +224,7 @@ au('CmdwinEnter', '*', function(event)
     ministatusline_disable = vim.g.ministatusline_disable,
   }
 
+  vim.cmd [[setlocal signcolumn=no]]
   vim.g.ministatusline_disable = true
   vim.o.laststatus = 0
   vim.o.cmdheight = 0
@@ -243,6 +259,7 @@ au('CmdwinEnter', '*', function(event)
     goto_cmd()
     vim.api.nvim_input '<Right><Left>'
   end, opts)
+
   map({ 'n', 'v', 'x' }, 'a', function()
     goto_cmd()
     vim.api.nvim_input '<Right>'
@@ -423,6 +440,26 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.api.nvim_buf_set_keymap(0, 'n', 'q', ':cclose<CR>', { noremap = true, silent = true })
   end,
 })
+au('Filetype', 'qf', function()
+  -- Define the quickfix command mappings
+  local mappings = {
+    ['l'] = function()
+      vim.api.nvim_input '<CR>'
+      vim.cmd 'cclose'
+    end,
+  }
+
+  -- Set the mappings for the quickfix window
+  for key, func in pairs(mappings) do
+    vim.keymap.set('n', key, func, {
+      buffer = 0,
+      silent = true,
+      noremap = true,
+      expr = false,
+      nowait = true,
+    })
+  end
+end)
 
 vim.api.nvim_create_autocmd('FileType', {
   group = excyber,
