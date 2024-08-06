@@ -85,6 +85,7 @@
   "scope.nvim": { "branch": "main", "commit": "c83a9285c58039ae3c6a1dfa6d84c322effc0b2c" },
   "searchbox.nvim": { "branch": "main", "commit": "5cbf11fbaa24da8810f467736cef7dde2410dfb2" },
   "snap": { "branch": "main", "commit": "486a2ab714eee79c392abfb45bdb94398409ed34" },
+  "stickybuf.nvim": { "branch": "master", "commit": "709da3b895a99bbfedd5b59a1a91930026288c15" },
   "submode.nvim": { "branch": "main", "commit": "2d180ca673771e1762348e60f29fb529ae13e27c" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "cf48d4dfce44e0b9a2e19a008d6ec6ea6f01a83b" },
   "telescope-hop.nvim": { "branch": "master", "commit": "0bafe1eb0f9e454a0b356c45be6d791a7f3c9580" },

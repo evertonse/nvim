@@ -77,7 +77,27 @@ local function delete_buffer()
   delete_scoped_buffer()
 end
 
+local last_floating_info = {}
 local file_tree_toggle = function(opts)
+  local _ = false
+    and vim.api.nvim_create_autocmd('BufUnload', {
+      pattern = '*',
+      callback = function(event)
+        local bufname = vim.api.nvim_buf_get_name(event.buf or 0)
+        local win_id = vim.api.nvim_get_current_win()
+        local is_floating = vim.api.nvim_win_get_config(win_id).relative ~= ''
+        if is_floating then
+          last_floating_info = {
+            buf = event.buf,
+            bufname = bufname,
+            event = event,
+          }
+          Inspect(last_floating_info)
+        end
+      end,
+      desc = 'hmm',
+    })
+
   -- opts.height_percentage, opts.width_percentage, opts.focus
   if vim.g.self.file_tree == 'neo-tree' then
     return function()

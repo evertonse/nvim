@@ -1,4 +1,5 @@
 local previous_stats = {
+  mode = 'n',
   laststatus = vim.opt.laststatus,
   number = vim.wo.number,
   relativenumber = vim.wo.relativenumber,
@@ -263,7 +264,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
     vim.highlight.on_yank { higroup = 'Visual', timeout = 210 }
     capture_yank()
-    vim.api.nvim_input 'gv<esc><esc>'
+    if previous_stats.mode ~= 'n' and previous_stats.mode ~= 'no' then
+      local _ = false and Inspect { previous_stats.mode, previous_stats.mode ~= 'no', previous_stats.mode ~= 'n' }
+      vim.api.nvim_input 'gv<esc>'
+    end
   end,
 })
 
@@ -297,22 +301,15 @@ au(
 -- delete lê
 
 local function toggle_signcolumn()
-  if false then
-    return
-  end
   local win_id = vim.api.nvim_get_current_win()
   local is_floating = vim.api.nvim_win_get_config(win_id).relative ~= ''
 
   if not is_floating then
-    vim.wo[win_id].signcolumn = 'auto'
-    vim.wo[win_id].number = true
-    vim.wo[win_id].relativenumber = true
-
     local editor_width = vim.o.columns
     local editor_height = vim.o.lines
 
     -- Define the desired width and height percentages
-    local width_percentage = 0.65
+    local width_percentage = 0.57
     local height_percentage = 0.65
 
     -- Calculate new dimensions
@@ -323,6 +320,7 @@ local function toggle_signcolumn()
     vim.api.nvim_win_set_width(win_id, new_width)
 
     -- Get the current window height
+    vim.cmd [[wincmd =]]
     local current_height = vim.api.nvim_win_get_height(win_id)
 
     -- Resize the current window height only if the new height is greater than the current height
@@ -331,88 +329,94 @@ local function toggle_signcolumn()
     end
     -- vim.wowin_id].signcolumn = 'yes'
     for _, w in ipairs(vim.api.nvim_list_wins()) do
-      if w ~= win_id then
+      if true or w ~= win_id and vim.api.nvim_win_get_config(w).relative ~= '' then
         local win_config = vim.api.nvim_win_get_config(w)
         if win_config.relative == '' then
           vim.wo[w].signcolumn = 'no'
           vim.wo[w].number = false
           vim.wo[w].relativenumber = false
+          -- vim.cmd [[setlocal nonumber norelativenumber signcolumn=no]]
         end
       end
     end
+
+    vim.wo[win_id].signcolumn = 'auto'
+    vim.wo[win_id].number = true
+    vim.wo[win_id].relativenumber = true
   end
 end
 
-au({ 'WinLeave', 'WinEnter' }, '*', function(_)
+au({ 'WinEnter' }, '*', function(_)
   toggle_signcolumn()
 end)
 
-au('CmdlineLeave', '*', function(_)
-  vim.opt.laststatus = previous_stats.laststatus
-  vim.wo.number = previous_stats.number
-  vim.wo.relativenumber = previous_stats.relativenumber
-  vim.opt.cmdheight = previous_stats.cmdheight
-  vim.g.ministatusline_disable = previous_stats.ministatusline_disable
-end)
+local _ = false and au({ 'WinEnter' }, '*', function(_) end)
 
-au('CmdwinEnter', '*', function(event)
-  local map = vim.keymap.set
-  previous_stats = {
-    laststatus = vim.opt.laststatus,
-    number = vim.wo.number,
-    relativenumber = vim.wo.relativenumber,
-    cmdheight = vim.opt.cmdheight,
-    ministatusline_disable = vim.g.ministatusline_disable,
-  }
+local _ = true
+  -- Before leaving the command-line (including non-interactive use of ":" 
+  and au('CmdlineLeave', '*', function(_)
+    vim.opt.laststatus = previous_stats.laststatus
+    vim.opt.cmdheight = previous_stats.cmdheight
+    vim.g.ministatusline_disable = previous_stats.ministatusline_disable
+  end)
 
-  vim.cmd [[setlocal signcolumn=no]]
-  vim.g.ministatusline_disable = true
-  vim.o.laststatus = 0
-  vim.o.cmdheight = 0
-  vim.wo.number = false
-  vim.wo.relativenumber = false
+local _ = true
+  and au('CmdwinEnter', '*', function(event)
+    local map = vim.keymap.set
 
-  local ok, cmp = pcall(require, 'cmp')
-  if ok then
-    cmp.close()
-    vim.schedule(cmp.complete)
-  end
+    previous_stats.laststatus = vim.opt.laststatus
+    previous_stats.cmdheight = vim.opt.cmdheight
+    previous_stats.ministatusline_disable = vim.g.ministatusline_disable
 
-  local opts = { buffer = event.buf, noremap = true, silent = true }
+    vim.cmd [[setlocal signcolumn=no]]
+    vim.g.ministatusline_disable = true
+    vim.o.laststatus = 0
+    vim.o.cmdheight = 0
 
-  map({ 'i', 'n' }, '<C-f>', '<C-c><Down>', opts)
-  map('n', '<C-c>', function()
-    vim.cmd [[stopinsert]]
-  end, opts)
+    vim.wo.number = false
+    vim.wo.relativenumber = false
 
-  map({ 'x', 'v', 'n' }, '<CR>', '<CR>', opts)
+    local ok, cmp = pcall(require, 'cmp')
+    if ok then
+      cmp.close()
+      vim.schedule(cmp.complete)
+    end
 
-  map({ 'n' }, '<Esc>', function()
-    vim.cmd [[q!]]
-  end, opts)
+    local opts = { buffer = event.buf, noremap = true, silent = true }
 
-  local goto_cmd = function()
-    vim.api.nvim_input '<C-f>'
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Space><BS>', true, true, true), 'c', false)
-  end
-
-  map({ 'n' }, 'i', function()
-    goto_cmd()
-    vim.api.nvim_input '<Right><Left>'
-  end, opts)
-
-  map({ 'n', 'v', 'x' }, 'a', function()
-    goto_cmd()
-    vim.api.nvim_input '<Right>'
-  end, opts)
-
-  for _, letter in ipairs { 'c', 'C', 's', 'S', 'o', 'O', 'A', 'I' } do
-    map({ 'v', 'x', 'n' }, letter, function()
-      vim.api.nvim_feedkeys(letter, 'n', true)
-      vim.schedule(goto_cmd)
+    map({ 'i', 'n' }, '<C-f>', '<C-c><Down>', opts)
+    map('n', '<C-c>', function()
+      vim.cmd [[stopinsert]]
     end, opts)
-  end
-end)
+
+    map({ 'x', 'v', 'n' }, '<CR>', '<CR>', opts)
+
+    map({ 'n' }, '<Esc>', function()
+      vim.cmd [[q!]]
+    end, opts)
+
+    local goto_cmd = function()
+      vim.api.nvim_input '<C-f>'
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Space><BS>', true, true, true), 'c', false)
+    end
+
+    map({ 'n' }, 'i', function()
+      goto_cmd()
+      vim.api.nvim_input '<Right><Left>'
+    end, opts)
+
+    map({ 'n', 'v', 'x' }, 'a', function()
+      goto_cmd()
+      vim.api.nvim_input '<Right>'
+    end, opts)
+
+    for _, letter in ipairs { 'c', 'C', 's', 'S', 'o', 'O', 'A', 'I' } do
+      map({ 'v', 'x', 'n' }, letter, function()
+        vim.api.nvim_feedkeys(letter, 'n', true)
+        vim.schedule(goto_cmd)
+      end, opts)
+    end
+  end)
 
 local telescope_yank_history = function()
   local finders = require 'telescope.finders'
@@ -591,20 +595,6 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
-local _ = false
-  and vim.api.nvim_create_autocmd('BufEnter', {
-    callback = function()
-      local buf = vim.api.nvim_get_current_buf()
-      -- TelescopeResults
-      -- 'TelescopePrompt',TelescopeResults
-
-      if vim.bo[buf].filetype == 'TelescopePrompt' then
-        assert(false, vim.inspect(vim.bo[buf]))
-        vim.cmd [[startinsert]]
-      end
-    end,
-  })
-
 -- Create an autocommand group for our buffer delete event
 local function save_buffer_path(args)
   local bufnr = args.buf
@@ -652,11 +642,10 @@ au(
   'ModeChanged',
   -- Show relative numbers only when they matter (linewise and blockwise
   -- selection) and 'number' is set (avoids horizontal flickering)
-  '*:[vV\x16]*',
+  -- '*:[vV\x16]*',
+  '*',
   function()
-    if previous_stats.cursor then
-      vim.api.nvim_win_set_cursor(0, previous_stats.cursor)
-    end
+    previous_stats.mode = vim.api.nvim_get_mode().mode
   end,
   'Show relative line numbers'
 )

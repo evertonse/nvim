@@ -285,7 +285,8 @@ require('lazy').setup({
   require 'plugins.cmdbuf',
   require 'plugins.searchbox',
   require 'plugins.multiple-cursors',
-  require 'plugins.lsp.lspconfig',
+  require 'plugins.stickybuf',
+  require 'plugins.lsp',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et
