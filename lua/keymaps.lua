@@ -1453,7 +1453,7 @@ end
 map('n', '<C-S>', '<Cmd>silent! update | redraw<CR>', { desc = 'Save' })
 map({ 'i', 'x' }, '<C-S>', '<Esc><Cmd>silent! update | redraw<CR>', { desc = 'Save and go to Normal mode' })
 
-local positions = {}
+Positions = {}
 local current_index = 0
 
 local function save_position()
@@ -1462,10 +1462,10 @@ local function save_position()
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
 
   -- Check if the position already exists
-  for i, pos in ipairs(positions) do
+  for i, pos in ipairs(Positions) do
     if pos.file == file and pos.line == row then
       -- Remove the position and clear the sign
-      table.remove(positions, i)
+      table.remove(Positions, i)
       -- Adjust the current index
       current_index = current_index - 1
       vim.fn.sign_unplace('PositionSigns', { buffer = buf, id = row })
@@ -1474,19 +1474,19 @@ local function save_position()
     end
   end
   -- Set sign in the buffer
-  table.insert(positions, { file = file, line = row, col = col })
-  vim.fn.sign_place(row, 'PositionSigns', 'PositionSign', buf, { id = row, lnum = row, priority = 10 })
+  table.insert(Positions, { file = file, line = row, col = col })
+  vim.fn.sign_place(row, 'PositionSigns', 'PositionSign', buf, { lnum = row, priority = 10 })
   print('Position saved: ' .. file .. ' [' .. row .. ', ' .. col .. ']')
 end
 
 local function jump_position(count)
-  if #positions == 0 then
+  if #Positions == 0 then
     print 'No positions saved'
     return
   end
   -- current_index = current_index % #positions + count
-  current_index = (current_index + count - 1) % #positions + 1
-  local pos = positions[current_index]
+  current_index = (current_index + count - 1) % #Positions + 1
+  local pos = Positions[current_index]
 
   local win_found = false
   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
@@ -1502,7 +1502,7 @@ local function jump_position(count)
   -- Open the file if it's not already open in any window
   if not win_found then
     vim.cmd('edit ' .. pos.file)
-    for _, other in ipairs(positions) do
+    for _, other in ipairs(Positions) do
       if other.file == pos.file then
         vim.fn.sign_place(pos.row, 'PositionSigns', 'PositionSign', vim.api.nvim_get_current_buf(), { lnum = other.line, priority = 10 })
       end
@@ -1512,9 +1512,6 @@ local function jump_position(count)
 
   print('Jumped to: ' .. pos.file .. ' [' .. pos.line .. ', ' .. pos.col .. ']')
 end
-
--- Create sign group and sign
-vim.fn.sign_define('PositionSign', { text = ' ', texthl = 'DiffAdd', linehl = '', numhl = '' })
 
 -- Key mappings
 map('n', '<leader>m', save_position, { noremap = true, silent = true })

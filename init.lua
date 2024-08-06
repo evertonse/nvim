@@ -69,7 +69,7 @@
 --    [ ] INVESTIGATE Snap on big code bases is it actually faster?
 --    [ ] AUTOCMD Enter terminal remove the lines and shit, autoquit when
 --    [ ] marks.nvim: Check alternative for marks or fixit youself
---    [ ] keymaps:
+--    [x] CmdwinEnter: Make StatusNC be conceal then return to previous when leaving
 --    [x](edit: found le incline good) nvinca something like that
 --
 --
@@ -96,7 +96,6 @@
 --    [ ] VScode like preview: https://github.com/DNLHC/glance.nvim
 --    [ ] Read semantic HL (see about priority of hl): https://gist.github.com/swarn/fb37d9eefe1bc616c2a7e476c0bc0316
 --    [ ] LaTeX replacement for sure, made in rust from ground up: https://github.com/typst/typst
---    [ ] CmdwinEnter: Make StatusNC be conceal then return to previous when leaving
 --    [x] DONE: Make the telescope prompt background not black
 --    [x] DONE: focus when chaging into tree not change line number of previously focused window and stuff
 --    [ ] TEX: Check If I like that for TCC : https://github.com/jakewvincent/texmagic.nvim

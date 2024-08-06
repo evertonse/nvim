@@ -31,6 +31,11 @@ vim.cmd [[
     autocmd WinLeave * setlocal nocursorline
     autocmd FileType qf,nofile,help set nobuflisted
   augroup end
+  
+  augroup QuickfixHorizontal
+    autocmd!
+    autocmd FileType qf wincmd J
+  augroup END
 
   augroup _git
     autocmd!
@@ -160,15 +165,103 @@ local function clean_up_buffers()
   end
 end
 
-vim.api.nvim_create_autocmd('VimEnter', {
-  group = vim.api.nvim_create_augroup('UserAutoClose', { clear = true }),
-  callback = clean_up_buffers,
-})
+local yank_history = {}
+local function get_yank_file_path()
+  -- Get the current working directory
+  local cwd = vim.fn.getcwd()
+  -- Define the file path for storing the last yank
+  return cwd .. '/.last_yank.txt'
+end
+
+local function save_last_yank()
+  local yank_file = get_yank_file_path()
+  local file = io.open(yank_file, 'w')
+  if file then
+    for _, text in ipairs(yank_history) do
+      file:write(text .. '\n')
+    end
+    file:close()
+  end
+end
+
+local function load_last_yank()
+  local yank_file = get_yank_file_path()
+  local file = io.open(yank_file, 'r')
+  if file then
+    yank_history = {}
+    local last_line = nil
+    for line in file:lines() do
+      table.insert(yank_history, line)
+      last_line = line
+    end
+    if last_line then
+      vim.fn.setreg('"', last_line)
+    end
+    file:close()
+  end
+end
+
+local function save_positions_to_file(file_path)
+  local file = io.open(file_path, 'w')
+  if file then
+    for _, pos in ipairs(Positions) do
+      file:write(pos.file .. ':' .. pos.line .. ':' .. pos.col .. '\n')
+    end
+    file:close()
+    print('Positions saved to ' .. file_path)
+  else
+    Inspect('Error: Could not open file ' .. file_path)
+  end
+end
+
+local place_signs = function()
+  vim.schedule(function()
+    for _, pos in ipairs(Positions) do
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_get_name(buf) == pos.file then
+          vim.fn.sign_place(pos.line, 'PositionSigns', 'PositionSign', buf, { lnum = pos.line, priority = 10 })
+        end
+      end
+    end
+  end)
+end
+
+local function load_positions_from_file(file_path)
+  -- Create sign group and sign
+  vim.fn.sign_define('PositionSign', { text = ' ', texthl = 'DiffAdd', linehl = '', numhl = '' })
+  local pfile = io.open(file_path, 'r')
+  if pfile then
+    Positions = {}
+    for pline in pfile:lines() do
+      local file, line, col = pline:match '^(.*):(%d+):(%d+)$'
+      if file and line and col then
+        table.insert(Positions, { file = file, line = tonumber(line), col = tonumber(col) })
+      end
+    end
+    pfile:close()
+    print('Positions loaded from ' .. file_path)
+    place_signs()
+  else
+    print('Error: Could not open file ' .. file_path)
+  end
+end
+
+-- Autocommand to save the last yanked text before exiting Neovim
+au('VimLeavePre', nil, function()
+  save_last_yank()
+  local path = vim.fn.getcwd() .. '/.trails'
+  save_positions_to_file(path)
+end, 'Close buffers, Load Yank, and stuff', excyber)
+
+au('VimEnter', '*', function()
+  clean_up_buffers()
+  load_last_yank()
+  local path = vim.fn.getcwd() .. '/.trails'
+  load_positions_from_file(path)
+end, 'Close buffers, Load Yank, and stuff', excyber)
 
 -- close quicklist after enter
 vim.cmd [[ autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>]]
-
-local yank_history = {}
 
 local function capture_yank()
   local yanked_text = vim.fn.getreg '"'
@@ -393,43 +486,6 @@ local function show_yank_history_on_quick()
 end
 
 vim.api.nvim_create_user_command('YankHistory', show_yank_history_on_quick, {})
-
-local function get_yank_file_path()
-  -- Get the current working directory
-  local cwd = vim.fn.getcwd()
-  -- Define the file path for storing the last yank
-  return cwd .. '/.last_yank.txt'
-end
-
-local function save_last_yank()
-  local yanked_text = vim.fn.getreg '"'
-  local yank_file = get_yank_file_path()
-  local file = io.open(yank_file, 'w')
-  if file then
-    file:write(yanked_text)
-    file:close()
-  end
-end
-
-local function load_last_yank()
-  local yank_file = get_yank_file_path()
-  local file = io.open(yank_file, 'r')
-  if file then
-    local yanked_text = file:read '*all'
-    vim.fn.setreg('"', yanked_text)
-    file:close()
-  end
-end
-
--- Autocommand to save the last yanked text before exiting Neovim
-vim.api.nvim_create_autocmd('VimLeavePre', {
-  callback = save_last_yank,
-})
-
--- Autocommand to load the last yanked text when entering Neovim
-vim.api.nvim_create_autocmd('VimEnter', {
-  callback = load_last_yank,
-})
 
 -- Autocmd to apply the mapping when entering the quickfix window
 vim.api.nvim_create_autocmd('FileType', {

@@ -26,7 +26,7 @@ return {
     },
     -- Show more detail about the sessions when selecting one to load.
     -- Disable if it causes lag.
-    load_detail = true,
+    load_detail = false,
     -- List order ["modification_time", "creation_time", "filename"]
     load_order = 'modification_time',
     -- override default filter
@@ -91,8 +91,9 @@ return {
         -- Only load the session if nvim was started with no args
         if vim.fn.argc(-1) == 0 then
           -- Save these to a different directory, so our manual sessions don't get polluted
+          resession.load(vim.fn.getcwd(), { dir = 'session', silence_errors = true })
+
           vim.schedule(function()
-            resession.load(vim.fn.getcwd(), { dir = 'session', silence_errors = true })
             vim.cmd [[stopinsert]]
             vim.cmd [[set cmdheight=1]]
           end)
@@ -101,13 +102,13 @@ return {
         vim.schedule(function()
           local ok, trail = pcall(require, 'trailblazer')
           if not ok then
-            vim.notify("Couldn't load trailblazer session from" .. trail_path .. '.', vim.log.levels.WARN)
+            local _ = false and vim.notify("Couldn't load trailblazer session from" .. trail_path .. '.', vim.log.levels.WARN)
             return
           end
 
           ok = pcall(trail.load_trailblazer_state_from_file, trail_path)
           if not ok then
-            vim.notify("Couldn't load trailblazer session from" .. trail_path .. '.', vim.log.levels.WARN)
+            local _ = false and vim.notify("Couldn't load trailblazer session from" .. trail_path .. '.', vim.log.levels.WARN)
           end
         end)
       end,
