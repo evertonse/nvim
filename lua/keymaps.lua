@@ -370,7 +370,7 @@ local grep_and_show_results = function()
   vim.fn.setqflist(quickfix_list)
 
   -- Open the quickfix window
-  vim.cmd 'copen'
+  vim.cmd 'horizontal copen'
   -- -- Close the quickfix window after setting the list
   -- vim.cmd "cclose"
 end
@@ -426,6 +426,18 @@ M.general = {
     },
   },
 
+  c = {
+    ['<C-k>'] = {
+      function()
+        vim.api.nvim_input '<Up>'
+      end,
+    },
+    ['<C-j>'] = {
+      function()
+        vim.api.nvim_input '<Down>'
+      end,
+    },
+  },
   -- [NORMAL]
   n = {
     ['<leader>hy'] = { ':YankHistory <cr>', '[H]istory [Y]ank' },

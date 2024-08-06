@@ -222,7 +222,7 @@ opt.iskeyword:append '-' -- hyphenated words recognized by searches
 -- Neovim version dependent
 opt.shortmess:append 'saAtilmnrxwWoOtTIFcC' -- flags to shorten vim messages, see :help 'shortmess'
 opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages
-if vim.fn.has 'nvim-0.9' == 1 then
+if vim.fn.has 'nvim-0.9' == 1 or (vim.version().major > 10) then
   opt.shortmess:append 'WcC' -- Reduce command line messages
 else
   opt.shortmess:append 'Wc' -- Reduce command line messages

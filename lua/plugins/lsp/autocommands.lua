@@ -1,4 +1,15 @@
 local is_nvim_11_or_higher = vim.version().major > 0 or (vim.version().major == 0 and vim.version().minor >= 11)
+local on_list = function(options)
+  -- Check the number of items in the options
+  if #options.items == 1 then
+    vim.lsp.util.jump_to_location(options.items[1])
+  else
+    -- If there are multiple items, set the quickfix list and open it
+    vim.fn.setqflist({}, ' ', options)
+    vim.cmd 'horizontal copen'
+    vim.cmd 'resize 6'
+  end
+end
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
@@ -18,7 +29,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     --  This is where a variable was first declared, or where a function is defined, etc.
     --  To jump back, press <C-t>.
     -- map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-    map('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+    map('gd', function()
+      vim.lsp.buf.definition { on_list = on_list }
+    end, '[G]oto [D]efinition')
     map('gD', vim.lsp.buf.declaration, '[G]o to [*D*]eclaration')
 
     -- Find references for the word under your cursor.

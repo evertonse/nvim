@@ -100,6 +100,8 @@
 --    [x] DONE: focus when chaging into tree not change line number of previously focused window and stuff
 --    [ ] TEX: Check If I like that for TCC : https://github.com/jakewvincent/texmagic.nvim
 --    [ ] Nvimtree: only show folder icon if the file with gitsuff is not visible
+--    [ ] Nvimtree: Hiden folders with zero stuff in livefilter
+--    [ ] Nvimtree: why does this bf set numberline?
 --    [x] DONE,HACK formatoptions being set by some plugin
 --
 --     NOTE: Use (in VISUAL MODE) :'<,'>!<shell_command><cr> output to buffer,

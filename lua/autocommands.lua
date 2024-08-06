@@ -14,14 +14,6 @@ local au = function(event, pattern, callback, desc, augroup, once)
   )
 end
 
-vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
-  callback = function()
-    vim.highlight.on_yank { higroup = 'Visual', timeout = 200 }
-  end,
-})
-
 -- Apperantly " in front of a line in vimscript is a comment?
 vim.cmd [[
   augroup _general_settings
@@ -172,7 +164,9 @@ local function save_last_yank()
   local file = io.open(yank_file, 'w')
   if file then
     for _, text in ipairs(yank_history) do
-      file:write(text .. '\n')
+      if text ~= '' then
+        file:write(text .. '\n')
+      end
     end
     file:close()
   end
@@ -185,10 +179,12 @@ local function load_last_yank()
     yank_history = {}
     local last_line = nil
     for line in file:lines() do
-      table.insert(yank_history, line)
-      last_line = line
+      if line ~= '' then
+        table.insert(yank_history, line)
+        last_line = line
+      end
     end
-    if last_line then
+    if last_line and last_line ~= '' then
       vim.fn.setreg('"', last_line)
     end
     file:close()
@@ -262,32 +258,93 @@ local function capture_yank()
 end
 
 vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
   group = excyber,
-  callback = capture_yank,
+  callback = function()
+    vim.highlight.on_yank { higroup = 'Visual', timeout = 210 }
+    capture_yank()
+    vim.api.nvim_input 'gv<esc><esc>'
+  end,
 })
+
+-- Function to open quickfix list below the current window
+local function open_quickfix_below()
+  -- Check if the quickfix list is empty
+  -- if #vim.fn.getqflist() == 0 then
+  --   return
+  -- end
+  vim.schedule(function()
+    vim.cmd 'cclose'
+    vim.cmd 'horizontal copen'
+    vim.cmd 'resize 5' -- Optional: Set the height of the quickfix window
+    assert(false)
+  end)
+end
+
+-- Autocommand to open quickfix list below when it is populated
+au(
+  'QuickFixCmdPre',
+  -- 'QuickFixCmdPost',
+  '*',
+  function()
+    open_quickfix_below()
+  end,
+  'Le quick fix thingy',
+  excyber
+)
 
 -- TODO: Make it come back to the line it once was, probably have to
 -- delete lê
 
--- function(event, pattern, callback, desc, augroup)
+local function toggle_signcolumn()
+  if false then
+    return
+  end
+  local win_id = vim.api.nvim_get_current_win()
+  local is_floating = vim.api.nvim_win_get_config(win_id).relative ~= ''
+
+  if not is_floating then
+    vim.wo[win_id].signcolumn = 'auto'
+    vim.wo[win_id].number = true
+    vim.wo[win_id].relativenumber = true
+
+    local editor_width = vim.o.columns
+    local editor_height = vim.o.lines
+
+    -- Define the desired width and height percentages
+    local width_percentage = 0.65
+    local height_percentage = 0.65
+
+    -- Calculate new dimensions
+    local new_width = math.floor(editor_width * width_percentage)
+    local new_height = math.floor(editor_height * height_percentage)
+
+    -- Resize the current window
+    vim.api.nvim_win_set_width(win_id, new_width)
+
+    -- Get the current window height
+    local current_height = vim.api.nvim_win_get_height(win_id)
+
+    -- Resize the current window height only if the new height is greater than the current height
+    if new_height > current_height then
+      vim.api.nvim_win_set_height(win_id, new_height)
+    end
+    -- vim.wowin_id].signcolumn = 'yes'
+    for _, w in ipairs(vim.api.nvim_list_wins()) do
+      if w ~= win_id then
+        local win_config = vim.api.nvim_win_get_config(w)
+        if win_config.relative == '' then
+          vim.wo[w].signcolumn = 'no'
+          vim.wo[w].number = false
+          vim.wo[w].relativenumber = false
+        end
+      end
+    end
+  end
+end
 
 au({ 'WinLeave', 'WinEnter' }, '*', function(_)
-  -- vim.cmd [[setlocal cursorline]]
-  -- local win_id = vim.api.nvim_get_current_win()
-  -- local buf_id = vim.api.nvim_win_get_buf(win_id)
-  -- local is_floating = vim.api.nvim_win_get_config(win_id).relative ~= ''
-  -- local is_terminal = vim.api.nvim_buf_get_option(buf_id, 'buftype') == 'terminal'
-  --
-  -- if is_floating or is_terminal then
-  --   vim.cmd [[setlocal nonumber]]
-  --   vim.cmd [[setlocal norelativenumber]]
-  --   -- Prohibit buffer changing
-  --
-  --   -- vim.api.nvim_buf_set_option(buf_id, 'modifiable', false)
-  -- else
-  --   -- If it's not a floating window or terminal, ensure buffer is modifiable
-  --   -- vim.api.nvim_buf_set_option(buf_id, 'modifiable', true)
-  -- end
+  toggle_signcolumn()
 end)
 
 au('CmdlineLeave', '*', function(_)
@@ -435,8 +492,8 @@ local function show_yank_history_on_quick()
   end
 
   vim.fn.setqflist(qf_list)
-  vim.cmd 'copen'
-  -- vim.cmd 'horizontal copen'
+  vim.cmd 'horizontal copen'
+  vim.cmd 'resize 8' -- Optional: Set the height of the quickfix window
 
   local get_selected_location_entry = function()
     local qfl = vim.fn.getqflist()
@@ -481,21 +538,29 @@ vim.api.nvim_create_user_command('YankHistory', show_yank_history_on_quick, {})
 
 -- Autocmd to apply the mapping when entering the quickfix window
 au('Filetype', 'qf', function(event)
+  vim.cmd [[setlocal nowrap]]
+  vim.cmd [[setlocal norelativenumber]]
   -- Define the quickfix command mappings
   -- map <Esc> to close quickfix window
 
   -- vim.cmd 'vertical topleft cwindow'
   -- vim.cmd 'vertical'
-  vim.api.nvim_buf_set_keymap(0, 'n', '<Esc>', ':cclose<CR>', { noremap = true, silent = true })
-  vim.api.nvim_buf_set_keymap(0, 'n', 'q', ':cclose<CR>', { noremap = true, silent = true })
-  local mappings = {
-    ['l'] = function()
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', false)
-      vim.cmd 'cclose'
-    end,
-  }
+
+  vim.api.nvim_buf_set_keymap(0, 'n', 'l', '<CR>', { noremap = true, silent = true })
 
   -- Set the mappings for the quickfix window
+  local mappings = {
+    ['<CR>'] = function()
+      vim.api.nvim_input '<C-CR>'
+      vim.cmd 'cclose'
+    end,
+    ['l'] = function()
+      vim.api.nvim_input '<C-CR>'
+      vim.cmd 'cclose'
+    end,
+    ['<Esc>'] = ':cclose<CR>',
+    ['q'] = ':cclose<CR>',
+  }
   for key, func in pairs(mappings) do
     vim.keymap.set('n', key, func, {
       buffer = 0,
@@ -508,7 +573,6 @@ au('Filetype', 'qf', function(event)
 end)
 
 vim.api.nvim_create_autocmd('FileType', {
-  group = excyber,
   pattern = '*',
   callback = function()
     -- HACK: solving with always setting this on buf enter or filetype, might be sorta slow
@@ -580,25 +644,19 @@ vim.api.nvim_create_autocmd('CompleteDone', {
 --   Inspect(event)
 -- end)
 
+au('TermClose', '*', function()
+  vim.api.nvim_feedkeys(vim.keycode '<C-c>', 'n', true)
+end, 'Autoclose terminal when [Process Exit $num]')
+
 au(
   'ModeChanged',
   -- Show relative numbers only when they matter (linewise and blockwise
   -- selection) and 'number' is set (avoids horizontal flickering)
-  '*:[V\x16]*',
+  '*:[vV\x16]*',
   function()
-    vim.wo.relativenumber = vim.wo.number
+    if previous_stats.cursor then
+      vim.api.nvim_win_set_cursor(0, previous_stats.cursor)
+    end
   end,
   'Show relative line numbers'
-)
-au('TermClose', '*', function()
-  vim.api.nvim_feedkeys(vim.keycode '<C-c>', 'n', true)
-end, 'Autoclose terminal when [Process Exit $num]')
-au(
-  'ModeChanged',
-  '[V\x16]*:*',
-  -- Hide relative numbers when neither linewise/blockwise mode is on
-  function()
-    vim.wo.relativenumber = (string.find(vim.fn.mode(), '^[V\22]') ~= nil) and vim.o.relativenumber
-  end,
-  'Hide relative line numbers'
 )
