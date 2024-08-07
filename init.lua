@@ -57,6 +57,13 @@
 --    [-] edit: dont wanna do itincline.nvim: and set percentage of file scrolling in the filename
 --    [x] breadtrail.nvim: (edit: done it, but need to make signcolum better) plugin idea, simpler than trailblazer.nvim
 --    [x] DONE: goto diagnostic bug
+--    [ ] fix cmdwin height
+--    [x] auto preencha cmd line with Lastcmd
+--    [ ] fix quicklist keymaps
+--    [ ] fix nvimtree pr
+--    [ ] insert "." and "_" in insert mode and ", "
+--    [ ] re in visaul mode first copy and restore register
+--    [x] Telescope: path = {smart} for my picker
 --
 --    [x] GOTTA TOGGLE comment better
 --    [x] Comment: better when not in visual mode

@@ -2,7 +2,8 @@ local is_nvim_11_or_higher = vim.version().major > 0 or (vim.version().major == 
 local on_list = function(options)
   -- Check the number of items in the options
   if #options.items == 1 then
-    vim.lsp.util.jump_to_location(options.items[1])
+    -- vim.lsp.util.jump_to_location(options.items[1])
+    vim.lsp.buf.definition()
   else
     -- If there are multiple items, set the quickfix list and open it
     vim.fn.setqflist({}, ' ', options)

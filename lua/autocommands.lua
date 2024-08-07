@@ -273,54 +273,61 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- TODO: Make it come back to the line it once was, probably have to
 -- delete lê
-local function toggle_signcolumn()
+local function focus_window(event)
   local win_id = vim.api.nvim_get_current_win()
   local is_floating = vim.api.nvim_win_get_config(win_id).relative ~= ''
 
-  if not is_floating then
-    local editor_width = vim.o.columns
-    local editor_height = vim.o.lines
+  -- local is_cmdline_window = win_config.relative == 'editor' and vim.fn.getcmdwintype() ~= ''
+  local current_filetype = vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), 'filetype')
 
-    -- Define the desired width and height percentages
-    local width_percentage = 0.57
-    local height_percentage = 0.65
-
-    -- Calculate new dimensions
-    local new_width = math.floor(editor_width * width_percentage)
-    local new_height = math.floor(editor_height * height_percentage)
-
-    -- Resize the current window
-    vim.api.nvim_win_set_width(win_id, new_width)
-
-    -- Get the current window height
-    vim.cmd [[wincmd =]]
-    local current_height = vim.api.nvim_win_get_height(win_id)
-
-    -- Resize the current window height only if the new height is greater than the current height
-    if new_height > current_height then
-      vim.api.nvim_win_set_height(win_id, new_height)
-    end
-    -- vim.wowin_id].signcolumn = 'yes'
-    for _, w in ipairs(vim.api.nvim_list_wins()) do
-      if true or w ~= win_id and vim.api.nvim_win_get_config(w).relative ~= '' then
-        local win_config = vim.api.nvim_win_get_config(w)
-        if win_config.relative == '' then
-          vim.wo[w].signcolumn = 'no'
-          vim.wo[w].number = false
-          vim.wo[w].relativenumber = false
-          -- vim.cmd [[setlocal nonumber norelativenumber signcolumn=no]]
-        end
-      end
-    end
-
-    vim.wo[win_id].signcolumn = 'auto'
-    vim.wo[win_id].number = true
-    vim.wo[win_id].relativenumber = true
+  if is_floating or current_filetype == 'qf' then
+    return
   end
+
+  local editor_width = vim.o.columns
+  local editor_height = vim.o.lines
+
+  -- Define the desired width and height percentages
+  local width_percentage = 0.57
+  local height_percentage = 0.65
+
+  -- Calculate new dimensions
+  local new_width = math.floor(editor_width * width_percentage)
+  local new_height = math.floor(editor_height * height_percentage)
+
+  -- Resize the current window
+
+  vim.api.nvim_win_set_width(win_id, new_width)
+  vim.cmd [[wincmd =]]
+  local current_height = vim.api.nvim_win_get_height(win_id)
+
+  -- Resize the current window height only if the new height is greater than the current height
+  if new_height > current_height then
+    vim.api.nvim_win_set_height(win_id, new_height)
+  end
+  -- vim.wowin_id].signcolumn = 'yes'
+  for _, w in ipairs(vim.api.nvim_list_wins()) do
+    if true or w ~= win_id and vim.api.nvim_win_get_config(w).relative ~= '' then
+      local win_config = vim.api.nvim_win_get_config(w)
+      local w_filetype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(w), 'filetype')
+      if not (win_config.relative ~= '' or w_filetype == 'qf') then
+        vim.wo[w].signcolumn = 'no'
+        vim.wo[w].number = false
+        vim.wo[w].relativenumber = false
+      end
+      -- vim.cmd [[setlocal nonumber norelativenumber signcolumn=no]]
+    end
+  end
+
+  vim.wo[win_id].signcolumn = 'auto'
+  vim.wo[win_id].number = true
+  vim.wo[win_id].relativenumber = true
 end
 
-au({ 'WinEnter' }, '*', function(_)
-  toggle_signcolumn()
+au({ 'WinEnter' }, '*', function(event)
+  vim.schedule(function()
+    focus_window(event)
+  end)
 end)
 
 local _ = false and au({ 'WinEnter' }, '*', function(_) end)
@@ -542,24 +549,18 @@ vim.api.nvim_create_user_command('YankHistory', show_yank_history_on_quick, {})
 au('Filetype', 'qf', function(event)
   vim.cmd [[setlocal nowrap]]
   vim.cmd [[setlocal norelativenumber]]
-  -- Define the quickfix command mappings
-  -- map <Esc> to close quickfix window
 
-  -- vim.cmd 'vertical topleft cwindow'
-  -- vim.cmd 'vertical'
-
-  vim.api.nvim_buf_set_keymap(0, 'n', 'l', '<CR>', { noremap = true, silent = true })
+  -- vim.api.nvim_buf_set_keymap(0, 'n', 'l', '<CR>', { noremap = true, silent = true })
 
   -- Set the mappings for the quickfix window
   local mappings = {
-    ['<CR>'] = function()
-      vim.api.nvim_input '<C-CR>'
-      vim.cmd 'cclose'
-    end,
-    ['l'] = function()
-      vim.api.nvim_input '<C-CR>'
-      vim.cmd 'cclose'
-    end,
+    -- ['<CR>'] = function()
+    --   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'i', false)
+    --   vim
+    --   vim.cmd 'cclose'
+    -- end,
+    ['<cr>'] = '<cr><cmd>cclose<CR>',
+    ['l'] = '<cr><cmd>cclose<CR>',
     ['<Esc>'] = ':cclose<CR>',
     ['q'] = ':cclose<CR>',
   }
