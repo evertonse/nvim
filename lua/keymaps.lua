@@ -657,7 +657,6 @@ M.general = {
       end,
       'close all buffers expect current one',
     },
-
     ['<C-s>'] = {
       function()
         vim.api.nvim_feedkeys(':', 'n', false)

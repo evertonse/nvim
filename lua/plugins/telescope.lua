@@ -174,8 +174,6 @@ local function custom_find_files()
       .new({}, {
         default_text = text,
 
-        path_display = { 'smart' },
-
         layout_config = {
           width = 0.65, -- percentage of screen width
           preview_cutoff = 125, -- Ensure previewer always most times
@@ -201,13 +199,21 @@ local function custom_find_files()
             local icon_color = icon_highlight or 'TelescopeNormal'
             return {
               display = function(display_entry)
+                local display_path = vim.fn.fnamemodify(display_entry.path, ':~:.') -- Show relative path
+                local win_width = vim.api.nvim_win_get_width(0) -- Get current window width
+
+                -- Adjust the path to fit the window width
+                local max_path_width = win_width - 10 -- Adjust as needed to fit icon and spacing
+                if #display_path > max_path_width then
+                  display_path = '...' .. display_path:sub(-max_path_width)
+                end
                 local display_color = true
                 if not display_color then
                   return icon .. ' ' .. display_entry.path
                 else
                   return displayer {
                     { icon, icon_color }, -- Icon with color
-                    { ' ' .. display_entry.path, 'TelescopeNormal' }, -- File name with default color
+                    { ' ' .. display_path, 'TelescopeNormal' }, -- File name with default color
                   }
                 end
               end,
@@ -561,6 +567,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
         -- sorting_strategy = 'descending',
         sorting_strategy = 'ascending',
         layout_strategy = 'horizontal',
+
         path_display = { 'smart' },
         -- path_display = { 'truncate' },
         initial_mode = 'normal',
