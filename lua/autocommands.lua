@@ -262,6 +262,57 @@ local function capture_yank()
   table.insert(yank_history, yanked_text)
 end
 
+local function open_floating_window_for_position()
+  local select_trail = function(win)
+    local line = vim.fn.getline '.'
+    local file, line, col = line:match '^(.*):(%d+):(%d+)$'
+    if file and line and col then
+      vim.api.nvim_win_close(win, true) -- Close the floating window
+      vim.cmd('edit ' .. file)
+      vim.fn.cursor(tonumber(line), tonumber(col))
+    end
+  end
+
+  local buf = vim.api.nvim_create_buf(false, true) -- Create a new buffer
+  local lines = {}
+  for _, pos in ipairs(Positions) do
+    table.insert(lines, pos.file .. ':' .. pos.line .. ':' .. pos.col)
+  end
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines) -- Set the trails as lines in the buffer
+
+  -- Calculate the dimensions for the floating window
+  local width = 80
+  local height = 10
+  local win_width = vim.api.nvim_get_option 'columns'
+  local win_height = vim.api.nvim_get_option 'lines'
+  local col = math.floor((win_width - width) / 2)
+  local row = math.floor((win_height - height) / 2)
+
+  -- Create the floating window
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = 'editor',
+    width = width,
+    height = height,
+    col = col,
+    row = row,
+    style = 'minimal',
+    border = 'single',
+  })
+
+  -- Remap Enter key to go to the trail on the selected line and close the window
+  vim.keymap.set(
+    'n',
+    '<CR>',
+    -- [[<cmd>lua select_trail(]] .. buf .. [[, ]] .. win .. [[)<CR>]],
+    function()
+      select_trail(win)
+    end,
+    { buffer = buf, noremap = true, silent = true }
+  )
+end
+
+vim.keymap.set('n', '<leader>Tm', open_floating_window_for_position, { noremap = true, silent = true })
+
 TextPostDontTrigger = false
 
 local _ = true
