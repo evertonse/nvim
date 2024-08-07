@@ -276,11 +276,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 local function focus_window(event)
   local win_id = vim.api.nvim_get_current_win()
   local is_floating = vim.api.nvim_win_get_config(win_id).relative ~= ''
+  local is_cmdline_window = vim.fn.getcmdwintype() ~= ''
 
   -- local is_cmdline_window = win_config.relative == 'editor' and vim.fn.getcmdwintype() ~= ''
   local current_filetype = vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), 'filetype')
 
-  if is_floating or current_filetype == 'qf' then
+  if is_cmdline_window or is_floating or current_filetype == 'qf' then
     return
   end
 

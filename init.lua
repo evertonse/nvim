@@ -59,7 +59,7 @@
 --    [x] DONE: goto diagnostic bug
 --    [ ] fix cmdwin height
 --    [x] auto preencha cmd line with Lastcmd
---    [ ] fix quicklist keymaps
+--    [x] fix quicklist keymaps
 --    [ ] fix nvimtree pr
 --    [ ] insert "." and "_" in insert mode and ", "
 --    [ ] re in visaul mode first copy and restore register
