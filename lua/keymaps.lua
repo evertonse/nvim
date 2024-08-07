@@ -447,6 +447,28 @@ M.general = {
   },
 
   c = {
+
+    ['<CR>'] = {
+      function()
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', true)
+        vim.schedule(function()
+          LastCmd = ''
+        end)
+      end,
+    },
+    ['<C-s>'] = {
+      function()
+        vim.api.nvim_input '<C-f>'
+      end,
+    },
+    ['<Esc>'] = {
+      function()
+        LastCmd = vim.fn.getcmdline()
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', false)
+      end,
+      'Quit and save lastcmd',
+    },
+
     ['<C-k>'] = {
       function()
         vim.api.nvim_input '<Up>'
@@ -636,8 +658,14 @@ M.general = {
       'close all buffers expect current one',
     },
 
-    -- save
-    ['<C-s>'] = { '<cmd> w <CR>', 'Save file' },
+    ['<C-s>'] = {
+      function()
+        vim.api.nvim_feedkeys(':', 'n', false)
+        vim.api.nvim_feedkeys(LastCmd or '', 'c', false)
+        vim.api.nvim_input '<C-f>'
+      end,
+      'Save file',
+    },
 
     -- Open Cmdline Window
     -- ['Q'] = { '<cmd> q:<CR>', 'Open Cmdline Window' },
@@ -750,10 +778,15 @@ M.general = {
     ['<C-e>'] = { '<End>', 'End of line' },
 
     -- navigate within insert mode
-    ['<C-h>'] = { '<Left>', 'Move left' },
+    ['<C-k>'] = {
+      function()
+        vim.api.nvim_input '.'
+      end,
+      'Move up',
+    },
+    ['<C-h>'] = { '_', 'Move left' },
     ['<C-l>'] = { '<Right>', 'Move right' },
     ['<C-j>'] = { '<Down>', 'Move down' },
-    ['<C-k>'] = { '<Up>', 'Move up' },
     -- Insert --
     -- Press jk fast to exit insert mode
     -- ['jk'] = { '<ESC>', noremap_opts },
@@ -1478,13 +1511,13 @@ map(
 -- Neovim>=0.8 but slightly worse than builtins in Neovim>=0.10)
 -- TODO: Remove this after compatibility with Neovim=0.9 is dropped
 if vim.fn.has 'nvim-0.10' == 0 then
-  map('x', '*', [[y/\V<C-R>=escape(@", '/\')<CR><CR>]], { desc = 'Search forward' })
-  map('x', '#', [[y?\V<C-R>=escape(@", '?\')<CR><CR>]], { desc = 'Search backward' })
+  -- map('x', '*', [[y/\V<C-R>=escape(@", '/\')<CR><CR>]], { desc = 'Search forward' })
+  -- map('x', '#', [[y?\V<C-R>=escape(@", '?\')<CR><CR>]], { desc = 'Search backward' })
 end
 
 -- Alternative way to save and exit in Normal mode.
 -- NOTE: Adding `redraw` helps with `cmdheight=0` if buffer is not modified
-map('n', '<C-S>', '<Cmd>silent! update | redraw<CR>', { desc = 'Save' })
+-- map('n', '<C-S>', '<Cmd>silent! update | redraw<CR>', { desc = 'Save' })
 map({ 'i', 'x' }, '<C-S>', '<Esc><Cmd>silent! update | redraw<CR>', { desc = 'Save and go to Normal mode' })
 
 Positions = {}

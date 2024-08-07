@@ -22,30 +22,31 @@
 --    [x] NvimTree implement open_win_config as a function
 --    [x] What is git cherrypick, squash and the other one?
 --    [x](edit: did checkout) MORE PLUGINS https://github.com/rockerBOO/awesome-neovim#cursorline
---    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
---    [ ] TELESCOPE: Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
---    [ ] REFACTOR: Make all keymaps in keymaps, and require 'keymaps'.telescope for example in plugin site
---    [ ] See about make named sessions and named tabs
---    [ ] See about reordering/managing buffers
---    [ ] MARKS: better marks per project visualization and managiong (harpoon2, grapple, portal, marks.nvim, etc...)
---    [ ] NvimTree bulk renamed when you actually need it
---    [ ] CmdLineWindow: Make so every insert char is transfered to the cmdline normally to ensure inccommand properly
---    [ ] CmdLineWindow: Make the cmdheight be 0 when in cmdline window
---    [ ] LazyDraw: Set it when problems slo, meaning, on ssh, how tho?
+--    [x] CmdLineWindow: Make so every insert char is transfered to the cmdline normally to ensure inccommand properly
+--    [x] CmdLineWindow: Make the cmdheight be 0 when in cmdline window
 --    [x] <3 NvimTree implement pattern dotfiles highlights (similar to gitignore highlights)
 --    [x] NvimTree: implement amount of dotfiles per directory similar to neo-tree
 --    [x] NvimTree: create separate PR for exposing NvimTreeFloatBorder
+--    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
+--    [ ] TELESCOPE: Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
+--    [ ] REFACTOR: Make all keymaps in keymaps, and require 'keymaps'.telescope for example in plugin site
+--    [ ] See about: make named sessions and named tabs
+--    [ ] See about: reordering/managing buffers
+--    [ ] MARKS: better marks per project visualization and managiong (harpoon2, grapple, portal, marks.nvim, etc...)
+--    [ ] NvimTree: bulk renamed when you actually need it
+--    [ ] LazyDraw: Set it when problems slo, meaning, on ssh, how tho?
 --    [ ] NvimTree-Important: Fix focus file to change cwd if necessary, save the cwd in stack, then pop it
 --    [ ] NvimTree: possibly undo (working with trash)
---    [ ] Focus: do you own focus looping through all windows that are not floating, and that's it =P
 --    [ ] NvimTree: Highlight current indent. Make current indent line diferent than the rest like mini.indent
 --    [ ] NvimTree: Make when going back a dir move cursor to last folder (or even keep opened the folder that were opened like neotree)
---    [x] NvimTree: Decorator on far left for SIZE of file, should be easy
 --    [ ] NvimTree: Signs deprecated when in nvim 0.11, fix
---    [ ] cmdbuf: make you own with the autocmmd you made
---    [ ] Neovim: make cmdwin work with incpreview commands
+--    [x] NvimTree: Decorator on far left for SIZE of file, should be easy
+--    [x] cmdbuf: make you own with the autocmmd you made
+--    [ ] cmdbuf(my own): ok i've done with cmdwin and autocommands, but what about an actuall window like cmdbuf?
+--    [x] Focus: do you own focus looping through all windows that are not floating, and that's it =P
+--    [x] Neovim: make cmdwin work with incpreview commands
 --    [ ] Scope: Clean up and fix PR by pushing
---    [ ] Colorscheme: Clean up and make it receive opts for transparancy
+--    [x] Colorscheme: Clean up and make it receive opts for transparancy
 --    [x] Alacritty: change this BS of copying with crtl+shift+v, and remove crlt+y mapping
 --    [x] Alacritty: Make it open on wsl
 --    [ ] Either this rcarriga/nvim-notify or noice, if too many lsp message, altough it seems that fidget be aight for some notifications
@@ -60,15 +61,13 @@
 --    [x] GOTTA TOGGLE comment better
 --    [x] Comment: better when not in visual mode
 --    [-] Comment: make it is not supported, insert single line comment on the start of cursor, should be doable with <> registers
---    [ ] focus.nvim: Add test for new feature
---    [ ] focus.nvim: better test when opening two floating windows
---    [ ] Autocmd: Use remembered last number options when switching back
+--    [-] (edit: made my own focus) focus.nvim: Add test for new feature
+--    [-] (edit: made my own focus) focus.nvim: better test when opening two floating windows
+--    [x] Autocmd: Use remembered last number options when switching back
 --    [x] 'visual' <leader>F need to scape '(' to '\('
 --
---    [ ] INVESTIGATE .gitignore slow to type on big code paths
---    [ ] INVESTIGATE Snap on big code bases is it actually faster?
---    [ ] AUTOCMD Enter terminal remove the lines and shit, autoquit when
 --    [ ] marks.nvim: Check alternative for marks or fixit youself
+--    [x] AUTOCMD Enter terminal remove the lines and shit, autoquit when
 --    [x] CmdwinEnter: Make StatusNC be conceal then return to previous when leaving
 --    [x](edit: found le incline good) nvinca something like that
 --
@@ -90,6 +89,7 @@
 --    IMPORTANT (17-07-2024): Highlight float windows can only wither have winblend or background "none", but not both as it bugs out
 --               see: https://github.com/rcarriga/nvim-notify/issues/47#issuecomment-1003326053
 --               see: https://github.com/neovim/neovim/issues/18576
+--
 --    IMPORTANT COPILOT like https://github.com/b0o/supermaven-nvim
 --
 --    [ ] Alacritty graphics: support for sixel image on terminal: https://github.com/alacritty/alacritty/pull/4763 with this we might just do alot no  wiht neovim neoorg and stuff?
@@ -98,6 +98,8 @@
 --    [ ] LaTeX replacement for sure, made in rust from ground up: https://github.com/typst/typst
 --    [x] DONE: Make the telescope prompt background not black
 --    [x] DONE: focus when chaging into tree not change line number of previously focused window and stuff
+--    [ ] INVESTIGATE .gitignore slow to type on big code paths
+--    [ ] INVESTIGATE Snap on big code bases is it actually faster?
 --    [ ] TEX: Check If I like that for TCC : https://github.com/jakewvincent/texmagic.nvim
 --    [ ] Nvimtree: only show folder icon if the file with gitsuff is not visible
 --    [ ] Nvimtree: Hiden folders with zero stuff in livefilter
@@ -115,6 +117,7 @@ require 'utils'
 require 'options'
 
 -- NOTE: might be useful `vim.fn.defer` or `vim.schedule`
+
 -- [[ Autocommands ]]
 require 'autocommands'
 
@@ -126,32 +129,3 @@ require 'lazy-bootstrap'
 
 -- [[ Configure and install plugins ]]
 require 'lazy-plugins'
-
-function SetVirtualTextBelowCurrentLine()
-  local buf = vim.api.nvim_get_current_buf()
-
-  local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1
-  local target_line = current_line + 1
-  local namespace = vim.api.nvim_create_namespace 'example_namespace'
-
-  vim.api.nvim_buf_set_extmark(buf, namespace, target_line, 0, {
-    virt_text = { { 'This is virtual text\n', 'Comment' } },
-    virt_text_pos = 'eol',
-  })
-end
-
-function InsertVirtualTextBelowCurrentLine()
-  local buf = vim.api.nvim_get_current_buf()
-
-  local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1
-
-  local target_line = current_line
-
-  local namespace = vim.api.nvim_create_namespace 'example_namespace'
-
-  vim.api.nvim_buf_set_extmark(buf, namespace, target_line, 0, {
-    virt_lines = { { { 'This is virtual line above current one', 'Comment' } } },
-    virt_lines_above = true,
-    virt_lines_leftcol = false,
-  })
-end

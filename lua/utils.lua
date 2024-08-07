@@ -291,6 +291,35 @@ TestVirtual = function()
   end
 end
 
+function SetVirtualTextBelowCurrentLine()
+  local buf = vim.api.nvim_get_current_buf()
+
+  local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+  local target_line = current_line + 1
+  local namespace = vim.api.nvim_create_namespace 'example_namespace'
+
+  vim.api.nvim_buf_set_extmark(buf, namespace, target_line, 0, {
+    virt_text = { { 'This is virtual text\n', 'Comment' } },
+    virt_text_pos = 'eol',
+  })
+end
+
+function InsertVirtualTextBelowCurrentLine()
+  local buf = vim.api.nvim_get_current_buf()
+
+  local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+
+  local target_line = current_line
+
+  local namespace = vim.api.nvim_create_namespace 'example_namespace'
+
+  vim.api.nvim_buf_set_extmark(buf, namespace, target_line, 0, {
+    virt_lines = { { { 'This is virtual line above current one', 'Comment' } } },
+    virt_lines_above = true,
+    virt_lines_leftcol = false,
+  })
+end
+
 ShowStringAndWait = function(input_string)
   -- Create a new buffer
   local buf = vim.api.nvim_create_buf(false, true)

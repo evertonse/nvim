@@ -271,35 +271,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- Function to open quickfix list below the current window
-local function open_quickfix_below()
-  -- Check if the quickfix list is empty
-  -- if #vim.fn.getqflist() == 0 then
-  --   return
-  -- end
-  vim.schedule(function()
-    vim.cmd 'cclose'
-    vim.cmd 'horizontal copen'
-    vim.cmd 'resize 5' -- Optional: Set the height of the quickfix window
-    assert(false)
-  end)
-end
-
--- Autocommand to open quickfix list below when it is populated
-au(
-  'QuickFixCmdPre',
-  -- 'QuickFixCmdPost',
-  '*',
-  function()
-    open_quickfix_below()
-  end,
-  'Le quick fix thingy',
-  excyber
-)
-
 -- TODO: Make it come back to the line it once was, probably have to
 -- delete lê
-
 local function toggle_signcolumn()
   local win_id = vim.api.nvim_get_current_win()
   local is_floating = vim.api.nvim_win_get_config(win_id).relative ~= ''
@@ -352,6 +325,18 @@ end)
 
 local _ = false and au({ 'WinEnter' }, '*', function(_) end)
 
+-- Global variable to store unexecuted command line text
+LastCmd = ''
+-- Function to capture unexecuted command line text
+local function capture_cmdline_text()
+  local cmd_type = vim.fn.getcmdtype()
+
+  Inspect('cmd type: "' .. cmd_type .. '" Unexecuted command line text saved: ' .. LastCmd)
+  if cmd_type == ':' or cmd_type == '/' or cmd_type == '?' then
+    print('Unexecuted command line text saved: ' .. LastCmd)
+  end
+end
+
 local _ = true
   -- Before leaving the command-line (including non-interactive use of ":" 
   and au('CmdlineLeave', '*', function(_)
@@ -389,9 +374,22 @@ local _ = true
       vim.cmd [[stopinsert]]
     end, opts)
 
-    map({ 'x', 'v', 'n' }, '<CR>', '<CR>', opts)
+    map({ 'x', 'v', 'n' }, '<CR>', function()
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', true)
+      vim.schedule(function()
+        LastCmd = ''
+      end)
+    end, opts)
+
+    map({ 'x', 'v', 'n', 'i' }, '<C-s>', function()
+      vim.api.nvim_input '<C-f>'
+    end, opts)
 
     map({ 'n' }, '<Esc>', function()
+      LastCmd = vim.fn.getline '.'
+      vim.schedule(function()
+        vim.cmd [[stopinsert]]
+      end)
       vim.cmd [[q!]]
     end, opts)
 
@@ -629,10 +627,9 @@ vim.api.nvim_create_autocmd('CompleteDone', {
 })
 
 -- LIARSSSS
--- au(
--- 'UserGettingBored', '*', function(event)
---   Inspect(event)
--- end)
+local _ = false and au('UserGettingBored', '*', function(event)
+  Inspect(event)
+end)
 
 au('TermClose', '*', function()
   vim.api.nvim_feedkeys(vim.keycode '<C-c>', 'n', true)
