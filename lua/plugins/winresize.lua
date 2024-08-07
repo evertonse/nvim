@@ -1,11 +1,32 @@
 return {
-  'pogyomo/winresize.nvim',
+  'pogyomo/submode.nvim',
   lazy = false,
   dependencies = {
-    'pogyomo/submode.nvim',
+    'pogyomo/winresize.nvim',
   },
   config = function()
     local submode = require 'submode'
+    vim.schedule(function()
+      submode.create('trails', {
+        mode = 'n',
+        enter = '<Leader>M',
+        leave = { 'q', '<ESC>' },
+        default = function(register)
+          register('i', function()
+            JumpPosition(1)
+          end)
+          register('o', function()
+            JumpPosition(-1)
+          end)
+          register('n', function()
+            JumpPosition(1)
+          end)
+          register('p', function()
+            JumpPosition(-1)
+          end)
+        end,
+      })
+    end)
     local resize = require('winresize').resize
     submode.create('WinResize', {
       mode = 'n',

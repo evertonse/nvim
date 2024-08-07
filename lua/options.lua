@@ -10,6 +10,7 @@
 -- vim.cmd [[ filetype plugin off]]
 -- vim.cmd [[ set omnifunc= ]]
 vim.cmd [[ :set sessionoptions-=options ]]
+vim.cmd [[ set t_kb=^?]]
 
 local o, opt, g = vim.o, vim.opt, vim.g
 
@@ -164,6 +165,7 @@ o.backup = false -- Don't store backup while overwriting the file
 o.writebackup = false -- Don't store backup while overwriting the file
 
 vim.cmd 'filetype plugin indent on' -- Enable all filetype plugins
+vim.cmd [[ set backspace=indent,eol,start ]]
 
 -- Appearance
 

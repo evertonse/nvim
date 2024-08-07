@@ -230,6 +230,10 @@ end
 
 M.disabled = {
   i = {
+    ['<C-h>'] = '',
+    ['<C-l>'] = '',
+    ['<C-j>'] = '',
+    ['<C-k>'] = '',
     ['<Tab>'] = '',
     ['<S-Tab>'] = '',
     ['<C-<space>>'] = '',
@@ -801,16 +805,12 @@ M.general = {
     ['<C-e>'] = { '<End>', 'End of line' },
 
     -- navigate within insert mode
-    ['<C-k>'] = {
-      function()
-        vim.api.nvim_input '.'
-      end,
-      'Move up',
-    },
-    ['<C-h>'] = { '_', 'Move left' },
-    ['<C-l>'] = { '<Right>', 'Move right' },
-    ['<C-j>'] = { '<Down>', 'Move down' },
+    ['<C-h>'] = { '_', '' },
+    ['<C-j>'] = { '.', '' },
+    ['<C-k>'] = { ',', '' },
+    ['<C-l>'] = { ';', '' },
     -- Insert --
+
     -- Press jk fast to exit insert mode
     -- ['jk'] = { '<ESC>', noremap_opts },
     -- ['kj'] = { '<ESC>', noremap_opts },
@@ -827,7 +827,6 @@ M.general = {
     -- ['<C-c>'] = { '<Esc>', noremap_opts },
     ['<M-U>'] = { '<C-o><C-r>' },
   },
-
   -- Visual --
   v = {
     ['<leader>re'] = {
@@ -842,7 +841,7 @@ M.general = {
           return
         end
 
-        vim.api.nvim_input [["hy:%s/<C-r>h//gc<left><left><left>]]
+        vim.api.nvim_input [["0y:%s/<C-r>0//gc<left><left><left>]]
       end,
       '[R]eplace [W]ord',
     },
@@ -1587,7 +1586,7 @@ local function save_position()
   print('Position saved: ' .. file .. ' [' .. row .. ', ' .. col .. ']')
 end
 
-local function jump_position(count)
+function JumpPosition(count)
   if #Positions == 0 then
     print 'No positions saved'
     return
@@ -1623,28 +1622,6 @@ end
 
 -- Key mappings
 map('n', '<leader>m', save_position, { noremap = true, silent = true })
-vim.schedule(function()
-  local submode = require 'submode'
-  submode.create('trails', {
-    mode = 'n',
-    enter = '<Leader>M',
-    leave = { 'q', '<ESC>' },
-    default = function(register)
-      register('i', function()
-        jump_position(1)
-      end)
-      register('o', function()
-        jump_position(-1)
-      end)
-      register('n', function()
-        jump_position(1)
-      end)
-      register('p', function()
-        jump_position(-1)
-      end)
-    end,
-  })
-end)
 
 SetKeyMaps(M.disabled)
 SetKeyMaps(M.general)

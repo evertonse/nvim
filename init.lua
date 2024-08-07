@@ -61,8 +61,8 @@
 --    [x] auto preencha cmd line with Lastcmd
 --    [x] fix quicklist keymaps
 --    [ ] fix nvimtree pr
---    [ ] insert "." and "_" in insert mode and ", "
---    [ ] re in visaul mode first copy and restore register
+--    [x] insert "." and "_" in insert mode and ", "
+--    [x] re in visaul mode first copy and restore register
 --    [x] Telescope: path = {smart} for my picker
 --
 --    [x] GOTTA TOGGLE comment better
@@ -136,3 +136,5 @@ require 'lazy-bootstrap'
 
 -- [[ Configure and install plugins ]]
 require 'lazy-plugins'
+
+vim.api.nvim_set_keymap('i', '<C-h>', '_', { noremap = true, silent = true })
