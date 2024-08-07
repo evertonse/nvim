@@ -30,8 +30,10 @@
 --    [ ] Search curious about the gui aspect of this: https://github.com/ray-x/guihua.lua
 --    [ ] TELESCOPE: Take a look at https://github-wiki-see.page/m/nvim-telescope/telescope.nvim/wiki/Extensions
 --    [ ] REFACTOR: Make all keymaps in keymaps, and require 'keymaps'.telescope for example in plugin site
+--
 --    [ ] See about: make named sessions and named tabs
 --    [ ] See about: reordering/managing buffers
+--
 --    [ ] MARKS: better marks per project visualization and managiong (harpoon2, grapple, portal, marks.nvim, etc...)
 --    [ ] NvimTree: bulk renamed when you actually need it
 --    [ ] LazyDraw: Set it when problems slo, meaning, on ssh, how tho?

@@ -274,7 +274,9 @@ local _ = true
       if previous_stats.mode ~= 'n' and previous_stats.mode ~= 'no' then
         local _ = false and Inspect { previous_stats.mode, previous_stats.mode ~= 'no', previous_stats.mode ~= 'n' }
         vim.schedule(function()
-          if not TextPostDontTrigger then
+          -- HACK: workaround, doest work on the yank and stop where you where feat. on floating windows
+          local is_floating = vim.api.nvim_win_get_config(0).relative ~= ''
+          if not TextPostDontTrigger and not is_floating then
             vim.api.nvim_input 'gv<esc>'
           end
         end)
@@ -367,6 +369,7 @@ local _ = false
 au('CmdwinLeave', '*', function(event)
   TextPostDontTrigger = false
 end)
+
 local _ = true
   and au('CmdwinEnter', '*', function(event)
     local map = vim.keymap.set
