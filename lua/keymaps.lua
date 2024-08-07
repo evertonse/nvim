@@ -461,14 +461,7 @@ M.general = {
   },
 
   vx = {
-    -- ['<leader>rw'] = { [[ygv<esc>:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' },
-    ['<leader>rw'] = {
-      function()
-        TextPostDontTrigger = true
-        vim.api.nvim_input [["hy:%s/<C-r>h//gc<left><left><left>]]
-      end,
-      '[R]eplace [W]ord',
-    },
+    ['<leader>rw'] = { [[ygv<esc>:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' },
     ['<leader><leader>'] = { ':Norm <Down>', 'live preview of normal command' },
     [';'] = { ':<Down><Down>', 'Command Mode' },
     -- ['<C-\\>'] = {
@@ -837,6 +830,22 @@ M.general = {
 
   -- Visual --
   v = {
+    ['<leader>re'] = {
+      function()
+        TextPostDontTrigger = true
+        local mode = vim.api.nvim_get_mode().mode
+
+        -- Check if we are in Visual mode (including Visual Line and Visual Block)
+
+        if mode == 'V' or mode == '\22' then
+          vim.api.nvim_input [[:%s///gc<left><left><left><left>]]
+          return
+        end
+
+        vim.api.nvim_input [["hy:%s/<C-r>h//gc<left><left><left>]]
+      end,
+      '[R]eplace [W]ord',
+    },
     ['<leader>n'] = { ':norm ', 'normal keys insertion', { expr = true } },
 
     ['*'] = { [[ "0y<ESC>/<c-r>0<CR> ]], 'Move up', { expr = false } },
