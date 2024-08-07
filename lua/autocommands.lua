@@ -276,8 +276,10 @@ local _ = true
         vim.schedule(function()
           -- HACK: workaround, doest work on the yank and stop where you where feat. on floating windows
           local is_floating = vim.api.nvim_win_get_config(0).relative ~= ''
-          if not TextPostDontTrigger and not is_floating then
-            vim.api.nvim_input 'gv<esc>'
+          if not TextPostDontTrigger and not is_floating and not is_in_cmdline() then
+            vim.schedule(function()
+              vim.api.nvim_input '<esc>gv<esc>'
+            end)
           end
         end)
       end
@@ -366,7 +368,20 @@ local _ = false
     vim.g.ministatusline_disable = previous_stats.ministatusline_disable
   end)
 
-au('CmdwinLeave', '*', function(event)
+LastBuffer = nil
+au('BufLeave', '*', function(event)
+  local current_buffer = vim.api.nvim_get_current_buf()
+  local current_buffer_name = vim.api.nvim_buf_get_name(current_buffer)
+
+  -- Check if the current buffer is loaded and has a valid name
+  if vim.api.nvim_buf_is_loaded(current_buffer) and current_buffer_name ~= '' then
+    if LastBuffer ~= current_buffer then
+      LastBuffer = current_buffer
+    end
+  end
+end)
+
+au('CmdlineLeave', '*', function(event)
   TextPostDontTrigger = false
 end)
 

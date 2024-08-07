@@ -44,14 +44,14 @@
 --    [ ] NvimTree: Signs deprecated when in nvim 0.11, fix
 --    [x] NvimTree: Decorator on far left for SIZE of file, should be easy
 --    [x] cmdbuf: make you own with the autocmmd you made
---    [ ] cmdbuf(my own): ok i've done with cmdwin and autocommands, but what about an actuall window like cmdbuf?
+--    [ ] OPTIONAL: cmdbuf(my own): ok i've done with cmdwin and autocommands, but what about an actuall window like cmdbuf?
 --    [x] Focus: do you own focus looping through all windows that are not floating, and that's it =P
 --    [x] Neovim: make cmdwin work with incpreview commands
 --    [ ] Scope: Clean up and fix PR by pushing
 --    [x] Colorscheme: Clean up and make it receive opts for transparancy
 --    [x] Alacritty: change this BS of copying with crtl+shift+v, and remove crlt+y mapping
 --    [x] Alacritty: Make it open on wsl
---    [ ] Either this rcarriga/nvim-notify or noice, if too many lsp message, altough it seems that fidget be aight for some notifications
+--    [ ] OPTIONAL: Either this rcarriga/nvim-notify or noice, if too many lsp message, altough it seems that fidget be aight for some notifications
 --    [ ] KEYMAP MARKS: check for global marks per directory right? or is it for .git , check that about the plugin marks.nvim at some point
 --    [ ] KEYMAP MARKS: keymaps for global marks could also be lowercase if we press shift couldn't it? See if you need some time from now
 --    [ ] Nvimtree: make selection mode leave cursor at the last position before leaving
@@ -110,9 +110,9 @@
 --    [ ] INVESTIGATE .gitignore slow to type on big code paths
 --    [ ] INVESTIGATE Snap on big code bases is it actually faster?
 --    [ ] TEX: Check If I like that for TCC : https://github.com/jakewvincent/texmagic.nvim
---    [ ] Nvimtree: only show folder icon if the file with gitsuff is not visible
---    [ ] Nvimtree: Hiden folders with zero stuff in livefilter
---    [ ] Nvimtree: why does this bf set numberline?
+--    [ ] @PR Nvimtree: only show folder icon if the file with gitsuff is not visible
+--    [ ] @PR Nvimtree: Hiden folders with zero stuff in livefilter
+--    [x] Nvimtree: why does this bs set numberline?
 --    [x] DONE,HACK formatoptions being set by some plugin
 --
 --     NOTE: Use (in VISUAL MODE) :'<,'>!<shell_command><cr> output to buffer,

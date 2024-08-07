@@ -358,20 +358,20 @@ return {
         show_folder_size = not OnWsl(),
         format_unit = 'single',
       },
-      -- hidden_display = OnSlowPath() and 'none' or 'all',
-      hidden_display = function(hidden_stats)
-        local total_count = 0
-        for reason, count in pairs(hidden_stats) do
-          total_count = total_count + count
-        end
-
-        if total_count > 0 then
-          return '(' .. tostring(total_count) .. ' hidden)'
-        end
-
-        return nil
-      end,
-
+      hidden_display = OnSlowPath() and 'none' or 'all',
+      -- hidden_display = function(hidden_stats)
+      --   local total_count = 0
+      --   for reason, count in pairs(hidden_stats) do
+      --     total_count = total_count + count
+      --   end
+      --
+      --   if total_count > 0 then
+      --     return '(' .. tostring(total_count) .. ' hidden)'
+      --   end
+      --
+      --   return nil
+      -- end,
+      --
       full_name = true,
       -- Value can be `"none"`, `"icon"`, `"name"` or `"all"`.
       highlight_git = 'icon',
@@ -504,7 +504,7 @@ return {
       no_buffer = false,
       no_bookmark = false,
       -- TODO: Make `exclude` / `custom` be a function based on node as well ok ?
-      custom = { '.*~' },
+      -- custom = { '.*~' },
       -- custom = { '^\\.git', '.*~' },
       -- exclude = { '*~' },
     },
