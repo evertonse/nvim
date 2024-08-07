@@ -245,6 +245,7 @@ M.disabled = {
     ['<C-<Space>>'] = '',
     ['K'] = '', -- disable search for `man` pages, too slow
     ['<leader>D'] = '',
+    ['<leader>'] = '',
     ['<S-tab>'] = '',
     ['<Tab>'] = '',
     ['<C-n>'] = '',
@@ -316,6 +317,7 @@ M.disabled = {
     ['gc'] = '',
     ['<leader>/'] = '',
     ['<M-Down'] = '',
+    ['<leader>'] = '',
   },
   t = {
     -- nvterm
@@ -475,6 +477,37 @@ M.general = {
     -- },
   },
 
+  ci = {
+    -- go to  beginning and end
+    ['<C-b>'] = { '<ESC>^i', 'Beginning of line' },
+    ['<C-e>'] = { '<End>', 'End of line' },
+
+    -- navigate within insert mode
+    ['<C-h>'] = {
+      function()
+        vim.api.nvim_input '_'
+      end,
+      '',
+    },
+    ['<C-j>'] = {
+      function()
+        vim.api.nvim_input '.'
+      end,
+      '',
+    },
+    ['<C-k>'] = {
+      function()
+        vim.api.nvim_input ','
+      end,
+      '',
+    },
+    ['<C-l>'] = {
+      function()
+        vim.api.nvim_input ';'
+      end,
+      '',
+    },
+  },
   c = {
 
     ['<CR>'] = {
@@ -800,15 +833,6 @@ M.general = {
   },
 
   i = {
-    -- go to  beginning and end
-    ['<C-b>'] = { '<ESC>^i', 'Beginning of line' },
-    ['<C-e>'] = { '<End>', 'End of line' },
-
-    -- navigate within insert mode
-    ['<C-h>'] = { '_', '' },
-    ['<C-j>'] = { '.', '' },
-    ['<C-k>'] = { ',', '' },
-    ['<C-l>'] = { ';', '' },
     -- Insert --
 
     -- Press jk fast to exit insert mode

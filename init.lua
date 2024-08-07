@@ -136,5 +136,3 @@ require 'lazy-bootstrap'
 
 -- [[ Configure and install plugins ]]
 require 'lazy-plugins'
-
-vim.api.nvim_set_keymap('i', '<C-h>', '_', { noremap = true, silent = true })

@@ -7,6 +7,10 @@ local previous_stats = {
   ministatusline_disable = vim.g.ministatusline_disable,
 }
 
+local function is_in_cmdline()
+  return vim.fn.getcmdwintype() ~= '' or vim.fn.mode():match '^[/:]' ~= nil
+end
+
 local excyber = vim.api.nvim_create_augroup('1', { clear = true })
 local au = function(event, pattern, callback, desc, augroup, once)
   vim.api.nvim_create_autocmd(
@@ -259,6 +263,7 @@ local function capture_yank()
 end
 
 TextPostDontTrigger = false
+
 local _ = true
   and vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'Highlight when yanking (copying) text',
@@ -282,7 +287,7 @@ local _ = true
 local function focus_window(event)
   local win_id = vim.api.nvim_get_current_win()
   local is_floating = vim.api.nvim_win_get_config(win_id).relative ~= ''
-  local is_cmdline_window = vim.fn.getcmdwintype() ~= ''
+  local is_cmdline_window = is_in_cmdline()
 
   -- local is_cmdline_window = win_config.relative == 'editor' and vim.fn.getcmdwintype() ~= ''
   local current_filetype = vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), 'filetype')
@@ -357,12 +362,15 @@ local _ = false
     vim.opt.laststatus = previous_stats.laststatus
     vim.opt.cmdheight = previous_stats.cmdheight
     vim.g.ministatusline_disable = previous_stats.ministatusline_disable
-    TextPostDontTrigger = false
   end)
 
+au('CmdwinLeave', '*', function(event)
+  TextPostDontTrigger = false
+end)
 local _ = true
   and au('CmdwinEnter', '*', function(event)
     local map = vim.keymap.set
+    TextPostDontTrigger = true
 
     previous_stats.laststatus = vim.opt.laststatus
     previous_stats.cmdheight = vim.opt.cmdheight
@@ -410,7 +418,7 @@ local _ = true
 
     local goto_cmd = function()
       vim.api.nvim_input '<C-f>'
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Space><BS>', true, true, true), 'c', false)
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Space><BS>', true, true, true), 'c', true)
     end
 
     map({ 'n' }, 'i', function()

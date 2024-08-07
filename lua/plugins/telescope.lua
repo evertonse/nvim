@@ -524,19 +524,21 @@ return { -- Fuzzy Finder (files, lsp, etc)
       defaults = {
 
         attach_mappings = function(prompt_bufnr, map)
-          local prompt_win = vim.fn.bufwinid(prompt_bufnr)
-          if prompt_win ~= -1 then
-            vim.schedule(function()
+          vim.schedule(function()
+            local win_id = vim.fn.bufwinid(prompt_bufnr)
+            local win_nr = vim.fn.bufwinnr(prompt_bufnr)
+            local prompt_win = win_id
+            local is_valid_win = vim.api.nvim_win_is_valid(prompt_win)
+            if is_valid_win then
               vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
               vim.api.nvim_win_set_option(prompt_win, 'signcolumn', 'no')
               vim.api.nvim_win_set_option(prompt_win, 'relativenumber', false)
               vim.api.nvim_win_set_option(prompt_win, 'number', false)
-
               if vim.version().minor >= 10 then
                 vim.api.nvim_get_hl_ns { winid = prompt_win }
               end
-            end)
-          end
+            end
+          end)
           return true
         end,
 
