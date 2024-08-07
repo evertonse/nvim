@@ -11,6 +11,35 @@ local noremap_opts = { noremap = true, silent = true, nowait = true }
 local wait_opts = { noremap = true, silent = true, nowait = false }
 FULLSCREEN = false
 
+local function get_visual_selection()
+  local s_start = vim.fn.getpos "'<"
+  local s_end = vim.fn.getpos "'>"
+  local n_lines = math.abs(s_end[2] - s_start[2]) + 1
+  local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
+  lines[1] = string.sub(lines[1], s_start[3], -1)
+  if n_lines == 1 then
+    lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3] - s_start[3] + 1)
+  else
+    lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
+  end
+  return table.concat(lines, '\n')
+end
+
+-- Function to perform substitution with selected text
+local function substitute_with_selection()
+  local selected_text = get_visual_selection() or ''
+
+  Inspect(selected_text)
+  -- Clear the selection
+  vim.cmd 'normal! gv'
+
+  -- Prepare the substitution command
+  local command = string.format(':%s/%s//g<Left><Left><Left><Down>', selected_text, selected_text)
+
+  -- Execute the command
+  vim.cmd(command)
+end
+
 -- Define a table to store previous positions
 
 -- Function to jump within the current buffer
@@ -430,20 +459,23 @@ M.general = {
     ['gH'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move left', { expr = true } },
     ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
   },
-  vnx = {
-    ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' },
+
+  vx = {
+    -- ['<leader>rw'] = { [[ygv<esc>:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' },
+    ['<leader>rw'] = {
+      function()
+        TextPostDontTrigger = true
+        vim.api.nvim_input [["hy:%s/<C-r>h//gc<left><left><left>]]
+      end,
+      '[R]eplace [W]ord',
+    },
     ['<leader><leader>'] = { ':Norm <Down>', 'live preview of normal command' },
     [';'] = { ':<Down><Down>', 'Command Mode' },
-    ['<C-\\>'] = {
-      function()
-        vim.api.nvim_input ':<Down><C-f>'
-      end,
-    },
-    ['\\'] = {
-      function()
-        vim.api.nvim_input ':<Down>'
-      end,
-    },
+    -- ['<C-\\>'] = {
+    --   function()
+    --     vim.api.nvim_input ':<Down><C-f>'
+    --   end,
+    -- },
   },
 
   c = {
@@ -760,7 +792,6 @@ M.general = {
     ['J'] = { 'mzJ`z', noremap_opts },
 
     ['U'] = { '<C-r>' },
-    --['<leader>re']     ={  'yW:%s/<C-r>*/<C-r>*/gc<Left><Left><Left><Down>',  noremap_opts},
     ['<leader>re'] = { ':%s///g<Left><Left><Left><Down>', noremap_opts },
 
     ['<leader>d'] = { '"_d', noremap_opts },
@@ -803,9 +834,13 @@ M.general = {
     -- ['<C-c>'] = { '<Esc>', noremap_opts },
     ['<M-U>'] = { '<C-o><C-r>' },
   },
+
   -- Visual --
   v = {
     ['<leader>n'] = { ':norm ', 'normal keys insertion', { expr = true } },
+
+    ['*'] = { [[ "0y<ESC>/<c-r>0<CR> ]], 'Move up', { expr = false } },
+    ['#'] = { [[ "0y<ESC>?<c-r>0<CR> ]], 'Move up', { expr = false } },
     ['<Up>'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },
     ['<Down>'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
 
@@ -845,8 +880,6 @@ M.general = {
 
     ['<M-Up>'] = { ":m '<-2<CR>gv=gv", noremap_opts },
     ['<M-Down>'] = { ":m '>+2<CR>gv=gv", noremap_opts },
-
-    ['<leader>re'] = { ':s///g<Left><Left><Left><Down><Down>', noremap_opts },
 
     ['<A-Up>'] = { ":move '<-2<CR>gv-gv", noremap_opts },
 

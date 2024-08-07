@@ -258,18 +258,24 @@ local function capture_yank()
   table.insert(yank_history, yanked_text)
 end
 
-vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
-  group = excyber,
-  callback = function()
-    vim.highlight.on_yank { higroup = 'Visual', timeout = 210 }
-    capture_yank()
-    if previous_stats.mode ~= 'n' and previous_stats.mode ~= 'no' then
-      local _ = false and Inspect { previous_stats.mode, previous_stats.mode ~= 'no', previous_stats.mode ~= 'n' }
-      vim.api.nvim_input 'gv<esc>'
-    end
-  end,
-})
+TextPostDontTrigger = false
+local _ = true
+  and vim.api.nvim_create_autocmd('TextYankPost', {
+    desc = 'Highlight when yanking (copying) text',
+    group = excyber,
+    callback = function()
+      vim.highlight.on_yank { higroup = 'Visual', timeout = 210 }
+      capture_yank()
+      if previous_stats.mode ~= 'n' and previous_stats.mode ~= 'no' then
+        local _ = false and Inspect { previous_stats.mode, previous_stats.mode ~= 'no', previous_stats.mode ~= 'n' }
+        vim.schedule(function()
+          if not TextPostDontTrigger then
+            vim.api.nvim_input 'gv<esc>'
+          end
+        end)
+      end
+    end,
+  })
 
 -- TODO: Make it come back to the line it once was, probably have to
 -- delete lê
@@ -345,12 +351,13 @@ local function capture_cmdline_text()
   end
 end
 
-local _ = true
+local _ = false
   -- Before leaving the command-line (including non-interactive use of ":" 
   and au('CmdlineLeave', '*', function(_)
     vim.opt.laststatus = previous_stats.laststatus
     vim.opt.cmdheight = previous_stats.cmdheight
     vim.g.ministatusline_disable = previous_stats.ministatusline_disable
+    TextPostDontTrigger = false
   end)
 
 local _ = true

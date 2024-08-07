@@ -57,7 +57,7 @@
 --    [-] edit: dont wanna do itincline.nvim: and set percentage of file scrolling in the filename
 --    [x] breadtrail.nvim: (edit: done it, but need to make signcolum better) plugin idea, simpler than trailblazer.nvim
 --    [x] DONE: goto diagnostic bug
---    [ ] fix cmdwin height
+--    [x] fix cmdwin height
 --    [x] auto preencha cmd line with Lastcmd
 --    [x] fix quicklist keymaps
 --    [ ] fix nvimtree pr
