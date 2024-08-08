@@ -861,7 +861,7 @@ M.general = {
         -- Check if we are in Visual mode (including Visual Line and Visual Block)
 
         if mode == 'V' or mode == '\22' then
-          vim.api.nvim_input [[:%s///gc<left><left><left><left>]]
+          vim.api.nvim_input [[:s///gc<left><left><left><left>]]
           return
         end
 
@@ -871,8 +871,30 @@ M.general = {
     },
     ['<leader>n'] = { ':norm ', 'normal keys insertion', { expr = true } },
 
-    ['*'] = { [[ "0y<ESC>/<c-r>0<CR> ]], 'Move up', { expr = false } },
-    ['#'] = { [[ "0y<ESC>?<c-r>0<CR> ]], 'Move up', { expr = false } },
+    ['*'] = {
+      function()
+        TextPostDontTrigger = true
+        local mode = vim.api.nvim_get_mode().mode
+
+        -- Check if we are in Visual mode (including Visual Line and Visual Block)
+
+        if mode == 'V' or mode == '\22' then
+          -- vim.api.nvim_input [[:s///gc<left><left><left><left>]]
+          return
+        end
+
+        vim.api.nvim_input [["0y/<C-r>0<Left>]]
+        vim.schedule(function()
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', true)
+          vim.cmd [[redraw]]
+        end)
+      end,
+      function()
+        TextPostDontTrigger = true
+      end,
+      '',
+      { expr = false },
+    },
     ['<Up>'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },
     ['<Down>'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
 

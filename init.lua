@@ -66,6 +66,7 @@
 --    [x] insert "." and "_" in insert mode and ", "
 --    [x] re in visaul mode first copy and restore register
 --    [x] Telescope: path = {smart} for my picker
+--    [ ] Multiplecursor: make the thingy work better
 --
 --    [x] GOTTA TOGGLE comment better
 --    [x] Comment: better when not in visual mode
@@ -76,6 +77,7 @@
 --    [x] 'visual' <leader>F need to scape '(' to '\('
 --
 --    [ ] marks.nvim: Check alternative for marks or fixit youself
+--    [ ] IMPORTANT YANK_HISTORY slow
 --    [x] AUTOCMD Enter terminal remove the lines and shit, autoquit when
 --    [x] CmdwinEnter: Make StatusNC be conceal then return to previous when leaving
 --    [x](edit: found le incline good) nvinca something like that
