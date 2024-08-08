@@ -19,7 +19,11 @@ return {
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = vim.g.self.dont_format or { c = false, cpp = false, odin = true, python = true }
+        local disable_filetypes =
+          vim.tbl_deep_extend('force', { c = true, cpp = true, odin = true, python = true }, vim.g.self.dont_format or {})
+        if disable_filetypes[vim.bo[0].filetype] then
+          return false
+        end
         return {
           timeout_ms = 1200,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
