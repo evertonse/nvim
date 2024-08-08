@@ -62,10 +62,12 @@
 --    [x] fix cmdwin height
 --    [x] auto preencha cmd line with Lastcmd
 --    [x] fix quicklist keymaps
---    [ ] fix nvimtree pr
 --    [x] insert "." and "_" in insert mode and ", "
 --    [x] re in visaul mode first copy and restore register
 --    [x] Telescope: path = {smart} for my picker
+--    [x] CdHistory: stack of cds
+--    [ ] fix nvimtree pr
+--    [ ] Fix: start * on selection, it's slow and shit
 --    [ ] Multiplecursor: make the thingy work better
 --
 --    [x] GOTTA TOGGLE comment better

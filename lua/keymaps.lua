@@ -886,20 +886,21 @@ M.general = {
     ['*'] = {
       function()
         TextPostDontTrigger = true
-        local mode = vim.api.nvim_get_mode().mode
 
+        local mode = vim.api.nvim_get_mode().mode
         -- Check if we are in Visual mode (including Visual Line and Visual Block)
 
         if mode == 'V' or mode == '\22' then
           -- vim.api.nvim_input [[:s///gc<left><left><left><left>]]
           return
         end
-
+        TextPostDontTrigger = true
         vim.api.nvim_input [["0y/<C-r>0<Left>]]
         vim.schedule(function()
+          -- vim.api.nvim_input [[<cr>n<S-N>]]
           vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', true)
-          vim.cmd [[redraw]]
         end)
+        -- vim.cmd [[redraw]]
       end,
       function()
         TextPostDontTrigger = true
