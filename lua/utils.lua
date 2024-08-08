@@ -428,6 +428,7 @@ vim.g.self = {
   cycles = {
     { '==', '!=' },
     { 'true', 'false' },
+    { 'False', 'True' },
     { 'if', 'else', 'elseif' },
     { 'and', 'or' },
     { 'off', 'on' },

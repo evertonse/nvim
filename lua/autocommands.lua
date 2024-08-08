@@ -628,6 +628,84 @@ local function show_yank_history_on_quick()
   end
 end
 
+-- Initialize a stack to keep track of directories
+local dir_stack = {}
+
+-- Function to push the current directory onto the stack
+
+local function push_dir()
+  table.insert(dir_stack, vim.fn.getcwd())
+end
+
+-- Function to pop the last directory from the stack
+local function pop_dir()
+  if #dir_stack > 0 then
+    local last_dir = table.remove(dir_stack)
+    vim.cmd('cd ' .. last_dir)
+  else
+    print 'Directory stack is empty.'
+  end
+end
+
+local function open_floating_window_for_directories()
+  local select_directory = function(win, index)
+    local dir = dir_stack[index]
+
+    if dir then
+      table.remove(dir_stack, index) -- Remove the selected directory from the stack
+      vim.api.nvim_win_close(win, true) -- Close the floating window
+      vim.cmd('cd ' .. dir) -- Change to the selected directory
+    end
+  end
+
+  local buf = vim.api.nvim_create_buf(false, true) -- Create a new buffer
+  local lines = {}
+  for i, dir in ipairs(dir_stack) do
+    table.insert(lines, dir) -- Add each directory to the lines
+  end
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines) -- Set the directories as lines in the buffer
+
+  -- Calculate the dimensions for the floating window
+  local width = 80
+
+  local height = 10
+  local win_width = vim.api.nvim_get_option 'columns'
+  local win_height = vim.api.nvim_get_option 'lines'
+  local col = math.floor((win_width - width) / 2)
+  local row = math.floor((win_height - height) / 2)
+
+  -- Create the floating window
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = 'editor',
+    width = width,
+    height = height,
+    col = col,
+    row = row,
+    style = 'minimal',
+
+    border = 'single',
+  })
+
+  -- Remap 'o' key to go to the selected directory and close the window
+  vim.keymap.set('n', 'o', function()
+    local cursor_line = vim.fn.line '.' -- Get the current line in the buffer
+    select_directory(win, cursor_line) -- Pass the line number to select_directory
+  end, { buffer = buf, noremap = true, silent = true })
+end
+
+-- Example usage: Add directories to the stack
+table.insert(dir_stack, '/tmp')
+table.insert(dir_stack, '~/code')
+
+-- Autocommand to push the directory onto the stack when changing directories
+vim.api.nvim_create_augroup('ChangeDir', { clear = true })
+vim.api.nvim_create_autocmd('DirChangedPre', {
+  group = 'ChangeDir',
+  callback = push_dir,
+})
+
+vim.api.nvim_create_user_command('CdHistory', open_floating_window_for_directories, {})
+vim.api.nvim_create_user_command('CdPop', pop_dir, {})
 vim.api.nvim_create_user_command('YankHistory', show_yank_history_on_quick, {})
 
 -- Autocmd to apply the mapping when entering the quickfix window
