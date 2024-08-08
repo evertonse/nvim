@@ -12,18 +12,18 @@ return {
     require('oil').setup {
       -- Oil will take over directory buffers (e.g. `vim .` or `:e src/`)
       -- Set to false if you want some other plugin (e.g. netrw) to open when you edit directories.
-      default_file_explorer = on_windows,
+      default_file_explorer = true or on_windows,
       -- Id is automatically added at the beginning, and name at the end
       -- See :help oil-columns
       columns = {
         'icon',
-        -- 'permissions',
+        'permissions',
         'size',
         -- "mtime",
       },
       -- Buffer-local options to use for oil buffers
       buf_options = {
-        buflisted = false,
+        buflisted = true,
         bufhidden = 'hide',
       },
       -- Window-local options to use for oil buffers
@@ -84,6 +84,7 @@ return {
         ['-'] = 'actions.parent',
         ['_'] = 'actions.open_cwd',
         ['`'] = 'actions.cd',
+        ['cd'] = 'actions.cd',
         ['~'] = { 'actions.cd', opts = { scope = 'tab' }, desc = ':tcd to the current oil directory' },
         ['gs'] = 'actions.change_sort',
         ['gx'] = 'actions.open_external',
@@ -97,7 +98,8 @@ return {
         show_hidden = false,
         -- This function defines what is considered a "hidden" file
         is_hidden_file = function(name, bufnr)
-          return vim.startswith(name, '.')
+          -- return vim.startswith(name, '.')
+          return name == '.git' or name == 'node_modules'
         end,
         -- This function defines what will never be shown, even when `show_hidden` is set
         is_always_hidden = function(name, bufnr)
