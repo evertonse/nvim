@@ -94,7 +94,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
     -- Make sure to replace '<leader>r' with the keybinding of your choice.
-    map('<leader>lf', vim.lsp.buf.format, 'Ranged [L]sp [F]formatting', 'v')
+    local _ = false and map('<leader>lf', vim.lsp.buf.format, 'Ranged [L]sp [F]formatting', 'v')
 
     map(
       '[d',
