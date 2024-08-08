@@ -477,7 +477,7 @@ M.general = {
     -- },
   },
 
-  ci = {
+  si = {
     -- go to  beginning and end
     ['<C-b>'] = { '<ESC>^i', 'Beginning of line' },
     ['<C-e>'] = { '<End>', 'End of line' },
@@ -489,7 +489,7 @@ M.general = {
       end,
       '',
     },
-    ['<C-j>'] = {
+    ['<C-g>'] = {
       function()
         vim.api.nvim_input '.'
       end,
@@ -509,7 +509,19 @@ M.general = {
     },
   },
   c = {
-
+    ['<C-l>'] = {
+      function()
+        vim.api.nvim_input ';'
+      end,
+      '',
+    },
+    -- navigate within insert mode
+    ['<C-h>'] = {
+      function()
+        vim.api.nvim_input '_'
+      end,
+      '',
+    },
     ['<CR>'] = {
       function()
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', true)
