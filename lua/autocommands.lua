@@ -691,6 +691,13 @@ local function open_floating_window_for_directories()
     local cursor_line = vim.fn.line '.' -- Get the current line in the buffer
     select_directory(win, cursor_line) -- Pass the line number to select_directory
   end, { buffer = buf, noremap = true, silent = true })
+
+  vim.keymap.set('n', 'q', '<cmd>q<cr>', { buffer = buf, noremap = true, silent = true })
+
+  vim.keymap.set('n', '<cr>', function()
+    local cursor_line = vim.fn.line '.' -- Get the current line in the buffer
+    select_directory(win, cursor_line) -- Pass the line number to select_directory
+  end, { buffer = buf, noremap = true, silent = true })
 end
 
 -- Example usage: Add directories to the stack

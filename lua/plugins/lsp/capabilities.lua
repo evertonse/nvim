@@ -213,6 +213,7 @@ capabilities.textDocument = vim.tbl_deep_extend('force', capabilities.textDocume
   documentLink = { dynamicRegistration = false },
   colorProvider = { dynamicRegistration = false },
 })
+capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
 
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
