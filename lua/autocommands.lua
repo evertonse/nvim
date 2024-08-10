@@ -514,29 +514,6 @@ local _ = true
         vim.api.nvim_input '<Right>'
       end)
     end, opts)
-
-    if true then
-      return
-    end
-
-    local goto_cmd = function()
-      vim.api.nvim_input '<C-f>'
-      -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-f>', true, true, true), 'c', true)
-      vim.schedule(function()
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Space>', true, true, true), 'c', true)
-      end)
-      vim.schedule(function()
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<BS>', true, true, true), 'c', true)
-      end)
-    end
-
-    for _, letter in ipairs { 'c', 'C', 's', 'S', 'o', 'O', 'A', 'I' } do
-      map({ 'v', 'x', 'n' }, letter, function()
-        vim.api.nvim_feedkeys(letter, 'n', true)
-        -- vim.api.nvim_input(letter)
-        -- vim.schedule(goto_cmd)
-      end, opts)
-    end
   end)
 
 local telescope_yank_history = function()
