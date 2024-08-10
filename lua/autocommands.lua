@@ -436,6 +436,10 @@ au('CmdlineLeave', '*', function(event)
   TextPostDontTrigger = false
 end)
 
+au('CmdwinLeave', '*', function(event)
+  vim.api.nvim_create_augroup('ChangedModeInCmdwin', { clear = true })
+end)
+
 local _ = true
   and au('CmdwinEnter', '*', function(event)
     local map = vim.keymap.set
@@ -461,10 +465,18 @@ local _ = true
 
     local opts = { buffer = event.buf, noremap = true, silent = true }
 
-    map({ 'i', 'n' }, '<C-f>', '<C-c><Down>', opts)
-    map('n', '<C-c>', function()
-      vim.cmd [[stopinsert]]
-    end, opts)
+    au(
+      'ModeChanged',
+      -- '*',
+      '*:[i]*', -- insert mode
+      function()
+        TextPostDontTrigger = false
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', true)
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<space><bs>', true, false, true), 'c', true)
+      end,
+      'ChangedModeInCmdwin',
+      vim.api.nvim_create_augroup('ChangedModeInCmdwin', { clear = true })
+    )
 
     map({ 'x', 'v', 'n' }, '<CR>', function()
       vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', true)
@@ -473,37 +485,56 @@ local _ = true
       end)
     end, opts)
 
+    map({ 'i', 'n' }, '<C-f>', '<C-c><Down>', opts)
+
     map({ 'x', 'v', 'n', 'i' }, '<C-s>', function()
       vim.api.nvim_input '<C-f>'
     end, opts)
 
+    map('n', '<C-c>', function()
+      vim.cmd [[stopinsert]]
+    end, opts)
+
     map({ 'n' }, '<Esc>', function()
       LastCmd = vim.fn.getline '.'
-      vim.schedule(function()
-        vim.cmd [[stopinsert]]
-      end)
+      vim.cmd [[stopinsert]]
       vim.cmd [[q!]]
     end, opts)
 
-    local goto_cmd = function()
-      vim.api.nvim_input '<C-f>'
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Space><BS>', true, true, true), 'c', true)
-    end
-
     map({ 'n' }, 'i', function()
-      goto_cmd()
-      vim.api.nvim_input '<Right><Left>'
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('i', true, true, true), 'n', true)
+      vim.schedule(function()
+        vim.api.nvim_input '<Right><Left>'
+      end)
     end, opts)
 
     map({ 'n', 'v', 'x' }, 'a', function()
-      goto_cmd()
-      vim.api.nvim_input '<Right>'
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('i', true, true, true), 'n', true)
+      vim.schedule(function()
+        vim.api.nvim_input '<Right>'
+      end)
     end, opts)
+
+    if true then
+      return
+    end
+
+    local goto_cmd = function()
+      vim.api.nvim_input '<C-f>'
+      -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-f>', true, true, true), 'c', true)
+      vim.schedule(function()
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Space>', true, true, true), 'c', true)
+      end)
+      vim.schedule(function()
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<BS>', true, true, true), 'c', true)
+      end)
+    end
 
     for _, letter in ipairs { 'c', 'C', 's', 'S', 'o', 'O', 'A', 'I' } do
       map({ 'v', 'x', 'n' }, letter, function()
         vim.api.nvim_feedkeys(letter, 'n', true)
-        vim.schedule(goto_cmd)
+        -- vim.api.nvim_input(letter)
+        -- vim.schedule(goto_cmd)
       end, opts)
     end
   end)
