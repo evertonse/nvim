@@ -416,14 +416,6 @@ local function capture_cmdline_text()
   end
 end
 
-local _ = false
-  -- Before leaving the command-line (including non-interactive use of ":" 
-  and au('CmdlineLeave', '*', function(_)
-    vim.opt.laststatus = previous_stats.laststatus
-    vim.opt.cmdheight = previous_stats.cmdheight
-    vim.g.ministatusline_disable = previous_stats.ministatusline_disable
-  end)
-
 LastBuffer = nil
 au('BufLeave', '*', function(event)
   local current_buffer = vim.api.nvim_get_current_buf()
@@ -437,7 +429,11 @@ au('BufLeave', '*', function(event)
   end
 end)
 
+-- Before leaving the command-line (including non-interactive use of ":")
 au('CmdlineLeave', '*', function(event)
+  vim.opt.laststatus = previous_stats.laststatus
+  vim.opt.cmdheight = previous_stats.cmdheight
+  vim.g.ministatusline_disable = previous_stats.ministatusline_disable
   TextPostDontTrigger = false
 end)
 
