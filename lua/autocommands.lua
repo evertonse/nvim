@@ -589,8 +589,26 @@ end
 -- Custom sorter that sorts in reverse order
 vim.api.nvim_create_user_command('TelescopeYankHistory', telescope_yank_history, {})
 
--- Function to open a quickfix window with yank history
-
+-- -- Function to move the cursor to line 1 in the quickfix window
+-- local function set_quickfix_cursor_to_line_1()
+--   -- Check if the current buffer is a quickfix list
+--   if vim.bo.buftype == 'quickfix' then
+--     -- Move the cursor to line 1
+--
+--     vim.cmd 'normal! gg'
+--   end
+-- end
+--
+-- -- Create an autocommand group for quickfix commands
+-- vim.api.nvim_create_augroup('QuickfixCursor', { clear = true })
+--
+-- -- Add an autocommand to set the cursor to line 1 after opening a quickfix list
+-- vim.api.nvim_create_autocmd('QuickFixCmdPre', {
+--   group = 'QuickfixCursor',
+--   pattern = '*',
+--   callback = set_quickfix_cursor_to_line_1,
+-- })
+--
 -- Function to show yank history in a custom quickfix window
 local function show_yank_history_on_quick()
   local qf_list = {}
@@ -612,6 +630,7 @@ local function show_yank_history_on_quick()
   vim.fn.setqflist(qf_list)
   vim.cmd 'horizontal copen'
   vim.cmd 'resize 8' -- Optional: Set the height of the quickfix window
+  vim.cmd 'normal! gg'
 
   local get_selected_location_entry = function()
     local qfl = vim.fn.getqflist()
