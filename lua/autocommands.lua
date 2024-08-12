@@ -472,16 +472,16 @@ local _ = true
       function()
         TextPostDontTrigger = false
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', true)
-        vim.api.nvim_input 'd<bs>'
 
         local reanimate_cmdline = function()
-          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<bs>', true, true, true), 'c', true)
+          -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<bs>', true, true, true), 'c', true)
+          vim.api.nvim_input 'i<bs>'
         end
 
         local defered_reanimate_cmdline = function()
           vim.defer_fn(reanimate_cmdline, 0)
         end
-        -- defered_reanimate_cmdline()
+        defered_reanimate_cmdline()
 
         -- vim.schedule(defered_reanimate_cmdline)
       end,
