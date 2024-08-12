@@ -37,6 +37,63 @@ function _TestExtMarks()
   end
 end
 
+local function write_selected_lines()
+  -- Get the current buffer and its name
+  local buf = vim.api.nvim_get_current_buf()
+  local buf_name = vim.api.nvim_buf_get_name(buf)
+
+  -- Get the file extension of the original file
+  local original_extension = buf_name:match '^.+(%..+)$' or ''
+
+  -- Get the line numbers of the selected range
+  local start_line = vim.fn.line "'<"
+  local end_line = vim.fn.line "'>"
+
+  -- Get the file extension of the original file
+  local original_extension = buf_name:match '^.+(%..+)$' or ''
+
+  -- Get the lines from the buffer
+  local lines = vim.api.nvim_buf_get_lines(buf, start_line - 1, end_line, false)
+
+  -- Write the lines to the new file
+  -- Determine the temporary directory based on the OS
+  local temp_dir
+  if vim.fn.has 'win32' == 1 then
+    temp_dir = os.getenv 'TEMP' or 'C:\\Temp'
+  else
+    temp_dir = '/tmp'
+  end
+
+  -- Create the new filename in the temporary directory
+  local new_filename = temp_dir
+    .. '/'
+    .. vim.fn.fnamemodify(buf_name, ':t:r')
+    .. '('
+    .. start_line
+    .. '-'
+    .. end_line
+    .. ')'
+    .. original_extension
+
+  local file = io.open(new_filename, 'w')
+  if file then
+    for _, line in ipairs(lines) do
+      file:write(line .. '\n')
+    end
+    file:close()
+
+    print('Wrote selected lines to: ' .. new_filename)
+    vim.cmd('e ' .. new_filename)
+    vim.schedule(function()
+      vim.cmd 'LspStop'
+    end)
+  else
+    print 'Error: Could not open file for writing.'
+  end
+end
+
+vim.api.nvim_create_user_command('WriteSelectedLines', write_selected_lines, { range = true })
+
 SetKeyMaps = function(mapping_table)
   -- Delete maps do disable
   local set = function(mode, key, mapping)

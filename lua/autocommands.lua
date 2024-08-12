@@ -460,7 +460,7 @@ local _ = true
     local ok, cmp = pcall(require, 'cmp')
     if ok then
       cmp.close()
-      vim.schedule(cmp.complete)
+      -- vim.schedule(cmp.complete)
     end
 
     local opts = { buffer = event.buf, noremap = true, silent = true }
@@ -472,7 +472,18 @@ local _ = true
       function()
         TextPostDontTrigger = false
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', true)
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<space><bs>', true, false, true), 'c', true)
+        vim.api.nvim_input 'd<bs>'
+
+        local reanimate_cmdline = function()
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<bs>', true, true, true), 'c', true)
+        end
+
+        local defered_reanimate_cmdline = function()
+          vim.defer_fn(reanimate_cmdline, 0)
+        end
+        -- defered_reanimate_cmdline()
+
+        -- vim.schedule(defered_reanimate_cmdline)
       end,
       'ChangedModeInCmdwin',
       vim.api.nvim_create_augroup('ChangedModeInCmdwin', { clear = true })

@@ -129,7 +129,7 @@ require 'utils'
 -- [[ Setting options ]]
 require 'options'
 
--- NOTE: might be useful `vim.fn.defer` or `vim.schedule`
+-- NOTE: might be useful `vim.defer_fn` or `vim.schedule`
 
 -- [[ Autocommands ]]
 require 'autocommands'

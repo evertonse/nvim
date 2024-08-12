@@ -287,6 +287,7 @@ require('lazy').setup({
   require 'plugins.multiple-cursors',
   require 'plugins.stickybuf',
   require 'plugins.lsp',
+  { 'sakhnik/nvim-gdb', lazy = false },
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et
