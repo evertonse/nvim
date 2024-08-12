@@ -315,11 +315,6 @@ return {
     select_prompts = true,
 
     on_attach = nvimtree_on_attach,
-    git = {
-      enable = true,
-      ignore = true,
-      timeout = 200,
-    },
     filesystem_watchers = {
       enable = true,
       ignore_dirs = {
@@ -456,13 +451,13 @@ return {
             -- 󰀨󰗖󰕗󰰜󱖔󰁢󰪥󰮍󱍸󰊰󰮎󰗖
             -- unstaged = '✗', -- "",
             unstaged = '-',
-            staged = '✓', --"S",
+            staged = '', -- "S"'✓'
             unmerged = '', --"",
             renamed = '➜',
             -- untracked = '★', --"U",
-            untracked = '?',
+            untracked = '',
             deleted = '',
-            ignored = '◌',
+            ignored = '', -- '◌'
           },
         },
       },
@@ -490,7 +485,7 @@ return {
     modified = {
       enable = false,
       show_on_dirs = true,
-      show_on_open_dirs = true,
+      show_on_open_dirs = false,
     },
     live_filter = {
       prefix = '> ',
@@ -509,10 +504,25 @@ return {
       -- exclude = { '*~' },
     },
 
+    modified = {
+      enable = false,
+      show_on_dirs = true,
+      show_on_open_dirs = false,
+    },
+
+    git = {
+      enable = true,
+      show_on_dirs = true,
+      show_on_open_dirs = false,
+      disable_for_dirs = {},
+      timeout = 400,
+      cygwin_support = false,
+    },
+
     diagnostics = {
       enable = true,
-      show_on_dirs = false,
-      show_on_open_dirs = true,
+      show_on_dirs = true,
+      show_on_open_dirs = false,
       debounce_delay = 50,
       severity = {
         min = vim.diagnostic.severity.HINT,
