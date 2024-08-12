@@ -349,7 +349,7 @@ local function focus_window(event)
   local current_filetype = vim.api.nvim_buf_get_option(current_buf, 'filetype')
   local is_terminal = vim.api.nvim_buf_get_option(current_buf, 'buftype') == 'terminal'
 
-  if is_cmdline_window or is_floating or current_filetype == 'qf' or is_terminal then
+  if is_cmdline_window or is_floating or current_filetype == 'qf' then
     return
   end
 
@@ -379,6 +379,7 @@ local function focus_window(event)
     if true or w ~= win_id and vim.api.nvim_win_get_config(w).relative ~= '' then
       local win_config = vim.api.nvim_win_get_config(w)
       local w_filetype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(w), 'filetype')
+      local _w_terminal = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(w), 'buftype') == 'terminal'
       if not (win_config.relative ~= '' or w_filetype == 'qf') then
         vim.wo[w].signcolumn = 'no'
         vim.wo[w].number = false
@@ -388,12 +389,14 @@ local function focus_window(event)
     end
   end
 
-  vim.wo[win_id].signcolumn = 'auto'
-  vim.wo[win_id].number = true
-  vim.wo[win_id].relativenumber = true
+  if not is_terminal then
+    vim.wo[win_id].signcolumn = 'auto'
+    vim.wo[win_id].number = true
+    vim.wo[win_id].relativenumber = true
+  end
 end
 
-au({ 'WinEnter' }, '*', function(event)
+au({ 'WinEnter', 'BufWinEnter', 'WinNew' }, '*', function(event)
   vim.schedule(function()
     focus_window(event)
   end)
