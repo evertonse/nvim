@@ -343,11 +343,13 @@ local function focus_window(event)
   local win_id = vim.api.nvim_get_current_win()
   local is_floating = vim.api.nvim_win_get_config(win_id).relative ~= ''
   local is_cmdline_window = is_in_cmdline()
+  local current_buf = vim.api.nvim_get_current_buf()
 
   -- local is_cmdline_window = win_config.relative == 'editor' and vim.fn.getcmdwintype() ~= ''
-  local current_filetype = vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), 'filetype')
+  local current_filetype = vim.api.nvim_buf_get_option(current_buf, 'filetype')
+  local is_terminal = vim.api.nvim_buf_get_option(current_buf, 'buftype') == 'terminal'
 
-  if is_cmdline_window or is_floating or current_filetype == 'qf' then
+  if is_cmdline_window or is_floating or current_filetype == 'qf' or is_terminal then
     return
   end
 
