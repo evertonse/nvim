@@ -126,6 +126,11 @@ SetKeyMaps = function(mapping_table)
   end
 end
 
+OnSSH = function()
+  -- Check if any of the SSH-related environment variables are set
+  return vim.env.SSH_CLIENT ~= nil or vim.env.SSH_CONNECTION ~= nil or vim.env.SSH_TTY ~= nil
+end
+
 OnWindows = function()
   local os_name = vim.loop.os_uname().sysname
   local os_version = vim.loop.os_uname().version

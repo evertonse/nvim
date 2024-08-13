@@ -247,8 +247,30 @@ vim.cmd ':set display-=msgsep'
 -- vim.cmd ':set display-=lastline' -- No Line on left
 -- vim.cmd ':set nomore'
 vim.cmd ':set more'
-vim.cmd ':set nolz' -- Lazy Redraw
--- vim.cmd ':set ttyfast'
+
+if OnSSH() then
+  vim.cmd ':set lz' -- Lazy Redraw
+  vim.cmd ':set ttyfast'
+  vim.o.ttyfast = true
+  vim.opt.timeoutlen = 300
+  vim.opt.ttimeoutlen = 10 -- Default is 100 ms
+  vim.opt.undolevels = 100 -- Default is 1000
+  vim.opt.swapfile = false
+  vim.opt.mouse = ''
+  vim.opt.foldenable = false
+  vim.opt.synmaxcol = 128 -- Only highlight the first 128 columns
+  vim.opt.lazyredraw = true -- Don't redraw while executing macros
+  vim.opt.signcolumn = 'no' -- Disable the sign column
+  vim.opt.foldmethod = 'manual'
+  vim.opt.backup = false
+  vim.opt.writebackup = false
+  vim.cmd [[autocmd! CursorHold,CursorHoldI]] -- Minimize autocmd activity
+  vim.lsp.handlers['textDocument/publishDiagnostics'] = function() end
+else
+  vim.cmd ':set nolz'
+  vim.opt.foldenable = true
+end
+
 vim.cmd [[ :set iskeyword-=- ]]
 vim.cmd ':set clipboard=""'
 
