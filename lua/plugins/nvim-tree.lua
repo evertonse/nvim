@@ -378,7 +378,7 @@ return {
       highlight_clipboard = 'icon',
 
       add_trailing = true,
-      group_empty = false,
+      group_empty = true,
       root_folder_label = ':~:s?$?/..?',
       special_files = { '.*', 'Cargo.toml', 'Makefile', 'README.md', 'readme.md' },
 

@@ -98,8 +98,8 @@ augroup Binary
 augroup END
 ]]
 
-vim.cmd [[autocmd FileType bin nnoremap <F5> :%!xxd <CR>]]
-vim.cmd [[autocmd FileType bin nnoremap <F6> :%!xxd -r <CR>]]
+vim.cmd [[autocmd FileType bin,exe nnoremap <F5> :%!xxd <CR>]]
+vim.cmd [[autocmd FileType bin,exe nnoremap <F6> :%!xxd -r <CR>]]
 
 -- vim.api.nvim_create_autocmd(
 --     { "BufRead", "BufNewFile" },
@@ -262,6 +262,59 @@ local function capture_yank()
   table.insert(yank_history, yanked_text)
 end
 
+OpenFloatingWindow = function(buflines, opts)
+  opts = opts or {}
+  local width = opts.width or 80
+  local height = opts.height or 10
+  local title = opts.title or 'Floating Window'
+
+  -- Create a new buffer
+  local buf = vim.api.nvim_create_buf(false, true)
+
+  -- Set the lines in the buffer
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, buflines)
+
+  -- Calculate the dimensions for the floating window
+  local win_width = vim.api.nvim_get_option 'columns'
+  local win_height = vim.api.nvim_get_option 'lines'
+  local col = math.floor((win_width - width) / 2)
+  local row = math.floor((win_height - height) / 2)
+
+  -- Create the floating window
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = 'editor',
+    width = width,
+    height = height,
+    col = col,
+    row = row,
+    style = 'minimal',
+    border = 'single',
+    title = title,
+    title_pos = 'center',
+  })
+
+  -- Set buffer options
+  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
+
+  -- Set window options
+  vim.api.nvim_win_set_option(win, 'wrap', false)
+  vim.api.nvim_win_set_option(win, 'cursorline', true)
+
+  -- Return both the buffer and window handles
+  return buf, win
+end
+
+-- Function to handle line selection
+local function handle_line_selection(callback)
+  local line = vim.fn.getline '.'
+  if callback then
+    callback(line)
+  end
+end
+
+-- Call the example usage
+-- local buf, win = example_usage()
 local function open_floating_window_for_position()
   local select_trail = function(win)
     local line = vim.fn.getline '.'
@@ -327,7 +380,7 @@ local _ = true
         vim.schedule(function()
           -- HACK: workaround, doest work on the yank and stop where you where feat. on floating windows
           local is_floating = vim.api.nvim_win_get_config(0).relative ~= ''
-          if not TextPostDontTrigger and not is_floating and not is_in_cmdline() then
+          if vim.v.operator == 'y' and not TextPostDontTrigger and not is_floating and not is_in_cmdline() then
             vim.schedule(function()
               vim.api.nvim_input '<esc>gv<esc>'
             end)

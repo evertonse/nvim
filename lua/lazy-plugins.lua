@@ -281,7 +281,7 @@ require('lazy').setup({
   require 'plugins.marks', -- alternative: https://github.com/desdic/marlin.nvim
   -- require 'plugins.trailblazer', -- TODO : Make something simpler than this some other day
   require 'plugins.portal',
-  require 'plugins.winresize',
+  require 'plugins.submode',
   require 'plugins.cmdbuf',
   require 'plugins.searchbox',
   require 'plugins.multiple-cursors',

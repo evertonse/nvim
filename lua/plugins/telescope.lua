@@ -188,11 +188,11 @@ local function custom_find_files()
         -- buffer_previewer_maker = require('telescope.previewers').buffer_previewer_maker,
         initial_mode = 'insert',
 
-        debounce = 20,
+        debounce = 1,
         prompt_title = 'Find Files (ExCyber)',
         -- finder = finders.new_oneshot_job { 'fd', '--type', 'f', '--hidden', '--exclude', '.git', '--color', 'never' },
         finder = finders.new_oneshot_job(chosen_command, {
-
+          maximum_results = 15, -- I don't think this is used internally
           entry_maker = function(entry)
             local filename = vim.fn.fnamemodify(entry, ':t')
             local icon, icon_highlight = devicons.get_icon(filename, nil, { default = true })
@@ -226,7 +226,8 @@ local function custom_find_files()
         -- Set up the display to include devicons
         attach_mappings = function(prompt_bufnr, map)
           local prompt_win = vim.fn.bufwinid(prompt_bufnr)
-          if prompt_win ~= -1 then
+          local is_valid_win = vim.api.nvim_win_is_valid(prompt_win)
+          if is_valid_win then
             vim.schedule(function()
               vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
             end)

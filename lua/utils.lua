@@ -521,6 +521,49 @@ vim.api.nvim_create_user_command('OpenConfig', change_to_nvim_config_dir, {})
 -- Optional: You can also map this to a keybinding, for example:
 vim.api.nvim_set_keymap('n', '<leader>cd', ':ChangeToConfigDir<CR>', { noremap = true, silent = true })
 
+fast_process_output = function(command)
+  local results = {}
+  local co = coroutine.create(function()
+    local handle = io.popen(command, 'r')
+    if handle then
+      for line in handle:lines() do
+        table.insert(results, line)
+        coroutine.yield()
+      end
+      handle:close()
+    end
+  end)
+
+  local function process_chunk()
+    if coroutine.status(co) ~= 'dead' then
+      local ok, err = coroutine.resume(co)
+      if not ok then
+        print('Error: ' .. tostring(err))
+        return false
+      end
+      return true
+    end
+    return false
+  end
+
+  -- Process in chunks to avoid blocking
+  while process_chunk() do
+    -- You can add a small delay here if needed
+    vim.loop.sleep(0)
+  end
+
+  return results
+end
+
+--TODO: Make it reponsive on grep of fzy finding job
+-- make the first line always be read for filtering the files
+vim.api.nvim_create_user_command('FindFiles', function()
+  -- Usage example
+  local fd_command = 'fd --type f --hidden --exclude .git --color never'
+  local files = fast_process_output(fd_command)
+  local buf, win = OpenFloatingWindow(files)
+end, {})
+
 return {
   check = function()
     vim.health.start 'kickstart.nvim'
