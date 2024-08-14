@@ -23,7 +23,7 @@ return {
       },
       -- Buffer-local options to use for oil buffers
       buf_options = {
-        buflisted = true,
+        buflisted = false,
         bufhidden = 'hide',
       },
       -- Window-local options to use for oil buffers
@@ -76,9 +76,9 @@ return {
         ['<C-c>'] = 'actions.close',
         ['<C-r>'] = 'actions.refresh',
         ['O'] = 'actions.parent',
-        ['<C-h>'] = 'actions.parent',
+        ['H'] = 'actions.parent',
         -- ['o'] = { 'actions.cd', opts = { scope = 'tab' }, desc = ':tcd to the current oil directory' },
-        ['<C-l>'] = 'actions.select',
+        ['L'] = 'actions.select',
         ['o'] = { 'actions.select' },
         ['i'] = 'actions.parent',
         ['-'] = 'actions.parent',

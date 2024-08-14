@@ -40,7 +40,7 @@ return { --https://github.com/andymass/vim-matchup
 
     -- To configure the number of lines to search in either direction while using motions and text objects.
     -- Does not apply to match highlighting (see g:matchup_matchparen_stopline instead).
-    vim.g.matchup_delim_stopline = 1500
+    vim.g.matchup_delim_stopline = 5500
 
     -- Matching does not work when lines are too far apart.
     -- The number of search lines is limited for performance reasons. You may increase the limits with the following options:

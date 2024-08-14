@@ -455,9 +455,10 @@ return {
             unmerged = '', --"",
             renamed = '➜',
             -- untracked = '★', --"U",
-            untracked = '',
+            untracked = '?', --'',
             deleted = '',
-            ignored = '', -- '◌'
+            --[[ '', ]]
+            ignored = '◌',
           },
         },
       },

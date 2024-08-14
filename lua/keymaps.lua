@@ -1634,7 +1634,7 @@ local function save_position()
       table.remove(Positions, i)
       -- Adjust the current index
       current_index = current_index - 1
-      vim.fn.sign_unplace('PositionSigns', { buffer = buf, id = row })
+      vim.fn.sign_unplace('PositionSigns', { id = row })
       print('Position removed: ' .. file .. ' [' .. row .. ', ' .. col .. ']')
       return
     end
