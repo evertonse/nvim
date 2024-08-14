@@ -1620,28 +1620,32 @@ end
 map({ 'i', 'x' }, '<C-S>', '<Esc><Cmd>silent! update | redraw<CR>', { desc = 'Save and go to Normal mode' })
 
 Positions = {}
-local current_index = 0
+local positions_used_ids = {}
+local positions_current_index = 0
 
 local function save_position()
   local buf = vim.api.nvim_get_current_buf()
   local file = vim.api.nvim_buf_get_name(buf)
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-
+  local id = tonumber(row)
   -- Check if the position already exists
   for i, pos in ipairs(Positions) do
     if pos.file == file and pos.line == row then
       -- Remove the position and clear the sign
       table.remove(Positions, i)
       -- Adjust the current index
-      current_index = current_index - 1
-      vim.fn.sign_unplace('PositionSigns', { id = row })
+      positions_current_index = positions_current_index - 1
+      vim.fn.sign_unplace('PositionSigns', { id = id, buffer = file })
       print('Position removed: ' .. file .. ' [' .. row .. ', ' .. col .. ']')
       return
     end
   end
   -- Set sign in the buffer
   table.insert(Positions, { file = file, line = row, col = col })
-  vim.fn.sign_place(row, 'PositionSigns', 'PositionSign', buf, { lnum = row, priority = 10 })
+  -- NOTE: instead of `file` we could use `buf`, which is a number
+  -- But to ensure proper detection when using `sign_unplace`, we use the
+  -- entire filename (it's in full path mode btw).
+  vim.fn.sign_place(id, 'PositionSigns', 'PositionSign', file, { lnum = row, priority = 10 })
   print('Position saved: ' .. file .. ' [' .. row .. ', ' .. col .. ']')
 end
 
@@ -1651,8 +1655,8 @@ function JumpPosition(count)
     return
   end
   -- current_index = current_index % #positions + count
-  current_index = (current_index + count - 1) % #Positions + 1
-  local pos = Positions[current_index]
+  positions_current_index = (positions_current_index + count - 1) % #Positions + 1
+  local pos = Positions[positions_current_index]
 
   local win_found = false
   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
