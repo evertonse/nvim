@@ -555,21 +555,39 @@ fast_process_output = function(command)
   return results
 end
 
-GetVisualSelection = function(register_symbol, escaped, dont_escape_parens)
-  register_symbol = register_symbol or '"'
-  vim.cmd('normal! "' .. register_symbol .. 'y') -- Yank the visual selection into the 'z' register
+GetVisualSelection = function(opts)
+  local opts = vim.tbl_deep_extend(
+    'force',
+    { register = '"', escape = {
+      enabled = true,
+      parens = true,
+      brackets = true,
+    } },
+    opts or {}
+  )
 
-  local register = vim.fn.getreg(register_symbol)
-  local selection = vim.fn.trim(register)
+  vim.cmd('normal! "' .. opts.register .. 'y') -- Yank the visual selection into the 'z' register
+
+  local register_text = vim.fn.getreg(opts.register)
+  local selection = vim.fn.trim(register_text)
   selection = selection:gsub('\n', ''):match '^%s*(.-)%s*$'
-  if escaped then
+  if opts.escape.enabled then
     selection = selection:gsub('%\\', '%\\%\\') -- NOTE: this should be the first one to avoid cluterring with '/'
-    if not dont_escape_parens then
+    if opts.escape.parens then
       selection = selection:gsub('%(', '%\\%(')
       selection = selection:gsub('%)', '%\\%)')
     end
+
+    if opts.escape.brackets then
+      selection = selection:gsub('%[', '%\\%[')
+      selection = selection:gsub('%]', '%\\%]')
+      selection = selection:gsub('%{', '%\\%{')
+      selection = selection:gsub('%}', '%\\%}')
+    end
+    selection = selection:gsub('%/', '%\\%/')
     selection = selection:gsub('%.', '%\\%.')
   end
+  Inspect { opts, register_text, selection }
 
   return selection
 end

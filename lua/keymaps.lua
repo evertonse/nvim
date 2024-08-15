@@ -867,7 +867,7 @@ M.general = {
         end
         TextPostDontTrigger = true
 
-        local selection = GetVisualSelection('"', true, true)
+        local selection = GetVisualSelection { escape = { parens = false, brackets = false } }
         vim.api.nvim_input('/' .. selection)
         vim.schedule(function()
           -- vim.api.nvim_input [[<cr>n<S-N>]]

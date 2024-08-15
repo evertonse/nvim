@@ -752,7 +752,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
 
         ['<leader>F'] = {
           function()
-            local selection = GetVisualSelection('"', true)
+            local selection = GetVisualSelection()
             builtin.live_grep { initial_mode = 'insert', default_text = selection }
           end,
           '[S]earch by [G]rep',
@@ -874,7 +874,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
       mappings.v['<leader>f'] = {
         function()
           -- Trim any whitespace from the selection
-          local selection = GetVisualSelection('"', true)
+          local selection = GetVisualSelection()
           vim.schedule(function()
             mappings.n['<leader>f'][1](selection)
             -- local keys = (vim.api.nvim_replace_termcodes('<C-r>', true, false, true) .. 'a')
