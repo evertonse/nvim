@@ -11,35 +11,6 @@ local noremap_opts = { noremap = true, silent = true, nowait = true }
 local wait_opts = { noremap = true, silent = true, nowait = false }
 FULLSCREEN = false
 
-local function get_visual_selection()
-  local s_start = vim.fn.getpos "'<"
-  local s_end = vim.fn.getpos "'>"
-  local n_lines = math.abs(s_end[2] - s_start[2]) + 1
-  local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
-  lines[1] = string.sub(lines[1], s_start[3], -1)
-  if n_lines == 1 then
-    lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3] - s_start[3] + 1)
-  else
-    lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
-  end
-  return table.concat(lines, '\n')
-end
-
--- Function to perform substitution with selected text
-local function substitute_with_selection()
-  local selected_text = get_visual_selection() or ''
-
-  Inspect(selected_text)
-  -- Clear the selection
-  vim.cmd 'normal! gv'
-
-  -- Prepare the substitution command
-  local command = string.format(':%s/%s//g<Left><Left><Left><Down>', selected_text, selected_text)
-
-  -- Execute the command
-  vim.cmd(command)
-end
-
 -- Define a table to store previous positions
 
 -- Function to jump within the current buffer
@@ -895,7 +866,9 @@ M.general = {
           return
         end
         TextPostDontTrigger = true
-        vim.api.nvim_input [["0y/<C-r>0<Left>]]
+
+        local selection = GetVisualSelection('"', true, true)
+        vim.api.nvim_input('/' .. selection)
         vim.schedule(function()
           -- vim.api.nvim_input [[<cr>n<S-N>]]
           vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', true)

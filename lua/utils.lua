@@ -555,6 +555,25 @@ fast_process_output = function(command)
   return results
 end
 
+GetVisualSelection = function(register_symbol, escaped, dont_escape_parens)
+  register_symbol = register_symbol or '"'
+  vim.cmd('normal! "' .. register_symbol .. 'y') -- Yank the visual selection into the 'z' register
+
+  local register = vim.fn.getreg(register_symbol)
+  local selection = vim.fn.trim(register)
+  selection = selection:gsub('\n', ''):match '^%s*(.-)%s*$'
+  if escaped then
+    selection = selection:gsub('%\\', '%\\%\\') -- NOTE: this should be the first one to avoid cluterring with '/'
+    if not dont_escape_parens then
+      selection = selection:gsub('%(', '%\\%(')
+      selection = selection:gsub('%)', '%\\%)')
+    end
+    selection = selection:gsub('%.', '%\\%.')
+  end
+
+  return selection
+end
+
 --TODO: Make it reponsive on grep of fzy finding job
 -- make the first line always be read for filtering the files
 vim.api.nvim_create_user_command('FindFiles', function()
