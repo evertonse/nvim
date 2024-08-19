@@ -38,15 +38,6 @@ return function()
   local capabilities = require 'plugins.lsp.capabilities'
   local servers = require 'plugins.lsp.servers'
 
-  local basedpyright_capabilities = vim.tbl_deep_extend('force', capabilities, {})
-  basedpyright_capabilities.textDocument.publishDiagnostics = {
-    relatedInformation = true, -- Disable related information
-    tagSupport = {
-      valueSet = {}, -- Disable tag support
-    },
-    dynamicRegistration = true,
-  }
-
   -- Ensure the servers and tools above are installed
   --  To check the current status of installed tools and/or manually install
   --  other tools, you can run
@@ -63,14 +54,16 @@ return function()
   })
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-  local setup_ols_no_matter_what = true
-  if setup_ols_no_matter_what and not OnWindows() then
-    local server_opts = servers.ols or {}
-    -- This handles overriding only values explicitly passed
-    -- by the server configuration above. Useful when disabling
-    -- certain features of an LSP (for example, turning off formatting for tsserver)
-    server_opts.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server_opts.capabilities or {})
-    lspconfig['ols'].setup(server_opts)
+  local servers_from_local_machine = { 'ols', 'jdtls' }
+  for _, server_local in ipairs(servers_from_local_machine) do
+    if not OnWindows() then
+      local server_opts = servers[server_local] or {}
+      -- This handles overriding only values explicitly passed
+      -- by the server configuration above. Useful when disabling
+      -- certain features of an LSP (for example, turning off formatting for tsserver)
+      server_opts.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server_opts.capabilities or {})
+      lspconfig[server_local].setup(server_opts)
+    end
   end
 
   require('mason-lspconfig').setup {

@@ -1,3 +1,14 @@
+local capabilities = require 'plugins.lsp.capabilities'
+
+local basedpyright_capabilities = vim.tbl_deep_extend('force', capabilities, {})
+basedpyright_capabilities.textDocument.publishDiagnostics = {
+  relatedInformation = true, -- Disable related information
+  tagSupport = {
+    valueSet = {}, -- Disable tag support
+  },
+  dynamicRegistration = true,
+}
+
 local servers = {
   bashls = {},
   --[[ OLS  https://github.com/DanielGavin/ols.gits ]]
@@ -8,7 +19,12 @@ local servers = {
     autoformat = false,
   },
   ast_grep = {},
-  jdtls = {},
+  jdtls = {
+    cmd = { '/usr/bin/jdtls' },
+    autostart = true,
+    filetypes = { 'java' },
+    autoformat = false,
+  },
   --[[ zig ]]
   zls = {},
   clangd = {},

@@ -587,7 +587,10 @@ GetVisualSelection = function(opts)
     selection = selection:gsub('%/', '%\\%/')
     selection = selection:gsub('%.', '%\\%.')
   end
-  Inspect { opts, register_text, selection }
+
+  if false then
+    Inspect { opts, register_text, selection }
+  end
 
   return selection
 end
