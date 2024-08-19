@@ -211,12 +211,12 @@ local function custom_find_files()
         -- Set up the display to include devicons
         attach_mappings = function(prompt_bufnr, map)
           local prompt_win = vim.fn.bufwinid(prompt_bufnr)
-          local is_valid_win = vim.api.nvim_win_is_valid(prompt_win)
-          if is_valid_win then
-            vim.schedule(function()
+          vim.schedule(function()
+            local is_valid_win = vim.api.nvim_win_is_valid(prompt_win)
+            if is_valid_win then
               vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
-            end)
-          end
+            end
+          end)
 
           if true then
             return true
