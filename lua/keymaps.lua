@@ -408,6 +408,7 @@ local float_term = {
   width_min = 70,
   height_min = 23,
 }
+
 local float_term_toggle = function()
   local ok, tt = pcall(require, 'toggleterm.terminal')
   if not ok then
@@ -421,6 +422,9 @@ local float_term_toggle = function()
         width = math.floor(vim.o.columns * f.width_percentage),
         height = math.floor(vim.o.lines * f.height_percentage),
       },
+      on_open = function(term) ---@diagnostic disable-line: unused-local
+        vim.cmd 'startinsert!'
+      end,
     }
   f.terminal.float_opts.width = math.max(f.width_min, math.floor(vim.o.columns * f.width_percentage))
   f.terminal.float_opts.height = math.max(f.height_min, math.floor(vim.o.lines * f.height_percentage))

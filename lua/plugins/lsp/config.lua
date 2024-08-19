@@ -62,6 +62,10 @@ return function()
       -- by the server configuration above. Useful when disabling
       -- certain features of an LSP (for example, turning off formatting for tsserver)
       server_opts.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server_opts.capabilities or {})
+      server_opts.root_dir = server_opts.root_dir
+        or function(fname)
+          return lspconfig.util.root_pattern('setup.py', 'setup.cfg', 'pyproject.toml', '.git')(fname) or vim.fn.getcwd()
+        end
       lspconfig[server_local].setup(server_opts)
     end
   end
@@ -90,6 +94,24 @@ return function()
         vim.g.zig_fmt_parse_errors = 0
         vim.g.zig_fmt_autosave = 0
       end,
+      -- basedpyright = function()
+      --   lspconfig.basedpyright.setup {
+      --     root_dir = lspconfig.util.root_pattern '.git',
+      --     settings = {
+      --       basedpyright = {
+      --         analysis = {
+      --           typeCheckingMode = 'off', -- Options: "off", "basic", "strict"
+      --         },
+      --         linting = {
+      --           enabled = false, -- Disable linting
+      --           pylintEnabled = false, -- If using pylint, disable it as well
+      --           flake8Enabled = false, -- If using flake8, disable it as well
+      --         },
+      --       },
+      --     },
+      --   }
+      -- end,
+
       -- ['lua_ls'] = function()
       --   servers.lua_ls.capabilities = capabilities
       --   lspconfig.lua_ls.setup(servers.lua_ls)

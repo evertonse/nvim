@@ -1,19 +1,23 @@
 local capabilities = require 'plugins.lsp.capabilities'
 
-local basedpyright_capabilities = vim.tbl_deep_extend('force', capabilities, {})
+local lspconfig = require 'lspconfig'
+local basedpyright_capabilities = vim.tbl_deep_extend('force', capabilities or {}, {})
 basedpyright_capabilities.textDocument.publishDiagnostics = {
-  relatedInformation = true, -- Disable related information
+  relatedInformation = false, -- Disable related information
   tagSupport = {
     valueSet = {}, -- Disable tag support
   },
-  dynamicRegistration = true,
+  dynamicRegistration = false,
 }
 
 local servers = {
   bashls = {},
   --[[ OLS  https://github.com/DanielGavin/ols.gits ]]
   ols = {
-    cmd = { '/home/excyber/.local/bin/ols' },
+    cmd = { 'ols' },
+    root_dir = function(fname)
+      return require('lspconfig').util.root_pattern('ols.json', '.git')(fname) or vim.fn.getcwd()
+    end,
     autostart = true, -- This is the important new option
     filetypes = { 'odin' }, -- Adjust this based on your server
     autoformat = false,
@@ -35,21 +39,23 @@ local servers = {
     autostart = true, -- This is the important new option
     -- offset_encoding = 'utf-8', -- Not supported yet by based_pyright
     capabilities = basedpyright_capabilities,
+    -- capabilities = capabilities,
     on_init = function(client)
-      client.server_capabilities.documentFormattingProvider = false
-      client.server_capabilities.documentFormattingRangeProvider = false
+      client.server_capabilities.documentFormattingProvider = true
+      client.server_capabilities.documentFormattingRangeProvider = true
     end,
+
+    -- root_dir = lspconfig.util.root_pattern '.git',
+    root_dir = function(fname)
+      return require('lspconfig').util.root_pattern('.git', 'pyproject.toml', 'setup.py')(fname) or vim.fn.getcwd()
+      -- return require('lspconfig').util.root_pattern('.git', , 'setup.py', 'setup.cfg')(fname) or vim.fn.getcwd()
+    end,
+
     filetypes = { 'python' },
     settings = {
-      python = {
-        linting = {
-          enabled = false, -- Disable linting
-          pylintEnabled = false, -- If using pylint, disable it as well
-          flake8Enabled = false, -- If using flake8, disable it as well
-        },
-      },
       basedpyright = {
         analysis = {
+          typeCheckingMode = 'off', -- Options: "off", "basic", "strict"
           disableOrganizeImports = false,
           diagnosticSeverityOverrides = {
             reportGeneralTypeIssues = 'none',
@@ -82,31 +88,16 @@ local servers = {
           useLibraryCodeForTypes = true,
           diagnosticMode = 'openFilesOnly',
           autoSearchPaths = true,
-          typeCheckingMode = 'off',
         },
-        include = { 'src' },
-        reportMissingImports = true,
-        typeCheckingMode = 'off',
-        -- typeCheckingMode = 'standard',
-        autoImportCompletion = false,
-        diagnosticMode = 'openFilesOnly',
-        autoSearchPaths = false,
-        disable = {
-          'E501', -- Line too long (adjust according to your needs)
+
+        linting = {
+          enabled = false, -- Disable linting
+          pylintEnabled = false, -- If using pylint, disable it as well
+          flake8Enabled = false, -- If using flake8, disable it as well
         },
       },
     },
   },
-  -- pylsp = {},
-  -- rust_analyzer = {},
-  -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-  --
-  -- Some languages (like typescript) have entire language plugins that can be useful:
-  --    https://github.com/pmizio/typescript-tools.nvim
-  --
-  -- But for many setups, the LSP (`tsserver`) will work just fine
-  -- tsserver = {},
-  --
 
   lua_ls = {
     autostart = true, -- This is the important new option
