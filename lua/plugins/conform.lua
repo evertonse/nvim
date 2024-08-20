@@ -20,7 +20,7 @@ return {
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
         local disable_filetypes =
-          vim.tbl_deep_extend('force', { c = true, cpp = true, odin = true, python = true }, vim.g.self.dont_format or {})
+          vim.tbl_deep_extend('force', { proto = true, c = true, cpp = true, odin = true, python = true }, vim.g.self.dont_format or {})
         if disable_filetypes[vim.bo[0].filetype] then
           return false
         end
