@@ -556,17 +556,20 @@ fast_process_output = function(command)
 end
 
 GetVisualSelection = function(opts)
-  local opts = vim.tbl_deep_extend(
+  opts = vim.tbl_deep_extend(
     'force',
     { register = '"', escape = {
       enabled = true,
       parens = true,
       brackets = true,
+      angle_brackets = true,
     } },
     opts or {}
   )
 
-  vim.cmd('normal! "' .. opts.register .. 'y') -- Yank the visual selection into the 'z' register
+  local before_main_register_text = vim.fn.getreg '"'
+
+  vim.cmd('normal!' .. '"' .. opts.register .. 'y')
 
   local register_text = vim.fn.getreg(opts.register)
   local selection = vim.fn.trim(register_text)
@@ -583,7 +586,9 @@ GetVisualSelection = function(opts)
       selection = selection:gsub('%]', '%\\%]')
       selection = selection:gsub('%{', '%\\%{')
       selection = selection:gsub('%}', '%\\%}')
+      -- selection = selection:gsub('%<', '%\\%<')
     end
+
     selection = selection:gsub('%/', '%\\%/')
     selection = selection:gsub('%.', '%\\%.')
   end
@@ -592,6 +597,7 @@ GetVisualSelection = function(opts)
     Inspect { opts, register_text, selection }
   end
 
+  vim.fn.setreg('"', before_main_register_text)
   return selection
 end
 

@@ -871,13 +871,17 @@ M.general = {
         end
         TextPostDontTrigger = true
 
-        local selection = GetVisualSelection { escape = { parens = false, brackets = false } }
-        vim.api.nvim_input('/' .. selection)
+        -- TODO: A churimbeta vai xiar com ese get visual selectrion regesitewr clyubering
+        local reg = 'a'
+        local selection = GetVisualSelection { register = reg, escape = { parens = false, brackets = true } }
+        -- vim.api.nvim_input('/' .. '<c-r>' .. reg)
+        -- vim.api.nvim_input('/' .. selection)
+        vim.api.nvim_feedkeys('/', 'n', false)
+        vim.api.nvim_feedkeys(selection or '', 'c', false)
+        -- Inspect(selection)
         vim.schedule(function()
-          -- vim.api.nvim_input [[<cr>n<S-N>]]
           vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', true)
         end)
-        -- vim.cmd [[redraw]]
       end,
       function()
         TextPostDontTrigger = true
