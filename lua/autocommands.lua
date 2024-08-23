@@ -37,7 +37,7 @@ vim.cmd [[
   augroup _markdown
     autocmd!
     autocmd FileType markdown setlocal wrap
-    autocmd FileType markdown setlocal spell
+    autocmd FileType markdown setlocal nospell
     autocmd FileType markdown nnoremap j gj
     autocmd FileType markdown nnoremap k gk
   augroup end
