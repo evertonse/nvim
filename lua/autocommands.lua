@@ -45,7 +45,6 @@ vim.cmd [[
   augroup _tex
     autocmd!
     autocmd FileType tex setlocal wrap
-    autocmd FileType markdown setlocal spell
   augroup end
 
   function! Odin_settings()
