@@ -491,6 +491,7 @@ vim.g.self = {
     { '==', '!=' },
     { 'true', 'false' },
     { 'False', 'True' },
+    { 'public', 'private' },
     { 'if', 'else', 'elseif' },
     { 'and', 'or' },
     { 'off', 'on' },
