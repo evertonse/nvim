@@ -914,3 +914,60 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'gh', 'g0', { noremap = true, expr = false })
   end,
 })
+
+local function disable_linting()
+  for _, client in pairs(vim.lsp.get_active_clients()) do
+    -- Disable the diagnostics handler
+    client.handlers['textDocument/publishDiagnostics'] = function() end
+
+    -- Clear existing diagnostics for each buffer associated with the client
+    for _, buffer in pairs(vim.api.nvim_list_bufs()) do
+      vim.diagnostic.reset(nil, buffer)
+    end
+  end
+  print 'Linting disabled and diagnostics cleared.'
+end
+
+-- Function to enable linting by restoring the default `textDocument/publishDiagnostics` handler
+-- and forcing a recheck of diagnostics by triggering a buffer change event
+local function enable_linting()
+  if not THIS_SHIT_IS_BROKEN_WILL_DO_THE_UNDERDEVELOPED_BRAIN_WAY then
+    for _, client in pairs(vim.lsp.get_active_clients()) do
+      -- Restore the default diagnostics handler
+      client.handlers['textDocument/publishDiagnostics'] = vim.lsp.diagnostic.on_publish_diagnostics
+    end
+    vim.cmd [[LspRestart]] -- XDD
+    return
+  end
+  for _, client in pairs(vim.lsp.get_active_clients()) do
+    -- Restore the default diagnostics handler
+    client.handlers['textDocument/publishDiagnostics'] = vim.lsp.diagnostic.on_publish_diagnostics
+
+    -- Force a recheck of diagnostics for each buffer associated with the client
+    for _, buffer in pairs(vim.api.nvim_list_bufs()) do
+      local params = { textDocument = vim.lsp.util.make_text_document_params(buffer) }
+
+      -- Schedule the diagnostics request to ensure it doesn't block the main loop
+      vim.schedule(function()
+        client.request('textDocument/publishDiagnostics', params, function(err, result, ctx, config)
+          -- Check if result is not nil before attempting to process it
+          if result then
+            vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx, config)
+          end
+        end)
+      end)
+
+      -- Trigger a buffer change to force diagnostics to refresh
+      vim.api.nvim_buf_call(buffer, function()
+        -- Reload the buffer or force a dummy change
+        vim.cmd 'edit' -- Reload the buffer
+      end)
+    end
+  end
+  print 'Linting enabled and diagnostics refreshed.'
+end
+
+-- Create the user commands `LspDisableLinting` and `LspEnableLinting`
+vim.api.nvim_create_user_command('LspDisableLinting', disable_linting, {})
+vim.api.nvim_create_user_command('LspEnableLinting', enable_linting, {})
+-- and requesting diagnostics again with error handling

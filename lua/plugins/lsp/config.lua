@@ -54,7 +54,7 @@ return function()
   })
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-  local servers_from_local_machine = { 'ols', 'jdtls' }
+  local servers_from_local_machine = { 'ols', 'jdtls', 'basedpyright' }
   for _, server_local in ipairs(servers_from_local_machine) do
     if not OnWindows() then
       local server_opts = servers[server_local] or {}
@@ -96,7 +96,7 @@ return function()
       end,
       -- basedpyright = function()
       --   lspconfig.basedpyright.setup {
-      --     root_dir = lspconfig.util.root_pattern '.git',
+      --     -- root_dir = lspconfig.util.root_pattern '.git',
       --     settings = {
       --       basedpyright = {
       --         analysis = {
