@@ -34,13 +34,6 @@ vim.cmd [[
     autocmd FileType gitcommit setlocal spell
   augroup end
 
-  augroup _markdown
-    autocmd!
-    autocmd FileType markdown setlocal wrap
-    autocmd FileType markdown setlocal nospell
-    autocmd FileType markdown nnoremap j gj
-    autocmd FileType markdown nnoremap k gk
-  augroup end
 
   augroup _tex
     autocmd!
@@ -909,3 +902,15 @@ au(
   end,
   'Show relative line numbers'
 )
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'markdown' },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.spell = false
+    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'j', 'gj', { noremap = true, expr = false })
+    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'k', 'gk', { noremap = true, expr = false })
+    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'gl', 'g$', { noremap = true, expr = false })
+    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'gh', 'g0', { noremap = true, expr = false })
+  end,
+})

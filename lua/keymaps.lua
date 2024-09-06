@@ -442,8 +442,8 @@ M.general = {
   -- [TERMINAL and NORMAL]
   tn = {},
   snovx = {
-    ['gh'] = { '0', 'Move big left', { expr = true } },
-    ['gl'] = { '"$"', 'Move big right', { expr = true } },
+    ['gh'] = { '0', 'Move big left', { expr = false } },
+    ['gl'] = { '$', 'Move big right', { expr = false } },
     ['gH'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move left', { expr = true } },
     ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
   },
