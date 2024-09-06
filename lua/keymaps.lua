@@ -12,6 +12,13 @@ local wait_opts = { noremap = true, silent = true, nowait = false }
 FULLSCREEN = false
 
 -- Define a table to store previous positions
+local function vim_cmd_switch_buffer()
+  vim.cmd 'set nomore | ls | set more | b '
+end
+
+local switch_buffer = [[:set nomore <Bar> :ls <Bar> :set more <CR>:b<Space><left><right>]]
+  or '<cmd> Telescope buffers initial_mode=normal<CR><esc>'
+  or vim_cmd_switch_buffer
 
 -- Function to jump within the current buffer
 local function spelltoggle()
@@ -513,7 +520,12 @@ M.general = {
     ['<Esc>'] = {
       function()
         LastCmd = vim.fn.getcmdline()
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', false)
+        if vim.g.self.autoskip_cmdline_on_esc then
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', false)
+        else
+          vim.api.nvim_input '<C-f>'
+        end
+        -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-s>', true, true, true), 'n', false)
       end,
       'Quit and save lastcmd',
     },
@@ -531,6 +543,8 @@ M.general = {
   },
   -- [NORMAL]
   n = {
+
+    ['<leader>b'] = { switch_buffer, 'Find buffers' },
     ['<leader>hy'] = { ':YankHistory <cr>', '[H]istory [Y]ank' },
     ['<leader>5'] = { spelltoggle, '5 for [5]pell Toggle' },
     ['<leader>z'] = { '[s1z=``', 'Correct [Z]peling Mistakes' },
@@ -564,6 +578,13 @@ M.general = {
     --   end,
     --   { expr = true },
     -- },
+
+    ['<M-b>'] = {
+      function()
+        vim.api.nvim_input [[:set nomore <CR> :ls <CR> :set more <CR>:b<Space>]]
+      end,
+      noremap_opts,
+    }, -- NOTE:This is remaped when lsp is present
 
     -->> commands
     ['<leader>gd'] = { grep_and_show_results, noremap_opts }, -- NOTE:This is remaped when lsp is present
@@ -751,7 +772,6 @@ M.general = {
       end,
       'New buffer',
     },
-    --["<leader>b"]      = { "<cmd> enew <CR>", "New buffer" },
     ['<M-Up>'] = { 'ddkP', noremap_opts }, --// Moving the line up
     ['<M-Down>'] = { 'ddjP', noremap_opts }, -- // Moving the line down
     ['<M-[>'] = { ':resize -2<CR>', noremap_opts },
@@ -1235,7 +1255,9 @@ M.telescope = {
       -- "<cmd>lua require'telescope.builtin'.find_files()<cr>",
     },
     ['<leader>F'] = { '<cmd> Telescope live_grep <CR>', 'Live grep' },
-    ['<leader>b'] = { '<cmd> Telescope buffers initial_mode=normal<CR><esc>', 'Find buffers' },
+    --- local Functions are considered false value !!?!!
+
+    --["<leader>b"]      = { "<cmd> enew <CR>", "New buffer" },
     ['<leader>tf'] = { '<cmd> Telescope help_tags <CR>', 'Help page' },
     ['<leader>of'] = { '<cmd> Telescope oldfiles <CR>', 'Find oldfiles' },
     ['<leader><C-f>'] = { '<cmd> Telescope current_buffer_fuzzy_find <CR>', '[C]urrent buffer [F]ind ' },

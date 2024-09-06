@@ -782,7 +782,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
         ['<leader>sd'] = { builtin.diagnostics, '[S]earch [D]iagnostics' },
         ['<leader>srf'] = { builtin.resume, '[S]earch [R]esume' },
         ['<leader>s.'] = { builtin.oldfiles, '[S]earch Recent Files ("." for repeat)' },
-        ['<leader>b'] = {
+        ['<leader>B'] = {
           function()
             builtin.buffers {
               select_current = true,

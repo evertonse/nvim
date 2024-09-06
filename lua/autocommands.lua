@@ -560,7 +560,8 @@ local _ = true
     end, opts)
 
     map({ 'n' }, '<Esc>', function()
-      LastCmd = vim.fn.getline '.'
+      -- LastCmd = vim.fn.getline '.'
+      LastCmd = vim.fn.getcmdline()
       vim.cmd [[stopinsert]]
       vim.cmd [[q!]]
     end, opts)

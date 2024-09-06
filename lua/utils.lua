@@ -473,6 +473,8 @@ local surround_opts = { 'mini.surround', 'vim-surround' }
 local file_tree_opts = { 'nvim-tree', 'neo-tree' }
 vim.g.self = {
   use_minipick_when_slow = OnSlowPath(),
+  autoskip_cmdline_on_esc = false,
+  inc_rename = false,
   icons = true,
   nerd_font = true,
   is_transparent = true,
@@ -522,7 +524,7 @@ vim.api.nvim_create_user_command('OpenConfig', change_to_nvim_config_dir, {})
 -- Optional: You can also map this to a keybinding, for example:
 vim.api.nvim_set_keymap('n', '<leader>cd', ':ChangeToConfigDir<CR>', { noremap = true, silent = true })
 
-fast_process_output = function(command)
+local fast_process_output = function(command)
   local results = {}
   local co = coroutine.create(function()
     local handle = io.popen(command, 'r')
