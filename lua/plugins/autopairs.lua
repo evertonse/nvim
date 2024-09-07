@@ -6,6 +6,7 @@ return {
   event = 'InsertEnter',
   -- Optional dependency
   dependencies = { 'hrsh7th/nvim-cmp' },
+  enabled = false,
   config = function()
     require('nvim-autopairs').setup {
 
