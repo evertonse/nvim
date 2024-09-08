@@ -435,7 +435,7 @@ local function focus_window(event)
   end
 
   if not is_terminal then
-    vim.wo[win_id].signcolumn = 'auto'
+    vim.wo[win_id].signcolumn = vim.g.self.signcolumn
     vim.wo[win_id].number = true
     vim.wo[win_id].relativenumber = true
   end

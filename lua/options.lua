@@ -67,8 +67,6 @@ opt.inccommand = 'nosplit' -- NO spliting the windows to see preview
 -- Show which line your cursor is on
 opt.cursorline = true
 
-local g = vim.g
-
 g.loaded_gzip = 1
 g.loaded_zip = 1
 g.loaded_zipPlugin = 1
