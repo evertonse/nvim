@@ -59,7 +59,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     --  Most Language Servers support renaming across files, etc.
     -- map('<leader>lr', vim.lsp.buf.rename, '[L]SP [R]ename')
     local rename_func = function()
-      local inc_rename_available, _ = pcall(require, 'inc_rename')
+      local inc_rename_available, _ = vim.g.self.inc_rename and pcall(require, 'inc_rename')
       if inc_rename_available then
         return function()
           return ':IncRename ' .. vim.fn.expand '<cword>' .. '<Down>'
