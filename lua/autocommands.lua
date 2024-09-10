@@ -967,6 +967,16 @@ local function enable_linting()
   print 'Linting enabled and diagnostics refreshed.'
 end
 
+vim.api.nvim_create_augroup('FileTypeBrdf', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+  pattern = '*.brdf',
+  callback = function()
+    vim.bo.filetype = 'glsl'
+  end,
+
+  group = 'FileTypeBrdf',
+})
+
 -- Create the user commands `LspDisableLinting` and `LspEnableLinting`
 vim.api.nvim_create_user_command('LspDisableLinting', disable_linting, {})
 vim.api.nvim_create_user_command('LspEnableLinting', enable_linting, {})

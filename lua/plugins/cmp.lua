@@ -285,6 +285,7 @@ return {
             return not disabled[cmd] or cmp.close()
           end,
           completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
+          -- completion = { completeopt = 'menu,menuone,noinsert,select,preview' },
           -- completion = { completeopt = 'menu' },
           mapping = cmp.mapping.preset.cmdline {
             ['<C-y>'] = {
