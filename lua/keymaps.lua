@@ -912,11 +912,6 @@ M.general = {
     ['<Up>'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },
     ['<Down>'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
 
-    ['gh'] = { '0', 'Move big left', { expr = true } },
-    ['gl'] = { '"$"', 'Move big right', { expr = true } },
-    ['gH'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move left', { expr = true } },
-    ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
-
     ['j'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
     ['k'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },
 
@@ -979,11 +974,6 @@ M.general = {
     -- Search visually selected text (slightly better than builtins in
     -- Neovim>=0.8 but slightly worse than builtins in Neovim>=0.10)
     -- TODO: Remove this after compatibility with Neovim=0.9 is dropped
-
-    ['gh'] = { '0', 'Move big left', { expr = true } },
-    ['gl'] = { '"$"', 'Move big right', { expr = true } },
-    ['gH'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move left', { expr = true } },
-    ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
 
     ['j'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
     ['k'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },

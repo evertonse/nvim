@@ -7,6 +7,7 @@ return {
     winbar = true,
     statusline = false,
   },
+  enabled = false,
   version = '*',
   dependencies = {
     'nvim-lua/plenary.nvim',
