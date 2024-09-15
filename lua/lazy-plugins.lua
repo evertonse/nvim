@@ -288,6 +288,9 @@ require('lazy').setup({
   require 'plugins.stickybuf',
   require 'plugins.lsp',
   { 'sakhnik/nvim-gdb', lazy = false },
+  'nvim-lua/plenary.nvim',
+  'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+  'MunifTanjim/nui.nvim',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et

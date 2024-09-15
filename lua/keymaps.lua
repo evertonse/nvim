@@ -612,8 +612,12 @@ M.general = {
         else
           -- vim.api.nvim_input "mM" -- Might be useful to know this cmd exists later
           require('harpoon.term').gotoTerminal(1)
-          if last_terminal_mode == 'i' then
+          if vim.g.self.terminal_always_insert then
             vim.cmd 'startinsert'
+          else
+            if last_terminal_mode == 'i' then
+              vim.cmd 'startinsert'
+            end
           end
         end
       end,
