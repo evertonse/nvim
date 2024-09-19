@@ -312,6 +312,7 @@ return {
         }
       end
       mini_hipatterns_setup()
+      -- require('mini.animate').setup() -- HORRIBLE
       local TERRIBLE = false -- just for emphasis, at least on wsl
       local _ = TERRIBLE and require('mini.completion').setup()
     end,

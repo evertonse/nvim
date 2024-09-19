@@ -800,6 +800,12 @@ vim.api.nvim_create_user_command('CdHistory', open_floating_window_for_directori
 vim.api.nvim_create_user_command('CdPop', pop_dir, {})
 vim.api.nvim_create_user_command('YankHistory', show_yank_history_on_quick, {})
 
+vim.api.nvim_create_user_command('ClearEmptyLines', function()
+  vim.cmd [[%s/^\s*$//g]] -- begining empty lines and
+  vim.cmd [[%s/\s*$//g]]
+  vim.cmd [[nohlsearch]]
+end, {})
+
 -- Autocmd to apply the mapping when entering the quickfix window
 au('Filetype', 'qf', function(event)
   vim.cmd [[setlocal nowrap]]
