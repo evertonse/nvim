@@ -27,7 +27,7 @@ vim.cmd [[
     autocmd WinLeave * setlocal nocursorline
     autocmd FileType qf,nofile,help set nobuflisted
   augroup end
-  
+
   augroup _git
     autocmd!
     autocmd FileType gitcommit setlocal wrap
@@ -804,6 +804,8 @@ vim.api.nvim_create_user_command('ClearEmptyLines', function()
   vim.cmd [[%s/^\s*$//g]] -- begining empty lines and
   vim.cmd [[%s/\s*$//g]]
   vim.cmd [[nohlsearch]]
+  vim.api.nvim_input [[<c-o>]]
+  vim.cmd [[]]
 end, {})
 
 -- Autocmd to apply the mapping when entering the quickfix window
@@ -910,7 +912,7 @@ au(
 )
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'markdown' },
+  pattern = { 'markdown', 'tex' },
   callback = function()
     vim.opt_local.wrap = true
     vim.opt_local.spell = false
@@ -918,6 +920,9 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'k', 'gk', { noremap = true, expr = false })
     vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'gl', 'g$', { noremap = true, expr = false })
     vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'gh', 'g0', { noremap = true, expr = false })
+    vim.schedule(function()
+      vim.cmd [[LspDisableLinting]]
+    end)
   end,
 })
 

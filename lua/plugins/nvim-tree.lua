@@ -545,7 +545,7 @@ return {
 
       float = {
         enable = true,
-        quit_on_focus_loss = false, -- TODO: On slow path does it lag if this is true? Test it
+        quit_on_focus_loss = true, -- TODO: On slow path does it lag if this is true? Test it
         open_win_config = function()
           local total_width = vim.o.columns
           local total_height = vim.o.lines
