@@ -90,7 +90,6 @@ local function nvimtree_on_attach(bufnr)
 
   local function edit_or_open()
     local node = api.tree.get_node_under_cursor()
-    -- api.tree.reload()
     if node.nodes ~= nil then
       api.node.open.edit()
       -- api.node.open.no_window_picker()
@@ -101,7 +100,9 @@ local function nvimtree_on_attach(bufnr)
 
       -- XXX:Idk why I need to schedule that now. Didn't used to need that, maybe change to default nvim_tree branch to check that that
       --Close the tree if file was opened but after opening so we schedule it
-      vim.schedule(api.tree.toggle)
+      -- vim.schedule(api.tree.toggle)
+      -- EDIT 29/09 - It came back into working, just moving parts as always XD
+      api.tree.toggle()
     end
   end
 
@@ -545,7 +546,9 @@ return {
 
       float = {
         enable = true,
-        quit_on_focus_loss = true, -- TODO: On slow path does it lag if this is true? Test it
+
+        -- bugged tries to rename buffer, completely le bad
+        quit_on_focus_loss = false, -- TODO: On slow path does it lag if this is true? Test it
         open_win_config = function()
           local total_width = vim.o.columns
           local total_height = vim.o.lines

@@ -120,11 +120,27 @@ local file_tree_toggle = function(opts)
   elseif vim.g.self.file_tree == 'nvim-tree' then
     return function()
       local api = require 'nvim-tree.api'
+
       api.tree.toggle {
         find_file = opts.focus_file,
       }
+
+      if true then
+        -- Avoid any logic after that for now
+        return
+      end
+
+      if api.tree.is_visible() then
+        api.tree.close {}
+      else
+        api.tree.open {
+          find_file = opts.focus_file,
+        }
+      end
+
       local tree_win_id = vim.fn.win_getid(vim.fn.bufwinnr(vim.fn.bufname 'NvimTree'))
       local is_valid_win = vim.api.nvim_win_is_valid(tree_win_id) and api.tree.is_visible()
+
       if is_valid_win then
         vim.api.nvim_win_set_option(tree_win_id, 'winblend', vim.g.self.is_transparent and 0 or 8) -- Set the highlight group for this window
         -- vim.api.nvim_set_hl(tree_win_id, 'FloatBorder', { bg = '#FFFFFF' })

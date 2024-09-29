@@ -169,16 +169,25 @@ local function save_last_yank()
   end
 end
 
+local MAX_LINES_TO_LOAD = 25
+
 local function load_last_yank()
   local yank_file = get_yank_file_path()
   local file = io.open(yank_file, 'r')
   if file then
     yank_history = {}
     local last_line = nil
+    local idx = 0
     for line in file:lines() do
+      idx = idx + 1
+
       if line ~= '' then
         table.insert(yank_history, line)
         last_line = line
+      end
+
+      if idx >= MAX_LINES_TO_LOAD then
+        break
       end
     end
     if last_line and last_line ~= '' then
@@ -186,6 +195,7 @@ local function load_last_yank()
     end
     file:close()
   end
+  yank_history = { unpack(yank_history, math.max(1, #yank_history - MAX_LINES_TO_LOAD), #yank_history) }
 end
 
 local function save_positions_to_file(file_path)
@@ -676,20 +686,23 @@ local function show_yank_history_on_quick()
 
   local get_selected_location_entry = function()
     local qfl = vim.fn.getqflist()
-    local lnum = vim.api.nvim__buf_stats(0).current_lnum
-    -- ShowStringAndWait(vim.inspect(qfl))
-    -- ShowStringAndWait(vim.inspect(lnum))
+    local lnum, _ = unpack(vim.api.nvim_win_get_cursor(0))
     local idx = lnum
+
+    assert(vim.api.nvim__buf_stats(0).current_lnum == lnum)
+
+    -- Inspect { lnum, qfl[idx].user_data, qfl = qfl }
     if idx > 0 and idx <= #qfl then
       return qfl[idx]
     else
+      print "Couldn't yank from history"
       return ''
     end
   end
 
   local choose = function()
-    -- vim.fn.setreg('"', get_selected_location_entry().text)
     local data = get_selected_location_entry().user_data
+    -- Inspect { data }
     vim.fn.setreg('"', data)
     vim.cmd 'cclose'
   end
