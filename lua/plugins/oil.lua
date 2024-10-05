@@ -33,7 +33,7 @@ return {
         cursorcolumn = false,
         foldcolumn = '0',
         spell = false,
-        list = false,
+        list = true,
         conceallevel = 3,
         concealcursor = 'nvic',
       },
@@ -57,7 +57,7 @@ return {
       },
       -- Constrain the cursor to the editable parts of the oil buffer
       -- Set to `false` to disable, or "name" to keep it on the file names
-      constrain_cursor = false and 'editable',
+      constrain_cursor = true and 'editable',
       -- Set to true to watch the filesystem for changes and reload oil
       watch_for_changes = true,
       -- Keymaps in oil buffer. Can be any value that `vim.keymap.set` accepts OR a table of keymap
