@@ -1,7 +1,7 @@
 return {
   'garymjr/nvim-snippets',
   lazy = false,
-  opts = { create_cmp_source = true },
+  opts = { create_cmp_source = true, search_paths = { (vim.fn.stdpath 'config') .. '/snippets/all.json' } },
   keys = {
     {
       '<Tab>',
