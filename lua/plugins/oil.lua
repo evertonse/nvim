@@ -57,7 +57,8 @@ return {
       },
       -- Constrain the cursor to the editable parts of the oil buffer
       -- Set to `false` to disable, or "name" to keep it on the file names
-      constrain_cursor = true and 'editable',
+      -- constrain_cursor = true and 'editable',
+      constrain_cursor = true and 'name',
       -- Set to true to watch the filesystem for changes and reload oil
       watch_for_changes = true,
       -- Keymaps in oil buffer. Can be any value that `vim.keymap.set` accepts OR a table of keymap
@@ -80,7 +81,7 @@ return {
         -- ['o'] = { 'actions.cd', opts = { scope = 'tab' }, desc = ':tcd to the current oil directory' },
         ['L'] = 'actions.select',
         ['o'] = { 'actions.select' },
-        ['i'] = 'actions.parent',
+        -- ['i'] = 'actions.parent',
         ['-'] = 'actions.parent',
         ['_'] = 'actions.open_cwd',
         ['`'] = 'actions.cd',

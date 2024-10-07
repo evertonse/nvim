@@ -6,7 +6,7 @@
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-
+--
 -- vim.cmd [[ filetype plugin off]]
 -- vim.cmd [[ set omnifunc= ]]
 local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
@@ -59,9 +59,11 @@ g.loaded_python_provider = 0
 g.loaded_python3_provider = 0
 opt.fillchars:append { eob = ' ' }
 
-vim.loader.enable()
+if false then
+  vim.loader.enable()
+end
+
 vim.o.cursorlineopt = 'both' -- to enable cursorline
-vim.o.wildmenu = false -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
 -- opt.wildmode = 'list:longest,list:full' -- for : stuff
 opt.wildmode = 'list:longest' -- for : stuff
 opt.wildignore:append { '.javac', 'node_modules', '*.pyc' }
@@ -85,6 +87,7 @@ opt.wildignore:append {
   '.hg',
   '.orig',
 }
+vim.o.wildmenu = false -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
 
 opt.suffixesadd:append { '.java', '.rs' } -- search for suffexes using gf
 

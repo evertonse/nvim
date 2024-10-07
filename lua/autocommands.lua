@@ -254,6 +254,15 @@ au('VimEnter', '*', function()
   clean_up_buffers()
   load_last_yank()
   local path = vim.fn.getcwd() .. '/.trails'
+
+  vim.keymap.set('n', '<A-n>', function()
+    JumpPosition(1)
+  end, { noremap = true, silent = true })
+
+  vim.keymap.set('n', '<A-p>', function()
+    JumpPosition(-1)
+  end, { noremap = true, silent = true })
+
   load_positions_from_file(path)
 end, 'Close buffers, Load Yank, and stuff', excyber)
 

@@ -6,32 +6,7 @@ return {
     lazy = false,
     enabled = true,
     dependencies = {
-      -- Snippet Engine & its associated nvim-cmp source
-      {
-        'L3MON4D3/LuaSnip',
-        build = (function()
-          -- Build Step is needed for regex support in snippets.
-          -- This step is not supported in many windows environments.
-          -- Remove the below condition to re-enable on windows.
-          if (vim.fn.has 'win32') == 1 or vim.fn.executable 'make' == 0 then
-            return
-          end
-          return 'make install_jsregexp'
-        end)(),
-        dependencies = {
-          { 'onsails/lspkind.nvim', enabled = true },
-          -- `friendly-snippets` contains a variety of premade snippets.
-          --    See the README about individual language/framework/plugin snippets:
-          --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
-        },
-      },
-      'saadparwaiz1/cmp_luasnip',
+      { 'onsails/lspkind.nvim', enabled = true },
 
       -- Adds other completion capabilities.
       --  nvim-cmp does not ship with all sources by default. They are split
@@ -101,9 +76,7 @@ return {
 
       local cmp_select = { behavior = cmp.SelectBehavior.Select }
       -- See `:help cmp`
-      local luasnip = require 'luasnip'
       local lspkind = require 'lspkind'
-      luasnip.config.setup {}
       cmp.event:on('confirm_done', function(event)
         cmp.config.compare.recently_used:add_entry(event.entry)
       end)
@@ -184,7 +157,7 @@ return {
         },
         snippet = {
           expand = function(args)
-            luasnip.lsp_expand(args.body)
+            vim.snippet.expand(args.body)
           end,
         },
         -- completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
@@ -214,7 +187,7 @@ return {
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
-          ['<C-\\>'] = cmp.mapping.confirm { select = true },
+          ['<Tab>'] = cmp.mapping.confirm { select = true },
           ['|'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
@@ -236,23 +209,9 @@ return {
           --
           -- <c-l> will move you to the right of each of the expansion locations.
           -- <c-h> is similar, except moving you backwards.
-          ['<M-l>'] = cmp.mapping(function()
-            if luasnip.expand_or_locally_jumpable() then
-              luasnip.expand_or_jump()
-            end
-          end, { 'i', 's' }),
-          ['<M-h>'] = cmp.mapping(function()
-            if luasnip.locally_jumpable(-1) then
-              luasnip.jump(-1)
-            end
-          end, { 'i', 's' }),
-
-          -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
-          --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         },
         sources = {
           { name = 'nvim_lsp' },
-          { name = 'luasnip' },
           { name = 'path' },
           { name = 'buffer' },
           -- { name = 'cmdline' },
@@ -332,7 +291,6 @@ return {
       cmp.setup.filetype('vim', {
         sources = {
           -- { name = 'nvim_lsp' },
-          -- { name = 'luasnip' },
           -- { name = 'path' },
           { name = 'cmdline' }, -- Example of an additional source
         },
