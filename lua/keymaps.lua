@@ -16,8 +16,10 @@ local function vim_cmd_switch_buffer()
   vim.cmd 'set nomore | ls | set more | b '
 end
 
-local switch_buffer = [[:set nomore <Bar> :ls <Bar> :set more <CR>:b<Space><left><right>]]
-  or '<cmd> Telescope buffers initial_mode=normal<CR><esc>'
+local switch_buffer = false
+  -- or [[:set nomore <Bar> :ls <Bar> :set more <CR>:b<Space><left><right>]]
+  -- or '<cmd> Telescope buffers initial_mode=normal<CR>'
+  or '<cmd> Telescope buffers initial_mode=insert<CR>'
   or vim_cmd_switch_buffer
 
 -- Function to jump within the current buffer
@@ -458,9 +460,12 @@ M.general = {
   -- [TERMINAL and NORMAL]
   tn = {},
   snovx = {
+    ['<A-q>'] = { '/', "I'm too used to Alt + q being search", { expr = false } },
+    ['Q'] = { 'q', 'annoying that `q` is quit but also record ??', { expr = false } },
+    ['q'] = { '', 'annoying that `q` is quit but also record ??', { expr = false } },
     ['gh'] = { '0', 'Move big left', { expr = false } },
     ['gl'] = { '$', 'Move big right', { expr = false } },
-    ['gH'] = { 'v:count || mode(1)[0:1] == "no" ? "0" : "g0"', 'Move left', { expr = true } },
+    ['gH'] = { 'v:count || mode(1)[0:1] == "" ? "0" : "g0"', 'Move left', { expr = true } },
     ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
   },
 

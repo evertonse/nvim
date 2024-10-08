@@ -603,20 +603,20 @@ return { -- Fuzzy Finder (files, lsp, etc)
         mappings = {
           i = {
             -- ["'"] = telescope_hop,
-            ["'"] = function(prompt_bufnr)
-              -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
-              local opts = {
-                -- callback = actions.toggle_selection,
-                callback = function(inner_prompt_bufnr)
-                  actions.select_default(inner_prompt_bufnr)
-                  -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
-                end,
-                -- loop_callback = actions.send_selected_to_qflist,
-                -- loop_callback = actions.select_default,
-              }
-              require('telescope').extensions.hop._hop(prompt_bufnr, opts)
-              -- require('telescope').extensions.hop._hop_loop(prompt_bufnr, opts)
-            end,
+            -- ["'"] = function(prompt_bufnr)
+            --   -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
+            --   local opts = {
+            --     -- callback = actions.toggle_selection,
+            --     callback = function(inner_prompt_bufnr)
+            --       actions.select_default(inner_prompt_bufnr)
+            --       -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
+            --     end,
+            --     -- loop_callback = actions.send_selected_to_qflist,
+            --     -- loop_callback = actions.select_default,
+            --   }
+            --   require('telescope').extensions.hop._hop(prompt_bufnr, opts)
+            --   -- require('telescope').extensions.hop._hop_loop(prompt_bufnr, opts)
+            -- end,
             -- ['1'] = select_nth_entry(1 - 1),
             -- ['2'] = select_nth_entry(2 - 1),
             -- ['3'] = select_nth_entry(3 - 1),
@@ -784,7 +784,9 @@ return { -- Fuzzy Finder (files, lsp, etc)
         ['<leader>s.'] = { builtin.oldfiles, '[S]earch Recent Files ("." for repeat)' },
         ['<leader>B'] = {
           function()
+            assert(false)
             builtin.buffers {
+              initial_mode = 'insert',
               select_current = true,
               attach_mappings = function(prompt_bufnr, map)
                 vim.defer_fn(

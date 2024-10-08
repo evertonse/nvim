@@ -49,6 +49,7 @@ return { --https://github.com/andymass/vim-matchup
     -- Customize like below in https://github.com/andymass/vim-matchup/wiki/The-match-up-wiki
     vim.cmd [[
       autocmd FileType lua let b:match_words = 'for:end'
+      autocmd FileType c,cpp let b:match_words = 'BeginDrawing:EndDrawing'
     ]]
   end,
 }
