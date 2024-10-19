@@ -256,7 +256,9 @@ for k, v in pairs(options) do
     end)
   end
 end
+
 opt.iskeyword:append '-' -- hyphenated words recognized by searches
+opt.iskeyword:append '.'
 
 -- Neovim version dependent
 opt.shortmess:append 'saAtilmnrxwWoOtTIFcC' -- flags to shorten vim messages, see :help 'shortmess'
