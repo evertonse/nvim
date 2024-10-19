@@ -25,6 +25,40 @@ else
         vim.cmd 'DoMatchParen'
       end,
       custom_key_maps = {
+        -- w
+        {
+          { 'n', 'x' },
+          'gw',
+          function(_, count)
+            if count ~= 0 and vim.api.nvim_get_mode().mode == 'n' then
+              vim.cmd('normal! ' .. count)
+            end
+            require('spider').motion 'w'
+          end,
+        },
+
+        -- e
+        {
+          { 'n', 'x' },
+          'ge',
+          function(_, count)
+            if count ~= 0 and vim.api.nvim_get_mode().mode == 'n' then
+              vim.cmd('normal! ' .. count)
+            end
+            require('spider').motion 'e'
+          end,
+        },
+        -- b
+        {
+          { 'n', 'x' },
+          'gb',
+          function(_, count)
+            if count ~= 0 and vim.api.nvim_get_mode().mode == 'n' then
+              vim.cmd('normal! ' .. count)
+            end
+            require('spider').motion 'b'
+          end,
+        },
         {
           'n',
           '<Leader>|',
