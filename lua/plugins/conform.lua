@@ -46,6 +46,7 @@ return {
         c = { 'clang-format' },
         cpp = { 'clang-format' },
         java = { 'clang-format' },
+        json = { 'fixjson' },
         -- java = { 'google-java-format' },
         -- java = { 'jdtls' },
 

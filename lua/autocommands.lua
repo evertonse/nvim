@@ -273,17 +273,19 @@ local function capture_yank()
   table.insert(yank_history, yanked_text)
 end
 
-OpenFloatingWindow = function(buflines, opts)
+OpenFloatingWindow = function(opts)
   opts = opts or {}
   local width = opts.width or 80
   local height = opts.height or 10
   local title = opts.title or 'Floating Window'
-
-  -- Create a new buffer
-  local buf = vim.api.nvim_create_buf(false, true)
+  local buflines = opts.lines or nil
+  local buf = opts.buf or vim.api.nvim_create_buf(false, true)
+  Inspect(opts)
 
   -- Set the lines in the buffer
-  vim.api.nvim_buf_set_lines(buf, 0, -1, false, buflines)
+  if buflines ~= nil then
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, buflines)
+  end
 
   -- Calculate the dimensions for the floating window
   local win_width = vim.api.nvim_get_option 'columns'
@@ -1014,3 +1016,183 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
 vim.api.nvim_create_user_command('LspDisableLinting', disable_linting, {})
 vim.api.nvim_create_user_command('LspEnableLinting', enable_linting, {})
 -- and requesting diagnostics again with error handling
+-- Hide window and its buffer
+
+local function store_window_layout(win_id)
+  if win_id and vim.api.nvim_win_is_valid(win_id) then
+    return {
+      relative = 'editor',
+      width = vim.api.nvim_win_get_width(win_id),
+      height = vim.api.nvim_win_get_height(win_id),
+
+      row = vim.api.nvim_win_get_position(win_id)[1],
+      col = vim.api.nvim_win_get_position(win_id)[2],
+      style = 'minimal',
+      border = 'rounded',
+    }
+  end
+end
+
+-- Show window and buffer in current window position
+local function show_window(buf_id, layout)
+  if not buf_id or not vim.api.nvim_buf_is_valid(buf_id) then
+    print('Buffer ' .. buf_id .. ' is not valid!')
+    return nil
+  end
+
+  -- Check if there's already a window showing this buffer
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_get_buf(win) == buf_id then
+      vim.api.nvim_set_current_win(win)
+      return win
+    end
+  end
+
+  -- If no existing window found, create new one
+  local new_win = vim.api.nvim_open_win(buf_id, true, layout)
+  return new_win
+end
+
+-- -- Show window and buffer in current window position
+-- local function show_window(buf_id, layout)
+--   if buf_id and vim.api.nvim_buf_is_valid(buf_id) then
+--     -- Create new window with stored layout
+--     local new_win = vim.api.nvim_open_win(buf_id, true, layout)
+--     return new_win
+--   end
+--   Inspect { buf_id = buf_id, valid = vim.api.nvim_buf_is_valid(buf_id) }
+-- end
+--
+local function hide_window(win_id)
+  if win_id and vim.api.nvim_win_is_valid(win_id) then
+    local buf_id = vim.api.nvim_win_get_buf(win_id)
+    local layout = store_window_layout(win_id)
+    -- Set buffer options to prevent it from being deleted
+    vim.api.nvim_buf_set_option(buf_id, 'bufhidden', 'hide')
+    vim.api.nvim_buf_set_option(buf_id, 'buflisted', false)
+
+    -- Hide the window
+    vim.api.nvim_win_hide(win_id)
+
+    return buf_id, layout
+  end
+end
+
+local run_buf = nil
+local run_layout = nil
+local run_command_in_window = function(cmd)
+  -- Run the command and capture its output
+  local output = vim.fn.system(cmd)
+
+  -- Create a new buffer
+  local buf = vim.api.nvim_create_buf(false, true)
+
+  -- Set the buffer's content to the command output
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(output, '\n'))
+
+  -- Get the current window's dimensions
+  local width = vim.api.nvim_get_option 'columns'
+  local height = vim.api.nvim_get_option 'lines'
+
+  -- Calculate floating window size
+  local win_height = math.ceil(height)
+  local win_width = math.ceil(width)
+  -- local win_height = math.ceil(height * 0.8 - 4)
+  -- local win_width = math.ceil(width * 0.8)
+
+  -- Calculate floating window starting position
+  local row = math.ceil((height - win_height) / 2 - 1)
+  local col = math.ceil((width - win_width) / 2)
+
+  -- Set up floating window options
+  local opts = {
+    style = 'minimal',
+    relative = 'editor',
+
+    width = win_width,
+    height = win_height,
+    row = row,
+    col = col,
+    border = 'rounded',
+  }
+
+  -- Create the floating window
+  local win = vim.api.nvim_open_win(buf, true, opts)
+
+  -- Set buffer keymaps
+  vim.api.nvim_buf_set_keymap(buf, 'n', 'q', ':close<CR>', { noremap = true, silent = true })
+
+  -- Set buffer options
+  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
+  -- vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+
+  -- Set buffer name
+  vim.api.nvim_buf_set_name(buf, 'Command Output: ' .. cmd)
+
+  -- Set buffer keymaps
+  vim.api.nvim_buf_set_keymap(buf, 'n', 'q', ':close<CR>', { noremap = true, silent = true })
+
+  -- Custom gf mapping
+
+  run_buf = buf
+  run_layout = store_window_layout(win)
+  Inspect { buf = buf, run_buf = run_buf }
+  vim.keymap.set('n', 'gf', function()
+    GoToFileUnderCursor()
+    vim.api.nvim_win_hide(win)
+    run_buf, run_layout = hide_window(win)
+  end, { buffer = buf, noremap = true, silent = true })
+
+  vim.keymap.set('n', '<leader>o', function()
+    if run_buf == nil or run_layout == nil then
+      Inspect { 'you fucked up jk' }
+      return
+    end
+    show_window(run_buf, run_layout)
+  end, { noremap = true, silent = true })
+
+  return win, buf
+end
+
+-- Function to go to file under cursor
+function GoToFileUnderCursor()
+  local filename = vim.fn.expand '<cfile>'
+
+  -- Check if the file exists
+  if vim.fn.filereadable(filename) == 0 then
+    print('File not found: ' .. filename)
+    return
+  end
+
+  -- Get all windows
+  local windows = vim.api.nvim_list_wins()
+  local target_win = nil
+
+  -- Find a non-floating window that's not the current one
+  for _, win in ipairs(windows) do
+    local win_config = vim.api.nvim_win_get_config(win)
+    if win_config.relative == '' and win ~= vim.api.nvim_get_current_win() then
+      target_win = win
+      break
+    end
+  end
+
+  -- If no suitable window found, create a new one
+  if not target_win then
+    vim.cmd 'wincmd v' -- Split vertically
+    target_win = vim.api.nvim_get_current_win()
+  end
+
+  -- Focus the target window
+  vim.api.nvim_set_current_win(target_win)
+
+  -- Open the file
+
+  vim.cmd('edit ' .. vim.fn.fnameescape(filename))
+end
+-- Store window layout before hiding
+-- Create the Run command
+vim.api.nvim_create_user_command('Run', function(opts)
+  run_command_in_window(opts.args)
+end, { nargs = '+' })

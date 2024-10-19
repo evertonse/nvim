@@ -559,6 +559,7 @@ GetVisualSelection = function(opts)
 
     selection = selection:gsub('%/', '%\\%/')
     selection = selection:gsub('%.', '%\\%.')
+    selection = selection:gsub('%*', '%\\%*')
   end
 
   if false then
@@ -575,7 +576,7 @@ vim.api.nvim_create_user_command('FindFiles', function()
   -- Usage example
   local fd_command = 'fd --type f --hidden --exclude .git --color never'
   local files = fast_process_output(fd_command)
-  local buf, win = OpenFloatingWindow(files)
+  local buf, win = OpenFloatingWindow { lines = files }
 end, {})
 
 return {
