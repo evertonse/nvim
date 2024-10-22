@@ -944,6 +944,8 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'k', 'gk', { noremap = true, expr = false })
     vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'gl', 'g$', { noremap = true, expr = false })
     vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'gh', 'g0', { noremap = true, expr = false })
+    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'o', 'g$a<enter>', { noremap = true, expr = false })
+    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'O', 'g0i<enter><left>', { noremap = true, expr = false })
     vim.schedule(function()
       vim.cmd [[LspDisableLinting]]
     end)

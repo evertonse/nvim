@@ -289,6 +289,7 @@ require('lazy').setup({
   require 'plugins.lsp',
   require 'plugins.nvim-snippets',
   { 'sakhnik/nvim-gdb', lazy = false },
+  { 'michaeljsmith/vim-indent-object', lazy = false },
   'nvim-lua/plenary.nvim',
   'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
   'MunifTanjim/nui.nvim',

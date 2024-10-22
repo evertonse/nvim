@@ -468,7 +468,6 @@ M.general = {
     ['gH'] = { 'v:count || mode(1)[0:1] == "" ? "0" : "g0"', 'Move left', { expr = true } },
     ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
   },
-
   vx = {
     ['<leader>rw'] = { [[ygv<esc>:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' },
     ['<leader><leader>'] = { ':Norm <Down>', 'live preview of normal command' },
@@ -488,19 +487,31 @@ M.general = {
     -- navigate within insert mode
     ['<C-h>'] = {
       function()
-        vim.api.nvim_input '_'
+        vim.api.nvim_input '{}<Left>'
       end,
       '',
     },
-    ['<C-g>'] = {
+    ['<C-j>'] = {
       function()
-        vim.api.nvim_input '.'
+        vim.api.nvim_input '()<Left>'
       end,
       '',
     },
     ['<C-k>'] = {
       function()
-        vim.api.nvim_input ','
+        vim.api.nvim_input '[]<Left>'
+      end,
+      '',
+    },
+    ['<C-f>'] = {
+      function()
+        vim.api.nvim_input '_'
+      end,
+      '',
+    },
+    ['<C-d>'] = {
+      function()
+        vim.api.nvim_input ':'
       end,
       '',
     },
@@ -551,16 +562,16 @@ M.general = {
       'Quit and save lastcmd',
     },
 
-    ['<C-k>'] = {
-      function()
-        vim.api.nvim_input '<Up>'
-      end,
-    },
-    ['<C-j>'] = {
-      function()
-        vim.api.nvim_input '<Down>'
-      end,
-    },
+    -- ['<C-k>'] = {
+    --   function()
+    --     vim.api.nvim_input '<Up>'
+    --   end,
+    -- },
+    -- ['<C-j>'] = {
+    --   function()
+    --     vim.api.nvim_input '<Down>'
+    --   end,
+    -- },
   },
   -- [NORMAL]
   n = {
@@ -853,7 +864,8 @@ M.general = {
     ['N'] = { 'Nzzzv', noremap_opts },
     ['J'] = { 'mzJ`z', noremap_opts },
 
-    ['U'] = { '<C-r>' },
+    ['U'] = { '<C-r>zz', noremap_opts },
+    ['u'] = { 'uzz', noremap_opts },
     ['<leader>re'] = { ':%s///g<Left><Left><Left><Down>', noremap_opts },
 
     ['<leader>d'] = { '"_d', noremap_opts },
@@ -1638,6 +1650,7 @@ end
 map({ 'i', 'x' }, '<C-S>', '<Esc><Cmd>silent! update | redraw<CR>', { desc = 'Save and go to Normal mode' })
 
 Positions = {}
+
 local positions_used_ids = {}
 local positions_current_index = 0
 
