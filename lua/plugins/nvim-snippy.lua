@@ -13,18 +13,20 @@ return {
     -- end, { expr = true })
     -- map('x', '<Tab>', '<plug>(snippy-cut-text)')
     -- map('n', 'g<Tab>', '<plug>(snippy-cut-text)')
-    vim.opt.runtimepath:append '/snippets'
     require('snippy').setup {
-      -- mappings = {
-      --   is = {
-      --     ['<C-y>'] = 'expand_or_advance',
-      --     -- ['<C-b>'] = 'expand_or_advance',
-      --     ['<S-Tab>'] = 'previous',
-      --   },
-      --   nx = {
-      --     ['<leader>x'] = 'cut_text',
-      --   },
-      -- },
+      snippet_dirs = { (vim.fn.stdpath 'config') .. '/snippets' },
+      enable_auto = true,
+      choice_delay = 50,
+      mappings = {
+        is = {
+          ['<Tab>'] = 'expand_or_advance',
+          -- ['<C-b>'] = 'expand_or_advance',
+          ['<S-Tab>'] = 'previous',
+        },
+        nx = {
+          ['<leader>x'] = 'cut_text',
+        },
+      },
     }
   end,
 }
