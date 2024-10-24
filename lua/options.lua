@@ -257,8 +257,9 @@ for k, v in pairs(options) do
   end
 end
 
-opt.iskeyword:append '-' -- hyphenated words recognized by searches
-opt.iskeyword:append '.'
+-- NOTE: I'm not understanding something about this iskeyword thing because it
+-- Actually jumps over '.' is I set this from lua !??
+-- vim.opt.iskeyword:append { ':', '-' }
 
 -- Neovim version dependent
 opt.shortmess:append 'saAtilmnrxwWoOtTIFcC' -- flags to shorten vim messages, see :help 'shortmess'
@@ -310,7 +311,7 @@ else
   vim.opt.foldenable = true
 end
 
-vim.cmd [[ :set iskeyword-=- ]]
+--vim.cmd [[ :set iskeyword-=- ]]
 vim.cmd ':set clipboard=""'
 
 if OnWsl() then

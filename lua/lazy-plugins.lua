@@ -162,7 +162,7 @@ require('lazy').setup({
     opts = { useDefaultKeymaps = true },
   },
 
-  require 'plugins.coerce',
+  -- require 'plugins.coerce',
   require 'plugins.Comment',
   {},
   -- require 'plugins.tabby',
@@ -270,7 +270,8 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
-  true and require 'plugins.spider' or require 'plugins.neowords',
+  -- true and require 'plugins.spider' or require 'plugins.neowords',
+  -- require 'plugins.multiple-cursors',
   require 'plugins.improved-ft',
   (false and vim.fn.has 'nvim-0.10' == 1) and require 'plugins.dropbar' or require 'plugins.incline',
   require 'plugins.cycler',
@@ -284,7 +285,6 @@ require('lazy').setup({
   require 'plugins.submode',
   require 'plugins.cmdbuf',
   require 'plugins.searchbox',
-  require 'plugins.multiple-cursors',
   require 'plugins.stickybuf',
   require 'plugins.lsp',
   require 'plugins.nvim-snippy',
