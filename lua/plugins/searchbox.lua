@@ -1,6 +1,6 @@
 return {
   'VonHeikemen/searchbox.nvim',
-  enabled = true,
+  enabled = false,
   lazy = false,
   config = function()
     require('searchbox').setup {

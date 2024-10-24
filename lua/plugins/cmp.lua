@@ -2,12 +2,13 @@
 return {
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
-    event = { 'VimEnter', 'InsertEnter' },
+    -- event = { 'VimEnter', 'InsertEnter' },
     lazy = false,
     enabled = true,
     dependencies = {
       { 'onsails/lspkind.nvim', enabled = true },
 
+      'dcampos/cmp-snippy',
       -- Adds other completion capabilities.
       --  nvim-cmp does not ship with all sources by default. They are split
       --  into multiple repos for maintenance purposes.
@@ -89,6 +90,22 @@ return {
         -- @field public confirm_resolve_timeout integer
         -- @field public async_budget integer Maximum time (in ms) an async function is allowed to run during one step of the event loop.
         -- @field public max_view_entries integer
+        sources = {
+          { name = 'buffer' },
+          { name = 'snippy' },
+          { name = 'nvim_lsp' },
+          { name = 'path' },
+          -- { name = 'cmdline' },
+        },
+
+        snippet = {
+          expand = function(args)
+            require('snippy').expand_snippet(args.body)
+          end,
+          -- expand = function(args)
+          --   vim.snippet.expand(args.body)
+          -- end,
+        },
 
         performance = {
           debounce = 20,
@@ -155,11 +172,6 @@ return {
             end,
           },
         },
-        snippet = {
-          expand = function(args)
-            vim.snippet.expand(args.body)
-          end,
-        },
         -- completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
         completion = { completeopt = 'menu,menuone,noinsert,preview' },
         -- experimental = {
@@ -209,12 +221,6 @@ return {
           --
           -- <c-l> will move you to the right of each of the expansion locations.
           -- <c-h> is similar, except moving you backwards.
-        },
-        sources = {
-          { name = 'nvim_lsp' },
-          { name = 'path' },
-          { name = 'buffer' },
-          -- { name = 'cmdline' },
         },
       }
       local search_opts = {
@@ -291,7 +297,7 @@ return {
       cmp.setup.filetype('vim', {
         sources = {
           -- { name = 'nvim_lsp' },
-          -- { name = 'path' },
+          { name = 'path' },
           { name = 'cmdline' }, -- Example of an additional source
         },
       })

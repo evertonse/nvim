@@ -1,10 +1,10 @@
 return {
   'garymjr/nvim-snippets',
   lazy = false,
-  opts = { create_cmp_source = true, search_paths = { (vim.fn.stdpath 'config') .. '/snippets/all.json' } },
+  opts = { create_cmp_source = true, search_paths = { (vim.fn.stdpath 'config') .. '/snippets' } },
   keys = {
     {
-      '<Tab>',
+      '<c-y>',
       function()
         if vim.snippet.active { direction = 1 } then
           vim.schedule(function()

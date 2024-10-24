@@ -10,7 +10,6 @@ else
     'brenton-leighton/multiple-cursors.nvim',
     version = '*', -- Use the latest tagged version
     lazy = false,
-
     opts = {
       pre_hook = function()
         require('cmp').setup { enabled = false }

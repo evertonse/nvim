@@ -320,7 +320,7 @@ Inspect = function(table)
   vim.fn.confirm(vim.inspect(table))
 end
 
-Inspect2 = function(table)
+ShowInspect = function(table)
   ShowStringAndWait(vim.inspect(table))
 end
 

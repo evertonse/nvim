@@ -85,6 +85,38 @@ return {
       treesitter = {
         valid_types = using_valid_type,
       },
+      path = {
+        ---@type string|fun(buf: integer, win: integer): string
+        relative_to = function(_, win)
+          -- Workaround for Vim:E5002: Cannot find window number
+          local ok, cwd = pcall(vim.fn.getcwd, win)
+          return ok and cwd or vim.fn.getcwd()
+        end,
+        ---Can be used to filter out files or directories
+        ---based on their name
+        ---@type fun(name: string): boolean
+        filter = function(_)
+          return true
+        end,
+        ---Last symbol from path source when current buf is modified
+        ---@param sym dropbar_symbol_t
+        ---@return dropbar_symbol_t
+        modified = function(sym)
+          return sym
+        end,
+        ---@type boolean|fun(path: string): boolean?|nil
+        preview = function(path)
+          local stat = vim.uv.fs_stat(path)
+          if not stat or stat.type ~= 'file' then
+            return false
+          end
+          if stat.size > 524288 then
+            vim.notify(string.format('[dropbar.nvim] file "%s" too large to preview', path), vim.log.levels.WARN)
+            return false
+          end
+          return true
+        end,
+      },
     },
   },
   dependencies = {
