@@ -864,8 +864,8 @@ M.general = {
     ['N'] = { 'Nzzzv', noremap_opts },
     ['J'] = { 'mzJ`z', noremap_opts },
 
-    -- ['U'] = { '<C-r>zzzv', noremap_opts },
-    -- ['u'] = { 'uzzzv', noremap_opts },
+    ['U'] = { '<C-r>zv', noremap_opts },
+    ['u'] = { 'uzv', noremap_opts },
     ['<leader>re'] = { ':%s///g<Left><Left><Left><Down>', noremap_opts },
 
     ['<leader>d'] = { '"_d', noremap_opts },

@@ -937,15 +937,18 @@ au(
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'markdown', 'tex' },
-  callback = function()
+  callback = function(buf)
+    local buf = vim.api.nvim_get_current_buf()
     vim.opt_local.wrap = true
     vim.opt_local.spell = false
-    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'j', 'gj', { noremap = true, expr = false })
-    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'k', 'gk', { noremap = true, expr = false })
-    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'gl', 'g$', { noremap = true, expr = false })
-    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'gh', 'g0', { noremap = true, expr = false })
-    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'o', 'g$a<enter>', { noremap = true, expr = false })
-    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'O', 'g0i<enter><left>', { noremap = true, expr = false })
+
+    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'j', 'gj', { buffer = buf, noremap = true, expr = false })
+    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'k', 'gk', { buffer = buf, noremap = true, expr = false })
+    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'gl', 'g$', { buffer = buf, noremap = true, expr = false })
+    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'gh', 'g0', { buffer = buf, noremap = true, expr = false })
+    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'o', 'g$a<enter>', { buffer = buf, noremap = true, expr = false })
+
+    vim.keymap.set({ 's', 'n', 'o', 'v', 'x' }, 'O', 'g0i<enter><left>', { buffer = buf, noremap = true, expr = false })
     vim.schedule(function()
       vim.cmd [[LspDisableLinting]]
     end)
@@ -1005,6 +1008,15 @@ local function enable_linting()
 end
 
 vim.api.nvim_create_augroup('FileTypeBrdf', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+  pattern = { '*.brdf', '*.fs', '*.vs' },
+  callback = function()
+    vim.bo.filetype = 'glsl'
+  end,
+
+  group = 'FileTypeBrdf',
+})
+
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
   pattern = '*.brdf',
   callback = function()

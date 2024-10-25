@@ -119,10 +119,15 @@ snippet for
 		${4}
 	}
 
+# forc
 snippet forc
 	for (int ${2:idx} = 0; $2 < ${1:count}; $2${3:idx += 1}) {
 		${4}
 	}
+
+# printff
+snippet printff
+	printf("${1:value}=%${2:fmt}", $1);
 
 # for (custom)
 snippet forr

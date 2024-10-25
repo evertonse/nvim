@@ -162,7 +162,7 @@ require('lazy').setup({
     opts = { useDefaultKeymaps = true },
   },
 
-  -- require 'plugins.coerce',
+  require 'plugins.coerce',
   require 'plugins.Comment',
   {},
   -- require 'plugins.tabby',
