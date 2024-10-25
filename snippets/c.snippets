@@ -115,9 +115,15 @@ snippet ex
 ## Loops
 # for
 snippet for
-	for (int ${2:i} = 0; $2 < ${1:count}; $2${3:++}) {
+	for (int ${2:i} = 0; $2 < ${1:count}; $2${3:++i}) {
 		${4}
 	}
+
+snippet forc
+	for (int ${2:idx} = 0; $2 < ${1:count}; $2${3:idx += 1}) {
+		${4}
+	}
+
 # for (custom)
 snippet forr
 	for (int ${1:i} = ${2:0}; ${3:$1 < 10}; $1${4:++}) {
