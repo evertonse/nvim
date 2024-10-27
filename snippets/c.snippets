@@ -121,13 +121,17 @@ snippet for
 
 # forc
 snippet forc
-	for (int ${2:idx} = 0; $2 < ${1:count}; $2${3:idx += 1}) {
-		${4}
+	for (int ${2:idx} = 0; ${2:idx} < ${1:count}; ${2:idx += 1}) {
+		${3}
 	}
+
+# TraceLog
+snippet TraceLog
+	TraceLog(LOG_INFO, "$1\n", $2);
 
 # printff
 snippet printff
-	printf("${1:value}=%${2:fmt}", $1);
+	printf("${1:kkk}=%${2:s}\n", $1$3);
 
 # for (custom)
 snippet forr
