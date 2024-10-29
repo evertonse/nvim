@@ -284,6 +284,7 @@ require('lazy').setup({
   require 'plugins.portal',
   require 'plugins.submode',
   require 'plugins.cmdbuf',
+  require 'plugins.compile-mode',
   require 'plugins.searchbox',
   require 'plugins.stickybuf',
   require 'plugins.lsp',

@@ -22,6 +22,18 @@ local switch_buffer = false
   or '<cmd> Telescope buffers initial_mode=insert<CR>'
   or vim_cmd_switch_buffer
 
+-- Close all windows except the current one
+local function close_other_windows()
+  local current_win = vim.api.nvim_get_current_win()
+  local windows = vim.api.nvim_list_wins()
+
+  for _, win in ipairs(windows) do
+    if win ~= current_win then
+      vim.api.nvim_win_close(win, true)
+    end
+  end
+end
+
 -- Function to jump within the current buffer
 local function spelltoggle()
   if vim.opt.spell:get() then
@@ -576,6 +588,7 @@ M.general = {
   -- [NORMAL]
   n = {
 
+    ['<leader>Q'] = { close_other_windows, 'Close all other windows' },
     ['<leader>b'] = { switch_buffer, 'Find buffers' },
     ['<leader>hy'] = { ':YankHistory <cr>', '[H]istory [Y]ank' },
     ['<leader>5'] = { spelltoggle, '5 for [5]pell Toggle' },
