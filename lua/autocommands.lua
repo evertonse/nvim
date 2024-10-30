@@ -649,6 +649,27 @@ local telescope_yank_history = function()
     :find()
 end
 
+local enable_lsp_highlighting = true
+local function toggle_lsp_highlighting()
+  if enable_lsp_highlighting then
+    vim.diagnostic.config {
+      virtual_text = true, -- Enable virtual text
+      signs = true, -- Enable signs in the gutter
+      underline = true, -- Enable underline
+      update_in_insert = true,
+    }
+  else
+    vim.diagnostic.config {
+      virtual_text = false, -- Disable virtual text
+      signs = false, -- Disable signs in the gutter
+      underline = false, -- Disable underline
+      update_in_insert = false,
+    }
+  end
+  enable_lsp_highlighting = not enable_lsp_highlighting
+end
+
+vim.api.nvim_create_user_command('LspToggleHighlighting', toggle_lsp_highlighting, {})
 -- Custom sorter that sorts in reverse order
 vim.api.nvim_create_user_command('TelescopeYankHistory', telescope_yank_history, {})
 
