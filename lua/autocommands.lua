@@ -650,26 +650,19 @@ local telescope_yank_history = function()
 end
 
 local enable_lsp_highlighting = true
-local function toggle_lsp_highlighting()
+local function toggle_lsp_comments()
+  local DeadCode = '#878787'
   if enable_lsp_highlighting then
-    vim.diagnostic.config {
-      virtual_text = true, -- Enable virtual text
-      signs = true, -- Enable signs in the gutter
-      underline = true, -- Enable underline
-      update_in_insert = true,
-    }
+    vim.api.nvim_set_hl(0, '@lsp.type.comment.c', {})
+    vim.api.nvim_set_hl(0, '@lsp.type.comment.cpp', {})
   else
-    vim.diagnostic.config {
-      virtual_text = false, -- Disable virtual text
-      signs = false, -- Disable signs in the gutter
-      underline = false, -- Disable underline
-      update_in_insert = false,
-    }
+    vim.api.nvim_set_hl(0, '@lsp.type.comment.c', { fg = DeadCode })
+    vim.api.nvim_set_hl(0, '@lsp.type.comment.cpp', { fg = DeadCode })
   end
   enable_lsp_highlighting = not enable_lsp_highlighting
 end
 
-vim.api.nvim_create_user_command('LspToggleHighlighting', toggle_lsp_highlighting, {})
+vim.api.nvim_create_user_command('LspToggleComments', toggle_lsp_comments, {})
 -- Custom sorter that sorts in reverse order
 vim.api.nvim_create_user_command('TelescopeYankHistory', telescope_yank_history, {})
 

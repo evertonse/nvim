@@ -261,7 +261,16 @@ end
 -- Actually jumps over '.' is I set this from lua !??
 -- vim.opt.iskeyword:append { ':', '-' }
 
--- Neovim version dependent
+-- " Set options on the newly created buffer.
+-- setlocal undolevels=-1     " Does not require undo (save memory).
+-- setlocal buftype=nofile    " Is not associated with a file.
+-- setlocal noswapfile        " Never has a swapfile.
+-- setlocal colorcolumn=      " No color column (slows down scrolling).
+-- setlocal syntax=off        " Syntax hl is very slow with long lines.
+-- setlocal foldmethod=manual " Only manual folding.
+-- setlocal nofoldenable      " Off means 'all folds open'.
+-- setlocal complete-=wbuU    " Disable parts of completion.
+
 opt.shortmess:append 'saAtilmnrxwWoOtTIFcC' -- flags to shorten vim messages, see :help 'shortmess'
 opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages
 if vim.fn.has 'nvim-0.9' == 1 or (vim.version().major > 10) then
