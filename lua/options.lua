@@ -48,6 +48,10 @@ vim.g.self = {
 vim.cmd [[ :set sessionoptions-=options ]]
 vim.cmd [[ set t_kb=^?]]
 
+-- Will prevent shada files from being generated or read in Neovim.
+-- For vim, set viminfo="NONE"
+vim.cmd [[ set shada="NONE"]]
+
 local o, opt, g = vim.o, vim.opt, vim.g
 
 g.mapleader = ' '

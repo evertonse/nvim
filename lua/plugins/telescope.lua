@@ -757,6 +757,14 @@ return { -- Fuzzy Finder (files, lsp, etc)
           end,
           '[S]earch by [G]rep',
         },
+        ['<leader>f'] = {
+          function()
+            local selection = GetVisualSelection()
+            Inspect { selection }
+            builtin.find_files { initial_mode = 'insert', default_text = selection }
+          end,
+          'Search Files',
+        },
       },
       n = {
         ['<leader>hs'] = {
