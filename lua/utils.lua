@@ -524,16 +524,16 @@ local fast_process_output = function(command)
 end
 
 GetVisualSelection = function(opts)
-  opts = vim.tbl_deep_extend(
-    'force',
-    { register = '"', escape = {
+  opts = vim.tbl_deep_extend('force', {
+    register = '"',
+    escape = {
       enabled = true,
       parens = true,
       brackets = true,
+      curly = false,
       angle_brackets = true,
-    } },
-    opts or {}
-  )
+    },
+  }, opts or {})
 
   local before_main_register_text = vim.fn.getreg '"'
 
@@ -552,9 +552,12 @@ GetVisualSelection = function(opts)
     if opts.escape.brackets then
       selection = selection:gsub('%[', '%\\%[')
       selection = selection:gsub('%]', '%\\%]')
-      selection = selection:gsub('%{', '%\\%{')
-      selection = selection:gsub('%}', '%\\%}')
       -- selection = selection:gsub('%<', '%\\%<')
+    end
+
+    if opts.escape.curly then
+      selection = selection:gsub('%{', '%\\%{') -- this is NFA repetition
+      selection = selection:gsub('%}', '%\\%}') -- this is NFA repetition
     end
 
     selection = selection:gsub('%/', '%\\%/')

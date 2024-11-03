@@ -760,7 +760,6 @@ return { -- Fuzzy Finder (files, lsp, etc)
         ['<leader>f'] = {
           function()
             local selection = GetVisualSelection()
-            Inspect { selection }
             builtin.find_files { initial_mode = 'insert', default_text = selection }
           end,
           'Search Files',
@@ -879,18 +878,6 @@ return { -- Fuzzy Finder (files, lsp, etc)
           }
         end,
         '[S]earch [F]iles',
-      }
-
-      mappings.v['<leader>f'] = {
-        function()
-          -- Trim any whitespace from the selection
-          local selection = GetVisualSelection()
-          vim.schedule(function()
-            mappings.n['<leader>f'][1](selection)
-            -- local keys = (vim.api.nvim_replace_termcodes('<C-r>', true, false, true) .. 'a')
-            -- vim.api.nvim_feedkeys(keys, 'c', true) --blocking
-          end)
-        end,
       }
     end
 
