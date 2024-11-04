@@ -791,11 +791,13 @@ return { -- Fuzzy Finder (files, lsp, etc)
         ['<leader>s.'] = { builtin.oldfiles, '[S]earch Recent Files ("." for repeat)' },
         ['<leader>B'] = {
           function()
-            assert(false)
             builtin.buffers {
               initial_mode = 'insert',
               select_current = true,
               attach_mappings = function(prompt_bufnr, map)
+                if true then
+                  return
+                end
                 vim.defer_fn(
                   function(inner1_prompt_bufnr)
                     -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
