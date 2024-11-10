@@ -1730,14 +1730,17 @@ end
 -- Key mappings
 map('n', '<leader>m', save_position, { noremap = true, silent = true })
 
-map('n', '<leader><tab>', function()
-  if LastBuffer then
-    print('Last buffer ' .. vim.inspect(LastBuffer))
-    vim.api.nvim_set_current_buf(LastBuffer)
-  else
-    print 'No last buffer to switch to.'
-  end
-end, { noremap = true, silent = true })
+map('n', '<leader><tab>', ':b#<CR>', { noremap = true, silent = true })
+
+local _ = false
+  and map('n', '<leader><tab>', function()
+    if LastBuffer then
+      print('Last buffer ' .. vim.inspect(LastBuffer))
+      vim.api.nvim_set_current_buf(LastBuffer)
+    else
+      print 'No last buffer to switch to.'
+    end
+  end, { noremap = true, silent = true })
 
 SetKeyMaps(M.disabled)
 SetKeyMaps(M.general)

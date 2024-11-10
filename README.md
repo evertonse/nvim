@@ -1,4 +1,8 @@
 
+## Start
+
+    git clone https://github.com/evertonse/nvim ~/.config/nvim
+
 ![](assets/theme1.png)
 
 ![](assets/theme2.png)
