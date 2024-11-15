@@ -289,11 +289,14 @@ require('lazy').setup({
   require 'plugins.stickybuf',
   require 'plugins.lsp',
   require 'plugins.nvim-snippy',
+  require 'plugins.tmux-file-jump',
   { 'sakhnik/nvim-gdb', lazy = false },
   { 'michaeljsmith/vim-indent-object', lazy = false },
   'nvim-lua/plenary.nvim',
   'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
   'MunifTanjim/nui.nvim',
+  { 'tpope/vim-abolish', lazy = false },
+  require 'plugins.text-case',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et

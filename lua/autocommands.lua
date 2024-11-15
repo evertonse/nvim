@@ -415,7 +415,7 @@ local function focus_window(event)
   local current_filetype = vim.api.nvim_buf_get_option(current_buf, 'filetype')
   local is_terminal = vim.api.nvim_buf_get_option(current_buf, 'buftype') == 'terminal'
 
-  if is_cmdline_window or is_floating or current_filetype == 'qf' then
+  if is_terminal or is_cmdline_window or is_floating or current_filetype == 'qf' then
     return
   end
 
@@ -445,8 +445,8 @@ local function focus_window(event)
     if true or w ~= win_id and vim.api.nvim_win_get_config(w).relative ~= '' then
       local win_config = vim.api.nvim_win_get_config(w)
       local w_filetype = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(w), 'filetype')
-      local _w_terminal = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(w), 'buftype') == 'terminal'
-      if not (win_config.relative ~= '' or w_filetype == 'qf') then
+      local w_terminal = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(w), 'buftype') == 'terminal'
+      if not (w_terminal or win_config.relative ~= '' or w_filetype == 'qf') then
         vim.wo[w].signcolumn = 'no'
         vim.wo[w].number = false
         vim.wo[w].relativenumber = false
@@ -714,7 +714,10 @@ local function show_yank_history_on_quick()
     local lnum, _ = unpack(vim.api.nvim_win_get_cursor(0))
     local idx = lnum
 
-    assert(vim.api.nvim__buf_stats(0).current_lnum == lnum)
+    if not vim.api.nvim__buf_stats(0).current_lnum == lnum then
+      print 'WARNING: lnum changed'
+      lnum = vim.api.nvim__buf_stats(0).current_lnum
+    end
 
     -- Inspect { lnum, qfl[idx].user_data, qfl = qfl }
     if idx > 0 and idx <= #qfl then

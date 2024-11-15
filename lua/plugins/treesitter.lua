@@ -119,13 +119,35 @@ return { -- Highlight, edit, and navigate code
     -- Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     -- Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 
-    vim.treesitter.language.register('c', '*.cl')
-    vim.treesitter.language.register('c', '*.h')
-    vim.treesitter.language.register('c', '.h')
+    vim.filetype.add {
+      extension = {
+        cl = 'cl',
+      },
+    }
     vim.treesitter.language.register('c', 'cl')
-    vim.treesitter.language.register('brdf', 'glsls')
-    -- vim.treesitter.language.register('odin', '*.c')
 
+    vim.filetype.add {
+      extension = {
+        h = 'h',
+      },
+    }
+    vim.treesitter.language.register('c', 'h')
+
+    vim.filetype.add {
+      extension = {
+        brdf = 'brdf',
+      },
+    }
+    vim.treesitter.language.register('c', 'brdf')
+
+    vim.filetype.add {
+      extension = {
+        mdx = 'mdx',
+      },
+    }
+    vim.treesitter.language.register('markdown', 'mdx')
+
+    --- How to get parser freom a new language
     -- local treesitter_parser_config = require('nvim-treesitter.parsers').get_parser_configs()
     -- treesitter_parser_config.odin = {
     --   install_info = {

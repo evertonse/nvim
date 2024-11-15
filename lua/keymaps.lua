@@ -10,6 +10,9 @@ local term_opts = { silent = true }
 local noremap_opts = { noremap = true, silent = true, nowait = true }
 local wait_opts = { noremap = true, silent = true, nowait = false }
 FULLSCREEN = false
+local substitute = '%s' -- default
+-- local substitute = '%S' -- timpope
+-- local substitute = 'Subs' -- text-case.nvim
 
 -- Define a table to store previous positions
 local function vim_cmd_switch_buffer()
@@ -481,7 +484,10 @@ M.general = {
     ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
   },
   vx = {
-    ['<leader>rw'] = { [[ygv<esc>:%s/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left><Space><BS><Down>]], '[R]eplace [W]ord' },
+    ['<leader>rw'] = {
+      [[ygv<esc>:]] .. substitute .. [[/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left><Space><BS><Down>]],
+      '[R]eplace [W]ord',
+    },
     ['<leader><leader>'] = { ':Norm <Down>', 'live preview of normal command' },
     [';'] = { ':<Down><Down>', 'Command Mode' },
     -- ['<C-\\>'] = {
@@ -604,7 +610,7 @@ M.general = {
       end,
       'Totgle nvimtree',
     },
-    ['<leader>rw'] = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS>]], '[R]eplace [W]ord' },
+    ['<leader>rw'] = { [[:]] .. substitute .. [[/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS>]], '[R]eplace [W]ord' },
     -->> neo-tree
     ['<leader>e'] = {
       file_tree_toggle { focus_file = false },
@@ -879,7 +885,7 @@ M.general = {
 
     ['U'] = { '<C-r>zv', noremap_opts },
     ['u'] = { 'uzv', noremap_opts },
-    ['<leader>re'] = { ':%s///g<Left><Left><Left><Down>', noremap_opts },
+    ['<leader>re'] = { [[:]] .. substitute .. [[///g<Left><Left><Left><Down>]], noremap_opts },
 
     ['<leader>d'] = { '"_d', noremap_opts },
     ['<leader>D'] = { '"_D', noremap_opts },
@@ -918,11 +924,13 @@ M.general = {
         -- Check if we are in Visual mode (including Visual Line and Visual Block)
 
         if mode == 'V' or mode == '\22' then
+          -- Below we're using normal S beware
           vim.api.nvim_input [[:s///gc<left><left><left><left>]]
+          -- vim.api.nvim_input([[:]] .. substitute .. [[///gc<left><left><left><left>]])
           return
         end
 
-        vim.api.nvim_input [["0y:%s/<C-r>0//gc<left><left><left>]]
+        vim.api.nvim_input([["0y:]] .. substitute .. [[/<c-r>0//gc<left><left><left>]])
       end,
       '[R]eplace [W]ord',
     },
