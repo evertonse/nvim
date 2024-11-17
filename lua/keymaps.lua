@@ -885,6 +885,8 @@ M.general = {
 
     ['U'] = { '<C-r>zv', noremap_opts },
     ['u'] = { 'uzv', noremap_opts },
+
+    -- TODO: Make this using GetVisualSelection  instead, for better escaping
     ['<leader>re'] = { [[:]] .. substitute .. [[///g<Left><Left><Left><Down>]], noremap_opts },
 
     ['<leader>d'] = { '"_d', noremap_opts },

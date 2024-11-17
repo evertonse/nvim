@@ -1043,6 +1043,16 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
   group = 'FileTypeBrdf',
 })
 
+vim.api.nvim_create_augroup('FileTypeC', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+  pattern = { '*.c', '*.h' },
+  callback = function()
+    vim.bo.filetype = 'c'
+  end,
+
+  group = 'FileTypeBrdf',
+})
+
 -- Create the user commands `LspDisableLinting` and `LspEnableLinting`
 vim.api.nvim_create_user_command('LspDisableLinting', disable_linting, {})
 vim.api.nvim_create_user_command('LspEnableLinting', enable_linting, {})
