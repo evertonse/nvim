@@ -94,6 +94,91 @@ local function close_buffers_by_operation(operation)
   require('scope.core').revalidate()
 end
 
+local goto_file_under_cursor = function()
+  -- Get the word under cursor as if using 'viW'
+  local line = vim.fn.expand '<cWORD>'
+
+  -- Try to get the file path from the current cursor position first
+  local cfile = vim.fn.expand '<cfile>'
+  if vim.fn.filereadable(cfile) == 1 then
+    file = cfile
+  else
+    -- Parse file and line number with more formats
+    local patterns = {
+      '([^:]+):(%d+)', -- file:123
+      '([^|]+)|(%d+)', -- file|123
+      '([^:]+)', -- just file
+      '([^|]+)', -- just file with pipe
+    }
+
+    local file, line_num
+    for _, pattern in ipairs(patterns) do
+      file, line_num = string.match(line, pattern)
+      if file then
+        break
+      end
+    end
+
+    if not file then
+      return
+    end
+  end
+
+  -- Expand the path
+  file = vim.fn.expand(file)
+
+  -- Check if file exists or is readable
+  if vim.fn.filereadable(file) ~= 1 then
+    vim.notify('File not readable: ' .. file, vim.log.levels.WARN)
+    return
+  end
+
+  -- Get real path
+  file = vim.fn.resolve(file)
+
+  -- Check if we're in a floating window
+  local win_config = vim.api.nvim_win_get_config(0)
+  if win_config.relative ~= '' then
+    -- Find a non-floating window
+    local windows = vim.api.nvim_list_wins()
+    local target_win
+    for _, win in ipairs(windows) do
+      local conf = vim.api.nvim_win_get_config(win)
+      if conf.relative == '' then
+        target_win = win
+        break
+      end
+    end
+
+    if target_win then
+      -- Close all floating windows
+      for _, win in ipairs(windows) do
+        local conf = vim.api.nvim_win_get_config(win)
+        if conf.relative ~= '' then
+          vim.api.nvim_win_close(win, false)
+        end
+      end
+
+      -- Switch to the non-floating window
+      vim.api.nvim_set_current_win(target_win)
+    else
+      -- No non-floating window found
+      vim.notify('No non-floating window found', vim.log.levels.WARN)
+      return
+    end
+  end
+
+  -- Open the file
+  vim.cmd('edit ' .. vim.fn.fnameescape(file))
+
+  -- Jump to line number if present
+  if line_num then
+    vim.cmd(line_num)
+    -- Center the view
+    vim.cmd 'normal! zz'
+  end
+end
+
 -- add this table only when you want to disable default keys
 -- TIPS `:map <key>` to see all keys with that prefix
 
@@ -639,7 +724,9 @@ M.general = {
 
     -->> commands
     ['<leader>gd'] = { grep_and_show_results, noremap_opts }, -- NOTE:This is remaped when lsp is present
-    ['gf'] = { 'gFzz', noremap_opts },
+    -- ['gf'] = { 'gFzz', noremap_opts },
+    ['gf'] = { goto_file_under_cursor, noremap_opts },
+
     ['<C-o>'] = { '<C-o>zz', noremap_opts },
     ['<C-i>'] = { '<C-i>zz', noremap_opts },
     ['<leader>tn'] = { ':tabn <CR>', noremap_opts },
