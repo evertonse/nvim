@@ -96,32 +96,31 @@ end
 
 local goto_file_under_cursor = function()
   -- Get the word under cursor as if using 'viW'
-  local line = vim.fn.expand '<cWORD>'
+  local line_string = vim.fn.expand '<cWORD>'
 
+  local file, line_num
   -- Try to get the file path from the current cursor position first
   local cfile = vim.fn.expand '<cfile>'
   if vim.fn.filereadable(cfile) == 1 then
     file = cfile
-  else
-    -- Parse file and line number with more formats
-    local patterns = {
-      '([^:]+):(%d+)', -- file:123
-      '([^|]+)|(%d+)', -- file|123
-      '([^:]+)', -- just file
-      '([^|]+)', -- just file with pipe
-    }
+  end
+  -- Parse file and line number with more formats
+  local patterns = {
+    '([^:]+):(%d+).*', -- file:123
+    '([^|]+)|(%d+).*', -- file|123
+    '([^:]+).*', -- just file
+    '([^|]+).*', -- just file with pipe
+  }
 
-    local file, line_num
-    for _, pattern in ipairs(patterns) do
-      file, line_num = string.match(line, pattern)
-      if file then
-        break
-      end
+  for _, pattern in ipairs(patterns) do
+    file, line_num = string.match(line_string, pattern)
+    if file then
+      break
     end
+  end
 
-    if not file then
-      return
-    end
+  if not file then
+    return
   end
 
   -- Expand the path
@@ -141,25 +140,26 @@ local goto_file_under_cursor = function()
   if win_config.relative ~= '' then
     -- Find a non-floating window
     local windows = vim.api.nvim_list_wins()
-    local target_win
+
+    local target_win = nil
+    local floating_windows = {}
+    -- Close all floating windows
     for _, win in ipairs(windows) do
       local conf = vim.api.nvim_win_get_config(win)
-      if conf.relative == '' then
-        target_win = win
-        break
+      if conf.relative ~= '' then
+        table.insert(floating_windows, win)
+      else
+        if target_win == nil then
+          target_win = win
+        end
       end
     end
 
+    -- Switch to the non-floating window
     if target_win then
-      -- Close all floating windows
-      for _, win in ipairs(windows) do
-        local conf = vim.api.nvim_win_get_config(win)
-        if conf.relative ~= '' then
-          vim.api.nvim_win_close(win, false)
-        end
+      for _, win in ipairs(floating_windows) do
+        vim.api.nvim_win_close(win, false)
       end
-
-      -- Switch to the non-floating window
       vim.api.nvim_set_current_win(target_win)
     else
       -- No non-floating window found
@@ -168,15 +168,16 @@ local goto_file_under_cursor = function()
     end
   end
 
-  -- Open the file
-  vim.cmd('edit ' .. vim.fn.fnameescape(file))
+  file = vim.fn.fnameescape(file)
 
-  -- Jump to line number if present
   if line_num then
-    vim.cmd(line_num)
-    -- Center the view
-    vim.cmd 'normal! zz'
+    -- vim.cmd(line_num)
+    file = (file .. '|' .. line_num)
   end
+
+  -- Open the file
+  vim.cmd('edit ' .. file)
+  vim.cmd 'normal! zz'
 end
 
 -- add this table only when you want to disable default keys
