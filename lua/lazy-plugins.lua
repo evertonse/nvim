@@ -290,6 +290,7 @@ require('lazy').setup({
   require 'plugins.lsp',
   require 'plugins.nvim-snippy',
   require 'plugins.tmux-file-jump',
+  require 'plugins.zen-mode',
   { 'sakhnik/nvim-gdb', lazy = false },
   { 'michaeljsmith/vim-indent-object', lazy = false },
   'nvim-lua/plenary.nvim',

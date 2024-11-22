@@ -134,6 +134,9 @@ require 'options'
 -- [[ Autocommands ]]
 require 'autocommands'
 
+-- [[ User Commands ]]
+require 'commands'
+
 -- [[ Basic Keymaps ]]
 require 'keymaps'
 

@@ -15,7 +15,7 @@
   "cmp-snippy": { "branch": "master", "commit": "6e39210aa3a74e2bf6462f492eaf0d436cd2b7d3" },
   "codewindow.nvim": { "branch": "master", "commit": "dd7017617962943eb1d152fc58940f11c6775a4a" },
   "coerce.nvim": { "branch": "main", "commit": "3e253701345a56d627306343faf89b2e61bbeb1e" },
-  "colorscheme.nvim": { "branch": "main", "commit": "59b0fec7386d5b018a00dfdaa3fe10782d42ef20" },
+  "colorscheme.nvim": { "branch": "main", "commit": "d65977accdcc26a6b2baa2c6d67ab4b8857bdb7f" },
   "compile-mode.nvim": { "branch": "main", "commit": "95a871602001456f28a41ca5c9abcbc57f9637c7" },
   "conform.nvim": { "branch": "master", "commit": "310e2e95a4f832163f3f7a9fedebb1a4afc0db69" },
   "cybu.nvim": { "branch": "v1.x", "commit": "22c8b6e62ae125db7a48bc37d427c1b53b12bb2e" },
@@ -105,5 +105,6 @@
   "vim-snippets": { "branch": "master", "commit": "f0a3184d9f90b96b044d5914625a25c554d7f301" },
   "which-key.nvim": { "branch": "main", "commit": "c4689ab39c1f51cac447893b05bb0266a7af1ed7" },
   "winresize.nvim": { "branch": "main", "commit": "9f44e9abc91e262b5715eac4427928bea1ac25b3" },
-  "yazi.nvim": { "branch": "main", "commit": "93fd9dc5f23c7699ba50507bfe5d4136cfa487d2" }
+  "yazi.nvim": { "branch": "main", "commit": "93fd9dc5f23c7699ba50507bfe5d4136cfa487d2" },
+  "zen-mode.nvim": { "branch": "main", "commit": "29b292bdc58b76a6c8f294c961a8bf92c5a6ebd6" }
 }
