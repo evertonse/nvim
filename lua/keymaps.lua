@@ -1007,6 +1007,14 @@ M.general = {
   },
   -- Visual --
   v = {
+    ['<C-s>'] = {
+      function()
+        vim.api.nvim_feedkeys(':', 'n', false)
+        vim.api.nvim_feedkeys(LastCmd or '', 'c', false)
+        vim.api.nvim_input '<C-f>'
+      end,
+      'Save file',
+    },
     ['<leader>re'] = {
       function()
         TextPostDontTrigger = true
