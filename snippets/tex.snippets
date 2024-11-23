@@ -3,6 +3,25 @@
 #documentclass without options
 snippet dcl \documentclass{}
 	\\documentclass{${1:class}} ${0}
+#código
+snippet codigo
+	\begin{codigo}[htb]
+			\caption{\small ${1:title}. }
+			\label{${2:label}}
+	  \begin{lstlisting}[language = ${3:python}]
+		${4}
+	  \end{lstlisting}
+	\end{codigo}
+
+#figure
+snippet figure
+	\begin{figure}[H]
+		\caption{\label{${2:label}} \small ${1:title}.}
+		\begin{center}
+			\includegraphics[scale=0.5]{${3:./}}
+		\end{center}
+	\end{figure}
+
 #documentclass with options
 snippet dclo \documentclass[]{}
 	\\documentclass[${1:options}]{${2:class}} ${0}
@@ -216,7 +235,7 @@ snippet ni \noindent
 #References
 snippet itd description \item
 	\\item[${1:description}] ${0:item}
-snippet figure reference to a figure
+snippet reffigure reference to a figure
 	${1:Figure}~\\ref{${2:fig:}}
 snippet table reference to a table
 	${1:Table}~\\ref{${2:tab:}}
@@ -278,7 +297,7 @@ snippet ms mathscr
 #misc
 snippet ft \footnote
 	\\footnote{${1:${VISUAL:text}}}${0}
-snippet fig figure environment (includegraphics)
+snippet fig-another figure environment (includegraphics)
 	\\begin{figure}
 	\\begin{center}
 		\\includegraphics[scale=${1}]{Figures/${2}}
