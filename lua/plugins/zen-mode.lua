@@ -7,6 +7,7 @@ return {
   opts = {
     plugins = {
       tmux = { enabled = true },
+      todo = { enabled = true }, -- if set to "true", todo-comments.nvim highlights will be disabled
       options = {
         enabled = true,
         ruler = false, -- disables the ruler text in the cmd line area

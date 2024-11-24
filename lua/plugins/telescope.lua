@@ -75,6 +75,8 @@ local function custom_find_files()
     '--exclude',
     '*.exe',
     '--exclude',
+    '*.aux',
+    '--exclude',
     '*~', -- Exclude backupfile
     '--color',
     'never', -- Do not use color output
@@ -108,6 +110,8 @@ local function custom_find_files()
     '!*.bin',
     '--glob',
     '!*.exe',
+    '--glob',
+    '!*.aux',
   }
 
   local find_command = {
@@ -139,6 +143,9 @@ local function custom_find_files()
     '-not',
     '-name',
     '*~',
+    '-not',
+    '-name',
+    '*.aux',
   }
 
   local cmds = { fd_command, rg_command, find_command }
