@@ -93,10 +93,9 @@ augroup END
 vim.cmd [[autocmd FileType bin,exe nnoremap <F5> :%!xxd <CR>]]
 vim.cmd [[autocmd FileType bin,exe nnoremap <F6> :%!xxd -r <CR>]]
 
--- vim.api.nvim_create_autocmd(
---     { "BufRead", "BufNewFile" },
---     { pattern = { "*.txt", "*.md", "*.tex" }, command = "setlocal spell" }
--- )
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, { pattern = { '*.txt', '*.md', '*.tex' }, command = 'setlocal spell' })
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, { pattern = { '*.txt', '*.md', '*.tex' }, command = 'setlocal wrap' })
+
 -- vim.cmd [[autocmd filetype python nnoremap <F5> :w <bar> exec '!python '.shellescape('%')<CR>]]
 -- vim.cmd [[autocmd filetype c nnoremap <F5> :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>]]
 -- vim.cmd [[autocmd filetype cpp nnoremap <F5> :w <bar> exec '!g++ '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>]]

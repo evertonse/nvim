@@ -6,7 +6,7 @@ return {
   enabled = true,
   opts = {
     plugins = {
-      tmux = { enabled = true },
+      tmux = { enabled = true, statusline = true, panes = false },
       todo = { enabled = true }, -- if set to "true", todo-comments.nvim highlights will be disabled
       options = {
         enabled = true,
@@ -18,10 +18,10 @@ return {
       },
     },
     on_open = function(_)
-      vim.cmd [[set laststatus=0 ]]
+      -- vim.cmd [[set laststatus=0 ]]
     end,
     on_close = function(_)
-      vim.cmd [[set laststatus=3 ]]
+      -- vim.cmd [[set laststatus=3 ]]
     end,
   },
 }
