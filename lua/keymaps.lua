@@ -106,16 +106,22 @@ local goto_file_under_cursor = function()
   end
   -- Parse file and line number with more formats
   local patterns = {
-    '([^{}:()]+)%((%d+):%d+%).*',
-    '([^{}:()]+):(%d+).*', -- file:123
-    '([^{}|()]+)|(%d+).*', -- file|123
-    '([^{}:()]+).*', -- just file
-    '([^{}|()]+).*', -- just file with pipe
+    '.*{([^:()]+)%((%d+):%d+%)}.*',
+    '([^:()]+)%((%d+):%d+%).*',
+    '([^:()]+):(%d+).*', -- file:123
+    '([^|()]+)|(%d+).*', -- file|123
+    '([^:()]+).*', -- just file
+    '([^|()]+).*', -- just file with pipe
   }
 
   for _, pattern in ipairs(patterns) do
+    string.match(line_string, pattern)
     file, line_num = string.match(line_string, pattern)
     if file then
+      local newfile = string.match(file, '.*{([^:()]+)}.*')
+      if newfile then
+        file = newfile
+      end
       break
     end
   end
@@ -129,7 +135,18 @@ local goto_file_under_cursor = function()
 
   -- Check if file exists or is readable
   if vim.fn.filereadable(file) ~= 1 then
-    vim.notify('File not readable: ' .. file, vim.log.levels.WARN)
+    --  {
+    --   levels = {
+    --     DEBUG = 1,
+    --     ERROR = 4,
+    --     INFO = 2,
+    --     OFF = 5,
+    --     TRACE = 0,
+    --     WARN = 3
+    --   }
+    -- }
+    vim.notify('File not readable: ' .. file, vim.log.levels.DEBUG)
+    vim.cmd [[normal! gF]] -- Last resource
     return
   end
 
