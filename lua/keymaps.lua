@@ -106,11 +106,11 @@ local goto_file_under_cursor = function()
   end
   -- Parse file and line number with more formats
   local patterns = {
-    '([^:()]+)%((%d+):%d+%).*',
-    '([^:()]+):(%d+).*', -- file:123
-    '([^|()]+)|(%d+).*', -- file|123
-    '([^:()]+).*', -- just file
-    '([^|()]+).*', -- just file with pipe
+    '([^{}:()]+)%((%d+):%d+%).*',
+    '([^{}:()]+):(%d+).*', -- file:123
+    '([^{}|()]+)|(%d+).*', -- file|123
+    '([^{}:()]+).*', -- just file
+    '([^{}|()]+).*', -- just file with pipe
   }
 
   for _, pattern in ipairs(patterns) do
