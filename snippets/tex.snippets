@@ -6,11 +6,11 @@ snippet dcl \documentclass{}
 #código
 snippet codigo
 	\begin{codigo}[htb]
-			\caption{\small ${1:title}. }
-			\label{${2:label}}
-	  \begin{lstlisting}[language = ${3:python}]
-		${4}
-	  \end{lstlisting}
+		\caption{\small ${1:title}. }
+		\label{${2:label}}
+	\begin{lstlisting}[language=${3:C}, numbers=none, frame=none, inputencoding=latin1]
+	${4}
+	\end{lstlisting}
 	\end{codigo}
 
 #figure
