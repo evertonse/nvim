@@ -63,6 +63,8 @@ local function custom_find_files()
     '--exclude',
     '.git', -- Exclude .git directory
     '--exclude',
+    '.trash', -- Exclude .git directory
+    '--exclude',
     '__pycache__', -- Exclude __pycache__ directory
     '--exclude',
     'venv', -- Exclude venv directory
@@ -112,6 +114,7 @@ local function custom_find_files()
     '!.git/*',
     '--glob',
     '!__pycache__/*',
+    '!.trash/*',
     '--glob',
     '!venv/*',
     '--glob',
@@ -153,6 +156,9 @@ local function custom_find_files()
     '-not',
     '-path',
     '*/__pycache__/*',
+    '-not',
+    '-path',
+    '*/.trash/*',
     '-not',
     '-path',
     '*/venv/*',
@@ -198,11 +204,12 @@ local function custom_find_files()
   }
 
   local cmds = { fd_command, rg_command, find_command }
-  local chosen_command = { 'find' }
+  local chosen_command = { find_command }
   for _, cmd in ipairs(cmds) do
     local is_executable = vim.loop.fs_access(vim.fn.exepath(cmd[1]), 'X') or (vim.fn.executable(cmd[1]) == 1)
     if is_executable then
       chosen_command = cmd
+      break
     end
   end
 

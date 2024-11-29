@@ -4,11 +4,12 @@
 snippet dcl \documentclass{}
 	\\documentclass{${1:class}} ${0}
 #código
+# \begin{lstlisting}[language=${3:C}, numbers=none, frame=none, inputencoding=latin1]
 snippet codigo
 	\begin{codigo}[htb]
 		\caption{\small ${1:title}. }
 		\label{${2:label}}
-	\begin{lstlisting}[language=${3:C}, numbers=none, frame=none, inputencoding=latin1]
+	\begin{lstlisting}[language=${3:C}, frame=none, inputencoding=utf8]
 	${4}
 	\end{lstlisting}
 	\end{codigo}
@@ -21,6 +22,24 @@ snippet figure
 			\includegraphics[scale=0.5]{${3:./}}
 		\end{center}
 	\end{figure}
+
+#sfigure
+snippet sfigure
+	\begin{figure}[!htb]
+	\minipage{0.32\textwidth}
+	  \includegraphics[width=\linewidth]{./Imagens/brdfs/aniso-goblin.png}
+	  \caption{A really Awesome Image}\label{fig:awesome_image1}
+	\endminipage\hfill
+	\minipage{0.32\textwidth}
+	  \includegraphics[width=\linewidth]{./Imagens/brdfs/aniso-goblin.png}
+	  \caption{A really Awesome Image}\label{fig:awesome_image2}
+	\endminipage\hfill
+	\minipage{0.32\textwidth}%
+	  \includegraphics[width=\linewidth]{./Imagens/brdfs/aniso-goblin.png}
+	  \caption{A really Awesome Image}\label{fig:awesome_image3}
+	\endminipage
+	\end{figure}
+
 
 #documentclass with options
 snippet dclo \documentclass[]{}
