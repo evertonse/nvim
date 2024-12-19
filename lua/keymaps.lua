@@ -605,6 +605,7 @@ M.general = {
     -- go to  beginning and end
     ['<C-b>'] = { '<ESC>^i', 'Beginning of line' },
     ['<C-e>'] = { '<End>', 'End of line' },
+    -- ['<S-<Tab>>'] = { '<C-o>dd', '' },
 
     -- navigate within insert mode
     ['<C-h>'] = {

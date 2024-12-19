@@ -186,12 +186,14 @@ require('lazy').setup({
   require 'plugins.which-key',
 
   require 'plugins.telescope',
+  require 'plugins.fzf-lua',
   -- require 'plugins.telescope-debug',
 
   -- BUGGY: require 'plugins.autocomplete',
   -- BUGGY: require 'plugins.epo',
 
   require 'plugins.cmp',
+  -- require 'plugins.blink-cmp',
 
   require 'plugins.conform',
 
