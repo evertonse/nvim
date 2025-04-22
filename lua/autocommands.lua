@@ -1055,9 +1055,12 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
 })
 
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
-  pattern = { '*.conf' },
+  pattern = { '*.conf', 'tmux' },
   callback = function()
-    vim.cmd [[TSBufDisable highlight]]
+    vim.schedule(function()
+      vim.cmd [[TSBufDisable highlight]]
+    end)
+    -- ShowInspect { 'AAAAAAAAA' }
   end,
 })
 
