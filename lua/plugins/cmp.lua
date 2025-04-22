@@ -4,7 +4,7 @@ return {
     'hrsh7th/nvim-cmp',
     -- event = { 'VimEnter', 'InsertEnter' },
     lazy = false,
-    enabled = true,
+    enabled = false,
     dependencies = {
       { 'onsails/lspkind.nvim', enabled = true },
 

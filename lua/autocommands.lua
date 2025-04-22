@@ -886,7 +886,8 @@ vim.api.nvim_create_autocmd('FileType', {
     -- instead of just setting it once. This is because the runtime ftplugin is setting formatoption :P lovely
     -- vim.cmd [[set formatoptions=qrn1j]]
     -- :h ftplugin-overrule
-    vim.b.did_ftplugin = 1
+
+    -- vim.b.did_ftplugin = 1
     local preserve_previous = true
 
     if not preserve_previous then
@@ -1051,6 +1052,22 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
   end,
 
   group = 'FileTypeBrdf',
+})
+
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+  pattern = { '*.conf' },
+  callback = function()
+    vim.cmd [[TSBufDisable highlight]]
+  end,
+})
+
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+  pattern = { '*.asm' },
+  callback = function()
+    vim.bo.filetype = 'fasm'
+    vim.bo.commentstring = ';%s'
+    -- or vim.api.nvim_command('set commentstring=//%s')
+  end,
 })
 
 -- Create the user commands `LspDisableLinting` and `LspEnableLinting`

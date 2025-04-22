@@ -122,8 +122,8 @@ g.loaded_vimball = 1
 g.loaded_vimballPlugin = 1
 g.loaded_2html_plugin = 1
 
-g.loaded_matchit = 1
-g.loaded_matchparen = 1
+-- g.loaded_matchit = 1
+-- g.loaded_matchparen = 1
 g.loaded_logiPat = 1
 g.loaded_rrhelper = 1
 
@@ -326,6 +326,38 @@ end
 
 --vim.cmd [[ :set iskeyword-=- ]]
 vim.cmd ':set clipboard=""'
+
+-- vim.opt.matchpairs:append '<:>'
+-- NOTE: Needs to make sure matchit is not disabled
+-- vim.g.matchit_words = vim.g.matchit_words and vim.g.matchit_words .. ',function:end' or 'function:end'
+-- Ensure matchit is not disabled
+local matchit_extend = function()
+  -- List of pairs to add
+  local pairs_to_add = {
+    'function:end',
+    'if:endif',
+    'switch:case',
+    'case:break',
+    'for:endfor',
+    'while:endwhile',
+    'try:endtry',
+    'case:endcase',
+    'do:done',
+    'repeat:until',
+  }
+
+  -- Loop through each pair and append to matchit_words
+  for _, pair in ipairs(pairs_to_add) do
+    if vim.g.matchit_words then
+      vim.g.matchit_words = vim.g.matchit_words .. ',' .. pair
+    else
+      vim.g.matchit_words = pair
+    end
+  end
+  -- If matchit_words is not set, initialize it with the first pair
+end
+
+matchit_extend()
 
 if OnWsl() then
   vim.cmd [[

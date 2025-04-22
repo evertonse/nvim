@@ -36,9 +36,38 @@ return { -- Highlight, edit, and navigate code
     -- EDIT(2024-jul-06): This is only true together with vim-matchup, which I have disabled some things that improved performance
     highlight = {
       enable = true,
-      disable = disable_treesitter_when,
-      additional_vim_regex_highlighting = { 'ruby', 'odin' },
+      -- disable = disable_treesitter_when,
+      additional_vim_regex_highlighting = { 'ruby', 'odin', 'c' },
     },
+
+    -- PLUGINS -----------------------
+    matchup = {
+      enable = false,
+      disable = { 'c' },
+      include_match_words = false,
+    },
+    pairs = {
+      enable = true,
+      disable = {},
+      highlight_pair_events = { 'CursorMoved' }, -- e.g. {"CursorMoved"}, -- when to highlight the pairs, use {} to deactivate highlighting
+      highlight_self = true, -- whether to highlight also the part of the pair under cursor (or only the partner)
+      goto_right_end = false, -- whether to go to the end of the right partner or the beginning
+      -- fallback_cmd_normal = "call matchit#Match_wrapper('',1,'n')", -- What command to issue when we can't find a pair (e.g. "normal! %")
+      -- fallback_cmd_normal = 'normal! %',
+      fallback_cmd_normal = nil,
+      keymaps = {
+        -- goto_partner = '<leader>%',
+        goto_partner = '%',
+        delete_balanced = 'X',
+      },
+      delete_balanced = {
+        only_on_first_char = false, -- whether to trigger balanced delete when on first character of a pair
+        fallback_cmd_normal = nil, -- fallback command when no pair found, can be nil
+        longest_partner = false, -- whether to delete the longest or the shortest pair when multiple found.
+        -- E.g. whether to delete the angle bracket or whole tag in  <pair> </pair>
+      },
+    },
+    ---------------------
 
     incremental_selection = {
       enable = true,
@@ -58,12 +87,12 @@ return { -- Highlight, edit, and navigate code
     textobjects = {
       enable = true,
       select = {
+        enable = true,
         selection_modes = {
           ['@parameter.outer'] = 'v', -- charwise
           ['@function.outer'] = 'V', -- linewise
           ['@class.outer'] = '<c-v>', -- blockwise
         },
-        enable = true,
         lookahead = true,
         keymaps = {
           ['af'] = '@function.outer',
@@ -73,7 +102,7 @@ return { -- Highlight, edit, and navigate code
         },
       },
       move = {
-        enable = false,
+        enable = true,
         set_jumps = true,
         goto_next_start = {
           [']m'] = '@function.outer',
@@ -93,16 +122,10 @@ return { -- Highlight, edit, and navigate code
         },
       },
     },
-    -- vim-matchup config
-    matchup = {
-      enable = true, -- mandatory, false will disable the whole extension
-      disable = { 'ruby' }, -- optional, list of language that will be disabled
-      -- [options]
-    },
+    indent = { enable = true, disable = { 'ruby' } },
     ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
     -- Autoinstall languages that are not installed
     auto_install = true,
-    indent = { enable = true, disable = { 'ruby' } },
   },
   config = function(_, opts)
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`

@@ -15,6 +15,8 @@
 -- If you use your Neovim config on multiple machines, using the lockfile, you can ensure that the same version of every plugin is installed.
 --
 -- If you are on another machine, you can do `:Lazy restore`, to update all your plugins to the version from the lockfile.
+SPEED_TEST = false
+
 local lazy_config = {
   defaults = { lazy = true },
   install = { colorscheme = { 'personal' } },
@@ -66,7 +68,7 @@ local lazy_config = {
         'netrwPlugin',
         'netrwSettings',
         'netrwFileHandlers',
-        'matchit',
+        -- 'matchit',
         'tar',
         'tarPlugin',
         'rrhelper',
@@ -193,7 +195,7 @@ require('lazy').setup({
   -- BUGGY: require 'plugins.epo',
 
   require 'plugins.cmp',
-  -- require 'plugins.blink-cmp',
+  require 'plugins.blink-cmp',
 
   require 'plugins.conform',
 
@@ -206,6 +208,10 @@ require('lazy').setup({
   require 'plugins.mini',
 
   require 'plugins.treesitter',
+  require 'plugins.nvim-treesitter-pairs',
+  -- require 'plugins.nvim-tree-pairs',
+  require 'plugins.vim-matchup', -- NOTE: Interaction with matchup and treesitter slow thing down when jumping from one context to another(lua table to another with jk), I think longer lines are more problematic
+  require 'plugins.autopairs',
 
   require 'plugins.dap',
 
@@ -242,10 +248,8 @@ require('lazy').setup({
   require 'plugins.inc-rename',
   require 'plugins.harpoon',
   require 'plugins.dressing',
-  require 'plugins.vim-matchup', -- NOTE: Interaction with matchup and treesitter slow thing down when jumping from one context to another(lua table to another with jk), I think longer lines are more problematic
   require 'plugins.indent-blankline',
   require 'plugins.lint',
-  require 'plugins.autopairs',
 
   require 'plugins.oil',
   require('plugins.' .. vim.g.self.file_tree), -- NOTE: Slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
