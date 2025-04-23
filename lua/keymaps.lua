@@ -205,6 +205,12 @@ local function delete_buffer()
   delete_scoped_buffer()
 end
 
+local function is_floating_window()
+  local win_id = vim.api.nvim_get_current_win()
+  local win_info = vim.api.nvim_win_get_config(win_id)
+  return win_info.relative ~= ''
+end
+
 local last_floating_info = {}
 local file_tree_toggle = function(opts)
   local _ = false
@@ -552,6 +558,22 @@ local float_term = {
   width_min = 70,
   height_min = 23,
 }
+local function switch_to_non_floating_buffer()
+  local current_win = vim.api.nvim_get_current_win()
+  local current_buf = vim.api.nvim_win_get_buf(current_win)
+
+  local windows = vim.api.nvim_list_wins()
+  for _, win in ipairs(windows) do
+    if win ~= current_win then
+      local win_info = vim.api.nvim_win_get_config(win)
+      if win_info.relative == '' then
+        -- Switch to the first non-floating window found
+        vim.api.nvim_set_current_win(win)
+        return
+      end
+    end
+  end
+end
 
 local float_term_toggle = function()
   local ok, tt = pcall(require, 'toggleterm.terminal')
