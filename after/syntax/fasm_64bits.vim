@@ -151,13 +151,13 @@ hi def link	fasmPreprocess		fasmDirective
 hi def link	fasmOperator operator
 hi def link	fasmComment  comment
 hi def link	fasmDirective	preproc
-hi def link	fasmRegister  type
+hi def link	fasmRegister  Global
 hi def link	fasmNumber   constant
 hi def link	fasmSymbol structure
 hi def link	fasmString  String
 hi def link	fasmSpecial	special
 hi def link	fasmInstr keyword
-hi def link	fasmLabel function
+hi def link	fasmLabel @function.builtin
 hi def link	fasmLocalLabel label
 hi def link	fasmPrefix preproc
 let b:current_syntax = "fasm_64bits"
