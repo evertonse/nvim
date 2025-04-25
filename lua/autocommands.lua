@@ -1068,7 +1068,7 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
   pattern = { '*.asm', '*.fasm', 'fasm', '*.disasm', '*.inc' },
   callback = function()
     vim.schedule(function()
-      vim.bo.filetype = 'fasm'
+      vim.bo.filetype = 'fasm_64bits'
       -- vim.bo.commentstring = ';%s'
       vim.api.nvim_command 'set commentstring=;%s'
     end)
