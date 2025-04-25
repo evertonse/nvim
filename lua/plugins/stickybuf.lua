@@ -1,7 +1,7 @@
 return {
   'stevearc/stickybuf.nvim',
   lazy = false,
-  enabled = false,
+  enabled = true,
   opts = {},
   config = function(_, opts)
     require('stickybuf').setup {
