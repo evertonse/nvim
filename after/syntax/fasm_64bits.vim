@@ -160,6 +160,8 @@ hi def link	fasmInstr keyword
 hi def link	fasmLabel @function.builtin
 hi def link	fasmLocalLabel label
 hi def link	fasmPrefix preproc
+hi def link	fasmDataDirectives Namespace
+
 let b:current_syntax = "fasm_64bits"
 
 let &cpo = s:cpo_save

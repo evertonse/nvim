@@ -1065,7 +1065,16 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
 })
 
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
-  pattern = { '*.asm', '*.fasm', 'fasm', '*.disasm', '*.inc' },
+  pattern = {
+    '*.asm',
+    '*.ASM',
+    '*.fasm',
+    '*.FASM',
+    '*.disasm',
+    '*.DISASM',
+    '*.inc',
+    '*.INC',
+  },
   callback = function()
     vim.schedule(function()
       vim.bo.filetype = 'fasm_64bits'

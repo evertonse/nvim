@@ -95,8 +95,12 @@ local function close_buffers_by_operation(operation)
 end
 
 local goto_file_under_cursor = function()
-  -- Get the word under cursor as if using 'viW'
-  local line_string = vim.fn.expand '<cWORD>'
+  -- Get the full line
+  -- Get the word under cursor as if using 'viW'S if current line doesnt yield anything
+  local line_string = vim.api.nvim_get_current_line()
+  if line_string == '' then
+    line_string = vim.fn.expand '<cWORD>'
+  end
 
   local file, line_num
   -- Try to get the file path from the current cursor position first
@@ -104,8 +108,10 @@ local goto_file_under_cursor = function()
   if vim.fn.filereadable(cfile) == 1 then
     file = cfile
   end
+
   -- Parse file and line number with more formats
   local patterns = {
+    '([^%[%]()]+)%s*%[(%d+)%]:.*',
     '.*{([^:()]+)%((%d+):%d+%)}.*',
     '([^:()]+)%((%d+):%d+%).*',
     '([^:()]+):(%d+).*', -- file:123
@@ -115,7 +121,6 @@ local goto_file_under_cursor = function()
   }
 
   for _, pattern in ipairs(patterns) do
-    string.match(line_string, pattern)
     file, line_num = string.match(line_string, pattern)
     if file then
       local newfile = string.match(file, '.*{([^:()]+)}.*')
@@ -127,24 +132,15 @@ local goto_file_under_cursor = function()
   end
 
   if not file then
+    vim.notify 'File not found under cursor'
     return
   end
-
   -- Expand the path
+  file = string.gsub(file, '^%s*(.-)%s*$', '%1')
   file = vim.fn.expand(file)
 
   -- Check if file exists or is readable
   if vim.fn.filereadable(file) ~= 1 then
-    --  {
-    --   levels = {
-    --     DEBUG = 1,
-    --     ERROR = 4,
-    --     INFO = 2,
-    --     OFF = 5,
-    --     TRACE = 0,
-    --     WARN = 3
-    --   }
-    -- }
     vim.notify('File not readable: ' .. file, vim.log.levels.DEBUG)
     vim.cmd [[normal! gF]] -- Last resource
     return
