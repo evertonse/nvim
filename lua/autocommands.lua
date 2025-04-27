@@ -1084,6 +1084,18 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
   end,
 })
 
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+  pattern = {
+    '*.b',
+  },
+  callback = function()
+    vim.schedule(function()
+      vim.bo.filetype = 'b'
+      vim.api.nvim_command 'set commentstring=//%s'
+    end)
+  end,
+})
+
 -- Create the user commands `LspDisableLinting` and `LspEnableLinting`
 vim.api.nvim_create_user_command('LspDisableLinting', disable_linting, {})
 vim.api.nvim_create_user_command('LspEnableLinting', enable_linting, {})
