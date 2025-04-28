@@ -1858,6 +1858,12 @@ function JumpPosition(count)
 
   -- Open the file if it's not already open in any window
   if not win_found then
+    if vim.fn.filereadable(pos.file) == 0 then
+      print('File not found: ' .. pos.file)
+      table.remove(Positions, positions_current_index)
+      return
+    end
+
     vim.cmd('edit ' .. pos.file)
     for _, other in ipairs(Positions) do
       if other.file == pos.file then
