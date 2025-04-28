@@ -1,0 +1,1 @@
+- add speed test files like sql amalgamation, zig.ll or zig.c (generated automatically)

@@ -66,8 +66,7 @@ syn keyword fasmRegister zmm0 zmm1 zmm2  zmm3  zmm4  zmm5  zmm6  zmm7
 syn keyword fasmRegister zmm8 zmm9 zmm10 zmm11 zmm12 zmm13 zmm14 zmm15
 
 
-syn keyword fasmAddressSizes    byte                dqword      dword      fword      pword      qword       tword       word
-syn keyword fasmDataDirectives  db                  dd          df         dp         dq         dt          du          dw       file       rb    rd      rf   rp   rq  rt  rw
+
 syn keyword fasmInstr           aaa                 aad         aam        aas        adc        add         addpd       addps    addsd      addss addsubpd
 syn keyword fasmInstr           addsubps            and         andnpd     andnps     andpd      andps       arpl        bound    bsf        bsr
 syn keyword fasmInstr           bswap               bt          btc        btr        bts        call        cbw         cdq      clc        cld   clflush cli  clts
@@ -98,8 +97,10 @@ syn keyword fasmInstr           fsubrp              ftst        fucom      fucom
 syn keyword fasmInstr           fxch                fxrstor     fxsave     fxtract    fyl2x      fyl2xp1     haddpd      haddps   heap
 syn keyword fasmInstr           hlt                 hsubpd      hsubps     idiv       if         imul        in          inc      ins        insb  insd    insw int
 syn keyword fasmInstr           int3                into        invd       invlpg     iret       iretd       iretw       ja       jae        jb    jbe     jc   jcxz
-syn keyword fasmInstr           je                  jecxz       jg         jge        jl         jle         jmp         jna      jnae       jnb   jnbe    jnc  jne  jng jnge
-syn keyword fasmInstr           jnl                 jnle        jno        jnp        jns        jnz         jo          jp       jpe        jpo   js      jz   lahf lar lddqu
+
+syn keyword fasmInstr je  jecxz jg  jge jl  jle jmp jna jnae jnb jnbe jnc jne  jng jnge
+syn keyword fasmInstr jnl jnle  jno jnp jns jnz jo  jp  jpe  jpo js   jz  lahf lar lddqu
+
 syn keyword fasmInstr           ldmxcsr             lds         lea        leave      les        lfence      lfs         lgdt     lgs        lidt  lldt    lmsw
 syn keyword fasmInstr           load                loadall286  loadall386 lock       lods       lodsb       lodsd       lodsw    loop
 syn keyword fasmInstr           loopd               loope       looped     loopew     loopne     loopned     loopnew     loopnz   loopnzd
@@ -136,14 +137,21 @@ syn keyword fasmInstr           stosd               stosw       str        sub  
 syn keyword fasmInstr           test                ucomisd     ucomiss    ud2        unpckhpd   unpckhps    unpcklpd    unpcklps
 syn keyword fasmInstr           verr                verw        wait       wbinvd     wrmsr      xadd        xchg        xlat     xlatb      xor   xorpd
 syn keyword fasmInstr           syscall
-syn keyword fasmPreprocess      common              equ         fix        forward    include    local       macro       purge    restore
-syn keyword fasmPreprocess      reverse             struc
-syn keyword fasmDirective       align               binary      code       coff       console    discardable display     dll
-syn keyword fasmDirective       elf                 entry       executable export     extern     far         fixups      format   gui
-syn keyword fasmDirective       import              label       ms         mz         native     near        notpageable pe       public     readable
-syn keyword fasmDirective       repeat              resource    section    segment    shareable  stack       times
-syn keyword fasmDirective       use16               use32       virtual    wdm        writable   writeable
-syn keyword fasmOperator        as                  at          defined    eq         eqtype     from        mod         on       ptr        rva   used
+
+syn keyword fasmPreprocess common  equ fix forward include local macro purge restore
+syn keyword fasmPreprocess reverse struc
+
+syn keyword fasmDirective align  binary   code       coff    console   discardable display     dll
+syn keyword fasmDirective elf    entry    executable export  extern    far         fixups      format gui
+syn keyword fasmDirective import label    ms         mz      native    near        notpageable pe     public readable
+syn keyword fasmDirective repeat resource section    segment shareable stack       times
+syn keyword fasmDirective use16  use32    virtual    wdm     writable  writeable
+
+syn keyword fasmAddressSizes   byte dqword dword fword pword qword tword word
+
+syn keyword fasmDataDirectives db dd df dp dq dt du dw file rb rd rf rp rq rt rw
+
+syn keyword fasmOperator as at defined eq eqtype from mod on ptr rva used
 
 syn match   fasmNumericOperator "[+-/*]"
 syn match   fasmLogicalOperator "[=|&~<>]\|<=\|>=\|<>"
