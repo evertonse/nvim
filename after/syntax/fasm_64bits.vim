@@ -40,13 +40,13 @@ syn keyword fasmRegister eax  ebx  ecx   edx   esi   edi   ebp   es
 syn keyword fasmRegister ax   bx   cx    dx    si    di    bp    s
 syn keyword fasmRegister al   bl   cl    dl    ah    bh    ch    d
 
-syn keyword fasmRegister mm0  mm1  mm2   mm3   mm4   mm5   mm6   mm
-syn keyword fasmRegister xmm0 xmm1 xmm2  xmm3  xmm4  xmm5  xmm6  xmm
-syn keyword fasmRegister xmm8 xmm9 xmm10 xmm11 xmm12 xmm13 xmm14 xmm1
-syn keyword fasmRegister ymm0 ymm1 ymm2  ymm3  ymm4  ymm5  ymm6  ymm
+syn keyword fasmRegister mm0  mm1  mm2   mm3   mm4   mm5   mm6   mm7
+syn keyword fasmRegister xmm0 xmm1 xmm2  xmm3  xmm4  xmm5  xmm6  xmm7
+syn keyword fasmRegister xmm8 xmm9 xmm10 xmm11 xmm12 xmm13 xmm14 xmm15
+syn keyword fasmRegister ymm0 ymm1 ymm2  ymm3  ymm4  ymm5  ymm6  ymm7
 syn keyword fasmRegister ymm8 ymm9 ymm10 ymm11 ymm12 ymm13 ymm14 ymm1
-syn keyword fasmRegister zmm0 zmm1 zmm2  zmm3  zmm4  zmm5  zmm6  zmm
-syn keyword fasmRegister zmm8 zmm9 zmm10 zmm11 zmm12 zmm13 zmm14 zmm1
+syn keyword fasmRegister zmm0 zmm1 zmm2  zmm3  zmm4  zmm5  zmm6  zmm7
+syn keyword fasmRegister zmm8 zmm9 zmm10 zmm11 zmm12 zmm13 zmm14 zmm15
 syn keyword fasmRegister fs   gs   cs    ds    ss
 
 syn keyword fasmRegister ah   al   ax   bh  bl  bp  bx  ch  cl  cr0  cr1  cr2  cr3 cr4 cr5 cr6
@@ -173,35 +173,50 @@ syn region  fasmString          start="\""          end="\"\|$"
 syn region  fasmString          start="'"           end="'\|$"
 syn match   fasmSymbol          "[()|\[\]:]"
 syn match   fasmSpecial         "[#?%$,]"
-syn match   fasmLabel           "^\s*[^;            \t]\+:"
-syn match   fasmLocalLabel      "^\s*\.\w\+:"
 
 
-hi  def     link                fasmAddressSizes    type
-hi  def     link                fasmNumericOperator fasmOperator
-hi  def     link                fasmLogicalOperator fasmOperator
+syn match   fasmLabel                  "^\s*[^;            \t]\+:"
 
-hi  def     link                fasmBinaryNumber    fasmNumber
-hi  def     link                fasmHexNumber       fasmNumber
-hi  def     link                fasmFPUNumber       fasmNumber
-hi  def     link                fasmOctalNumber     fasmNumber
-hi  def     link                fasmDecimalNumber   fasmNumber
+syn match   fasmLocalLabelRef          "\s*\.\w\+\s*[^:]"
+syn match   fasmLocalLabel             "^\s*\.\w\+:"
 
-hi  def     link                fasmSymbols         fasmRegister
-hi  def     link                fasmPreprocess      fasmDirective
+syn match   fasmPrivateLocalLabelRef   "\s*\.\.\w\+\s*[^:]"
+syn match   fasmPrivateLocalLabel      "^\s*\.\.\w\+:"
+
+
+hi def link fasmLocalLabelRef   fasmLocalLabel
+hi def link fasmLocalLabelRef   fasmLocalLabel
+
+hi def link fasmHexNumber       fasmNumber
+
+hi def link fasmAddressSizes    type
+hi def link fasmNumericOperator fasmOperator
+hi def link fasmLogicalOperator fasmOperator
+
+hi def link fasmBinaryNumber    fasmNumber
+hi def link fasmHexNumber       fasmNumber
+hi def link fasmFPUNumber       fasmNumber
+hi def link fasmOctalNumber     fasmNumber
+hi def link fasmDecimalNumber   fasmNumber
+
+hi def link fasmSymbols         fasmRegister
+hi def link fasmPreprocess      fasmDirective
 
 "  link to standard syn groups so the 'colorschemes' work:
-hi def link fasmOperator       operator
-hi def link fasmComment        comment
-hi def link fasmDirective      preproc
-hi def link fasmRegister       Global
-hi def link fasmNumber         constant
-hi def link fasmSymbol         structure
-hi def link fasmString         String
-hi def link fasmSpecial        special
-hi def link fasmInstr          keyword
-hi def link fasmLabel          @function.builtin
-hi def link fasmLocalLabel     label
+hi def link fasmOperator       @string.escape
+
+hi def link fasmComment           comment
+hi def link fasmDirective         preproc
+hi def link fasmRegister          Global
+hi def link fasmNumber            constant
+hi def link fasmSymbol            structure
+hi def link fasmString            String
+hi def link fasmSpecial           special
+hi def link fasmInstr             keyword
+hi def link fasmLabel             @function.builtin
+hi def link fasmLocalLabel        label
+hi def link fasmPrivateLocalLabel @variable
+
 hi def link fasmPrefix         preproc
 hi def link fasmDataDirectives Namespace
 
