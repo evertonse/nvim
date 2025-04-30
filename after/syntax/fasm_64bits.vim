@@ -19,24 +19,27 @@ setlocal iskeyword=a-z,A-Z,48-57,.,_
 setlocal isident=a-z,A-Z,48-57,.,_
 syn case ignore
 
+" 64 bit
 syn keyword fasmRegister rax rbx rcx  rdx  rsi  rdi  rbp  rsp
 syn keyword fasmRegister r8  r9  r10  r11  r12  r13  r14  r15
 
+" 32 bit
 syn keyword fasmRegister eax ebx ecx  edx  esi  edi  ebp  esp
 syn keyword fasmRegister r8d r9d r10d r11d r12d r13d r14d r15d
 
+" 16 bit
 syn keyword fasmRegister ax  bx  cx   dx   si   di   bp   sp
 syn keyword fasmRegister r8w r9w r10w r11w r12w r13w r14w r15w
 
+" 8 bit
 syn keyword fasmRegister al  bl  cl   dl   sil  dil  bpl  spl
 syn keyword fasmRegister r8b r9b r10b r11b r12b r13b r14b r15b
 
-syn keyword fasmRegister rax rbx rcx  rdx  rsi  rdi  rbp  rsp
-syn keyword fasmRegister r8  r9  r10  r11  r12  r13  r14  r15
 
 syn keyword fasmRegister eax  ebx  ecx   edx   esi   edi   ebp   es
 syn keyword fasmRegister ax   bx   cx    dx    si    di    bp    s
 syn keyword fasmRegister al   bl   cl    dl    ah    bh    ch    d
+
 syn keyword fasmRegister mm0  mm1  mm2   mm3   mm4   mm5   mm6   mm
 syn keyword fasmRegister xmm0 xmm1 xmm2  xmm3  xmm4  xmm5  xmm6  xmm
 syn keyword fasmRegister xmm8 xmm9 xmm10 xmm11 xmm12 xmm13 xmm14 xmm1
@@ -136,7 +139,10 @@ syn keyword fasmInstr           sqrtps              sqrtsd      sqrtss     stc  
 syn keyword fasmInstr           stosd               stosw       str        sub        subpd      subps       subsd       subss    sysenter   sysexit
 syn keyword fasmInstr           test                ucomisd     ucomiss    ud2        unpckhpd   unpckhps    unpcklpd    unpcklps
 syn keyword fasmInstr           verr                verw        wait       wbinvd     wrmsr      xadd        xchg        xlat     xlatb      xor   xorpd
-syn keyword fasmInstr           syscall
+
+syn keyword fasmInstr syscall
+syn keyword fasmInstr cdqe endbr64
+
 
 syn keyword fasmPreprocess common  equ fix forward include local macro purge restore
 syn keyword fasmPreprocess reverse struc

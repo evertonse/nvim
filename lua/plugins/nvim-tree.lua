@@ -65,7 +65,9 @@ local wrap_reload = function(fn)
   local api = require 'nvim-tree.api'
   return function()
     fn()
-    api.tree.reload()
+    vim.schedule(function()
+      api.tree.reload()
+    end)
   end
 end
 

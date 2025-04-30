@@ -360,7 +360,7 @@ M.disabled = {
     ['gcc'] = '',
     ['gc'] = '',
     ['<C-<Space>>'] = '',
-    ['K'] = '', -- disable search for `man` pages, too slow
+    ['K'] = '', -- does't work disable search for `man` pages, too slow
     ['<leader>D'] = '',
     ['<leader>'] = '',
     ['<S-tab>'] = '',
@@ -1857,10 +1857,12 @@ function JumpPosition(count)
   end
 
   -- Open the file if it's not already open in any window
+  -- TODO Fix sign_unplace for .trails
   if not win_found then
     if vim.fn.filereadable(pos.file) == 0 then
       print('File not found: ' .. pos.file)
       table.remove(Positions, positions_current_index)
+      vim.fn.sign_place(pos.row, 'PositionSigns', 'PositionSign', vim.api.nvim_get_current_buf(), { lnum = other.line, priority = 10 })
       return
     end
 
@@ -1894,3 +1896,8 @@ local _ = false
 SetKeyMaps(M.disabled)
 SetKeyMaps(M.general)
 SetKeyMaps(M.blankline)
+
+vim.schedule(function()
+  -- Disable fucking manual laggy search
+  vim.api.nvim_set_keymap('n', 'K', '<Nop>', { noremap = true, silent = true })
+end)

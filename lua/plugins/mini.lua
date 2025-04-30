@@ -75,6 +75,34 @@ return {
 
       require('mini.align').setup {
         -- see :help mini.align
+        -- Alignment is done in three main steps:
+        --     Split lines into parts based on Lua pattern(s) or user-supplied rule.
+        --
+        --     Justify parts for certain side(s) to be same width inside columns.
+        --
+        --     Merge parts to be lines, with customizable delimiter(s).
+        --
+        -- Each main step can be preceded by other steps (pre-steps) to achieve highly customizable outcome.
+        -- User can control alignment interactively by pressing customizable modifiers (single keys representing how alignment steps and/or options should change). Some of default modifiers:
+        --
+        --     Press s to enter split Lua pattern.
+        --
+        --     Press j to choose justification side from available ones ("left", "center", "right", "none").
+        --
+        --     Press m to enter merge delimiter.
+        --
+        --     Press f to enter filter Lua expression to configure which parts will be affected (like "align only first column").
+        --
+        --     Press i to ignore some commonly unwanted split matches.
+        --
+        --     Press p to pair neighboring parts so they be aligned together.
+        --
+        --     Press t to trim whitespace from parts.
+        --
+        --     Press <BS> (backspace) to delete some last pre-step.
+        --
+        -- Alignment can be done with instant preview (result is updated after each modifier) or without it (result is shown and accepted after non-default split pattern is set).
+        -- Every user interaction is accompanied with helper status message showing relevant information about current alignment process.
         mappings = {
           start = 'ga',
           start_with_preview = 'gA',
