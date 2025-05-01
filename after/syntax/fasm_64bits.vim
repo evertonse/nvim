@@ -113,6 +113,7 @@ syn keyword fasmInstr           mov                 movapd      movaps     movd 
 syn keyword fasmInstr           movhpd              movhps      movlhps    movlpd     movlps     movmskpd    movmskps    movntdq
 syn keyword fasmInstr           movnti              movntpd     movntps    movntq     movq       movq2dq     movs        movsb    movsd
 syn keyword fasmInstr           movshdup            movsldup    movss      movsw      movsx      movupd      movups      movzx    mul
+syn keyword fasmInstr           movsxd
 syn keyword fasmInstr           mulpd               mulps       mulsd      mulss      mwait      neg         nop         not      or         org   orpd    orps
 syn keyword fasmInstr           out                 outs        outsb      outsd      outsw      packssdw    packsswb    packuswb paddb
 syn keyword fasmInstr           paddd               paddq       paddsb     paddsw     paddusb    paddusw     paddw       pand     pandn
@@ -146,6 +147,7 @@ syn keyword fasmInstr cdqe endbr64
 
 syn keyword fasmPreprocess common  equ fix forward include local macro purge restore
 syn keyword fasmPreprocess reverse struc
+syn keyword fasmPreprocess match define
 
 syn keyword fasmDirective align  binary   code       coff    console   discardable display     dll
 syn keyword fasmDirective elf    entry    executable export  extern    far         fixups      format gui
@@ -177,10 +179,10 @@ syn match   fasmSpecial         "[#?%$,]"
 
 syn match   fasmLabel                  "^\s*[^;            \t]\+:"
 
-syn match   fasmLocalLabelRef          "\s*\.\w\+\s*[^:]"
+syn match   fasmLocalLabelRef          "\s*\.\w\+[^:\[\]]"
 syn match   fasmLocalLabel             "^\s*\.\w\+:"
 
-syn match   fasmPrivateLocalLabelRef   "\s*\.\.\w\+\s*[^:]"
+syn match   fasmPrivateLocalLabelRef   "\s*\.\.\w\+[^:\[\]]"
 syn match   fasmPrivateLocalLabel      "^\s*\.\.\w\+:"
 
 
