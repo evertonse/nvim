@@ -184,8 +184,8 @@ syn match   fasmPrivateLocalLabelRef   "\s*\.\.\w\+\s*[^:]"
 syn match   fasmPrivateLocalLabel      "^\s*\.\.\w\+:"
 
 
-hi def link fasmLocalLabelRef   fasmLocalLabel
-hi def link fasmLocalLabelRef   fasmLocalLabel
+hi def link fasmLocalLabelRef        fasmLocalLabel
+hi def link fasmPrivateLocalLabelRef fasmPrivateLocalLabel
 
 hi def link fasmHexNumber       fasmNumber
 

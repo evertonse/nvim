@@ -111,7 +111,7 @@ local goto_file_under_cursor = function()
 
   -- Parse file and line number with more formats
   local patterns = {
-    '([^%[%]()]+)%s*%[(%d+)%]:.*',
+    '([^%[%]()]+)%s*%[(%d+)%].*:.*',
     '.*{([^:()]+)%((%d+):%d+%)}.*',
     '([^:()]+)%((%d+):%d+%).*',
     '([^:()]+):(%d+).*', -- file:123
