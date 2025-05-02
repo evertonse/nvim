@@ -120,9 +120,13 @@ return function()
   }
 
   -- NOTE: Idk if this is global ??
-  vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-    virtual_text = true,
-  })
+  if vim.g.self.linting_by_default then
+    vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+      virtual_text = true,
+    })
+  else
+    vim.lsp.handlers['textDocument/publishDiagnostics'] = function() end
+  end
 
   -- Disable "No information available" notification on hover
   -- plus define border for hover window

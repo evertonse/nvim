@@ -13,6 +13,7 @@ local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persist
 local surround_opts = { 'mini.surround', 'vim-surround' }
 local file_tree_opts = { 'nvim-tree', 'neo-tree' }
 vim.g.self = {
+  linting_by_default = false,
   terminal_always_insert = false,
   use_minipick_when_slow = OnSlowPath(),
   autoskip_cmdline_on_esc = true,

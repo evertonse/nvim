@@ -92,7 +92,7 @@ local function nvimtree_on_attach(bufnr)
 
   local function edit_or_open()
     local node = api.tree.get_node_under_cursor()
-    if node.nodes ~= nil then
+    if node and node.nodes ~= nil then
       api.node.open.edit()
       -- api.node.open.no_window_picker()
       -- node.has_children == false
