@@ -6,7 +6,7 @@ return {
   enabled = true,
 
   -- use a release tag to download pre-built binaries
-  version = 'v0.*',
+  -- version = 'v1.*',
   -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
   -- build = 'cargo build --release',
   -- If you use nix, you can build from source using latest nightly rust with:
@@ -21,6 +21,19 @@ return {
     -- see the "default configuration" section below for full documentation on how to define
     -- your own keymap.
     keymap = { preset = 'default' },
+    -- keymap = { preset = 'super-tab' },
+    cmdline = {
+      enabled = true,
+      keymap = { preset = 'super-tab' },
+
+      completion = {
+        menu = {
+          auto_show = true,
+        },
+        -- Show documentation when selecting a completion item
+        -- Display a preview of the selected item on the current line
+      },
+    },
 
     appearance = {
       -- Sets the fallback highlight groups to nvim-cmp's highlight groups
@@ -39,9 +52,21 @@ return {
       -- optionally disable cmdline completions
       -- cmdline = {},
     },
+    fuzzy = { implementation = 'prefer_rust' }, -- experimental signature help support
+    -- signature = { enabled = true },
+    completion = {
+      documentation = { auto_show = true },
+      menu = {
+        -- Don't automatically show the completion menu
+        auto_show = true,
+      },
+      trigger = { show_on_keyword = true },
+      -- Show documentation when selecting a completion item
+      documentation = { auto_show = true, auto_show_delay_ms = 500 },
 
-    -- experimental signature help support
-    -- signature = { enabled = true }
+      -- Display a preview of the selected item on the current line
+      ghost_text = { enabled = true },
+    },
   },
   -- allows extending the providers array elsewhere in your config
   -- without having to redefine it

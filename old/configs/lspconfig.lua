@@ -6,6 +6,16 @@ capabilities = vim.tbl_deep_extend('force', capabilities, {
     positionEncodings = { 'utf-8' },
   },
 })
+-- capabilities = vim.tbl_deep_extend('force', capabilities, require('blink.cmp').get_lsp_capabilities({}, false))
+-- capabilities = vim.tbl_deep_extend('force', capabilities, {
+--   textDocument = {
+--     foldingRange = {
+--       dynamicRegistration = false,
+--       lineFoldingOnly = true,
+--     },
+--   },
+-- })
+--
 
 -- please take a look at this https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
 --https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#completionItemKind
