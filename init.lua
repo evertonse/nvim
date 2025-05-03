@@ -1,3 +1,4 @@
+------------------------------------------------------------------------------------------------------
 -- TODO:
 --    [x](edit: disabled for now, kinda buggy even with tmux optios ) zen mode needs better interection zindex with neotree
 --    [x](edit: oil.nvim i think) find faster neotree for windows
@@ -119,9 +120,15 @@
 --    [x] Nvimtree: why does this bs set numberline?
 --    [x] DONE,HACK formatoptions being set by some plugin
 --
---     NOTE: Use (in VISUAL MODE) :'<,'>!<shell_command><cr> output to buffer,
---    or :redir @a :cmd and then :redir END to get the output of command into the `a` register
---    awesome list: https://github.com/rockerBOO/awesome-neovim
+------------------------------------------------------------------------------------------------------
+
+--  NOTE: Use (in VISUAL MODE) :'<,'>!<shell_command><cr> output to buffer,
+-- or :redir @a :cmd and then :redir END to get the output of command into the `a` register
+-- awesome list: https://github.com/rockerBOO/awesome-neovim
+--
+-- Non greedy search in vim is done using {-} operator. Like this:
+--
+-- %s/style=".\{-}"//g
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'

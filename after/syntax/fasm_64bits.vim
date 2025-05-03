@@ -19,26 +19,40 @@ setlocal iskeyword=a-z,A-Z,48-57,.,_
 setlocal isident=a-z,A-Z,48-57,.,_
 syn case ignore
 
-" 64 bit
-syn keyword fasmRegister rax rbx rcx  rdx  rsi  rdi  rbp  rsp
-syn keyword fasmRegister r8  r9  r10  r11  r12  r13  r14  r15
-
-" 32 bit
-syn keyword fasmRegister eax ebx ecx  edx  esi  edi  ebp  esp
-syn keyword fasmRegister r8d r9d r10d r11d r12d r13d r14d r15d
 
 " 16 bit
-syn keyword fasmRegister ax  bx  cx   dx   si   di   bp   sp
+syn keyword fasmRegister r8  r9  r10  r11  r12  r13  r14  r15
+" 32 bit
+syn keyword fasmRegister r8d r9d r10d r11d r12d r13d r14d r15d
+" 16 bit
 syn keyword fasmRegister r8w r9w r10w r11w r12w r13w r14w r15w
-
-" 8 bit
-syn keyword fasmRegister al  bl  cl   dl   sil  dil  bpl  spl
+" 8 bit low
 syn keyword fasmRegister r8b r9b r10b r11b r12b r13b r14b r15b
 
 
-syn keyword fasmRegister eax  ebx  ecx   edx   esi   edi   ebp   es
-syn keyword fasmRegister ax   bx   cx    dx    si    di    bp    s
-syn keyword fasmRegister al   bl   cl    dl    ah    bh    ch    d
+" 64 bit
+syn keyword fasmRegister rax rbx rcx rdx rsi rdi rbp rsp
+" 32 bit
+syn keyword fasmRegister eax ebx ecx edx esi edi ebp esp
+" 16 bit
+syn keyword fasmRegister ax  bx  cx  dx  si  di  bp  sp
+" 8 bit low
+syn keyword fasmRegister al  bl  cl  dl  sil dil bpl sil dil
+" 8 bit high
+syn keyword fasmRegister ah  bh  ch  dh
+" In 64-bit mode, eight new GPRs are added to the eight legacy GPRs, all 16 GPRs are 64 bits wide, and
+" the low bytes of all registers are accessible. Figure 3-3 on page 27 shows the GPRs, flags register, and
+" instruction-pointer register available in 64-bit mode. The GPRs include:
+" • Sixteen 8-bit low-byte registers (AL, BL, CL, DL, SIL, DIL, BPL, SPL, R8B, R9B, R10B, R11B, R12B, R13B, R14B, R15B).
+
+" This is clear, but the lower 8 bits mode seems invalid for r8 ~ r15 on my intel x86-64 cpu, though it works for the other 8 general purpose registers. Also rax ~ rdx support to access the 8 bits in high mode, means access the most significant 8 bits of the 16 bit mode, using ah ~ dh . – 
+" Eric
+" Commented Jun 1, 2016 at 4:28
+" @EricWang: Did you try to use mov ah, r8b or something? You can't use a high-8 register with a REX prefix. REX mov ah, 0 is mov spl, 0, and so on (the encodings for AH/CH/DH/BH mean spl/bpl/sil/dil when there's a REX prefix (in that order in machine code) – 
+" Peter Cordes
+" Commented Nov 23, 2017 at
+" The high bytes of the old 16-bit registers are still accessible, under many circumstances, as ah, bh, and so on (though this appears to not be the case for the new r8 through r15 registers). There are some new instruction encodings, specifically those using the REX prefix, that can not access those original high bytes, but others are still free to use them.
+" @Fotis, which bit is "not correct" exactly? If you're referring to the x86-64 inability to access upper halves (ah, etc) in instructions with the REX prefix, that's a limitation I didn't even cover, though I'll add a short note. That just means some instructions cannot access those upper halves, it doesn't mean the registers don't exist or that you can't use them at all. And, just to clarify, the registers themselves aren't mapped, it's the instruction encodings - if you change sil, that doesn't affect the ah content going forward.
 
 syn keyword fasmRegister mm0  mm1  mm2   mm3   mm4   mm5   mm6   mm7
 syn keyword fasmRegister xmm0 xmm1 xmm2  xmm3  xmm4  xmm5  xmm6  xmm7
@@ -145,17 +159,24 @@ syn keyword fasmInstr syscall
 syn keyword fasmInstr cdqe endbr64
 
 
+
 syn keyword fasmPreprocess common  equ fix forward include local macro purge restore
 syn keyword fasmPreprocess reverse struc
-syn keyword fasmPreprocess match define
 
-syn keyword fasmDirective align  binary   code       coff    console   discardable display     dll
-syn keyword fasmDirective elf    entry    executable export  extern    far         fixups      format gui
-syn keyword fasmDirective import label    ms         mz      native    near        notpageable pe     public readable
-syn keyword fasmDirective repeat resource section    segment shareable stack       times
-syn keyword fasmDirective use16  use32    virtual    wdm     writable  writeable
+syn keyword fasmDirective align    binary  code       coff      console  discardable display     dll
+syn keyword fasmDirective elf      entry   executable export    extern   far         fixups      format gui
+syn keyword fasmDirective import   label   ms         mz        native   near        notpageable pe     public readable
+syn keyword fasmDirective resource section segment    shareable stack
+syn keyword fasmDirective use16    use32   virtual    wdm       writable writeable
+
+" Assembly time
+syn keyword fasmDirective repeat times
+" Preprocessor time
+syn keyword fasmPreprocess match define rept irp
 
 syn keyword fasmAddressSizes   byte dqword dword fword pword qword tword word
+
+syn keyword fasmAddressSizes  byte word dword pword fword qword tword dqword qqword
 
 syn keyword fasmDataDirectives db dd df dp dq dt du dw file rb rd rf rp rq rt rw
 
@@ -179,11 +200,13 @@ syn match   fasmSpecial         "[#?%$,]"
 
 syn match   fasmLabel                  "^\s*[^;            \t]\+:"
 
-syn match   fasmLocalLabelRef          "\s*\.\w\+[^:\[\]]"
+syn match   fasmLocalLabelRef          "\s*\.\w\+[^:\[\],]"
 syn match   fasmLocalLabel             "^\s*\.\w\+:"
 
-syn match   fasmPrivateLocalLabelRef   "\s*\.\.\w\+[^:\[\]]"
+syn match   fasmPrivateLocalLabelRef   "\s*\.\.\w\+[^:\[\],]"
 syn match   fasmPrivateLocalLabel      "^\s*\.\.\w\+:"
+
+" syn match   fasmDirective              "end\s\+if"
 
 
 hi def link fasmLocalLabelRef        fasmLocalLabel
