@@ -550,7 +550,7 @@ end
 local float_term = {
   terminal = nil,
   width_percentage = 0.63,
-  height_percentage = 0.35,
+  height_percentage = 0.76,
   width_min = 70,
   height_min = 23,
 }
@@ -571,11 +571,12 @@ local function switch_to_non_floating_buffer()
   end
 end
 
-local float_term_toggle = function()
+local float_term_get_or_create = function()
   local ok, tt = pcall(require, 'toggleterm.terminal')
   if not ok then
     return
   end
+
   local f = float_term
   f.terminal = f.terminal
     or tt.Terminal:new {
@@ -590,12 +591,57 @@ local float_term_toggle = function()
     }
   f.terminal.float_opts.width = math.max(f.width_min, math.floor(vim.o.columns * f.width_percentage))
   f.terminal.float_opts.height = math.max(f.height_min, math.floor(vim.o.lines * f.height_percentage))
+  return f
+end
+
+local float_term_toggle = function()
+  local ok, tt = pcall(require, 'toggleterm.terminal')
+  if not ok then
+    return
+  end
+
+  local f = float_term_get_or_create()
   f.terminal:toggle()
+end
+
+local float_term_rerun_cmd = function()
+  local ok, tt = pcall(require, 'toggleterm.terminal')
+  if not ok then
+    return
+  end
+  local f = float_term_get_or_create()
+
+  if not f.terminal:is_open() then
+    f.terminal:open()
+  end
+
+  f.terminal:focus()
+  vim.schedule(function()
+    vim.cmd [[startinsert]]
+    -- vim.api.nvim_input 'clear<CR>'
+    -- f.terminal:send('!!', false) -- bugged ass send. TESTED ON: wsl
+    vim.api.nvim_input '!!<CR>'
+  end)
+end
+
+if OnWindows() then
+  float_term_rerun_cmd = function()
+    vim.print 'Go fuck yourself, u be tryina use terminals on windows ? Get a life'
+  end
 end
 
 M.general = {
   -- [TERMINAL and NORMAL]
   tn = {},
+  tni = {
+    ['<F5>'] = {
+      function()
+        float_term_rerun_cmd()
+      end,
+      'Rerun floating terminal',
+    },
+  },
+
   snovx = {
     ['<A-q>'] = { '/', "I'm too used to Alt + q being search", { expr = false } },
     ['Q'] = { 'q', 'annoying that `q` is quit but also record ??', { expr = false } },
@@ -731,8 +777,9 @@ M.general = {
         float_term_toggle()
         --vim.cmd [[startinsert]]
       end,
-      'Totgle nvimtree',
+      'Toggle floating terminal',
     },
+
     ['<leader>rw'] = { [[:]] .. substitute .. [[/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS>]], '[R]eplace [W]ord' },
     -->> neo-tree
     ['<leader>e'] = {

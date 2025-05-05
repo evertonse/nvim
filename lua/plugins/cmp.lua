@@ -2,9 +2,9 @@
 return {
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
-    -- event = { 'VimEnter', 'InsertEnter' },
-    lazy = false,
-    enabled = false,
+    event = { 'VimEnter', 'InsertEnter' },
+    -- lazy = false,
+    enabled = true,
     dependencies = {
       { 'onsails/lspkind.nvim', enabled = true },
 
@@ -249,10 +249,13 @@ return {
             -- else call/return cmp.close(), which returns false
             return not disabled[cmd] or cmp.close()
           end,
+
           completion = { completeopt = 'menu,menuone,noinsert,noselect,preview' },
           -- completion = { completeopt = 'menu,menuone,noinsert,select,preview' },
           -- completion = { completeopt = 'menu' },
-          mapping = cmp.mapping.preset.cmdline {
+
+          -- mapping = cmp.mapping.preset.cmdline {
+          mapping = {
             ['<C-y>'] = {
               c = function()
                 if not cmp.get_selected_entry() then
@@ -274,9 +277,9 @@ return {
             },
           },
           sources = cmp.config.sources {
-            { name = 'path', option = {
-              trailing_slash = true,
-            } },
+            -- { name = 'path', option = {
+            --   trailing_slash = true,
+            -- } },
             {
               name = 'cmdline',
               option = {

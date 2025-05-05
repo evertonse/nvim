@@ -14,7 +14,7 @@ return {
   'akinsho/toggleterm.nvim',
   lazy = true,
   event = 'VimEnter',
-  version = '*',
+  -- version = '*',
   opts = {
     highlights = {
       -- highlights which map to a highlight group name and a table of it's values

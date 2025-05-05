@@ -194,7 +194,7 @@ require('lazy').setup({
   -- BUGGY: require 'plugins.autocomplete',
   -- BUGGY: require 'plugins.epo',
 
-  require 'plugins.cmp',
+  -- require 'plugins.cmp',
   require 'plugins.blink-cmp',
 
   require 'plugins.conform',
