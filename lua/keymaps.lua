@@ -595,7 +595,7 @@ local float_term_get_or_create = function()
 end
 
 local float_term_toggle = function()
-  local ok, tt = pcall(require, 'toggleterm.terminal')
+  local tt, ok = pcall(require, 'toggleterm.terminal')
   if not ok then
     return
   end
@@ -624,6 +624,36 @@ local float_term_rerun_cmd = function()
   end)
 end
 
+local float_term_run_selection = function()
+  local tt, ok = pcall(require, 'toggleterm.terminal')
+  if not ok then
+    return
+  end
+  local tt = require 'toggleterm'
+  local first_open = float_term.terminal == nil
+
+  local selection = GetVisualSelection { register = 'a', escape = { enabled = false, parens = false, brackets = false } }
+  local f = float_term_get_or_create()
+  if not f.terminal:is_open() then
+    f.terminal:open()
+  end
+  f.terminal:focus()
+
+  vim.schedule(function()
+    f.terminal:focus()
+    vim.schedule(function()
+      if first_open then
+        -- Hackish as mofo, like it takes some time for my zshrc to load so before it loads
+        -- nothing we send will go through XDDD
+        -- 150 is def too little time, go on from there
+        vim.wait(195)
+      end
+      f.terminal:send(selection)
+      vim.api.nvim_input '<CR>'
+    end)
+  end)
+end
+
 if OnWindows() then
   float_term_rerun_cmd = function()
     vim.print 'Go fuck yourself, u be tryina use terminals on windows ? Get a life'
@@ -633,6 +663,7 @@ end
 M.general = {
   -- [TERMINAL and NORMAL]
   tn = {},
+
   tni = {
     ['<F5>'] = {
       function()
@@ -652,6 +683,12 @@ M.general = {
     ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
   },
   vx = {
+    ['<F5>'] = {
+      function()
+        float_term_run_selection()
+      end,
+      'Rerun floating terminal',
+    },
     ['<leader>rw'] = {
       [[ygv<esc>:]] .. substitute .. [[/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left><Space><BS><Down>]],
       '[R]eplace [W]ord',
