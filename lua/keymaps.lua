@@ -802,9 +802,21 @@ M.general = {
 
     ['<leader>Q'] = { close_other_windows, 'Close all other windows' },
     ['<leader>b'] = { switch_buffer, 'Find buffers' },
-    ['<leader>hy'] = { ':YankHistory <cr>', '[H]istory [Y]ank' },
+    ['<leader>hy'] = { ':YankHistory <CR>', '[H]istory [Y]ank' },
     ['<leader>5'] = { spelltoggle, '5 for [5]pell Toggle' },
-    ['<leader>z'] = { '[s1z=``', 'Correct [Z]peling Mistakes' },
+
+    ['<leader>1z'] = { '[s1z=``', 'Correct [Z]peling Mistakes (choose first option)' },
+    ['<leader>z'] = {
+      function()
+        vim.cmd [[setlocal spell spelllang=en_us]]
+        -- Next
+        vim.api.nvim_input 'z=]s'
+        vim.schedule(function()
+          vim.cmd [[setlocal spelllang=]]
+        end)
+      end,
+      'Correct [Z]peling Mistakes',
+    },
 
     ['<Esc>'] = { '<cmd>noh <CR>', 'Clear highlights' },
 

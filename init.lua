@@ -130,6 +130,14 @@
 --
 -- %s/style=".\{-}"//g
 
+--
+-- :setlocal spell spelllang=en_us :help spell
+-- ]s  " Move to the next misspelt word
+-- [s  " Move to the previous misspelt word
+-- z=  " Provide suggestions (you can entire the suggestion ID and enter to replace the word)
+-- zg  " Add a word to the dictionary
+--
+
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
 
