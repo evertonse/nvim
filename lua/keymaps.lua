@@ -94,7 +94,7 @@ local function close_buffers_by_operation(operation)
   require('scope.core').revalidate()
 end
 
-local goto_file_in_tab = function(file, line_num)
+GotoFile = function(file, line_num)
   -- get absolute, resolved path for reliable bufname matching
   local abs = vim.fn.fnamemodify(file, ':p')
   abs = vim.fn.resolve(abs)
@@ -113,7 +113,7 @@ local goto_file_in_tab = function(file, line_num)
     end
   end
 
-  -- 2) not in this tab: is the buffer loaded anywhere?
+  --  not in this tab: is the buffer loaded anywhere?
   local bufnr = vim.fn.bufnr(abs, false) -- false = don’t create
   local target_win = vim.api.nvim_tabpage_list_wins(0)[1]
   vim.api.nvim_set_current_win(target_win)
@@ -121,23 +121,28 @@ local goto_file_in_tab = function(file, line_num)
   if bufnr ~= -1 then
     -- buffer exists, just switch to it
     vim.api.nvim_win_set_buf(target_win, bufnr)
+    if line_num then
+      vim.api.nvim_win_set_cursor(target_win, { line_num, 0 })
+    end
   else
-    -- 3) not loaded: edit the file in that window
-    vim.api.nvim_command('edit ' .. vim.fn.fnameescape(abs))
-  end
-
-  -- 4) finally go to the desired line (or leave at top)
-  if line_num then
-    vim.api.nvim_win_set_cursor(target_win, { line_num, 0 })
+    -- not loaded: edit the file in that window
+    file = vim.fn.fnameescape(abs)
+    if line_num then
+      file = (file .. '|' .. line_num)
+    end
+    -- Open the file
+    vim.cmd('edit ' .. file)
   end
 end
 
-local goto_file_under_cursor = function()
+GotoFileFromLine = function(line_string)
   -- Get the full line
   -- Get the word under cursor as if using 'viW'S if current line doesnt yield anything
-  local line_string = vim.api.nvim_get_current_line()
-  if line_string == '' then
-    line_string = vim.fn.expand '<cWORD>'
+  if not line_string then
+    line_string = vim.api.nvim_get_current_line()
+    if line_string == '' then
+      line_string = vim.fn.expand '<cWORD>'
+    end
   end
 
   local file, line_num
@@ -224,15 +229,15 @@ local goto_file_under_cursor = function()
 
   local use_vim_cmd = false
   if not use_vim_cmd then
-    goto_file_in_tab(file, line_num)
+    GotoFile(file, line_num)
   else
     if line_num then
       file = (file .. '|' .. line_num)
     end
     -- Open the file
     vim.cmd('edit ' .. file)
-    vim.cmd 'normal! zz'
   end
+  vim.cmd 'normal! zz'
 end
 
 -- add this table only when you want to disable default keys
@@ -937,7 +942,7 @@ M.general = {
     -->> commands
     ['<leader>gd'] = { grep_and_show_results, noremap_opts }, -- NOTE:This is remaped when lsp is present
     -- ['gf'] = { 'gFzz', noremap_opts },
-    ['gf'] = { goto_file_under_cursor, noremap_opts },
+    ['gf'] = { GotoFileFromLine, noremap_opts },
 
     ['<C-o>'] = { '<C-o>zz', noremap_opts },
     ['<C-i>'] = { '<C-i>zz', noremap_opts },
