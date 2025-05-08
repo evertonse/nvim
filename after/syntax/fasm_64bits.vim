@@ -200,10 +200,10 @@ syn match   fasmSpecial         "[#?%$,]"
 
 syn match   fasmLabel                  "^\s*[^;            \t]\+:"
 
-syn match   fasmLocalLabelRef          "\s*\.\w\+[^:\[\],\(\)]"
+syn match   fasmLocalLabelRef          "\s*\.\w\+[^:\[\],\(\);]"
 syn match   fasmLocalLabel             "^\s*\.\w\+:"
 
-syn match   fasmPrivateLocalLabelRef   "\s*\.\.\w\+[^:\[\],\(\)]"
+syn match   fasmPrivateLocalLabelRef   "\s*\.\.\w\+[^:\[\],\(\);]"
 syn match   fasmPrivateLocalLabel      "^\s*\.\.\w\+:"
 
 " syn match   fasmDirective              "end\s\+if"

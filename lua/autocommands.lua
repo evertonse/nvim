@@ -1056,11 +1056,18 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
 
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
   pattern = { '*.conf', 'tmux' },
-  callback = function()
+  callback = function(args)
     vim.schedule(function()
-      vim.cmd [[TSBufDisable highlight]]
+      require('vim.treesitter').stop(args.buf)
+      -- vim.cmd [[TSBufDisable highlight]] -- This way needs to 'vim.schedule' it and because of that it bugs if we quickly change buffers
+
+      --   local ts = require 'vim.treesitter'
+      --   -- ShowInspect { buf = vim.api.nvim_get_current_buf(), active = require('vim.treesitter').highlighter.active }
+      --   -- lua ShowInspect({buf = vim.api.nvim_get_current_buf(),  active = require('vim.treesitter').highlighter.active })
+      --   if ts.highlighter and ts.highlighter.active[args.buf] then
+      --     ts.highlighter.active[args.buf] = nil
+      --   end
     end)
-    -- ShowInspect { 'AAAAAAAAA' }
   end,
 })
 
@@ -1076,11 +1083,9 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
     '*.INC',
   },
   callback = function()
-    vim.schedule(function()
-      vim.bo.filetype = 'fasm_64bits'
-      -- vim.bo.commentstring = ';%s'
-      vim.api.nvim_command 'set commentstring=;%s'
-    end)
+    vim.bo.filetype = 'fasm_64bits'
+    vim.bo.commentstring = ';%s'
+    vim.api.nvim_command 'setlocal commentstring=;%s'
   end,
 })
 
@@ -1096,11 +1101,8 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
   end,
 })
 
--- Create the user commands `LspDisableLinting` and `LspEnableLinting`
 vim.api.nvim_create_user_command('LspDisableLinting', disable_linting, {})
 vim.api.nvim_create_user_command('LspEnableLinting', enable_linting, {})
--- and requesting diagnostics again with error handling
--- Hide window and its buffer
 
 local function store_window_layout(win_id)
   if win_id and vim.api.nvim_win_is_valid(win_id) then
@@ -1137,16 +1139,6 @@ local function show_window(buf_id, layout)
   return new_win
 end
 
--- -- Show window and buffer in current window position
--- local function show_window(buf_id, layout)
---   if buf_id and vim.api.nvim_buf_is_valid(buf_id) then
---     -- Create new window with stored layout
---     local new_win = vim.api.nvim_open_win(buf_id, true, layout)
---     return new_win
---   end
---   Inspect { buf_id = buf_id, valid = vim.api.nvim_buf_is_valid(buf_id) }
--- end
---
 local function hide_window(win_id)
   if win_id and vim.api.nvim_win_is_valid(win_id) then
     local buf_id = vim.api.nvim_win_get_buf(win_id)
@@ -1218,7 +1210,6 @@ local run_command_in_window = function(cmd)
   vim.api.nvim_buf_set_keymap(buf, 'n', 'q', ':close<CR>', { noremap = true, silent = true })
 
   -- Custom gf mapping
-
   run_buf = buf
   run_layout = store_window_layout(win)
   Inspect { buf = buf, run_buf = run_buf }

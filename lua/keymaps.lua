@@ -94,6 +94,44 @@ local function close_buffers_by_operation(operation)
   require('scope.core').revalidate()
 end
 
+local goto_file_in_tab = function(file, line_num)
+  -- get absolute, resolved path for reliable bufname matching
+  local abs = vim.fn.fnamemodify(file, ':p')
+  abs = vim.fn.resolve(abs)
+
+  -- 1) look through all windows in the current tab
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local name = vim.api.nvim_buf_get_name(buf)
+    if name == abs then
+      vim.api.nvim_set_current_win(win)
+      if line_num then
+        line_num = tonumber(line_num)
+        vim.api.nvim_win_set_cursor(win, { line_num, 0 })
+      end
+      return
+    end
+  end
+
+  -- 2) not in this tab: is the buffer loaded anywhere?
+  local bufnr = vim.fn.bufnr(abs, false) -- false = don’t create
+  local target_win = vim.api.nvim_tabpage_list_wins(0)[1]
+  vim.api.nvim_set_current_win(target_win)
+
+  if bufnr ~= -1 then
+    -- buffer exists, just switch to it
+    vim.api.nvim_win_set_buf(target_win, bufnr)
+  else
+    -- 3) not loaded: edit the file in that window
+    vim.api.nvim_command('edit ' .. vim.fn.fnameescape(abs))
+  end
+
+  -- 4) finally go to the desired line (or leave at top)
+  if line_num then
+    vim.api.nvim_win_set_cursor(target_win, { line_num, 0 })
+  end
+end
+
 local goto_file_under_cursor = function()
   -- Get the full line
   -- Get the word under cursor as if using 'viW'S if current line doesnt yield anything
@@ -184,14 +222,17 @@ local goto_file_under_cursor = function()
 
   file = vim.fn.fnameescape(file)
 
-  if line_num then
-    -- vim.cmd(line_num)
-    file = (file .. '|' .. line_num)
+  local use_vim_cmd = false
+  if not use_vim_cmd then
+    goto_file_in_tab(file, line_num)
+  else
+    if line_num then
+      file = (file .. '|' .. line_num)
+    end
+    -- Open the file
+    vim.cmd('edit ' .. file)
+    vim.cmd 'normal! zz'
   end
-
-  -- Open the file
-  vim.cmd('edit ' .. file)
-  vim.cmd 'normal! zz'
 end
 
 -- add this table only when you want to disable default keys
@@ -549,8 +590,8 @@ end
 
 local float_term = {
   terminal = nil,
-  width_percentage = 0.63,
-  height_percentage = 0.76,
+  width_percentage = 0.60,
+  height_percentage = 0.65,
   width_min = 70,
   height_min = 23,
 }
@@ -618,9 +659,12 @@ local float_term_rerun_cmd = function()
   f.terminal:focus()
   vim.schedule(function()
     vim.cmd [[startinsert]]
-    -- vim.api.nvim_input 'clear<CR>'
-    -- f.terminal:send('!!', false) -- bugged ass send. TESTED ON: wsl
-    vim.api.nvim_input '!!<CR>'
+
+    -- Clear shell prompt line (works in bash and sh)
+    vim.api.nvim_chan_send(f.terminal.job_id, '\x15') -- <C-u> in ASCII
+    vim.api.nvim_chan_send(f.terminal.job_id, '\x0b') -- <C-k>
+    f.terminal:send '!!'
+    vim.api.nvim_chan_send(f.terminal.job_id, '\n')
   end)
 end
 
@@ -640,17 +684,30 @@ local float_term_run_selection = function()
   f.terminal:focus()
 
   vim.schedule(function()
-    f.terminal:focus()
-    vim.schedule(function()
-      if first_open then
-        -- Hackish as mofo, like it takes some time for my zshrc to load so before it loads
-        -- nothing we send will go through XDDD
-        -- 150 is def too little time, go on from there
-        vim.wait(195)
-      end
-      f.terminal:send(selection)
-      vim.api.nvim_input '<CR>'
-    end)
+    -- local first_open = float_term.terminal == nil
+    if first_open then
+      -- Hackish as mofo, like it takes some time for my zshrc to load so before it loads
+      -- nothing we send will go through XDDD
+      -- 190 is def too little time, go on from there
+      vim.wait(450)
+    end
+    -- clear_terminal_scrollback doenst work
+    -- vim.api.nvim_chan_send(f.terminal.job_id, '\027c')
+
+    -- vim.wait(225)
+    vim.cmd [[startinsert]]
+
+    -- Clear shell prompt line (works in bash and sh)
+    vim.api.nvim_chan_send(f.terminal.job_id, '\x15') -- <C-u> in ASCII
+    vim.api.nvim_chan_send(f.terminal.job_id, '\x0b') -- <C-k>
+
+    -- Supposedly vim.fn functions have more overhead because it does through vim script  i believe; api.nvim_* fuinction are preferred.
+    -- vim.fn.chansend(f.terminal.job_id, '\x15')
+
+    -- f.terminal:send(selection)
+    vim.api.nvim_chan_send(f.terminal.job_id, selection .. '\n') -- newline triggers execution
+
+    -- vim.api.nvim_input '<CR>'
   end)
 end
 
@@ -805,8 +862,29 @@ M.general = {
     ['<leader>hy'] = { ':YankHistory <CR>', '[H]istory [Y]ank' },
     ['<leader>5'] = { spelltoggle, '5 for [5]pell Toggle' },
 
-    ['<leader>1z'] = { '[s1z=``', 'Correct [Z]peling Mistakes (choose first option)' },
-    ['<leader>z'] = {
+    ['<leader>zz'] = {
+      function()
+        vim.cmd [[setlocal spell spelllang=en_us]]
+        -- Next
+        -- vim.api.nvim_input '[s1z=``'
+        vim.api.nvim_input '1z='
+        vim.schedule(function()
+          vim.cmd [[setlocal spelllang=]]
+        end)
+      end,
+      'Correct [Z]peling Mistakes',
+    },
+    ['<leader>zg'] = {
+      function()
+        vim.cmd [[setlocal spell spelllang=en_us]]
+        vim.api.nvim_input 'zg'
+        vim.schedule(function()
+          vim.cmd [[setlocal spelllang=]]
+        end)
+      end,
+      '',
+    },
+    ['<leader>z='] = {
       function()
         vim.cmd [[setlocal spell spelllang=en_us]]
         -- Next

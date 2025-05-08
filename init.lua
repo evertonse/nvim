@@ -122,21 +122,24 @@
 --
 ------------------------------------------------------------------------------------------------------
 
---  NOTE: Use (in VISUAL MODE) :'<,'>!<shell_command><cr> output to buffer,
--- or :redir @a :cmd and then :redir END to get the output of command into the `a` register
+--  NOTE: Tips I found in the wilds
+--
+-- (in VISUAL MODE)
+-- :'<,'>!<shell_command><cr>
+-- Output to buffer, or :redir @a :cmd and then :redir END to get the output of command into the `a` register
+
 -- awesome list: https://github.com/rockerBOO/awesome-neovim
---
+
 -- Non greedy search in vim is done using {-} operator. Like this:
---
 -- %s/style=".\{-}"//g
 
---
 -- :setlocal spell spelllang=en_us :help spell
 -- ]s  " Move to the next misspelt word
 -- [s  " Move to the previous misspelt word
 -- z=  " Provide suggestions (you can entire the suggestion ID and enter to replace the word)
 -- zg  " Add a word to the dictionary
---
+
+------------------------------------------------------------------------------------------------------
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
