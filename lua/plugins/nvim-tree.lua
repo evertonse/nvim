@@ -349,14 +349,14 @@ return {
     },
 
     renderer = {
-      size = {
-        enable = true,
-        column_width = 8,
-        width_cutoff = 18,
-        show_folder_size = not OnWsl(),
-        format_unit = 'single',
-      },
-      hidden_display = OnSlowPath() and 'none' or 'all',
+      -- size = {
+      --   enable = true,
+      --   column_width = 8,
+      --   width_cutoff = 18,
+      --   show_folder_size = not OnWsl(),
+      --   format_unit = 'single',
+      -- },
+      -- hidden_display = OnSlowPath() and 'none' or 'all',
       -- hidden_display = function(hidden_stats)
       --   local total_count = 0
       --   for reason, count in pairs(hidden_stats) do
