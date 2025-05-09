@@ -195,7 +195,7 @@ require('lazy').setup({
   -- BUGGY: require 'plugins.epo',
 
   -- require 'plugins.cmp',
-  require 'plugins.blink-cmp',
+  -- require 'plugins.blink-cmp',
 
   require 'plugins.conform',
 

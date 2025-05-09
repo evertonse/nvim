@@ -94,10 +94,13 @@ local function close_buffers_by_operation(operation)
   require('scope.core').revalidate()
 end
 
-GotoFile = function(file, line_num)
+GotoFile = function(file, line_num, col_num)
   -- get absolute, resolved path for reliable bufname matching
   local abs = vim.fn.fnamemodify(file, ':p')
   abs = vim.fn.resolve(abs)
+
+  line_num = line_num and tonumber(line_num) or 0
+  col_num = col_num and tonumber(col_num) or 0
 
   -- 1) look through all windows in the current tab
   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
@@ -105,9 +108,9 @@ GotoFile = function(file, line_num)
     local name = vim.api.nvim_buf_get_name(buf)
     if name == abs then
       vim.api.nvim_set_current_win(win)
-      if line_num then
-        line_num = tonumber(line_num)
-        vim.api.nvim_win_set_cursor(win, { line_num, 0 })
+
+      if line_num ~= 0 then
+        vim.api.nvim_win_set_cursor(win, { line_num, col_num })
       end
       return
     end
@@ -121,8 +124,8 @@ GotoFile = function(file, line_num)
   if bufnr ~= -1 then
     -- buffer exists, just switch to it
     vim.api.nvim_win_set_buf(target_win, bufnr)
-    if line_num then
-      vim.api.nvim_win_set_cursor(target_win, { line_num, 0 })
+    if line_num ~= 0 then
+      vim.api.nvim_win_set_cursor(win, { line_num, col_num })
     end
   else
     -- not loaded: edit the file in that window
@@ -132,6 +135,9 @@ GotoFile = function(file, line_num)
     end
     -- Open the file
     vim.cmd('edit ' .. file)
+    if line_num ~= 0 then
+      vim.api.nvim_win_set_cursor(win, { line_num, col_num })
+    end
   end
 end
 
@@ -145,7 +151,7 @@ GotoFileFromLine = function(line_string)
     end
   end
 
-  local file, line_num
+  local file, line_num, col_num
   -- Try to get the file path from the current cursor position first
   local cfile = vim.fn.expand '<cfile>'
   if vim.fn.filereadable(cfile) == 1 then
@@ -157,6 +163,7 @@ GotoFileFromLine = function(line_string)
     '([^%[%]()]+)%s*%[(%d+)%].*:.*',
     '.*{([^:()]+)%((%d+):%d+%)}.*',
     '([^:()]+)%((%d+):%d+%).*',
+    '([^:()]+):(%d+):(%d+).*', -- file:123:123
     '([^:()]+):(%d+).*', -- file:123
     '([^|()]+)|(%d+).*', -- file|123
     '([^:()]+).*', -- just file
@@ -164,7 +171,7 @@ GotoFileFromLine = function(line_string)
   }
 
   for _, pattern in ipairs(patterns) do
-    file, line_num = string.match(line_string, pattern)
+    file, line_num, col_num = string.match(line_string, pattern)
     if file then
       local newfile = string.match(file, '.*{([^:()]+)}.*')
       if newfile then
@@ -229,7 +236,7 @@ GotoFileFromLine = function(line_string)
 
   local use_vim_cmd = false
   if not use_vim_cmd then
-    GotoFile(file, line_num)
+    GotoFile(file, line_num, col_num)
   else
     if line_num then
       file = (file .. '|' .. line_num)
@@ -765,39 +772,30 @@ M.general = {
   },
 
   si = {
+
     -- go to  beginning and end
-    ['<C-b>'] = { '<ESC>^i', 'Beginning of line' },
     ['<C-e>'] = { '<End>', 'End of line' },
     -- ['<S-<Tab>>'] = { '<C-o>dd', '' },
 
-    -- navigate within insert mode
+    -----------------------------------------------------
+    --- remap key to output symbols easier ininsert mode
+    -----------------------------------------------------
+    ['<C-b>'] = { '<ESC>^i', 'Beginning of line' },
     ['<C-h>'] = {
       function()
-        vim.api.nvim_input '{}<Left>'
+        vim.api.nvim_input '_'
       end,
       '',
     },
     ['<C-j>'] = {
       function()
-        vim.api.nvim_input '()<Left>'
+        vim.api.nvim_input ':'
       end,
       '',
     },
     ['<C-k>'] = {
       function()
-        vim.api.nvim_input '[]<Left>'
-      end,
-      '',
-    },
-    ['<C-f>'] = {
-      function()
-        vim.api.nvim_input '_'
-      end,
-      '',
-    },
-    ['<C-d>'] = {
-      function()
-        vim.api.nvim_input ':'
+        vim.api.nvim_input '*'
       end,
       '',
     },
@@ -807,21 +805,27 @@ M.general = {
       end,
       '',
     },
+    ['<C-g>'] = {
+      function()
+        vim.api.nvim_input '&'
+      end,
+      '',
+    },
+    ['<C-9>'] = {
+      function()
+        vim.api.nvim_input '{'
+      end,
+      '',
+    },
+    ['<C-0>'] = {
+      function()
+        vim.api.nvim_input '}'
+      end,
+      '',
+    },
+    ------------------------------------
   },
   c = {
-    ['<C-l>'] = {
-      function()
-        vim.api.nvim_input ';'
-      end,
-      '',
-    },
-    -- navigate within insert mode
-    ['<C-h>'] = {
-      function()
-        vim.api.nvim_input '_'
-      end,
-      '',
-    },
     ['<CR>'] = {
       function()
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', true)

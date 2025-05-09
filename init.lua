@@ -139,6 +139,8 @@
 -- z=  " Provide suggestions (you can entire the suggestion ID and enter to replace the word)
 -- zg  " Add a word to the dictionary
 
+-- nvim --clean or nvim -u NONE
+
 ------------------------------------------------------------------------------------------------------
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
