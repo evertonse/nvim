@@ -156,21 +156,20 @@ return function()
     return vim.lsp.util.open_floating_preview(markdown_lines, 'markdown', config)
   end
 
-  virtual_lines =
-    true, vim.diagnostic.config {
-      -- virtual_text = true, -- Show for all
-      virtual_lines = {
-        -- Only show virtual line diagnostics for the current cursor line
-        current_line = true,
-      },
-      update_in_insert = false,
-      float = {
-        focusable = true,
-        style = 'minimal',
-        border = 'single',
-        -- source = 'always',
-        header = '',
-        prefix = '',
-      },
-    }
+  vim.diagnostic.config {
+    -- virtual_text = true, -- Show for all
+    virtual_lines = {
+      -- Only show virtual line diagnostics for the current cursor line
+      current_line = true,
+    },
+    update_in_insert = false,
+    float = {
+      focusable = true,
+      style = 'minimal',
+      border = 'single',
+      -- source = 'always',
+      header = '',
+      prefix = '',
+    },
+  }
 end

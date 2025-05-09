@@ -94,7 +94,7 @@ local function close_buffers_by_operation(operation)
   require('scope.core').revalidate()
 end
 
-GotoFile = function(file, line_num, col_num)
+local goto_file = function(file, line_num, col_num)
   -- get absolute, resolved path for reliable bufname matching
   local abs = vim.fn.fnamemodify(file, ':p')
   abs = vim.fn.resolve(abs)
@@ -160,6 +160,9 @@ GotoFileFromLine = function(line_string)
 
   -- Parse file and line number with more formats
   local patterns = {
+    -- [[23 ▏   │
+    '%[%[%d+%s*([^│%[%]()]+)%s*%[(%d+)%].*:.*',
+    '([^│%[%]()]+)%s*%[(%d+)%].*:.*',
     '([^%[%]()]+)%s*%[(%d+)%].*:.*',
     '.*{([^:()]+)%((%d+):%d+%)}.*',
     '([^:()]+)%((%d+):%d+%).*',
@@ -236,7 +239,7 @@ GotoFileFromLine = function(line_string)
 
   local use_vim_cmd = false
   if not use_vim_cmd then
-    GotoFile(file, line_num, col_num)
+    goto_file(file, line_num, col_num)
   else
     if line_num then
       file = (file .. '|' .. line_num)
@@ -662,6 +665,7 @@ local float_term_rerun_cmd = function()
   if not ok then
     return
   end
+  local first_open = float_term.terminal == nil
   local f = float_term_get_or_create()
 
   if not f.terminal:is_open() then
@@ -670,13 +674,21 @@ local float_term_rerun_cmd = function()
 
   f.terminal:focus()
   vim.schedule(function()
+    if first_open then
+      -- Hackish as mofo, like it takes some time for my zshrc to load so before it loads
+      -- nothing we send will go through XDDD
+      -- 190 is def too little time, go on from there
+      vim.wait(250)
+    end
     vim.cmd [[startinsert]]
 
     -- Clear shell prompt line (works in bash and sh)
     vim.api.nvim_chan_send(f.terminal.job_id, '\x15') -- <C-u> in ASCII
     vim.api.nvim_chan_send(f.terminal.job_id, '\x0b') -- <C-k>
-    f.terminal:send '!!'
-    vim.api.nvim_chan_send(f.terminal.job_id, '\n')
+    -- Method terminal:send was bugged in a previous version of toggleterm, didn't send the '\n'.
+    -- So we're using lower lever api 'vim.api.nvim_chan_send'
+    -- f.terminal:send '!!'
+    vim.api.nvim_chan_send(f.terminal.job_id, '!!\n')
   end)
 end
 
@@ -686,9 +698,10 @@ local float_term_run_selection = function()
     return
   end
   local tt = require 'toggleterm'
-  local first_open = float_term.terminal == nil
 
   local selection = GetVisualSelection { register = 'a', escape = { enabled = false, parens = false, brackets = false } }
+
+  local first_open = float_term.terminal == nil
   local f = float_term_get_or_create()
   if not f.terminal:is_open() then
     f.terminal:open()
@@ -701,7 +714,7 @@ local float_term_run_selection = function()
       -- Hackish as mofo, like it takes some time for my zshrc to load so before it loads
       -- nothing we send will go through XDDD
       -- 190 is def too little time, go on from there
-      vim.wait(450)
+      vim.wait(250)
     end
     -- clear_terminal_scrollback doenst work
     -- vim.api.nvim_chan_send(f.terminal.job_id, '\027c')
