@@ -16,7 +16,7 @@ vim.g.self = {
   linting_by_default = false,
   terminal_always_insert = false,
   use_minipick_when_slow = OnSlowPath(),
-  autoskip_cmdline_on_esc = true,
+  autoskip_cmdline_on_esc = false,
   inc_rename = false,
   icons = true,
   nerd_font = true,
@@ -107,9 +107,6 @@ opt.sessionoptions = { -- XXX: required for scope.nvim
 -- Preview substitutions live, as you type!
 opt.inccommand = 'nosplit' -- NO spliting the windows to see preview
 -- opt.inccommand = 'split'
-
--- Show which line your cursor is on
-opt.cursorline = true
 
 g.loaded_gzip = 1
 g.loaded_zip = 1
@@ -359,6 +356,10 @@ local matchit_extend = function()
 end
 
 matchit_extend()
+
+-- Long lines a the single most important reason for when it's lagging for no reason
+-- Limiting the highlighting based on column looks like a decent solution
+vim.cmd [[set synmaxcol=250]]
 
 if OnWsl() then
   vim.cmd [[

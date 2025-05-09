@@ -141,6 +141,11 @@
 
 -- nvim --clean or nvim -u NONE
 
+-- <insert mode>:
+--
+--     Ctrl+d - shift left
+--     Ctrl+t - shift right
+
 ------------------------------------------------------------------------------------------------------
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]

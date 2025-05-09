@@ -125,7 +125,7 @@ local goto_file = function(file, line_num, col_num)
     -- buffer exists, just switch to it
     vim.api.nvim_win_set_buf(target_win, bufnr)
     if line_num ~= 0 then
-      vim.api.nvim_win_set_cursor(win, { line_num, col_num })
+      vim.api.nvim_win_set_cursor(target_win, { line_num, col_num })
     end
   else
     -- not loaded: edit the file in that window
@@ -136,7 +136,7 @@ local goto_file = function(file, line_num, col_num)
     -- Open the file
     vim.cmd('edit ' .. file)
     if line_num ~= 0 then
-      vim.api.nvim_win_set_cursor(win, { line_num, col_num })
+      vim.api.nvim_win_set_cursor(target_win, { line_num, col_num })
     end
   end
 end
@@ -162,6 +162,10 @@ GotoFileFromLine = function(line_string)
   local patterns = {
     -- [[23 ▏   │
     '%[%[%d+%s*([^│%[%]()]+)%s*%[(%d+)%].*:.*',
+
+    -- File "/home/excyber/code/dotfiles/./installer.py", line 334, in <module>
+    '%s*File%s*"([^│%[%]()]+)"%s*.%s*line%s*(%d+).*',
+
     '([^│%[%]()]+)%s*%[(%d+)%].*:.*',
     '([^%[%]()]+)%s*%[(%d+)%].*:.*',
     '.*{([^:()]+)%((%d+):%d+%)}.*',
@@ -786,6 +790,7 @@ M.general = {
 
   si = {
 
+    ['<S-Tab>'] = { '<C-d>', 'Reverse Tab' },
     -- go to  beginning and end
     ['<C-e>'] = { '<End>', 'End of line' },
     -- ['<S-<Tab>>'] = { '<C-o>dd', '' },
@@ -808,7 +813,7 @@ M.general = {
     },
     ['<C-k>'] = {
       function()
-        vim.api.nvim_input '*'
+        vim.api.nvim_input '<C-k>'
       end,
       '',
     },
@@ -1107,7 +1112,7 @@ M.general = {
       function()
         vim.api.nvim_feedkeys(':', 'n', false)
         vim.api.nvim_feedkeys(LastCmd or '', 'c', false)
-        vim.api.nvim_input '<C-f>'
+        vim.api.nvim_input '<C-f>i'
       end,
       'Save file',
     },
@@ -1243,7 +1248,7 @@ M.general = {
       function()
         vim.api.nvim_feedkeys(':', 'n', false)
         vim.api.nvim_feedkeys(LastCmd or '', 'c', false)
-        vim.api.nvim_input '<C-f>'
+        vim.api.nvim_input '<C-f>i'
       end,
       'Save file',
     },

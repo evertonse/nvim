@@ -236,8 +236,13 @@ local function load_positions_from_file(file_path)
       end
     end
     pfile:close()
-    print('Positions loaded from ' .. file_path)
-    place_signs()
+
+    -- These placing and loading signs doesn't work their not  in sync with anything
+    if false then
+      --- Printing gets annoying
+      print('Positions loaded from ' .. file_path)
+      place_signs()
+    end
   else
     print('Error: Could not open file ' .. file_path)
   end
