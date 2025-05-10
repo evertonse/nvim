@@ -163,8 +163,10 @@ GotoFileFromLine = function(line_string)
     -- [[23 ▏   │
     '%[%[%d+%s*([^│%[%]()]+)%s*%[(%d+)%].*:.*',
 
+    -- sh: /home/excyber/.config/shell/variables.sh: line 12: syntax error near unexpected token `else'
+    '%s*sh.%s*([^│%[%]():]+)%s*.%s*line%s*(%d+).*',
     -- File "/home/excyber/code/dotfiles/./installer.py", line 334, in <module>
-    '%s*File%s*"([^│%[%]()]+)"%s*.%s*line%s*(%d+).*',
+    '%s*File%s*"([^│%[%]():]+)"%s*.%s*line%s*(%d+).*',
 
     '([^│%[%]()]+)%s*%[(%d+)%].*:.*',
     '([^%[%]()]+)%s*%[(%d+)%].*:.*',

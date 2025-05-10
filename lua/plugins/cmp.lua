@@ -269,6 +269,7 @@ return {
                 if cmp.visible() then
                   cmp.select_next_item()
                   cmp.mapping.confirm { select = true }
+                  ShowInspect {}
                 else
                   cmp.complete()
                   cmp.mapping.complete_common_string()
@@ -277,13 +278,14 @@ return {
             },
           },
           sources = cmp.config.sources {
-            -- { name = 'path', option = {
-            --   trailing_slash = true,
-            -- } },
+            { name = 'path', option = {
+              trailing_slash = true,
+            } },
             {
               name = 'cmdline',
               option = {
                 ignore_cmds = { 'Man', '!' },
+                treat_trailing_slash = false,
               },
             },
             {
