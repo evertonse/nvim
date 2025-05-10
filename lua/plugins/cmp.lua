@@ -1,4 +1,27 @@
 -- https://github.com/hrsh6th/nvim-cmp/wiki/Advanced-techniques
+
+local has_words_before2 = function()
+  unpack = unpack or table.unpack
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match '%s' == nil
+end
+
+local has_words_before = function()
+  local col = vim.api.nvim_win_get_cursor(0)[2]
+  if col == 0 then
+    return false
+  end
+  local line = vim.api.nvim_get_current_line()
+  return line:sub(col, col):match '%s' == nil
+end
+
+local cmdline_has_slash_before = function()
+  local line = vim.fn.getcmdline()
+  local suffix = '/'
+  -- ShowInspect { line, line:match(suffix .. '$') ~= nil }
+  return line:match(suffix .. '$') ~= nil
+end
+
 return {
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -120,8 +143,8 @@ return {
           priority_weight = 1.2,
           comparators = {
             -- cmp.score_offset, -- not good at all
-            cmp.config.compare.locality,
             cmp.config.compare.exact,
+            cmp.config.compare.locality,
             cmp.config.compare.recently_used,
 
             function(e1, e2)
@@ -264,18 +287,59 @@ return {
                 cmp.mapping.confirm { select = true }
               end,
             },
+
+            ['<CR>'] = cmp.mapping.confirm {
+              behavior = cmp.ConfirmBehavior.Insert,
+              select = false, -- Do not auto-select if nothing is selected
+            },
             ['<Tab>'] = {
-              c = function()
+              c = function(fallback)
+                -- cmp.mapping.confirm { select = true }(fallback)
+
+                -- cmp.mapping.complete_common_string()(fallback)
                 if cmp.visible() then
                   cmp.select_next_item()
-                  cmp.mapping.confirm { select = true }
-                  ShowInspect {}
+                  cmp.confirm { select = true }
+                end
+                -- cmp.mapping.complete()(fallback)
+                if cmdline_has_slash_before() then
+                  cmp.mapping.confirm {
+                    behavior = cmp.ConfirmBehavior.Insert,
+                    select = true,
+                  }(fallback)
+                  -- if not cmp.get_selected_entry() then
+                  cmp.select_next_item()
+                  -- end
+
+                  -- cmp.mapping.confirm { select = true }
                 else
-                  cmp.complete()
-                  cmp.mapping.complete_common_string()
+                  -- cmp.confirm { select = true }
                 end
               end,
             },
+
+            -- -- Old behaviour
+            -- ['<Tab>'] = {
+            --   c = function()
+            --     if cmp.visible() then
+            --       cmp.select_next_item()
+            --       cmp.confirm { select = true }
+            --       cmp.complete() -- Trigger completion again after confirm
+            --       -- -- ShowInspect { 'Fuckyou' }
+            --       -- -- cmp.mapping.complete_common_string()
+            --       -- cmp.select_next_item()
+            --       -- cmp.mapping.confirm { select = true }
+            --       -- vim.api.nvim_input '<space><bs>'
+            --       -- vim.schedule(function()
+            --       --   cmp.complete()
+            --       -- end)
+            --       -- ShowInspect {}
+            --     else
+            --       cmp.complete()
+            --       cmp.mapping.complete_common_string()
+            --     end
+            --   end,
+            -- },
           },
           sources = cmp.config.sources {
             { name = 'path', option = {

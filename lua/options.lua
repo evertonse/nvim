@@ -92,7 +92,7 @@ opt.wildignore:append {
   '.hg',
   '.orig',
 }
-vim.o.wildmenu = false -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
+vim.o.wildmenu = true -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
 
 opt.suffixesadd:append { '.java', '.rs' } -- search for suffexes using gf
 

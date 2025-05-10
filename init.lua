@@ -146,6 +146,8 @@
 --     Ctrl+d - shift left
 --     Ctrl+t - shift right
 
+-- g_ got the the end of text (not counting spaces similar to ^)
+
 ------------------------------------------------------------------------------------------------------
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
