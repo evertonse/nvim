@@ -34,11 +34,11 @@
   "luarocks": { "branch": "main", "commit": "6663abaa8c6b8037f6046b2e2b40f24aea1f804e" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "d39a75bbce4b8aad5d627191ea915179c77c100f" },
   "mason-nvim-dap.nvim": { "branch": "main", "commit": "4c2cdc69d69fe00c15ae8648f7e954d99e5de3ea" },
-  "mason-tool-installer.nvim": { "branch": "main", "commit": "aafae207d5a2a28c59c9d478d8581c2739135d09" },
+  "mason-tool-installer.nvim": { "branch": "main", "commit": "62f821a14e20f3f2ee358cd44d0b3d299a508e72" },
   "mason.nvim": { "branch": "main", "commit": "7c7318e8bae7e3536ef6b9e86b9e38e74f2e125e" },
   "mini.icons": { "branch": "main", "commit": "397ed3807e96b59709ef3292f0a3e253d5c1dc0a" },
   "mini.nvim": { "branch": "main", "commit": "c665f30bb372c2ec8cfd61f7531098d3658b6634" },
-  "move.nvim": { "branch": "main", "commit": "30047fbb4ee0f3b79bf969d37d889085e96b44e6" },
+  "move.nvim": { "branch": "main", "commit": "cccbd4ea9049ca5f99f025ffaddb7392359c7d6a" },
   "multiple-cursors.nvim": { "branch": "main", "commit": "1ac15d047a4b265cc2389957bcc56ee561b29e02" },
   "neodev.nvim": { "branch": "main", "commit": "46aa467dca16cf3dfe27098042402066d2ae242d" },
   "nui.nvim": { "branch": "main", "commit": "f535005e6ad1016383f24e39559833759453564e" },
@@ -85,6 +85,6 @@
   "vim-snippets": { "branch": "master", "commit": "f0a3184d9f90b96b044d5914625a25c554d7f301" },
   "which-key.nvim": { "branch": "main", "commit": "c4689ab39c1f51cac447893b05bb0266a7af1ed7" },
   "winresize.nvim": { "branch": "main", "commit": "df7ac44154565b0bb91a8894ffe57c5a93689f10" },
-  "yazi.nvim": { "branch": "main", "commit": "b7c9b78f330216924dbef2dd2a78199083637ee2" },
+  "yazi.nvim": { "branch": "main", "commit": "75766fab481fd8b7877c460dd3ed02e78adc2c24" },
   "zen-mode.nvim": { "branch": "main", "commit": "863f150ca321b3dd8aa1a2b69b5f411a220e144f" }
 }

@@ -26,8 +26,8 @@ return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
   cmd = { 'TSInstall', 'TSBufEnable', 'TSBufDisable', 'TSModuleInfo' },
   build = ':TSUpdate',
-  -- event = { 'BufReadPost', 'BufNewFile' },
-  event = { 'BufEnter' },
+  event = { 'BufReadPost', 'BufNewFile' },
+  -- event = { 'BufEnter' },
   dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects', event = 'InsertEnter' },
   opts = {
 
@@ -37,15 +37,16 @@ return { -- Highlight, edit, and navigate code
     highlight = {
       enable = true,
       -- disable = disable_treesitter_when,
-      additional_vim_regex_highlighting = { 'ruby', 'odin', 'c' },
+      additional_vim_regex_highlighting = { 'ruby' },
     },
 
     -- PLUGINS -----------------------
     matchup = {
       enable = false,
-      disable = { 'c' },
+      disable = {},
       include_match_words = false,
     },
+
     pairs = {
       enable = true,
       disable = {},
@@ -142,35 +143,9 @@ return { -- Highlight, edit, and navigate code
     -- Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     -- Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 
-    vim.filetype.add {
-      extension = {
-        cl = 'cl',
-      },
-    }
-    vim.treesitter.language.register('c', 'cl')
-
-    vim.filetype.add {
-      extension = {
-        h = 'h',
-      },
-    }
-    vim.treesitter.language.register('c', 'h')
-
-    vim.filetype.add {
-      extension = {
-        brdf = 'brdf',
-      },
-    }
-    vim.treesitter.language.register('c', 'brdf')
-
-    vim.filetype.add {
-      extension = {
-        mdx = 'mdx',
-      },
-    }
-    vim.treesitter.language.register('markdown', 'mdx')
-
-    --- How to get parser freom a new language
+    -------------------------------------------------------
+    -----How to get parser from a new language-------------
+    -------------------------------------------------------
     -- local treesitter_parser_config = require('nvim-treesitter.parsers').get_parser_configs()
     -- treesitter_parser_config.odin = {
     --   install_info = {
@@ -191,5 +166,7 @@ return { -- Highlight, edit, and navigate code
     -- }
     --
     -- vim.treesitter.language.register('templ', 'templ')
+    -------------------------------------------------------
+    -------------------------------------------------------
   end,
 }
