@@ -95,6 +95,7 @@ opt.wildignore:append {
 vim.o.wildmenu = true -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
 
 opt.suffixesadd:append { '.java', '.rs' } -- search for suffexes using gf
+-- vim.filetype.add
 
 -- vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
 -- vim.o.sessionoptions = 'buffers,curdir,folds,help,tabpages,winsize,winpos'

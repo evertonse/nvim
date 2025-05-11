@@ -1078,24 +1078,6 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
 
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
   pattern = {
-    '*.asm',
-    '*.ASM',
-    '*.fasm',
-    '*.FASM',
-    '*.disasm',
-    '*.DISASM',
-    '*.inc',
-    '*.INC',
-  },
-  callback = function()
-    vim.bo.filetype = 'fasm_64bits'
-    vim.bo.commentstring = ';%s'
-    vim.api.nvim_command 'setlocal commentstring=;%s'
-  end,
-})
-
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
-  pattern = {
     '*.b',
   },
   callback = function()

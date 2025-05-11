@@ -108,7 +108,7 @@ require('lazy').setup({
   { 'uga-rosa/ccc.nvim', cmd = { 'CccHighlighterToggle', 'CccPick', 'CccConvert' }, lazy = true, event = 'VeryLazy' },
   {
     'bfredl/nvim-incnormal',
-    enabled = true,
+    enabled = false,
     event = 'BufEnter',
   }, -- NOTE:live-command if better
   {
