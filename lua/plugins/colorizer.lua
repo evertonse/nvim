@@ -1,7 +1,8 @@
 return {
   'NvChad/nvim-colorizer.lua',
   -- event = 'User FilePost',
-  event = 'VimEnter',
+  -- event = 'VimEnter',
+  event = 'BufEnter',
   opts = {
     user_default_options = {
       names = false,

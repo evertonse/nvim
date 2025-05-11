@@ -201,7 +201,10 @@ GotoFileFromLine = function(line_string)
   -- Check if file exists or is readable
   if vim.fn.filereadable(file) ~= 1 then
     vim.notify('File not readable: ' .. file, vim.log.levels.DEBUG)
-    vim.cmd [[normal! gF]] -- Last resource
+    local ok = pcall(vim.cmd, [[normal! gF]]) -- Last resource
+    if not ok then
+      vim.print('File not found: ' .. file)
+    end
     return
   end
 
@@ -783,7 +786,7 @@ M.general = {
       [[ygv<esc>:]] .. substitute .. [[/\<<C-r><C-w>\>/<C-r><C-w>/gc<Left><Left><Left><Space><BS><Down>]],
       '[R]eplace [W]ord',
     },
-    ['<leader><leader>'] = { ':Norm <Down>', 'live preview of normal command' },
+
     [';'] = { ':<Down><Down>', 'Command Mode' },
     -- ['<C-\\>'] = {
     --   function()

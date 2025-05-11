@@ -148,6 +148,13 @@
 
 -- g_ got the the end of text (not counting spaces similar to ^)
 
+--
+-- Exit from insert mode in ':normal!' by pressing <C-v><esc>, not typing int, but pressing in command mode
+-- you can see the command filled with ^[
+-- see: https://hassek.github.io/exit-insert-mode-on-a-norm-command-in-vim/
+-- :g/^/norm! to match all lines with a beginning of line (all of them)
+--
+
 ------------------------------------------------------------------------------------------------------
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]

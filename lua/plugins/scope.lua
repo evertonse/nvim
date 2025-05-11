@@ -4,7 +4,8 @@ return {
   config = function()
     require('scope').setup {}
   end,
-  lazy = false,
+  lazy = true,
+  keys = { '<leader>x' },
   -- event = 'VeryLazy',
   enabled = true,
 }

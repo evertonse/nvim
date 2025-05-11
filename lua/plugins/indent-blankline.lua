@@ -3,14 +3,15 @@ return {
   'lukas-reineke/indent-blankline.nvim',
   -- Enable `lukas-reineke/indent-blankline.nvim`
   -- See `:help ibl`
+  lazy = false,
+  -- event = 'VimEnter',
+  event = 'BufReadPost',
+  -- event = 'User FilePost',
+  enabled = false,
+
   pin = true,
   main = 'ibl',
   tag = 'v3.7.1',
-  -- event = 'VimEnter',
-  event = 'BufReadPost',
-  -- enable = true,
-  lazy = false,
-  -- event = 'User FilePost',
   opts = {
     -- debounce = 512,
     debounce = 128,

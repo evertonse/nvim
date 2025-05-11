@@ -10,8 +10,8 @@ return {
   -- snake_case |   s
   -- UPPER_CASE |   u
   -- path/case  |   /
-  lazy = false,
-
+  lazy = true,
+  keys = { 'gC', mode = { 'n', 'v', 'x' } },
   config = function()
     require('coerce').setup {
       keymap_registry = require('coerce.keymap').keymap_registry(),

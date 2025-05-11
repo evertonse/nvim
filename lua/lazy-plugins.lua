@@ -105,13 +105,33 @@ personally_disable_runtime_plugins()
 require('lazy').setup({
 
   -- NOTE :h event for valid  vim events, there are some only in neovim like LspDetach
-  { 'uga-rosa/ccc.nvim', cmd = { 'CccHighlighterToggle', 'CccPick', 'CccConvert' }, lazy = false, event = 'VeryLazy' },
-  { 'bfredl/nvim-incnormal', enabled = true, event = 'BufEnter' }, -- NOTE:live-command if better
-  { 'moll/vim-bbye', lazy = false, enabled = true },
-  { 'pteroctopus/faster.nvim', enabled = true, event = 'BufEnter' }, -- Faster j,k movement
-  { 'yorickpeterse/nvim-pqf', lazy = false, enabled = false }, -- Nicer Quick List
-  { 'rktjmp/playtime.nvim', enabled = false },
+  { 'uga-rosa/ccc.nvim', cmd = { 'CccHighlighterToggle', 'CccPick', 'CccConvert' }, lazy = true, event = 'VeryLazy' },
+  {
+    'bfredl/nvim-incnormal',
+    enabled = true,
+    event = 'BufEnter',
+  }, -- NOTE:live-command if better
+  {
+    'moll/vim-bbye',
+    lazy = false,
+    enabled = true,
+  },
+  {
+    'pteroctopus/faster.nvim',
+    enabled = false,
+    event = 'BufEnter',
+  }, -- Faster j,k movement
+  {
+    'yorickpeterse/nvim-pqf',
+    lazy = false,
+    enabled = false,
+  }, -- Nicer Quick List
+  {
+    'rktjmp/playtime.nvim',
+    enabled = false,
+  },
   require 'plugins.focus',
+
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -119,7 +139,7 @@ require('lazy').setup({
   --
   --  This is equivalent to:
   --    require('Comment').setup({})
-  -- "gc" to comment visual regions/lines
+
   {
     'filipdutescu/renamer.nvim',
     branch = 'master',
@@ -222,21 +242,22 @@ require('lazy').setup({
   require 'plugins.bufjump',
 
   require 'plugins.undotree',
+
   {
     'gennaro-tedesco/nvim-peekup',
     enabled = false --[[Mega Slow, plus :Telescope register is almost the same]],
-    lazy = false,
+    lazy = true,
   },
   -- Hop (Better Navigation)
   {
     'phaazon/hop.nvim',
     opts = {},
-    lazy = false,
+    lazy = true,
     enabled = false,
   },
   {
     'jinh0/eyeliner.nvim',
-    lazy = false,
+    lazy = true,
     enabled = false,
     config = function()
       require('eyeliner').setup {
@@ -248,6 +269,7 @@ require('lazy').setup({
   require 'plugins.inc-rename',
   require 'plugins.harpoon',
   require 'plugins.dressing',
+  require 'plugins.snacks',
   require 'plugins.indent-blankline',
   require 'plugins.lint',
 
@@ -262,8 +284,8 @@ require('lazy').setup({
   require 'plugins.live-command',
 
   require 'plugins.guess-indent',
-  { 'tpope/vim-sleuth', lazy = false, enabled = true }, -- Detect tabstop and shiftwidth automatically
-  -- -- :set formatoptions-=r formatoptions-=c formatoptions-=o
+  { 'tpope/vim-sleuth', event = 'BufEnter', lazy = true, enabled = false }, -- Detect tabstop and shiftwidth automatically
+  -- :set formatoptions-=r formatoptions-=c formatoptions-=o
   require 'plugins.scope',
   require('plugins.' .. vim.g.self.session_plugin),
 
@@ -279,7 +301,7 @@ require('lazy').setup({
   true and require 'plugins.spider' or require 'plugins.neowords',
   require 'plugins.multiple-cursors',
   require 'plugins.improved-ft',
-  (false and vim.fn.has 'nvim-0.10' == 1) and require 'plugins.dropbar' or require 'plugins.incline',
+  (false and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar' or require 'plugins.incline',
   require 'plugins.cycler',
   require 'plugins.snap',
   require 'plugins.bufmanager',
@@ -297,13 +319,16 @@ require('lazy').setup({
   require 'plugins.nvim-snippy',
   require 'plugins.tmux-file-jump',
   require 'plugins.zen-mode',
-  { 'sakhnik/nvim-gdb', lazy = false },
-  { 'michaeljsmith/vim-indent-object', lazy = false },
+  { 'sakhnik/nvim-gdb', lazy = true },
+  { 'michaeljsmith/vim-indent-object', lazy = true },
   'nvim-lua/plenary.nvim',
   'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
   'MunifTanjim/nui.nvim',
-  { 'tpope/vim-abolish', lazy = false },
+  { 'tpope/vim-abolish', lazy = true },
+  -- { 'tpope/vim-surround', lazy = false },
+  { 'tpope/vim-repeat', keys = { { '.' }, { ';' } } },
   require 'plugins.text-case',
+  require 'plugins.bigfile',
 }, lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et

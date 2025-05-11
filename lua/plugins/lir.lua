@@ -1,6 +1,7 @@
 return {
   'tamago324/lir.nvim',
   lazy = false,
+  enabled = false,
   config = function()
     local actions = require 'lir.actions'
     local mark_actions = require 'lir.mark.actions'
@@ -68,7 +69,13 @@ return {
       pattern = { 'lir' },
       callback = function()
         -- use visual mode
-        vim.api.nvim_buf_set_keymap(0, 'x', 'J', ':<C-u>lua require"lir.mark.actions".toggle_mark("v")<CR>', { noremap = true, silent = true })
+        vim.api.nvim_buf_set_keymap(
+          0,
+          'x',
+          'J',
+          ':<C-u>lua require"lir.mark.actions".toggle_mark("v")<CR>',
+          { noremap = true, silent = true }
+        )
 
         -- echo cwd
         vim.api.nvim_echo({ { vim.fn.expand '%:p', 'Normal' } }, false, {})

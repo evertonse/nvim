@@ -2,7 +2,8 @@
 -- When using function() require("spider").motion("w") end as third argument of the keymap, dot-repeatability will not work
 return {
   'chrisgrieser/nvim-spider',
-  lazy = false,
+  keys = { 'gw', 'ge', 'gb', mode = { 'n', 'v', 'x' } },
+  lazy = true,
   opts = {
     skipInsignificantPunctuation = true,
     consistentOperatorPending = false, -- see "Consistent Operator-pending Mode" in the README

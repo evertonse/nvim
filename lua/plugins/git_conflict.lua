@@ -1,6 +1,7 @@
 return {
   'akinsho/git-conflict.nvim',
   version = '*',
+  enabled = false,
   opts = {
     default_mappings = {
       ours = 'o',

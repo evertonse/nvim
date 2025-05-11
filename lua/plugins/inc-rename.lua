@@ -1,6 +1,6 @@
 return {
   'smjonas/inc-rename.nvim',
-  lazy = false,
+  lazy = true,
   enabled = vim.g.self.inc_rename or (vim.version().minor >= 10 and true or false),
   event = 'LspAttach',
   config = function()

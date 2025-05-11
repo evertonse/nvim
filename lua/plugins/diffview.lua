@@ -1,6 +1,6 @@
 return {
   'sindrets/diffview.nvim',
-  lazy = false,
+  lazy = true,
   cmd = { 'DiffviewOpen' },
   config = function()
     local actions = require 'diffview.actions'
@@ -24,10 +24,30 @@ return {
           { 'n', 'g<C-x>', actions.cycle_layout, { desc = 'Cycle through available layouts.' } },
           { 'n', '[x', actions.prev_conflict, { desc = 'In the merge-tool: jump to the previous conflict' } },
           { 'n', ']x', actions.next_conflict, { desc = 'In the merge-tool: jump to the next conflict' } },
-          { 'n', '<leader>' .. choose_prefix .. 'o', actions.conflict_choose 'ours', { desc = '[D]iff [C]hoose the OURS version of a conflict' } },
-          { 'n', '<leader>' .. choose_prefix .. 't', actions.conflict_choose 'theirs', { desc = '[D]iff [C]hoose the THEIRS version of a conflict' } },
-          { 'n', '<leader>' .. choose_prefix .. 'b', actions.conflict_choose 'base', { desc = '[D]iff [C]hoose the BASE version of a conflict' } },
-          { 'n', '<leader>' .. choose_prefix .. 'a', actions.conflict_choose 'all', { desc = '[D]iff [C]hoose all the versions of a conflict' } },
+          {
+            'n',
+            '<leader>' .. choose_prefix .. 'o',
+            actions.conflict_choose 'ours',
+            { desc = '[D]iff [C]hoose the OURS version of a conflict' },
+          },
+          {
+            'n',
+            '<leader>' .. choose_prefix .. 't',
+            actions.conflict_choose 'theirs',
+            { desc = '[D]iff [C]hoose the THEIRS version of a conflict' },
+          },
+          {
+            'n',
+            '<leader>' .. choose_prefix .. 'b',
+            actions.conflict_choose 'base',
+            { desc = '[D]iff [C]hoose the BASE version of a conflict' },
+          },
+          {
+            'n',
+            '<leader>' .. choose_prefix .. 'a',
+            actions.conflict_choose 'all',
+            { desc = '[D]iff [C]hoose all the versions of a conflict' },
+          },
           { 'n', 'dx', actions.conflict_choose 'none', { desc = 'Delete the conflict region' } },
           {
             'n',

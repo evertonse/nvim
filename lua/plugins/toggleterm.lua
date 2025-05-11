@@ -13,7 +13,7 @@ end
 return {
   'akinsho/toggleterm.nvim',
   lazy = true,
-  event = 'VimEnter',
+  -- event = 'VimEnter',
   -- version = '*',
   opts = {
     highlights = {

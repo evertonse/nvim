@@ -1,8 +1,7 @@
 return {
   'kwkarlwang/bufjump.nvim',
-  event = 'VeryLazy',
-  lazy = false,
-  keys = {},
+  event = 'VimEnter',
+  -- lazy = true,
   config = function()
     require('bufjump').setup {
       forward_key = false,

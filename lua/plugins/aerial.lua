@@ -1,6 +1,6 @@
 return {
   'stevearc/aerial.nvim',
-  lazy = false,
+  lazy = true,
   cmd = { 'AerialToggle' },
   opts = {
     -- Determines the default direction to open the aerial window. The 'prefer'

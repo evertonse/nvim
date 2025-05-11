@@ -223,6 +223,7 @@ end
 return {
   REPOSITORY,
   branch = BRANCH,
+  lazy = true,
   cmd = 'NvimTreeToggle',
   dependencies = {
     {

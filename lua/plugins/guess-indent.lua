@@ -1,7 +1,8 @@
 -- This is the default configuration
 return {
   'NMAC427/guess-indent.nvim',
-  lazy = false,
+  lazy = true,
+  event = 'BufEnter',
   opts = {
     auto_cmd = true, -- Set to false to disable automatic execution
     override_editorconfig = true, -- Set to true to override settings set by .editorconfig

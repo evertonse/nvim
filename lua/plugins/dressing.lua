@@ -1,3 +1,4 @@
+-- About: Nice ui for vim.ui. Author says we should use snacks. Fuck that. Bunch a plugins into one
 return {
   'stevearc/dressing.nvim',
   event = 'VeryLazy',

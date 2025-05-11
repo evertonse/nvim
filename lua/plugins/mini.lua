@@ -7,14 +7,38 @@ return {
     enabled = true,
     event = 'VimEnter',
     cmds = vim.g.self.mini_pick and { 'Pick' } or {},
-    dependencies = 'nvim-tree/nvim-web-devicons',
+    dependencies = { 'nvim-tree/nvim-web-devicons', 'nvim-treesitter/nvim-treesitter-textobjects' },
     config = function()
       -- Better Around/Inside textobjects
       -- Examples:
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 } -- see :help MiniAi.config
+      local ai = require 'mini.ai'
+      ai.setup {
+        n_lines = 500,
+        n_lines = 500,
+        custom_textobjects = {
+          f = ai.gen_spec.treesitter { a = '@function.outer', i = '@function.inner' }, -- function
+          c = ai.gen_spec.treesitter { a = '@class.outer', i = '@class.inner' }, -- class
+          t = { '<([%p%w]-)%f[^<%w][^<>]->.-</%1>', '^<.->().*()</[^/]->$' }, -- tags
+          d = { '%f[%d]%d+' }, -- digits
+          e = { -- Word with case
+            {
+              '%u[%l%d]+%f[^%l%d]',
+              '%f[%S][%l%d]+%f[^%l%d]',
+              '%f[%P][%l%d]+%f[^%l%d]',
+              '^[%l%d]+%f[^%l%d]',
+            },
+            '^().*()$',
+          },
+          u = ai.gen_spec.function_call(), -- u for "Usage"
+          U = ai.gen_spec.function_call { name_pattern = '[%w_]' }, -- without dot in function name
+        },
+        search_method = 'cover_or_next',
+        -- search_method = "cover_or_nearest",
+      } -- see :help MiniAi.config
+
       local _ = vim.g.self.mini_ai and require('mini.git').setup {}
       local _ = vim.g.self.mini_pick
         and require('mini.pick').setup {
@@ -108,6 +132,7 @@ return {
           start_with_preview = 'gA',
         },
       }
+      require('mini.splitjoin').setup {}
 
       -- No need to copy this inside `setup()`. Will be used automatically.
       local mini_jump_setup = function()
@@ -271,16 +296,22 @@ return {
             find_left = 'sF', -- Find surrounding (to the left)
             highlight = 'sh', -- Highlight surrounding
             replace = 'sc', -- Chande Surrounding
-            update_n_lines = 'sn', -- Update `n_lines`
+            -- update_n_lines = 'sn', -- Update `n_lines`
+            update_n_lines = '', -- Update `n_lines`
 
-            suffix_last = 'l', -- Suffix to search with "prev" method
-            suffix_next = 'n', -- Suffix to search with "next" method
+            -- suffix_last = 'l', -- Suffix to search with "prev" method
+            -- suffix_next = 'n', -- Suffix to search with "next" method
+            -- Add this only if you don't want to use extended mappings
+            suffix_last = '',
+            suffix_next = '',
           },
-          search_method = 'cover',
+          search_method = 'cover_or_next',
+          -- search_method = 'cover',
           respect_selection_type = true,
         }
       end
-      mini_surround_setup()
+
+      local _ = true and mini_surround_setup()
 
       -- Use older API for Neovim versions lower than 0.10
 

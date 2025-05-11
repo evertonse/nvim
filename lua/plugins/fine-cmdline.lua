@@ -1,11 +1,12 @@
 local fine_cmdline_keymaps_enabled = true
 return {
   'VonHeikemen/fine-cmdline.nvim',
+  lazy = false,
+  enabled = false,
+
   dependencies = {
     { 'MunifTanjim/nui.nvim' },
   },
-  lazy = false,
-  enabled = false,
   config = function()
     local fn = require('fine-cmdline').fn
     require('fine-cmdline').setup {
