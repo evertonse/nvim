@@ -228,8 +228,9 @@ return {
         }
 
       require('mini.cursorword').setup { delay = 400 }
-      -- which does scope highlighting rather than indentlevel highlighting
-      -- TODO: When current indent from indentblank is MERGED we might come here and disable mini.indentscope
+
+      -- This one  does scope highlighting rather than indentlevel highlighting
+      -- TODO: When 'current indent' from indentblank is MERGED we might come here and disable mini.indentscope
       local _ = false
         and require('mini.indentscope').setup {
           -- Draw options

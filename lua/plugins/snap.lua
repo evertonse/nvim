@@ -1,6 +1,13 @@
 return {
   'camspiers/snap',
-  lazy = false,
+  lazy = true,
+
+  keys = {
+    { '<leader>sf' },
+    { '<Leader>sb' },
+    { '<Leader>so' },
+    { '<Leader>sF' },
+  },
   enabled = vim.version().minor >= 10,
   dependencies = { 'camspiers/luarocks', opts = { rocks = { 'fzy' } } },
   config = function()

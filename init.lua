@@ -154,8 +154,11 @@
 -- see: https://hassek.github.io/exit-insert-mode-on-a-norm-command-in-vim/
 -- :g/^/norm! to match all lines with a beginning of line (all of them)
 --
+-- TODO: Checkout if finecmd has live preview of commnds on comand line normal mode
 
 ------------------------------------------------------------------------------------------------------
+
+-- TODO Utils autocommands and such are slow enough
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'

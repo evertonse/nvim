@@ -1,6 +1,7 @@
 return {
   'pogyomo/submode.nvim',
   lazy = false,
+  enabled = false,
   dependencies = {
     'pogyomo/winresize.nvim',
   },

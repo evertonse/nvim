@@ -10,8 +10,15 @@ return {
   -- 'hinell/move.nvim',
   'fedepujol/move.nvim',
   tag = 'v2.0.0',
-  lazy = false,
+  lazy = true,
   enabled = true,
+
+  keys = {
+    { '<A-j>', mode = { 'n', 'v', 'x', 'c' } },
+    { '<A-h>', mode = { 'n', 'v', 'x', 'c' } },
+    { '<A-k>', mode = { 'n', 'v', 'x', 'c' } },
+    { '<A-l>', mode = { 'n', 'v', 'x', 'c' } },
+  },
   opts = {
     line = {
       enable = true, -- Enables line movement

@@ -2,6 +2,7 @@ return {
   'ghillb/cybu.nvim',
   --branch = "main", -- timely updates
   branch = 'v1.x', -- won't receive breaking changes
+  enabled = false,
   requires = { 'nvim-tree/nvim-web-devicons', 'nvim-lua/plenary.nvim' }, -- optional for icon support
   config = function()
     require('cybu').setup {

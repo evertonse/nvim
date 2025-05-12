@@ -4,6 +4,7 @@
 return {
   'cbochs/portal.nvim',
   lazy = false,
+  enabled = false,
   -- Optional dependencies
   dependencies = {
     'cbochs/grapple.nvim',

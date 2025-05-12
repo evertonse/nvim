@@ -1,5 +1,9 @@
 return {
   'nvimdev/indentmini.nvim',
+  lazy = false,
+  -- event = 'VeryLazy',
+  event = 'BufEnter',
+  enabled = true,
   config = function()
     require('indentmini').setup {
       char = '', -- string type default is │,
