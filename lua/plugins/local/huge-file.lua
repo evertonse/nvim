@@ -1,84 +1,10 @@
 local M = {}
 
-local should_disable = function(bufnr)
-  local fts = { 'bin', 'odin', 'tmux', 'llvm', 'conf' }
-  for i, ft in ipairs(fts) do
-    if vim.bo.filetype == ft then
-      return true
-    end
-  end
-
-  local buf_name = vim.api.nvim_buf_get_name(bufnr)
-
-  if string.find(buf_name, 'tmux%-') then
-    return true
-  end
-
-  local info = vim.loop.fs_stat(buf_name)
-  local file_size_permitted = (20 * 1024 * 1024)
-  local is_large_file = vim.fn.getfsize(buf_name) > file_size_permitted
-  local is_large_file = info and (info.size > (20 * 1024 * 1024))
-
-  if is_large_file then
-    return true
-  end
-
-  if vim.api.nvim_buf_line_count(bufnr) > 200 * 1000 then
-    return true
-  end
-
-  return false
-end
-
-local disable = function(args)
-  if should_disable(args.buf) then
-    vim.notify(vim.inspect(args))
-    vim.api.nvim_buf_call(args.buf, function()
-      if vim.fn.exists ':NoMatchParen' ~= 0 then
-        vim.cmd [[NoMatchParen]]
-      end
-      vim.b.minianimate_disable = true
-
-      for _, plugin in ipairs(M) do
-        vim.notify(vim.inspect(plugin))
-        ShowInspect { args, plugin }
-        -- config.capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
-        if plugin.disable ~= nil then
-          if plugin.on then
-            plugin.disable()
-          end
-        end
-      end
-    end)
-  end
-end
-
-M.init = function()
-  local augroup = vim.api.nvim_create_augroup('huge-file', {})
-
-  vim.api.nvim_create_autocmd('BufReadPre', {
-    pattern = { '*' },
-    group = augroup,
-    callback = disable,
-    desc = 'Huge-file',
-  })
-
-  vim.api.nvim_create_autocmd('BufReadPost', {
-    pattern = { '*' },
-    group = augroup,
-    callback = disable,
-    desc = 'Huge-file Post',
-  })
-end
-
-M.stop = function()
-  vim.api.nvim_del_augroup_by_name 'huge-file'
-end
-
+local list = {}
 -- Illuminate plugin
 -- https://github.com/RRethy/vim-illuminate
 
-M.illuminate = {
+list.illuminate = {
   on = true,
 
   enable = function()
@@ -98,7 +24,7 @@ M.illuminate = {
 
 -- MatchParen
 
-M.matchparen = {
+list.matchparen = {
   on = true,
 
   enable = function()
@@ -118,7 +44,7 @@ M.matchparen = {
 
 -- LSP
 
-M.lsp = {
+list.lsp = {
   on = true,
 
   enable = function()
@@ -141,7 +67,7 @@ M.lsp = {
 local treesitter_backup = {}
 local treesitter_disabled = false
 
-M.treesitter = {
+list.treesitter = {
   on = true,
 
   enable = function()
@@ -193,7 +119,7 @@ M.treesitter = {
 -- Indent Blankline
 -- https://github.com/lukas-reineke/indent-blankline.nvim
 
-M.indent_blankline = {
+list.indent_blankline = {
   on = true,
 
   enable = function()
@@ -217,8 +143,8 @@ M.indent_blankline = {
 local vimopts_backup = {}
 local vimopts_disabled = false
 
-M.vimopts = {
-  on = false,
+list.vimopts = {
+  on = true,
 
   enable = function()
     if vimopts_disabled == true then
@@ -259,7 +185,7 @@ M.vimopts = {
 local syntax_backup = {}
 local syntax_disabled = false
 
-M.syntax = {
+list.syntax = {
   on = false,
 
   enable = function()
@@ -284,7 +210,7 @@ M.syntax = {
 local filetype_backup = {}
 local filetype_disabled = false
 
-M.filetype = {
+list.filetype = {
   on = false,
 
   enable = function()
@@ -306,7 +232,7 @@ M.filetype = {
 -- Lualine
 -- https://github.com/nvim-lualine/lualine.nvim
 
-M.lualine = {
+list.lualine = {
   on = true,
 
   enable = function()
@@ -321,6 +247,80 @@ M.lualine = {
     end)
   end,
 }
+
+local should_disable = function(bufnr)
+  local fts = { 'bin', 'odin', 'tmux', 'llvm', 'conf' }
+  for i, ft in ipairs(fts) do
+    if vim.bo.filetype == ft then
+      return true
+    end
+  end
+
+  local buf_name = vim.api.nvim_buf_get_name(bufnr)
+
+  if string.find(buf_name, 'tmux%-') then
+    return true
+  end
+
+  local info = vim.loop.fs_stat(buf_name)
+  local file_size_permitted = (20 * 1024 * 1024)
+  local is_large_file = vim.fn.getfsize(buf_name) > file_size_permitted
+  local is_large_file = info and (info.size > (20 * 1024 * 1024))
+
+  if is_large_file then
+    return true
+  end
+
+  if vim.api.nvim_buf_line_count(bufnr) > 200 * 1000 then
+    return true
+  end
+
+  return false
+end
+
+local disable = function(args)
+  if should_disable(args.buf) then
+    vim.notify 'Huge File Detected'
+    vim.api.nvim_buf_call(args.buf, function()
+      if vim.fn.exists ':NoMatchParen' ~= 0 then
+        vim.cmd [[NoMatchParen]]
+      end
+      vim.b.minianimate_disable = true
+
+      for name, plugin in pairs(list) do
+        -- config.capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
+        if plugin.disable ~= nil then
+          if plugin.on then
+            vim.notify('Applying ' .. name)
+            plugin.disable()
+          end
+        end
+      end
+    end)
+  end
+end
+
+M.init = function()
+  local augroup = vim.api.nvim_create_augroup('huge-file', {})
+
+  vim.api.nvim_create_autocmd('BufReadPre', {
+    pattern = { '*' },
+    group = augroup,
+    callback = disable,
+    desc = 'Huge-file',
+  })
+
+  vim.api.nvim_create_autocmd('BufReadPost', {
+    pattern = { '*' },
+    group = augroup,
+    callback = disable,
+    desc = 'Huge-file Post',
+  })
+end
+
+M.stop = function()
+  vim.api.nvim_del_augroup_by_name 'huge-file'
+end
 
 -- M.setup = function() end
 M.setup = M.init
