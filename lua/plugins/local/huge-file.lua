@@ -173,8 +173,8 @@ list.vimopts = {
     vim.opt_local.statuscolumn = ''
     vim.opt_local.conceallevel = 0
     vim.opt_local.swapfile = false
-    -- vim.opt_local.foldmethod = 'manual'
-    vim.opt_local.undolevels = -1
+    vim.opt_local.foldmethod = 'manual' --- Bad for me, it folds everything
+    -- vim.opt_local.undolevels = -1 --- Makes no undo
     vim.opt_local.undoreload = 0
     vim.opt_local.list = false
   end,
