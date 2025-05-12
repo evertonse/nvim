@@ -1,5 +1,30 @@
 local nvim_ok_version = vim.version().major > 0 or (vim.version().major == 0 and vim.version().minor >= 10)
 
+local mini_move = function()
+  require('mini.move').setup {
+    -- Module mappings. Use `''` (empty string) to disable one.
+    mappings = {
+      -- Move visual selection in Visual mode. Defaults are Alt (Meta) + hjkl.
+      left = '<M-h>',
+      right = '<M-l>',
+      down = '<M-j>',
+      up = '<M-k>',
+
+      -- Move current line in Normal mode
+      line_left = '<M-h>',
+      line_right = '<M-l>',
+      line_down = '<M-j>',
+      line_up = '<M-k>',
+    },
+
+    -- Options which control moving behavior
+    options = {
+      -- Automatically reindent selection during linewise vertical move
+      reindent_linewise = true,
+    },
+  }
+end
+
 local mini_align = function()
   require('mini.align').setup {
     -- see :help mini.align
@@ -413,6 +438,7 @@ return {
     cmds = vim.g.self.mini_pick and { 'Pick' } or {},
     dependencies = { 'nvim-tree/nvim-web-devicons', 'nvim-treesitter/nvim-treesitter-textobjects' },
     config = function()
+      -- mini_move() -- Decided to fork move.nvim
       mini_ai()
       mini_align()
       mini_pick()

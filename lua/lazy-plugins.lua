@@ -53,6 +53,7 @@ local plugins = function()
 
     -- PERF: slow but maybe fixable.
     -- require 'plugins.hlargs',
+    require 'plugins.move',
 
     require 'plugins.bufjump',
     require 'plugins.focus',
@@ -64,7 +65,6 @@ local plugins = function()
     require 'plugins.fzf-lua',
     require 'plugins.vim-matchup', -- NOTE: Interaction with matchup and treesitter slow thing down when jumping from one context to another(lua table to another with jk), I think longer lines are more problematic
     require 'plugins.autopairs',
-    require 'plugins.move',
     require 'plugins.undotree',
     require 'plugins.guess-indent',
 
@@ -86,7 +86,7 @@ local plugins = function()
     require 'plugins.improved-ft',
     (false and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar' or require 'plugins.incline',
     require 'plugins.cycler',
-    require 'plugins.marks', -- alternative: https://github.com/desdic/marlin.nvim
+    -- require 'plugins.marks', -- alternative: https://github.com/desdic/marlin.nvim
     require 'plugins.snap',
 
     require 'plugins.nvim-tree',

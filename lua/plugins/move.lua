@@ -8,11 +8,11 @@ end
 
 return {
   -- 'hinell/move.nvim',
-  'fedepujol/move.nvim',
+  -- 'fedepujol/move.nvim',
+  'evertonse/move.nvim',
   tag = 'v2.0.0',
   lazy = true,
   enabled = true,
-
   keys = {
     { '<A-j>', mode = { 'n', 'v', 'x', 'c' } },
     { '<A-h>', mode = { 'n', 'v', 'x', 'c' } },
@@ -44,10 +44,11 @@ return {
     vim.keymap.set('n', '<A-k>', safe_cmd 'MoveLine -1', opts)
     vim.keymap.set('n', '<A-l>', safe_cmd 'MoveWord 1', opts)
 
-    -- vim.keymap.set('x', '<A-j>', safe_cmd 'MoveBlock 1', opts)
-    -- vim.keymap.set('x', '<A-k>', safe_cmd 'MoveBlock -1', opts)
     -- Visual-mode commands
-    vim.keymap.set('v', '<A-h>', safe_cmd 'MoveHBlock -1', opts)
-    vim.keymap.set('v', '<A-l>', safe_cmd 'MoveHBlock 1', opts)
+    -- IMPORTANT Would need to fork it to easily make it safe because the author doesn't check if the buffer is modifiable and because of that it give annoying erros, I'm switchin to mini.move and I've checked that it does check for modifiable buffer 12/05/2025
+    vim.keymap.set('v', '<A-j>', 'MoveBlock 1', opts)
+    vim.keymap.set('v', '<A-k>', 'MoveBlock -1', opts)
+    vim.keymap.set('v', '<A-h>', 'MoveHBlock -1', opts)
+    vim.keymap.set('v', '<A-l>', 'MoveHBlock 1', opts)
   end,
 }
