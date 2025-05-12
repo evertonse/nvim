@@ -917,7 +917,11 @@ return { -- Fuzzy Finder (files, lsp, etc)
         --  See `:help telescope.builtin.live_grep()` for information about particular keys
         ['<leader>sof'] = {
           function()
-            builtin.live_grep { grep_open_files = true, prompt_title = 'Live Grep in Open Files', initial_mode = 'insert' }
+            builtin.live_grep {
+              grep_open_files = true,
+              prompt_title = 'Live Grep in Open Files',
+              initial_mode = 'insert',
+            }
           end,
           '[S]earch [/] in Open Files',
         },

@@ -1,23 +1,15 @@
-local function safe_cmd(cmd)
-  return function()
-    if vim.bo.modifiable and not vim.bo.readonly then
-      pcall(vim.cmd, cmd)
-    end
-  end
-end
-
 return {
   -- 'hinell/move.nvim',
   -- 'fedepujol/move.nvim',
-  'evertonse/move.nvim',
-  tag = 'v2.0.0',
+  "evertonse/move.nvim",
+  -- tag = 'v2.0.0',
   lazy = true,
   enabled = true,
   keys = {
-    { '<A-j>', mode = { 'n', 'v', 'x', 'c' } },
-    { '<A-h>', mode = { 'n', 'v', 'x', 'c' } },
-    { '<A-k>', mode = { 'n', 'v', 'x', 'c' } },
-    { '<A-l>', mode = { 'n', 'v', 'x', 'c' } },
+    { "<A-j>", mode = { "n", "v", "x", "c" } },
+    { "<A-h>", mode = { "n", "v", "x", "c" } },
+    { "<A-k>", mode = { "n", "v", "x", "c" } },
+    { "<A-l>", mode = { "n", "v", "x", "c" } },
   },
   opts = {
     line = {
@@ -36,19 +28,19 @@ return {
     },
   },
   config = function(opts)
-    require('move').setup(opts)
+    require("move").setup(opts)
     local opts = { noremap = true, silent = true }
     -- Normal-mode commands
-    vim.keymap.set('n', '<A-j>', safe_cmd 'MoveLine 1', opts)
-    vim.keymap.set('n', '<A-h>', safe_cmd 'MoveWord -1', opts)
-    vim.keymap.set('n', '<A-k>', safe_cmd 'MoveLine -1', opts)
-    vim.keymap.set('n', '<A-l>', safe_cmd 'MoveWord 1', opts)
+    vim.keymap.set("n", "<A-j>", ":MoveLine  1 <CR>", opts)
+    vim.keymap.set("n", "<A-h>", ":MoveWord -1 <CR>", opts)
+    vim.keymap.set("n", "<A-k>", ":MoveLine -1 <CR>", opts)
+    vim.keymap.set("n", "<A-l>", ":MoveWord  1 <CR>", opts)
 
     -- Visual-mode commands
     -- IMPORTANT Would need to fork it to easily make it safe because the author doesn't check if the buffer is modifiable and because of that it give annoying erros, I'm switchin to mini.move and I've checked that it does check for modifiable buffer 12/05/2025
-    vim.keymap.set('v', '<A-j>', 'MoveBlock 1', opts)
-    vim.keymap.set('v', '<A-k>', 'MoveBlock -1', opts)
-    vim.keymap.set('v', '<A-h>', 'MoveHBlock -1', opts)
-    vim.keymap.set('v', '<A-l>', 'MoveHBlock 1', opts)
+    vim.keymap.set("v", "<A-j>", ":MoveBlock   1 <CR>", opts)
+    vim.keymap.set("v", "<A-k>", ":MoveBlock  -1 <CR>", opts)
+    vim.keymap.set("v", "<A-h>", ":MoveHBlock -1 <CR>", opts)
+    vim.keymap.set("v", "<A-l>", ":MoveHBlock  1 <CR>", opts)
   end,
 }

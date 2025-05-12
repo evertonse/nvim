@@ -2,14 +2,16 @@ local M = {}
 function M.setup()
   local todo_highlight_group = vim.api.nvim_create_augroup('TodoHighlight', { clear = true })
   local xs = {
+    -- Old groups that I've used. You may reuse these
+    -- 'MiniHipatternsFixme', 'MiniHipatternsHack', 'MiniHipatternsTodo', 'MiniHipatternsNote', 'MiniHipatternsNote', 'MiniHipatternsNote', 'Done',
     -- group, patterns
     ['Todo'] = '(TODO|PERF)',
-    ['Error'] = '(HACK|ERROR)',
-    ['Warning'] = '(NOTE|WARNING)',
+    ['Error'] = '(HACK|ERROR|FIXME)',
+    ['Note'] = '(NOTE|WARNING)',
     ['Done'] = '(DONE|IMPORTANT)',
   }
 
-  -- Function to highlight TODOs in comments
+  -- TODO: Function to highlight TODOs in comments
   local function highlight_todos()
     -- Get the current buffer
     local bufnr = vim.api.nvim_get_current_buf()

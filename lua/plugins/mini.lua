@@ -452,7 +452,7 @@ return {
 
       mini_surround()
 
-      mini_indentscope()
+      local _ = false and mini_indentscope()
 
       -- PERF Slow updates when in, can be seen when pressing j in normal mode in the function sqlite3_create_module line 249577
       -- mini_statusline()

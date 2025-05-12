@@ -16,6 +16,15 @@
 -- If you use your Neovim config on multiple machines, using the lockfile, you can ensure that the same version of every plugin is installed.
 -- If you are on another machine, you can do `:Lazy restore`, to update all your plugins to the version from the lockfile.
 
+local plugins_local = {
+  require 'plugins.local.huge-file',
+  require 'plugins.local.pattern-highlight',
+}
+
+for _, plugin in pairs(plugins_local) do
+  plugin.setup()
+end
+
 local plugins = function()
   return {
     require 'plugins.colorscheme',
@@ -28,7 +37,7 @@ local plugins = function()
     -- PERF Might slow further test needed
     require 'plugins.indent-blankline',
 
-    require 'plugins.snacks',
+    -- require 'plugins.snacks',
 
     -- PERF: Slow In bigfiles, treesitter has a slight slow when highlighting
     -- In cases like this regex based highglight is instant. Also inserting is majorly slow with treesitter, even if highlight is turned off.
@@ -84,9 +93,10 @@ local plugins = function()
     true and require 'plugins.spider' or require 'plugins.neowords',
     require 'plugins.multiple-cursors',
     require 'plugins.improved-ft',
-    (false and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar' or require 'plugins.incline',
+    (false and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar'
+      or require 'plugins.incline',
     require 'plugins.cycler',
-    -- require 'plugins.marks', -- alternative: https://github.com/desdic/marlin.nvim
+    require 'plugins.marks', -- alternative: https://github.com/desdic/marlin.nvim
     require 'plugins.snap',
 
     require 'plugins.nvim-tree',
@@ -115,7 +125,13 @@ local unused_plugins = function()
     { 'tpope/vim-sleuth', event = 'BufEnter', lazy = true, enabled = false }, -- Detect tabstop and shiftwidth automatically
 
     -- Color picker ccc
-    { 'uga-rosa/ccc.nvim', enabled = false, cmds = { 'CccHighlighterToggle', 'CccPick', 'CccConvert' }, lazy = true, event = 'VeryLazy' },
+    {
+      'uga-rosa/ccc.nvim',
+      enabled = false,
+      cmds = { 'CccHighlighterToggle', 'CccPick', 'CccConvert' },
+      lazy = true,
+      event = 'VeryLazy',
+    },
 
     {
       'bfredl/nvim-incnormal',
@@ -356,9 +372,6 @@ personally_disable_runtime_plugins()
 
 -- NOTE: Where you install your plugins.
 require('lazy').setup(plugins(), lazy_config)
-
-require('plugins.local.huge-file').setup()
-require('plugins.local.pattern-highlight').setup()
 
 -- vim: ts=2 sts=2 sw=2 et
 -- :set formatoptions-=r formatoptions-=c formatoptions-=o
