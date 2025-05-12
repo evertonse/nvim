@@ -279,6 +279,8 @@ local should_disable = function(bufnr)
 end
 
 local disable = function(args)
+  -- TODO confirm that it schedule is needed
+  -- vim.schedule(function()
   if should_disable(args.buf) then
     vim.notify 'Huge File Detected'
     vim.api.nvim_buf_call(args.buf, function()
@@ -287,17 +289,32 @@ local disable = function(args)
       end
       vim.b.minianimate_disable = true
 
+      local pedantic = false
       for name, plugin in pairs(list) do
-        -- config.capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
+        -- TODO check this config.capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
         if plugin.disable ~= nil then
           if plugin.on then
-            vim.notify('Applying ' .. name)
+            if pedantic then
+              vim.notify('Applying ' .. name)
+            end
             plugin.disable()
           end
         end
       end
     end)
+  else
+    if true then
+      return
+    end
+    for name, plugin in pairs(list) do
+      if plugin.enable ~= nil then
+        if plugin.on then
+          plugin.enable()
+        end
+      end
+    end
   end
+  -- end)
 end
 
 M.init = function()
@@ -310,19 +327,19 @@ M.init = function()
     desc = 'Huge-file',
   })
 
-  vim.api.nvim_create_autocmd('BufReadPost', {
-    pattern = { '*' },
-    group = augroup,
-    callback = disable,
-    desc = 'Huge-file Post',
-  })
+  local _ = true
+    and vim.api.nvim_create_autocmd('BufReadPost', {
+      pattern = { '*' },
+      group = augroup,
+      callback = disable,
+      desc = 'Huge-file Post',
+    })
 end
 
 M.stop = function()
   vim.api.nvim_del_augroup_by_name 'huge-file'
 end
 
--- M.setup = function() end
 M.setup = M.init
 
 return M

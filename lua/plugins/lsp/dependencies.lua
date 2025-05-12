@@ -18,6 +18,8 @@ local dependencies = {
   -- Useful status updates for LSP.
   -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
   {
+    -- To see notifications :Fidget history
+    -- :messages doesn't work anymore
     'j-hui/fidget.nvim',
     enabled = true,
     opts = {

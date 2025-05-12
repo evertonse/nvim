@@ -1,5 +1,4 @@
 local M = {}
-
 function M.setup()
   local todo_highlight_group = vim.api.nvim_create_augroup('TodoHighlight', { clear = true })
   local xs = {

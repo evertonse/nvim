@@ -161,6 +161,9 @@
 -- nvim --startuptime nvim.log
 -- Lazy profile
 --
+--
+-- Neorg check it out someday (Never): https://github.com/nvim-neorg/neorg
+--
 ------------------------------------------------------------------------------------------------------
 
 -- TODO Utils autocommands and such are slow enough

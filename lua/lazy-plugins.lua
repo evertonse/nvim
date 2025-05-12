@@ -42,6 +42,8 @@ local plugins = function()
     require 'plugins.telescope',
     require 'plugins.mini',
     require 'plugins.lualine',
+    -- require 'plugins.staline',
+
     require 'plugins.conform',
     require 'plugins.Comment',
     require('plugins.' .. vim.g.self.file_tree), -- NOTE: Slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
