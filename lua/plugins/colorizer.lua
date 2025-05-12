@@ -1,8 +1,15 @@
 return {
   'NvChad/nvim-colorizer.lua',
-  -- event = 'User FilePost',
+  event = 'User FilePost',
+  -- event = 'VezyLazy',
   -- event = 'VimEnter',
-  event = 'BufEnter',
+  -- event = 'BufEnter',
+  cmd = {
+    'ColorizerAttachToBuffer',
+    'ColorizerDetachFromBuffer',
+    'ColorizerReloadAllBuffers',
+    'ColorizerToggle',
+  },
   opts = {
     user_default_options = {
       names = false,
@@ -28,7 +35,7 @@ return {
     },
 
     filetypes = {
-      '*',
+      -- '*',
       'css',
       'javascript',
       'yaml',

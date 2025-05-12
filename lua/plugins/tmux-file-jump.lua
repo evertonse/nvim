@@ -2,6 +2,7 @@ return {
   'canova/tmux-file-jump.nvim',
   event = 'VeryLazy',
   lazy = false,
+  enabled = false,
   dependencies = {
     'nvim-telescope/telescope.nvim',
     -- 'ibhagwan/fzf-lua', -- Or fzf-lua if you prefer.

@@ -1,6 +1,7 @@
 return {
   'chentoast/marks.nvim',
-  lazy = false,
+  event = 'BufRead',
+  lazy = true,
   enabled = true,
   config = function()
     require('marks').setup {

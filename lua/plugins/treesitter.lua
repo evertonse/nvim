@@ -12,16 +12,36 @@
 -- treesitter-query in treesitter.txt
 
 local disable_treesitter_when = function(lang, bufnr)
-  local too_big = vim.api.nvim_buf_line_count(bufnr) > 50000
-  local buf_name = vim.fn.expand '%'
-  local is_binary = vim.bo.filetype == 'bin'
-  local is_odin = vim.bo.filetype == 'odin'
-  if is_odin or is_binary or vim.bo.filetype == 'tmux' or too_big or lang == 'conf' or string.find(buf_name, 'tmux%-') then
+  local fts = { 'bin', 'odin', 'tmux', 'llvm', 'conf' }
+  for i, ft in ipairs(fts) do
+    if vim.bo.filetype == ft then
+      return true
+    end
+  end
+
+  local buf_name = vim.api.nvim_buf_get_name(bufnr)
+
+  if lang == 'conf' or string.find(buf_name, 'tmux%-') then
     return true
   end
-end
--- NOTE: custom parser -> https://github.com/nvim-treesitter/nvim-treesitter/issues/2241
 
+  local info = vim.loop.fs_stat(buf_name)
+  local file_size_permitted = (20 * 1024 * 1024)
+  local is_large_file = vim.fn.getfsize(buf_name) > file_size_permitted
+  local is_large_file = info and (info.size > (20 * 1024 * 1024))
+
+  if is_large_file then
+    return true
+  end
+
+  if vim.api.nvim_buf_line_count(bufnr) > 200 * 1000 then
+    return true
+  end
+
+  return false
+end
+
+-- NOTE: custom parser -> https://github.com/nvim-treesitter/nvim-treesitter/issues/2241
 return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
   cmd = { 'TSInstall', 'TSBufEnable', 'TSBufDisable', 'TSModuleInfo' },
@@ -36,42 +56,14 @@ return { -- Highlight, edit, and navigate code
     -- EDIT(2024-jul-06): This is only true together with vim-matchup, which I have disabled some things that improved performance
     highlight = {
       enable = true,
-      -- disable = disable_treesitter_when,
-      additional_vim_regex_highlighting = { 'ruby' },
+      disable = disable_treesitter_when,
+      -- additional_vim_regex_highlighting = { 'c' },
     },
-
-    -- PLUGINS -----------------------
-    matchup = {
-      enable = false,
-      disable = {},
-      include_match_words = false,
-    },
-
-    pairs = {
-      enable = true,
-      disable = {},
-      highlight_pair_events = { 'CursorMoved' }, -- e.g. {"CursorMoved"}, -- when to highlight the pairs, use {} to deactivate highlighting
-      highlight_self = true, -- whether to highlight also the part of the pair under cursor (or only the partner)
-      goto_right_end = false, -- whether to go to the end of the right partner or the beginning
-      -- fallback_cmd_normal = "call matchit#Match_wrapper('',1,'n')", -- What command to issue when we can't find a pair (e.g. "normal! %")
-      -- fallback_cmd_normal = 'normal! %',
-      fallback_cmd_normal = nil,
-      keymaps = {
-        -- goto_partner = '<leader>%',
-        goto_partner = '%',
-        delete_balanced = 'X',
-      },
-      delete_balanced = {
-        only_on_first_char = false, -- whether to trigger balanced delete when on first character of a pair
-        fallback_cmd_normal = nil, -- fallback command when no pair found, can be nil
-        longest_partner = false, -- whether to delete the longest or the shortest pair when multiple found.
-        -- E.g. whether to delete the angle bracket or whole tag in  <pair> </pair>
-      },
-    },
-    ---------------------
+    -- NOTE: Very slow to INSERT text on bigfiles
+    indent = { enable = false, disable = { 'ruby' } },
 
     incremental_selection = {
-      enable = true,
+      enable = false,
       keymaps = {
         init_selection = '<CR>',
         scope_incremental = '<CR>',
@@ -87,6 +79,7 @@ return { -- Highlight, edit, and navigate code
     },
     textobjects = {
       enable = true,
+      disable = disable_treesitter_when,
       select = {
         enable = true,
         selection_modes = {
@@ -104,6 +97,7 @@ return { -- Highlight, edit, and navigate code
       },
       move = {
         enable = true,
+        disable = disable_treesitter_when,
         set_jumps = true,
         goto_next_start = {
           [']m'] = '@function.outer',
@@ -123,10 +117,41 @@ return { -- Highlight, edit, and navigate code
         },
       },
     },
-    indent = { enable = true, disable = { 'ruby' } },
     ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
     -- Autoinstall languages that are not installed
     auto_install = true,
+
+    ---------------------------------------------------------------------------------------------------------
+    -- PLUGINS ----------------------------------------------------------------------------------------------
+    ---------------------------------------------------------------------------------------------------------
+    matchup = {
+      disable = disable_treesitter_when,
+      enable = true,
+      include_match_words = false,
+    },
+
+    pairs = {
+      enable = true,
+      disable = disable_treesitter_when,
+      highlight_pair_events = { 'CursorMoved' }, -- e.g. {"CursorMoved"}, -- when to highlight the pairs, use {} to deactivate highlighting
+      highlight_self = true, -- whether to highlight also the part of the pair under cursor (or only the partner)
+      goto_right_end = false, -- whether to go to the end of the right partner or the beginning
+      -- fallback_cmd_normal = "call matchit#Match_wrapper('',1,'n')", -- What command to issue when we can't find a pair (e.g. "normal! %")
+      -- fallback_cmd_normal = 'normal! %',
+      fallback_cmd_normal = nil,
+      keymaps = {
+        -- goto_partner = '<leader>%',
+        goto_partner = '%',
+        delete_balanced = 'X',
+      },
+      delete_balanced = {
+        only_on_first_char = false, -- whether to trigger balanced delete when on first character of a pair
+        fallback_cmd_normal = nil, -- fallback command when no pair found, can be nil
+        longest_partner = false, -- whether to delete the longest or the shortest pair when multiple found.
+        -- E.g. whether to delete the angle bracket or whole tag in  <pair> </pair>
+      },
+    },
+    ---------------------------------------------------------------------------------------------------------
   },
   config = function(_, opts)
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`

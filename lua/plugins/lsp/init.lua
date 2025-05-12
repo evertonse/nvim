@@ -8,8 +8,10 @@ return {
     lazy = true,
     event = {
       'BufReadPost',
-      'BufNewFile',
-      'VimEnter',
+      -- 'BufReadCmd',
+      -- 'LspAttach',
+      -- 'BufNewFile',
+      -- 'VimEnter',
     },
     -- event = 'BufReadCmd', -- NOTE: It hangs in the first opned buffer for some reason? I thought it was just an event
     dependencies = require 'plugins.lsp.dependencies',

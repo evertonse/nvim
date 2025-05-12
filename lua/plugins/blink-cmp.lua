@@ -17,6 +17,7 @@ local setup_blink_cmp_vim_on_key = function()
     end
   end) -- or 0 for current buffer
 end
+
 setup_blink_cmp_vim_on_key()
 
 local setup_blink_cmp_schedule_key_read = function()
@@ -104,9 +105,9 @@ return {
   'saghen/blink.cmp',
   -- optional: provides snippets for the snippet source
   dependencies = 'rafamadriz/friendly-snippets',
-  lazy = true,
-  event = 'VimEnter',
   enabled = true,
+  event = 'BufReadPost',
+  lazy = true,
 
   -- use a release tag to download pre-built binaries
   -- version = 'v1.2',
@@ -274,11 +275,13 @@ return {
       },
       documentation = { auto_show = true },
       menu = {
-        -- Don't automatically show the completion menu
         auto_show = true,
       },
-      trigger = { show_on_keyword = true },
+      trigger = {
 
+        prefetch_on_insert = false,
+        show_on_keyword = true,
+      },
       -- Display a preview of the selected item on the current line
       ghost_text = { enabled = false },
     },

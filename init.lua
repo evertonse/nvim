@@ -156,6 +156,11 @@
 --
 -- TODO: Checkout if finecmd has live preview of commnds on comand line normal mode
 
+--
+-- Profiling:
+-- nvim --startuptime nvim.log
+-- Lazy profile
+--
 ------------------------------------------------------------------------------------------------------
 
 -- TODO Utils autocommands and such are slow enough

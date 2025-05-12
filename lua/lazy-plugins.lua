@@ -16,231 +16,255 @@
 -- If you use your Neovim config on multiple machines, using the lockfile, you can ensure that the same version of every plugin is installed.
 -- If you are on another machine, you can do `:Lazy restore`, to update all your plugins to the version from the lockfile.
 
-local plugins = {
+local plugins = function()
+  return {
+    require 'plugins.colorscheme',
 
-  require 'plugins.indent-blankline',
-  -- Another option https://github.com/Yggdroot/indentLine
-  -- require 'plugins.indentmini', -- Despite what is says, it's slow
-  -- require 'plugins.bigfile',
+    -- PERF Lsp slow as fuck sometimes, but culprit might always be the server its self, but nonethe less everything should be async, so if the server is slowing the fuck down, what does it matter to us? that seems like a problem
+    require 'plugins.lsp',
 
-  require 'plugins.snacks',
+    require 'plugins.dap',
 
-  require 'plugins.colorscheme',
-  require 'plugins.treesitter',
-  require 'plugins.nvim-treesitter-pairs',
+    -- PERF Might slow further test needed
+    require 'plugins.indent-blankline',
 
-  -- NOTE :h event for valid  vim events, there are some only in neovim like LspDetach
+    require 'plugins.snacks',
 
-  -- Color picker ccc
-  { 'uga-rosa/ccc.nvim', enabled = false, cmds = { 'CccHighlighterToggle', 'CccPick', 'CccConvert' }, lazy = true, event = 'VeryLazy' },
+    -- PERF: Slow In bigfiles, treesitter has a slight slow when highlighting
+    -- In cases like this regex based highglight is instant. Also inserting is majorly slow with treesitter, even if highlight is turned off.
+    -- Update: I've found that is 'treesitter indent' that causes this huge slowness on insert
+    -- Edit: `.ll` files from llvm is slow to <C-d> or <C-u> from the end (tested with a.ll)
+    --     Disabling the highlight fix it
+    -- Update: a.ll
+    require 'plugins.treesitter',
 
-  {
-    'bfredl/nvim-incnormal',
-    enabled = false,
-    event = 'BufEnter',
-  }, -- NOTE:live-command if better
-  {
-    'moll/vim-bbye',
-    lazy = false,
-    enabled = true,
-  },
-  {
-    'pteroctopus/faster.nvim',
-    enabled = false,
-    event = 'BufEnter',
-  }, -- Faster j,k movement
-  {
-    'yorickpeterse/nvim-pqf',
-    lazy = false,
-    enabled = false,
-  }, -- Nicer Quick List
-  {
-    'rktjmp/playtime.nvim',
-    enabled = false,
-  },
-  require 'plugins.focus',
+    require 'plugins.nvim-treesitter-pairs',
+    require 'plugins.telescope',
+    require 'plugins.mini',
+    require 'plugins.lualine',
+    require 'plugins.conform',
+    require 'plugins.Comment',
+    require('plugins.' .. vim.g.self.file_tree), -- NOTE: Slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
 
-  {
-    'filipdutescu/renamer.nvim',
-    branch = 'master',
-    enabled = false,
-    lazy = false,
-    event = 'LspAttch',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-  },
-  {
-    'folke/trouble.nvim',
-    lazy = true,
-    enabled = false,
-  }, -- LPS Diagnostic with colors and shit
-  {
-    'iamcco/markdown-preview.nvim',
-    lazy = false,
-    enabled = false,
-    build = 'cd app && npm install',
-    config = function()
-      vim.g.mkdp_filetypes = { 'markdown' }
-    end,
-    ft = { 'markdown' },
-  },
-  {
-    'ekickx/clipboard-image.nvim',
-    branch = 'feat_WSL',
-    lazy = false,
-    enabled = false,
-  },
-  {
-    -- Investigate this further, why isnt it working
-    'backdround/tabscope.nvim',
-    event = 'VimEnter',
-    lazy = false,
-    enabled = false,
-  },
-  {
-    'chrisgrieser/nvim-various-textobjs',
-    --alternative: 'XXiaoA/ns-textobject.nvim'
-    enabled = false,
-    lazy = false,
-    opts = { useDefaultKeymaps = true },
-  },
+    -- PERF: needs to test more, bigfiles might need to slow the update time
+    require 'plugins.blink-cmp',
 
-  require 'plugins.coerce',
-  require 'plugins.Comment',
-  -- require 'plugins.tabby',
-  -- require 'plugins.tabline',
-  -- require 'plugins.wilder',
-  require 'plugins.fine-cmdline',
+    -- PERF: slow but maybe fixable.
+    -- require 'plugins.hlargs',
 
-  require 'plugins.codewindow',
+    require 'plugins.bufjump',
+    require 'plugins.focus',
+    require 'plugins.toggleterm',
+    require 'plugins.scope',
+    require 'plugins.which-key',
+    require 'plugins.coerce',
+    require 'plugins.diffview',
+    require 'plugins.fzf-lua',
+    require 'plugins.vim-matchup', -- NOTE: Interaction with matchup and treesitter slow thing down when jumping from one context to another(lua table to another with jk), I think longer lines are more problematic
+    require 'plugins.autopairs',
+    require 'plugins.move',
+    require 'plugins.undotree',
+    require 'plugins.guess-indent',
 
-  require 'plugins.neogit',
+    -- PERF: Why is it mildly slow? findout maybe its all the stuff of autocommands
+    require('plugins.' .. vim.g.self.session_plugin),
 
-  require 'plugins.gitsigns',
+    require 'plugins.zen-mode',
+    require 'plugins.harpoon',
+    require 'plugins.oil',
+    require 'plugins.yazi',
+    require 'plugins.better-scape',
+    require 'plugins.live-command',
 
-  require 'plugins.git_conflict',
+    require 'plugins.colorizer',
+    require 'plugins.dressing',
 
-  require 'plugins.diffview',
+    true and require 'plugins.spider' or require 'plugins.neowords',
+    require 'plugins.multiple-cursors',
+    require 'plugins.improved-ft',
+    (false and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar' or require 'plugins.incline',
+    require 'plugins.cycler',
+    require 'plugins.marks', -- alternative: https://github.com/desdic/marlin.nvim
+    require 'plugins.snap',
 
-  require 'plugins.nvim-hlslens',
-  --------------------------------------
+    require 'plugins.nvim-tree',
+    require 'plugins.aerial',
+    require 'plugins.compile-mode',
+    require 'plugins.stickybuf',
 
-  require 'plugins.which-key',
+    { 'tpope/vim-abolish', lazy = true },
+    { 'tpope/vim-repeat', keys = { { '.' }, { ';' } } },
 
-  require 'plugins.telescope',
-  require 'plugins.fzf-lua',
-  -- require 'plugins.telescope-debug',
+    'MunifTanjim/nui.nvim',
+    'nvim-lua/plenary.nvim',
+    'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+  }
+end
 
-  -- BUGGY: require 'plugins.autocomplete',
-  -- BUGGY: require 'plugins.epo',
+local unused_plugins = function()
+  return {
+    -- { 'tpope/vim-surround', lazy = false },
+    -- NOTE :h event for valid  vim events, there are some only in neovim like LspDetach
 
-  -- require 'plugis.cmp',
-  require 'plugins.blink-cmp',
+    -- Another option https://github.com/Yggdroot/indentLine
+    -- require 'plugins.indentmini', -- Despite what is says, it's slow
+    -- require 'plugins.bigfile',
 
-  require 'plugins.conform',
+    { 'tpope/vim-sleuth', event = 'BufEnter', lazy = true, enabled = false }, -- Detect tabstop and shiftwidth automatically
 
-  require 'plugins.todo-comments',
+    -- Color picker ccc
+    { 'uga-rosa/ccc.nvim', enabled = false, cmds = { 'CccHighlighterToggle', 'CccPick', 'CccConvert' }, lazy = true, event = 'VeryLazy' },
 
-  require 'plugins.toggleterm',
+    {
+      'bfredl/nvim-incnormal',
+      enabled = false,
+      event = 'BufEnter',
+    }, -- NOTE:live-command if better
+    {
+      'pteroctopus/faster.nvim',
+      enabled = false,
+      event = 'BufEnter',
+    }, -- Faster j,k movement
+    {
+      'yorickpeterse/nvim-pqf',
+      lazy = false,
+      enabled = false,
+    }, -- Nicer Quick List
+    {
+      'rktjmp/playtime.nvim',
+      enabled = false,
+    },
 
-  require 'plugins.mini',
+    {
+      'filipdutescu/renamer.nvim',
+      branch = 'master',
+      enabled = false,
+      lazy = false,
+      event = 'LspAttch',
+      dependencies = { 'nvim-lua/plenary.nvim' },
+    },
+    {
+      'folke/trouble.nvim',
+      lazy = true,
+      enabled = false,
+    }, -- LPS Diagnostic with colors and shit
+    {
+      'iamcco/markdown-preview.nvim',
+      lazy = false,
+      enabled = false,
+      build = 'cd app && npm install',
+      config = function()
+        vim.g.mkdp_filetypes = { 'markdown' }
+      end,
+      ft = { 'markdown' },
+    },
+    {
+      'ekickx/clipboard-image.nvim',
+      branch = 'feat_WSL',
+      lazy = false,
+      enabled = false,
+    },
+    {
+      -- Investigate this further, why isnt it working
+      'backdround/tabscope.nvim',
+      event = 'VimEnter',
+      lazy = false,
+      enabled = false,
+    },
+    {
+      'chrisgrieser/nvim-various-textobjs',
+      --alternative: 'XXiaoA/ns-textobject.nvim'
+      enabled = false,
+      lazy = false,
+      opts = { useDefaultKeymaps = true },
+    },
 
-  require 'plugins.vim-matchup', -- NOTE: Interaction with matchup and treesitter slow thing down when jumping from one context to another(lua table to another with jk), I think longer lines are more problematic
-  require 'plugins.autopairs',
+    -- require 'plugins.tabby',
+    -- require 'plugins.tabline',
+    -- require 'plugins.wilder',
 
-  require 'plugins.dap',
+    require 'plugins.fine-cmdline',
 
-  --------------------------------------
+    require 'plugins.codewindow',
 
-  require 'plugins.move',
+    require 'plugins.neogit',
 
-  require 'plugins.bufjump',
+    require 'plugins.gitsigns',
 
-  require 'plugins.undotree',
+    require 'plugins.git_conflict',
 
-  {
-    'gennaro-tedesco/nvim-peekup',
-    enabled = false --[[Mega Slow, plus :Telescope register is almost the same]],
-    lazy = true,
-  },
-  -- Hop (Better Navigation)
-  {
-    'phaazon/hop.nvim',
-    opts = {},
-    lazy = true,
-    enabled = false,
-  },
-  {
-    'jinh0/eyeliner.nvim',
-    lazy = true,
-    enabled = false,
-    config = function()
-      require('eyeliner').setup {
-        highlight_on_key = true, -- show highlights only after keypress
-        dim = false, -- dim all other characters if set to true (recommended!)
-      }
-    end,
-  },
-  require 'plugins.inc-rename',
-  require 'plugins.harpoon',
-  require 'plugins.dressing',
-  require 'plugins.lint',
+    require 'plugins.nvim-hlslens',
+    --------------------------------------
 
-  require 'plugins.oil',
-  require('plugins.' .. vim.g.self.file_tree), -- NOTE: Slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
-  require 'plugins.yazi',
-  -- require 'plugins.nnn', -- NOTE: works fine but needs better NNN configurations with tui-preview plugin ,
-  -- require 'plugins.lf', -- NOTE: Appear to bugout with my toggleterm config
-  require 'plugins.colorizer',
-  require 'plugins.better-scape',
-  require 'plugins.noice',
-  require 'plugins.live-command',
+    -- require 'plugins.telescope-debug',
 
-  require 'plugins.guess-indent',
-  { 'tpope/vim-sleuth', event = 'BufEnter', lazy = true, enabled = false }, -- Detect tabstop and shiftwidth automatically
-  -- :set formatoptions-=r formatoptions-=c formatoptions-=o
-  require 'plugins.scope',
-  require('plugins.' .. vim.g.self.session_plugin),
-  -- @
-  require 'plugins.neo-tree',
-  require 'plugins.nvim-tree',
-  require 'plugins.aerial',
-  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    This is the easiest way to modularize your config.
-  --
-  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
-  true and require 'plugins.spider' or require 'plugins.neowords',
-  require 'plugins.multiple-cursors',
-  require 'plugins.improved-ft',
-  (false and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar' or require 'plugins.incline',
-  require 'plugins.cycler',
-  require 'plugins.snap',
-  require 'plugins.bufmanager',
-  require 'plugins.cybu',
-  require 'plugins.img-clip',
-  require 'plugins.marks', -- alternative: https://github.com/desdic/marlin.nvim
-  -- require 'plugins.trailblazer', -- TODO : Make something simpler than this some other day
-  require 'plugins.portal',
-  require 'plugins.submode',
-  require 'plugins.cmdbuf',
-  require 'plugins.compile-mode',
-  require 'plugins.searchbox',
-  require 'plugins.stickybuf',
-  require 'plugins.lsp',
-  require 'plugins.nvim-snippy',
-  require 'plugins.tmux-file-jump',
-  require 'plugins.zen-mode',
-  { 'sakhnik/nvim-gdb', lazy = true },
-  { 'michaeljsmith/vim-indent-object', lazy = true },
-  'nvim-lua/plenary.nvim',
-  'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
-  'MunifTanjim/nui.nvim',
-  { 'tpope/vim-abolish', lazy = true },
-  -- { 'tpope/vim-surround', lazy = false },
-  { 'tpope/vim-repeat', keys = { { '.' }, { ';' } } },
-  require 'plugins.text-case',
-}
+    -- BUGGY: require 'plugins.autocomplete',
+    -- BUGGY: require 'plugins.epo',
+
+    require 'plugins.cmdbuf',
+    require 'plugins.cmp',
+
+    require 'plugins.todo-comments',
+
+    --------------------------------------
+
+    {
+      'gennaro-tedesco/nvim-peekup',
+      enabled = false --[[Mega Slow, plus :Telescope register is almost the same]],
+      lazy = true,
+    },
+    -- Hop (Better Navigation)
+    {
+      'phaazon/hop.nvim',
+      opts = {},
+      lazy = true,
+      enabled = false,
+    },
+    {
+      'jinh0/eyeliner.nvim',
+      lazy = true,
+      enabled = false,
+      config = function()
+        require('eyeliner').setup {
+          highlight_on_key = true, -- show highlights only after keypress
+          dim = false, -- dim all other characters if set to true (recommended!)
+        }
+      end,
+    },
+    require 'plugins.inc-rename',
+    require 'plugins.lint',
+
+    -- require 'plugins.nnn', -- NOTE: works fine but needs better NNN configurations with tui-preview plugin ,
+    -- require 'plugins.lf', -- NOTE: Appear to bugout with my toggleterm config
+    require 'plugins.noice',
+
+    -- @
+    require 'plugins.neo-tree',
+    -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
+    --    This is the easiest way to modularize your config.
+    --
+    --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
+    --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
+    -- { import = 'custom.plugins' },
+
+    require 'plugins.bufmanager',
+
+    require 'plugins.cybu', -- buffer cycle ? why tho
+
+    require 'plugins.img-clip',
+    -- require 'plugins.trailblazer', -- TODO : Make something simpler than this some other day
+    require 'plugins.portal',
+    require 'plugins.submode',
+
+    require 'plugins.searchbox',
+
+    require 'plugins.nvim-snippy',
+    require 'plugins.tmux-file-jump',
+    { 'michaeljsmith/vim-indent-object', lazy = true },
+    { 'sakhnik/nvim-gdb', lazy = true },
+    require 'plugins.text-case',
+  }
+end
 
 local lazy_config = {
   defaults = { lazy = true },
@@ -274,9 +298,11 @@ local lazy_config = {
     -- Enables extra stats on the debug tab related to the loader cache.
     -- Additionally gathers stats about all package.loaders
     loader = false,
+
     -- Track each new require in the Lazy profiling tab
-    require = false,
+    require = true,
   },
+
   performance = {
     rtp = {
       disabled_plugins = {
@@ -317,7 +343,7 @@ local lazy_config = {
 
 local personally_disable_runtime_plugins = function()
   for _, bplugin in ipairs(lazy_config.performance.rtp.disabled_plugins) do
-    if false then
+    if true then
       break
     end
     vim.g['loaded_' .. bplugin:gsub('%..*', '')] = 1
@@ -327,6 +353,10 @@ end
 personally_disable_runtime_plugins()
 
 -- NOTE: Where you install your plugins.
-require('lazy').setup(plugins, lazy_config)
+require('lazy').setup(plugins(), lazy_config)
+
+require('plugins.local.huge-file').setup()
+require('plugins.local.pattern-highlight').setup()
 
 -- vim: ts=2 sts=2 sw=2 et
+-- :set formatoptions-=r formatoptions-=c formatoptions-=o

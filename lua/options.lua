@@ -68,7 +68,7 @@ if false then
   vim.loader.enable()
 end
 
-vim.o.cursorlineopt = 'both' -- to enable cursorline
+-- vim.o.cursorlineopt = 'oth' -- to enable cursorline
 -- opt.wildmode = 'list:longest,list:full' -- for : stuff
 opt.wildmode = 'list:longest' -- for : stuff
 opt.wildignore:append { '.javac', 'node_modules', '*.pyc' }
@@ -360,7 +360,8 @@ matchit_extend()
 
 -- Long lines a the single most important reason for when it's lagging for no reason
 -- Limiting the highlighting based on column looks like a decent solution
-vim.cmd [[set synmaxcol=250]]
+-- vim.cmd [[set synmaxcol=250]]
+vim.cmd [[set synmaxcol=800]]
 
 if OnWsl() then
   vim.cmd [[

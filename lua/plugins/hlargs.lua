@@ -2,8 +2,9 @@ return {
   'm-demare/hlargs.nvim',
   lazy = false,
   enabled = true,
+  event = { 'BufReadPost' },
   opts = {
-    color = '#909090',
+    color = '#e0e0bb',
     highlight = {},
     excluded_filetypes = {},
     paint_arg_declarations = true,
@@ -41,8 +42,8 @@ return {
       },
     },
   },
-  config = function()
-    require 'custom.plugins.configs.hlargs'
+  config = function(opts)
+    require('hlargs').setup(opts)
     require('hlargs').enable()
   end,
 }

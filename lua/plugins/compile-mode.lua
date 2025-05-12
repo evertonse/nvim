@@ -1,5 +1,6 @@
 return {
-  'evertonse/compile-mode.nvim',
+  -- 'evertonse/compile-mode.nvim',
+  'ej-shafran/compile-mode.nvim',
   -- tag = 'v5.*',
   -- tag = 'v5.3.0',
   main = 'main',

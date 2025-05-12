@@ -10,7 +10,7 @@ local results_width = 1.0 - preview_width
 
 local them = {
   repo = 'nvim-telescope/telescope.nvim',
-  commit_working_path_support = 'bfcc7d5c6f12209139f175e6123a7b7de6d9c18a',
+  commit_working_path_support = 'b4da76be54691e854d3e0e02c36b0245f945c2c7',
   commit_working_path_support_branch = 'master',
 }
 
@@ -21,9 +21,9 @@ local self = {
 }
 
 local using = {
-  repo = self.repo,
-  commit_working_path_support = self.commit_working_path_support_branch,
-  commit_working_path_support_branch = self.commit_working_path_support_branch,
+  repo = them.repo,
+  commit_working_path_support = them.commit_working_path_support_branch,
+  commit_working_path_support_branch = them.commit_working_path_support_branch,
 }
 
 local select_nth_entry = function(nth)
@@ -441,10 +441,8 @@ local function custom_entry_maker(entry, index)
 end
 
 return { -- Fuzzy Finder (files, lsp, etc)
-
   using.repo,
   event = 'VimEnter',
-  -- lazy = false,
   -- tag = '0.1.8',
   branch = using.commit_working_path_support_branch,
   commit = using.commit_working_path_support,
@@ -900,11 +898,17 @@ return { -- Fuzzy Finder (files, lsp, etc)
         -- Slightly advanced example of overriding default behavior and theme
         ['<leader>/'] = {
           function() -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-            builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-              winblend = vim.g.self.is_transparent and 0 or 10,
-              previewer = false,
-              initial_mode = 'insert',
-            })
+            local ok, tthemes = pcall(require, 'telescope.themes')
+            if ok then
+              local dropdown_ok, dropdown = pcall(tthemes.get_dropdown, {
+                winblend = vim.g.self.is_transparent and 0 or 10,
+                previewer = false,
+                initial_mode = 'insert',
+              })
+              if dropdown_ok then
+                pcall(builtin.current_buffer_fuzzy_find, dropdown)
+              end
+            end
           end,
           '[/] Fuzzily search in current buffer',
         },

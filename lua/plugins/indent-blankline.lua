@@ -3,11 +3,28 @@ return {
   'lukas-reineke/indent-blankline.nvim',
   -- Enable `lukas-reineke/indent-blankline.nvim`
   -- See `:help ibl`
-  lazy = false,
+  lazy = true,
   -- event = 'VimEnter',
   event = 'BufReadPost',
   -- event = 'User FilePost',
-  enabled = false,
+  enabled = true,
+
+  keys = {
+    {
+      '<leader>jc',
+      function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local config = require('ibl.config').get_config(bufnr)
+        local scope = require('ibl.scope').get(bufnr, config)
+        if scope then
+          local row, column = scope:start()
+          vim.api.nvim_win_set_cursor(vim.api.nvim_get_current_win(), { row + 1, column })
+          vim.cmd [[normal! _]]
+        end
+      end,
+      'Jump to current context',
+    },
+  },
 
   pin = true,
   main = 'ibl',
