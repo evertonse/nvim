@@ -52,6 +52,7 @@ return function()
   vim.list_extend(ensure_installed, {
     'stylua', -- Used to format Lua code
   })
+
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
   local servers_from_local_machine = { 'ols', 'jdtls', 'basedpyright' }
@@ -64,7 +65,8 @@ return function()
       server_opts.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server_opts.capabilities or {})
       server_opts.root_dir = server_opts.root_dir
         or function(fname)
-          return lspconfig.util.root_pattern('setup.py', 'setup.cfg', 'pyproject.toml', '.git')(fname) or vim.fn.getcwd()
+          return lspconfig.util.root_pattern('setup.py', 'setup.cfg', 'pyproject.toml', '.git')(fname)
+            or vim.fn.getcwd()
         end
       lspconfig[server_local].setup(server_opts)
     end

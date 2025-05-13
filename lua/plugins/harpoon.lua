@@ -1,7 +1,8 @@
 return {
   'ThePrimeagen/harpoon',
-  lazy = false,
+  lazy = true,
   enabled = true,
+  keys = { { '<A-o>', mode = { 'n', 'v', 'x' } } },
   dependencies = {
     { 'nvim-lua/plenary.nvim' },
   },
@@ -28,7 +29,7 @@ return {
         mark_branch = false,
 
         -- enable tabline with harpoon marks
-        tabline = true,
+        tabline = false,
         tabline_prefix = '   ',
         tabline_suffix = '   ',
       },

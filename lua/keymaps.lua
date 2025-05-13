@@ -94,171 +94,6 @@ local function close_buffers_by_operation(operation)
   require('scope.core').revalidate()
 end
 
-local goto_file = function(file, line_num, col_num)
-  -- get absolute, resolved path for reliable bufname matching
-  local abs = vim.fn.fnamemodify(file, ':p')
-  abs = vim.fn.resolve(abs)
-
-  line_num = line_num and tonumber(line_num) or 0
-  col_num = col_num and tonumber(col_num) or 0
-
-  -- 1) look through all windows in the current tab
-  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-    local buf = vim.api.nvim_win_get_buf(win)
-    local name = vim.api.nvim_buf_get_name(buf)
-    if name == abs then
-      vim.api.nvim_set_current_win(win)
-
-      if line_num ~= 0 then
-        vim.api.nvim_win_set_cursor(win, { line_num, col_num })
-      end
-      return
-    end
-  end
-
-  --  not in this tab: is the buffer loaded anywhere?
-  local bufnr = vim.fn.bufnr(abs, false) -- false = don’t create
-  local target_win = vim.api.nvim_tabpage_list_wins(0)[1]
-  vim.api.nvim_set_current_win(target_win)
-
-  if bufnr ~= -1 then
-    -- buffer exists, just switch to it
-    vim.api.nvim_win_set_buf(target_win, bufnr)
-    if line_num ~= 0 then
-      vim.api.nvim_win_set_cursor(target_win, { line_num, col_num })
-    end
-  else
-    -- not loaded: edit the file in that window
-    file = vim.fn.fnameescape(abs)
-    if line_num then
-      file = (file .. '|' .. line_num)
-    end
-    -- Open the file
-    vim.cmd('edit ' .. file)
-    if line_num ~= 0 then
-      vim.api.nvim_win_set_cursor(target_win, { line_num, col_num })
-    end
-  end
-end
-
-GotoFileFromLine = function(line_string)
-  -- Get the full line
-  -- Get the word under cursor as if using 'viW'S if current line doesnt yield anything
-  if not line_string then
-    line_string = vim.api.nvim_get_current_line()
-    if line_string == '' then
-      line_string = vim.fn.expand '<cWORD>'
-    end
-  end
-
-  local file, line_num, col_num
-  -- Try to get the file path from the current cursor position first
-  local cfile = vim.fn.expand '<cfile>'
-  if vim.fn.filereadable(cfile) == 1 then
-    file = cfile
-  end
-
-  -- Parse file and line number with more formats
-  local patterns = {
-    -- [[23 ▏   │
-    '%[%[%d+%s*([^│%[%]()]+)%s*%[(%d+)%].*:.*',
-
-    -- sh: /home/excyber/.config/shell/variables.sh: line 12: syntax error near unexpected token `else'
-    '%s*sh.%s*([^│%[%]():]+)%s*.%s*line%s*(%d+).*',
-    -- File "/home/excyber/code/dotfiles/./installer.py", line 334, in <module>
-    '%s*File%s*"([^│%[%]():]+)"%s*.%s*line%s*(%d+).*',
-
-    '([^│%[%]()]+)%s*%[(%d+)%].*:.*',
-    '([^%[%]()]+)%s*%[(%d+)%].*:.*',
-    '.*{([^:()]+)%((%d+):%d+%)}.*',
-    '([^:()]+)%((%d+):%d+%).*',
-    '([^:()]+):(%d+):(%d+).*', -- file:123:123
-    '([^:()]+):(%d+).*', -- file:123
-    '([^|()]+)|(%d+).*', -- file|123
-    '([^:()]+).*', -- just file
-    '([^|()]+).*', -- just file with pipe
-  }
-
-  for _, pattern in ipairs(patterns) do
-    file, line_num, col_num = string.match(line_string, pattern)
-    if file then
-      local newfile = string.match(file, '.*{([^:()]+)}.*')
-      if newfile then
-        file = newfile
-      end
-      break
-    end
-  end
-
-  if not file then
-    vim.notify 'File not found under cursor'
-    return
-  end
-  -- Expand the path
-  file = string.gsub(file, '^%s*(.-)%s*$', '%1')
-  file = vim.fn.expand(file)
-
-  -- Check if file exists or is readable
-  if vim.fn.filereadable(file) ~= 1 then
-    vim.notify('File not readable: ' .. file, vim.log.levels.DEBUG)
-    local ok = pcall(vim.cmd, [[normal! gF]]) -- Last resource
-    if not ok then
-      vim.print('File not found: ' .. file)
-    end
-    return
-  end
-
-  -- Get real path
-  file = vim.fn.resolve(file)
-
-  -- Check if we're in a floating window
-  local win_config = vim.api.nvim_win_get_config(0)
-  if win_config.relative ~= '' then
-    -- Find a non-floating window
-    local windows = vim.api.nvim_list_wins()
-
-    local target_win = nil
-    local floating_windows = {}
-    -- Close all floating windows
-    for _, win in ipairs(windows) do
-      local conf = vim.api.nvim_win_get_config(win)
-      if conf.relative ~= '' then
-        table.insert(floating_windows, win)
-      else
-        if target_win == nil then
-          target_win = win
-        end
-      end
-    end
-
-    -- Switch to the non-floating window
-    if target_win then
-      for _, win in ipairs(floating_windows) do
-        vim.api.nvim_win_close(win, false)
-      end
-      vim.api.nvim_set_current_win(target_win)
-    else
-      -- No non-floating window found
-      vim.notify('No non-floating window found', vim.log.levels.WARN)
-      return
-    end
-  end
-
-  file = vim.fn.fnameescape(file)
-
-  local use_vim_cmd = false
-  if not use_vim_cmd then
-    goto_file(file, line_num, col_num)
-  else
-    if line_num then
-      file = (file .. '|' .. line_num)
-    end
-    -- Open the file
-    vim.cmd('edit ' .. file)
-  end
-  vim.cmd 'normal! zz'
-end
-
 -- add this table only when you want to disable default keys
 -- TIPS `:map <key>` to see all keys with that prefix
 
@@ -708,7 +543,8 @@ local float_term_run_selection = function()
   end
   local tt = require 'toggleterm'
 
-  local selection = GetVisualSelection { register = 'a', escape = { enabled = false, parens = false, brackets = false } }
+  local selection =
+    GetVisualSelection { register = 'a', escape = { enabled = false, parens = false, brackets = false } }
 
   local first_open = float_term.terminal == nil
   local f = float_term_get_or_create()
@@ -941,7 +777,10 @@ M.general = {
       'Toggle floating terminal',
     },
 
-    ['<leader>rw'] = { [[:]] .. substitute .. [[/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS>]], '[R]eplace [W]ord' },
+    ['<leader>rw'] = {
+      [[:]] .. substitute .. [[/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS>]],
+      '[R]eplace [W]ord',
+    },
     -->> neo-tree
     ['<leader>e'] = {
       file_tree_toggle { focus_file = false },
@@ -971,7 +810,6 @@ M.general = {
     -->> commands
     ['<leader>gd'] = { grep_and_show_results, noremap_opts }, -- NOTE:This is remaped when lsp is present
     -- ['gf'] = { 'gFzz', noremap_opts },
-    ['gf'] = { GotoFileFromLine, noremap_opts },
 
     ['<C-o>'] = { '<C-o>zz', noremap_opts },
     ['<C-i>'] = { '<C-i>zz', noremap_opts },
@@ -1806,8 +1644,11 @@ local setup_marks_to_always_globals = function()
       local buffer_name = vim.fn.bufname(existing_mark[1])
       local line_number = existing_mark[2]
       -- Prompt the user for confirmation
-      local response =
-        vim.fn.confirm("Mark '" .. mark .. "' " .. buffer_name .. ':' .. line_number .. '  already exists.\nOverwrite?', '&yes\n&no', 2)
+      local response = vim.fn.confirm(
+        "Mark '" .. mark .. "' " .. buffer_name .. ':' .. line_number .. '  already exists.\nOverwrite?',
+        '&yes\n&no',
+        2
+      )
       if response ~= 1 then
         return
       end
@@ -1945,11 +1786,19 @@ if type(toggle_prefix) == 'string' and toggle_prefix ~= '' then
     map_toggle('s', '<Cmd>setlocal spell!<CR>', "Toggle 'spell'")
     map_toggle('w', '<Cmd>setlocal wrap!<CR>', "Toggle 'wrap'")
   else
-    map_toggle('b', '<Cmd>lua vim.o.bg = vim.o.bg == "dark" and "light" or "dark"; print(vim.o.bg)<CR>', "Toggle 'background'")
+    map_toggle(
+      'b',
+      '<Cmd>lua vim.o.bg = vim.o.bg == "dark" and "light" or "dark"; print(vim.o.bg)<CR>',
+      "Toggle 'background'"
+    )
     map_toggle('c', '<Cmd>setlocal cursorline! cursorline?<CR>', "Toggle 'cursorline'")
     map_toggle('C', '<Cmd>setlocal cursorcolumn! cursorcolumn?<CR>', "Toggle 'cursorcolumn'")
     map_toggle('d', '<Cmd>lua print(MiniBasics.toggle_diagnostic())<CR>', 'Toggle diagnostic')
-    map_toggle('h', '<Cmd>let v:hlsearch = 1 - v:hlsearch | echo (v:hlsearch ? "  " : "no") . "hlsearch"<CR>', 'Toggle search highlight')
+    map_toggle(
+      'h',
+      '<Cmd>let v:hlsearch = 1 - v:hlsearch | echo (v:hlsearch ? "  " : "no") . "hlsearch"<CR>',
+      'Toggle search highlight'
+    )
     map_toggle('i', '<Cmd>setlocal ignorecase! ignorecase?<CR>', "Toggle 'ignorecase'")
     map_toggle('l', '<Cmd>setlocal list! list?<CR>', "Toggle 'list'")
     map_toggle('n', '<Cmd>setlocal number! number?<CR>', "Toggle 'number'")
@@ -2053,14 +1902,26 @@ function JumpPosition(count)
     if vim.fn.filereadable(pos.file) == 0 then
       print('File not found: ' .. pos.file)
       table.remove(Positions, positions_current_index)
-      vim.fn.sign_place(pos.row, 'PositionSigns', 'PositionSign', vim.api.nvim_get_current_buf(), { lnum = other.line, priority = 10 })
+      vim.fn.sign_place(
+        pos.row,
+        'PositionSigns',
+        'PositionSign',
+        vim.api.nvim_get_current_buf(),
+        { lnum = other.line, priority = 10 }
+      )
       return
     end
 
     vim.cmd('edit ' .. pos.file)
     for _, other in ipairs(Positions) do
       if other.file == pos.file then
-        vim.fn.sign_place(pos.row, 'PositionSigns', 'PositionSign', vim.api.nvim_get_current_buf(), { lnum = other.line, priority = 10 })
+        vim.fn.sign_place(
+          pos.row,
+          'PositionSigns',
+          'PositionSign',
+          vim.api.nvim_get_current_buf(),
+          { lnum = other.line, priority = 10 }
+        )
       end
     end
     vim.api.nvim_win_set_cursor(0, { pos.line, pos.col })

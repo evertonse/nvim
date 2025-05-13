@@ -327,7 +327,7 @@ M.init = function()
     desc = 'Huge-file',
   })
 
-  local _ = true
+  local _ = false
     and vim.api.nvim_create_autocmd('BufReadPost', {
       pattern = { '*' },
       group = augroup,

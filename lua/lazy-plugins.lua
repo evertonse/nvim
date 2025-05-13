@@ -19,6 +19,7 @@
 local plugins_local = {
   require 'plugins.local.huge-file',
   require 'plugins.local.pattern-highlight',
+  require 'plugins.local.gfx',
 }
 
 for _, plugin in pairs(plugins_local) do

@@ -442,7 +442,7 @@ end
 
 return { -- Fuzzy Finder (files, lsp, etc)
   using.repo,
-  event = 'VimEnter',
+  event = 'VeryLazy',
   -- tag = '0.1.8',
   branch = using.commit_working_path_support_branch,
   commit = using.commit_working_path_support,

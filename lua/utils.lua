@@ -107,6 +107,12 @@ SetKeyMaps = function(mapping_table)
     else
       opts = { noremap = true, silent = true }
     end
+
+    if mode == mapping == nil or mapping[1] == nil or key == nil then
+      vim.notify('Keymap error:' .. vim.inspect { mode = mode, key = key, mapping = mapping, opts = opts })
+      return
+    end
+
     vim.keymap.set(mode, key, mapping[1], opts)
   end
 

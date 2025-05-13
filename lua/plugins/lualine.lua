@@ -110,7 +110,7 @@ local cached_lsp = {
 
 return {
   'nvim-lualine/lualine.nvim',
-  event = 'BufRead',
+  event = 'BufReadPost',
   dependencies = { 'nvim-tree/nvim-web-devicons' },
   config = function(opts)
     local lualine = require 'lualine'
@@ -124,8 +124,8 @@ return {
         always_divide_middle = true,
         globalstatus = true,
         refresh = {
-          statusline = 120, -- Refresh less frequently (1 second)
-          tabline = 1000000000,
+          statusline = 175, -- Refresh less frequently (1 second)
+          tabline = 10000000000,
           winbar = 1000000000,
         },
       },

@@ -2,10 +2,11 @@ return {
   -- 'evertonse/compile-mode.nvim',
   'ej-shafran/compile-mode.nvim',
   -- tag = 'v5.*',
-  -- tag = 'v5.3.0',
-  main = 'main',
+  tag = 'v5.3.0',
+  -- main = 'main',
+  cmds = { 'Compile' },
 
-  lazy = false,
+  lazy = true,
   -- you can just use the latest version:
   -- branch = "latest",
   -- or the most up-to-date updates:
@@ -20,7 +21,7 @@ return {
     ---@type CompileModeOpts
     vim.g.compile_mode = {
       -- to add ANSI escape code support, add:
-      -- baleia_setup = true,
+      baleia_setup = true,
     }
   end,
 }

@@ -1,2 +1,3 @@
 - add speed test files like sql amalgamation, zig.ll or zig.c (generated automatically)
-- Can we move queries to `afer/`
+- Can we move queries, snippets to `after/`?
+- make snippet work again >.<

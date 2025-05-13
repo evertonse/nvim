@@ -3,7 +3,7 @@ local comment_block_prefix = 'gB'
 return {
   'numToStr/Comment.nvim',
   lazy = true,
-  keys = { 'gc', mode = { 'n', 'v', 'x' } },
+  keys = { { 'gc', mode = { 'n', 'v', 'x' } } },
   opts = {
     ---Add a space b/w comment and the line
     padding = true,
