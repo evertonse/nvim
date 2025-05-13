@@ -180,6 +180,13 @@ end
 
 M.setup = function()
   GotoFile = M.goto_file
+  vim.api.nvim_create_user_command('GotoFile', function(opts)
+    -- Inspect(opts)
+    M.goto_file(opts.args)
+  end, {
+    nargs = 1,
+  })
+
   vim.keymap.set({ 'n', 'v' }, 'gf', function()
     M.goto_file()
   end, { noremap = true, silent = true })

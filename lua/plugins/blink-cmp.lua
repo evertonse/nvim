@@ -173,8 +173,9 @@ return {
         return {}
       end,
       keymap = {
-        -- preset = 'super-tab',
-        preset = 'cmdline',
+        preset = 'super-tab',
+        -- preset = 'none',
+        -- preset = 'cmdline',
 
         -- If completion hasn't been triggered yet, insert the first suggestion; if it has, cycle to the next suggestion.
         ['<C-Tab>'] = {
