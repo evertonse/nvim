@@ -106,7 +106,7 @@ end
 return {
   'saghen/blink.cmp',
   -- optional: provides snippets for the snippet source
-  dependencies = 'rafamadriz/friendly-snippets',
+  dependencies = { 'evertonse/friendly-snippets', enabled = true },
   -- event = 'BufReadPost',
   event = { 'CmdlineChanged', 'InsertCharPre' },
   enabled = true,
@@ -123,6 +123,7 @@ return {
   ---@module 'blink.cmp'
   ---@type blink.cmp.Config
   opts = {
+
     -- 'default' for mappings similar to built-in completion
     -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
     -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
@@ -249,6 +250,14 @@ return {
       default = { 'lsp', 'path', 'snippets', 'buffer' },
 
       providers = {
+        snippets = {
+          name = 'snippets',
+          enabled = true,
+          min_keyword_length = 2,
+          opts = {
+            search_paths = { vim.fn.stdpath 'config', vim.fn.stdpath 'config' .. '/after/snippets/' },
+          },
+        },
         cmdline = {
           enabled = function()
             -- return vim.fn.getcmdline():sub(1, 1) ~= '!'

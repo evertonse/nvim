@@ -133,22 +133,22 @@ local lsp_keymaps = function(event)
 end
 
 local lsp_optimize_server_capabilites = function(client)
-  client.server_capabilities.documentFormattingProvider = true
-  client.server_capabilities.documentRangeFormattingProvider = true
-  client.server_capabilities.hoverProvider = true
-  client.server_capabilities.signatureHelpProvider = true
-  client.server_capabilities.documentSymbolProvider = true
-  client.server_capabilities.colorProvider = true
-  client.server_capabilities.publishDiagnostics = true
-  client.server_capabilities.referencesProvider = true
-  client.server_capabilities.renameProvider = true
-  client.server_capabilities.implementationProvider = true
-  client.server_capabilities.typeDefinitionProvider = true
-  client.server_capabilities.declarationProvider = true
-  client.server_capabilities.workspaceSymbolProvider = true
-  client.server_capabilities.selectionRangeProvider = true
-  client.server_capabilities.foldingRangeProvider = true
-  client.server_capabilities.completionProvider.resolveProvider = true
+  -- client.server_capabilities.documentFormattingProvider = true
+  -- client.server_capabilities.documentRangeFormattingProvider = true
+  -- client.server_capabilities.hoverProvider = true
+  -- client.server_capabilities.signatureHelpProvider = true
+  -- client.server_capabilities.documentSymbolProvider = true
+  -- client.server_capabilities.colorProvider = true
+  -- client.server_capabilities.publishDiagnostics = true
+  -- client.server_capabilities.referencesProvider = true
+  -- client.server_capabilities.renameProvider = true
+  -- client.server_capabilities.implementationProvider = true
+  -- client.server_capabilities.typeDefinitionProvider = true
+  -- client.server_capabilities.declarationProvider = true
+  -- client.server_capabilities.workspaceSymbolProvider = true
+  -- client.server_capabilities.selectionRangeProvider = true
+  -- client.server_capabilities.foldingRangeProvider = true
+  -- client.server_capabilities.completionProvider.resolveProvider = true
 
   -- client.server_capabilities.semanticTokensProvider = nil
   -- client.server_capabilities.textDocumentSync = nil
@@ -396,11 +396,10 @@ local lsp_attach_autocommands = function()
         client.server_capabilities.documentFormattingProvider = false
       end
 
-      -- -- nightly has inbuilt completions, this can replace all completion plugins
-      -- if client:supports_method("textDocument/completion", bufnr) then
-      --   -- Enable auto-completion
-      --   vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-      -- end
+      if client:supports_method('textDocument/completion', bufnr) then
+        -- Enable auto-completion
+        vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+      end
     end,
   })
 

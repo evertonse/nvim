@@ -7,7 +7,10 @@
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 --
--- vim.cmd [[ filetype plugin off]]
+vim.cmd [[ filetype plugin on]]
+vim.cmd 'filetype plugin indent off'
+-- vim.filetype.add
+
 -- vim.cmd [[ set omnifunc= ]]
 local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
 local surround_opts = { 'mini.surround', 'vim-surround' }
@@ -58,6 +61,7 @@ local o, opt, g = vim.o, vim.opt, vim.g
 
 g.mapleader = ' '
 g.maplocalleader = ' '
+
 g.loaded_perl_provider = 0
 g.loaded_ruby_provider = 0
 g.loaded_node_provider = 0
@@ -113,7 +117,6 @@ opt.wildignore:append {
 vim.o.wildmenu = true -- if set to `false` disallow autocomplete on cmdline since I'm using cmp.cmdline
 
 opt.suffixesadd:append { '.java', '.rs' } -- search for suffexes using gf
--- vim.filetype.add
 
 -- vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
 -- vim.o.sessionoptions = 'buffers,curdir,folds,help,tabpages,winsize,winpos'
@@ -224,7 +227,6 @@ o.undofile = true -- Enable persistent undo (see also `:h undodir`)
 o.backup = false -- Don't store backup while overwriting the file
 o.writebackup = false -- Don't store backup while overwriting the file
 
-vim.cmd 'filetype plugin indent on' -- Enable all filetype plugins
 vim.cmd [[ set backspace=indent,eol,start ]]
 
 -- Appearance
@@ -346,9 +348,9 @@ end
 --vim.cmd [[ :set iskeyword-=- ]]
 vim.cmd ':set clipboard=""'
 
--- vim.opt.matchpairs:append '<:>'
+vim.opt.matchpairs:append '<:>'
 -- NOTE: Needs to make sure matchit is not disabled
--- vim.g.matchit_words = vim.g.matchit_words and vim.g.matchit_words .. ',function:end' or 'function:end'
+vim.g.matchit_words = vim.g.matchit_words and vim.g.matchit_words .. ',function:end' or 'function:end'
 -- Ensure matchit is not disabled
 local matchit_extend = function()
   -- List of pairs to add

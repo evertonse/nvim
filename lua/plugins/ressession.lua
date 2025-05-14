@@ -97,7 +97,9 @@ return {
           vim.schedule(function()
             vim.cmd [[stopinsert]]
             vim.cmd [[set cmdheight=1]]
-            vim.cmd.e()
+            if vim.fn.bufname '%' ~= '' then
+              vim.cmd.edit()
+            end
           end)
         end
 

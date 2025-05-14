@@ -94,6 +94,11 @@ M.goto_file = function(line_string)
     '([^:()]+).*',
   }
 
+  local pattern_extended = {
+    -- require 'plugins.local.huge-file',
+    lua = [[.*'([^│%[%]():,]+)'.*]],
+  }
+
   local file, line_num, col_num
   for _, pattern in ipairs(patterns) do
     file, line_num, col_num = string.match(line_string, pattern)

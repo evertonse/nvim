@@ -55,6 +55,7 @@ return { -- Highlight, edit, and navigate code
   -- event = { 'BufEnter' },
   dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects', event = 'InsertEnter' },
   opts = {
+    sync_install = false,
 
     --XXX: Found out that putting these highlight options is laggy on long lines when the cursor is
     -- on the far right going up and down (j and k movement).
@@ -69,6 +70,7 @@ return { -- Highlight, edit, and navigate code
 
     incremental_selection = {
       enable = true,
+      disable = disable_treesitter_when,
       keymaps = {
         init_selection = '<CR>',
         scope_incremental = '<CR>',
@@ -175,6 +177,7 @@ return { -- Highlight, edit, and navigate code
 
     -- Prefer git instead of curl in order to improve connectivity in some environments
     require('nvim-treesitter.install').prefer_git = true
+
     ---@diagnostic disable-next-line: missing-fields
     require('nvim-treesitter.configs').setup(opts)
 
