@@ -1,5 +1,4 @@
 -- [[ Configure and install plugins ]]
---
 --  Docs:
 --    https://lazy.folke.io/spec
 --  To check the current status of your plugins, run
@@ -12,9 +11,7 @@
 --
 -- 🔒 Lockfile
 -- After every update, the local lockfile (lazy-lock.json) is updated with the installed revisions. It is recommended to have this file under version control.
---
--- If you use your Neovim config on multiple machines, using the lockfile, you can ensure that the same version of every plugin is installed.
--- If you are on another machine, you can do `:Lazy restore`, to update all your plugins to the version from the lockfile.
+-- If you are on another machine, you can do `:Lazy restore`, to update all your plugins to the version from the ' lockfile'.
 
 local plugins_local_setup = function()
   local plugins_local = {
@@ -31,19 +28,16 @@ end
 local plugins = function()
   return {
     require 'plugins.colorscheme',
-    --
-    -- -- PERF Lsp slow as fuck sometimes, but culprit might always be the server its self, but nonethe less everything should be async, so if the server is slowing the fuck down, what does it matter to us? that seems like a problem
+
+    -- PERF Lsp slow as fuck sometimes, but culprit might always be the server its self, but nonethe less everything should be async, so if the server is slowing the fuck down, what does it matter to us? that seems like a problem
     -- require 'plugins.lsp',
+
     require('plugins.' .. vim.g.self.file_tree), -- NOTE: Neotree is slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
     require 'plugins.telescope',
     require 'plugins.Comment',
     require 'plugins.mini',
     require 'plugins.cycler',
     require 'plugins.move',
-    --
-    require 'plugins.mason',
-    -- require 'plugins.fidget',
-    -- require 'plugins.neodev',
 
     -- PERF: Slow In bigfiles, treesitter has a slight slow when highlighting
     -- In cases like this regex based highglight is instant. Also inserting is majorly slow with treesitter, even if highlight is turned off.
@@ -51,8 +45,13 @@ local plugins = function()
     -- Edit: `.ll` files from llvm is slow to <C-d> or <C-u> from the end (tested with a.ll)
     --     Disabling the highlight fix it
     -- Update: a.ll
-    require 'plugins.treesitter',
-    require 'plugins.nvim-treesitter-pairs',
+    require 'plugins.nvim-treesitter',
+
+    -- require 'plugins.nvim-treesitter-pairs',
+
+    require 'plugins.mason',
+    -- require 'plugins.fidget',
+    -- require 'plugins.neodev',
 
     require 'plugins.lualine',
     -- require 'plugins.staline',
@@ -97,9 +96,13 @@ local plugins = function()
     true and require 'plugins.spider' or require 'plugins.neowords',
     require 'plugins.multiple-cursors',
     require 'plugins.improved-ft',
+
+    -- PERF test dropbar
     -- (true and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar' or require 'plugins.incline',
+
     -- PERF haven't tested fully but it seemed better without it
     -- require 'plugins.marks', -- alternative: https://github.com/desdic/marlin.nvim
+
     require 'plugins.snap',
 
     require 'plugins.aerial',

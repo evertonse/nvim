@@ -167,6 +167,9 @@
 ------------------------------------------------------------------------------------------------------
 
 -- TODO Utils autocommands and such are slow enough
+-- PERF: Event if we have an empty init.lua opening ./assets/speed/rmlint.sh takes a while to load
+--       But if we use nvim -u NONE then it's fast, or even pure vim, it's fast to load, not necessarily to C-d the full life
+--       Need to investigate that, even when using nvim-tmp APPNAME is does the same slow load
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
@@ -192,4 +195,4 @@ require 'lazy-bootstrap'
 require 'lazy-plugins'
 
 -- [[ Configure Lsp ]]
--- require 'lsp'
+require 'lsp'

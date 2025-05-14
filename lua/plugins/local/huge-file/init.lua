@@ -10,17 +10,6 @@ local should_disable = function(bufnr)
   local buf = bufs[bufnr]
   local buf_ft = buf:ft()
 
-  local fts = { 'bin', 'odin', 'tmux', 'llvm', 'conf' }
-  for i, ft in ipairs(fts) do
-    if buf_ft == ft then
-      return true
-    end
-  end
-
-  if string.find(buf.name, 'tmux%-') then
-    return true
-  end
-
   local MB = 8
   if buf.size > (MB * 1024 * 1024) then
     return true
@@ -237,6 +226,7 @@ list.vimopts = {
     -- vim.opt_local.undolevels = -1 --- Makes no undo
     vim.opt_local.undoreload = 0
     vim.opt_local.list = false
+    vim.wo.wrap = false
 
     vim.opt_local.cursorline = false
     vim.opt_local.redrawtime = 12525

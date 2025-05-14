@@ -63,9 +63,26 @@ g.loaded_ruby_provider = 0
 g.loaded_node_provider = 0
 g.loaded_python_provider = 0
 g.loaded_python3_provider = 0
+g.loaded_netrw = 1
+g.loaded_netrwPlugin = 1
+g.loaded_matchparen = 1
+g.loaded_gzip = 1
+g.loaded_tar = 1
+g.loaded_tarPlugin = 1
+g.loaded_zip = 1
+g.loaded_zipPlugin = 1
+g.loaded_rrhelper = 1
+g.loaded_2html_plugin = 1
+g.loaded_vimball = 1
+g.loaded_vimballPlugin = 1
+g.loaded_getscript = 1
+g.loaded_getscriptPlugin = 1
+g.loaded_logiPat = 1
+g.loaded_spellfile_plugin = 1
+
 opt.fillchars:append { eob = ' ' }
 
-if false then
+if vim.loader then
   vim.loader.enable()
 end
 
@@ -134,6 +151,8 @@ g.loaded_netrwFileHandlers = 1
 g.netrw_browse_split = 0
 g.netrw_banner = 0
 g.netrw_winsize = 25
+g.do_filetype_lua = 0
+g.did_load_filetypes = 1
 
 local options = {
   laststatus = 3,
@@ -158,7 +177,7 @@ local options = {
   termguicolors = true, -- set term gui colors (most terminals support this)
   timeoutlen = 100, -- time to wait for a mapped sequence to complete (in milliseconds)
   undofile = true, -- enable persistent undo
-  updatetime = 10, -- faster completion (4000ms default)
+  updatetime = 75, -- faster completion (4000ms default)
   backup = false, -- creates a backup file
   writebackup = false, -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
 

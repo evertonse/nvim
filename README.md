@@ -3,6 +3,23 @@
 
     git clone https://github.com/evertonse/nvim ~/.config/nvim
 
+## Tagging
+    
+Tagging a commit (-a creates an annotated tag.)
+    git tag -a v1.0.0 <commit-hash> -m "Tagging older release"
+
+View Tags
+
+    git tag
+
+## Debug
+
+    nvim -u /tmp/init.lua +"syntax off" +"filetype off" assets/speed/rmlint.sh
+    :verbose autocmd BufReadPost
+
+    nvim --startuptime startup.log -u ~/.config/nvim-min/init.lua --noplugin empty.txt
+
+
 ![](assets/theme1.png)
 
 ![](assets/theme2.png)

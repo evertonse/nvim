@@ -371,7 +371,7 @@ local lsp_attach_autocommands = function()
   au('VimEnter', {
     group = group,
     callback = function(event)
-      vim.cmd.e()
+      --vim.cmd.e()
     end,
   })
 
