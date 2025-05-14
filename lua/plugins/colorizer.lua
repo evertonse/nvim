@@ -37,6 +37,7 @@ return {
     filetypes = {
       -- '*',
       'css',
+      'lua',
       'javascript',
       'yaml',
       'yml',

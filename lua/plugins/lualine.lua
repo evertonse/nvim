@@ -18,7 +18,8 @@ local mode_map = {
 
 -- Fast LSP component
 local function lsp_status()
-  local buf_clients = vim.lsp.buf_get_clients()
+  -- local buf_clients = vim.lsp.get_active_clients()
+  local buf_clients = vim.lsp.get_clients { bufnr = 0 }
   if #buf_clients == 0 then
     return ''
   end
@@ -100,17 +101,9 @@ local line_column = {
   end,
 }
 
--- Avoid creating the component on every redraw
-local cached_lsp = {
-  function()
-    return lsp_status()
-  end,
-  -- color = { fg = '#ffffff', gui = 'bold' },
-}
-
 return {
   'nvim-lualine/lualine.nvim',
-  event = 'BufReadPost',
+  event = 'BufWinEnter',
   dependencies = { 'nvim-tree/nvim-web-devicons' },
   config = function(opts)
     local lualine = require 'lualine'

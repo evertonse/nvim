@@ -12,9 +12,11 @@ local setup_blink_cmp_vim_on_key = function()
   vim.on_key(function(key, typed)
     -- key is a string like '\t' for Tab, '\x1b[Z' for S-Tab, etc.
     -- Exit loop on any key that is not Tab or S-Tab
-    if inloop and key ~= '\t' and key ~= vim.api.nvim_replace_termcodes('<S-Tab>', true, true, true) then
-      inloop = false
-    end
+    vim.schedule(function()
+      if inloop and key ~= '\t' and key ~= vim.api.nvim_replace_termcodes('<S-Tab>', true, true, true) then
+        inloop = false
+      end
+    end)
   end) -- or 0 for current buffer
 end
 

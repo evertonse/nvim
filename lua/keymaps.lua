@@ -543,8 +543,7 @@ local float_term_run_selection = function()
   end
   local tt = require 'toggleterm'
 
-  local selection =
-    GetVisualSelection { register = 'a', escape = { enabled = false, parens = false, brackets = false } }
+  local selection = GetVisualSelection { register = 'a', escape = { enabled = false, parens = false, brackets = false } }
 
   local first_open = float_term.terminal == nil
   local f = float_term_get_or_create()
@@ -1644,11 +1643,8 @@ local setup_marks_to_always_globals = function()
       local buffer_name = vim.fn.bufname(existing_mark[1])
       local line_number = existing_mark[2]
       -- Prompt the user for confirmation
-      local response = vim.fn.confirm(
-        "Mark '" .. mark .. "' " .. buffer_name .. ':' .. line_number .. '  already exists.\nOverwrite?',
-        '&yes\n&no',
-        2
-      )
+      local response =
+        vim.fn.confirm("Mark '" .. mark .. "' " .. buffer_name .. ':' .. line_number .. '  already exists.\nOverwrite?', '&yes\n&no', 2)
       if response ~= 1 then
         return
       end
@@ -1786,19 +1782,11 @@ if type(toggle_prefix) == 'string' and toggle_prefix ~= '' then
     map_toggle('s', '<Cmd>setlocal spell!<CR>', "Toggle 'spell'")
     map_toggle('w', '<Cmd>setlocal wrap!<CR>', "Toggle 'wrap'")
   else
-    map_toggle(
-      'b',
-      '<Cmd>lua vim.o.bg = vim.o.bg == "dark" and "light" or "dark"; print(vim.o.bg)<CR>',
-      "Toggle 'background'"
-    )
+    map_toggle('b', '<Cmd>lua vim.o.bg = vim.o.bg == "dark" and "light" or "dark"; print(vim.o.bg)<CR>', "Toggle 'background'")
     map_toggle('c', '<Cmd>setlocal cursorline! cursorline?<CR>', "Toggle 'cursorline'")
     map_toggle('C', '<Cmd>setlocal cursorcolumn! cursorcolumn?<CR>', "Toggle 'cursorcolumn'")
     map_toggle('d', '<Cmd>lua print(MiniBasics.toggle_diagnostic())<CR>', 'Toggle diagnostic')
-    map_toggle(
-      'h',
-      '<Cmd>let v:hlsearch = 1 - v:hlsearch | echo (v:hlsearch ? "  " : "no") . "hlsearch"<CR>',
-      'Toggle search highlight'
-    )
+    map_toggle('h', '<Cmd>let v:hlsearch = 1 - v:hlsearch | echo (v:hlsearch ? "  " : "no") . "hlsearch"<CR>', 'Toggle search highlight')
     map_toggle('i', '<Cmd>setlocal ignorecase! ignorecase?<CR>', "Toggle 'ignorecase'")
     map_toggle('l', '<Cmd>setlocal list! list?<CR>', "Toggle 'list'")
     map_toggle('n', '<Cmd>setlocal number! number?<CR>', "Toggle 'number'")
@@ -1836,8 +1824,8 @@ map(
 -- Neovim>=0.8 but slightly worse than builtins in Neovim>=0.10)
 -- TODO: Remove this after compatibility with Neovim=0.9 is dropped
 if vim.fn.has 'nvim-0.10' == 0 then
-  -- map('x', '*', [[y/\V<C-R>=escape(@", '/\')<CR><CR>]], { desc = 'Search forward' })
-  -- map('x', '#', [[y?\V<C-R>=escape(@", '?\')<CR><CR>]], { desc = 'Search backward' })
+  map('x', '*', [[y/\V<C-R>=escape(@", '/\')<CR><CR>]], { desc = 'Search forward' })
+  map('x', '#', [[y?\V<C-R>=escape(@", '?\')<CR><CR>]], { desc = 'Search backward' })
 end
 
 -- Alternative way to save and exit in Normal mode.
@@ -1902,26 +1890,14 @@ function JumpPosition(count)
     if vim.fn.filereadable(pos.file) == 0 then
       print('File not found: ' .. pos.file)
       table.remove(Positions, positions_current_index)
-      vim.fn.sign_place(
-        pos.row,
-        'PositionSigns',
-        'PositionSign',
-        vim.api.nvim_get_current_buf(),
-        { lnum = other.line, priority = 10 }
-      )
+      vim.fn.sign_place(pos.row, 'PositionSigns', 'PositionSign', vim.api.nvim_get_current_buf(), { lnum = other.line, priority = 10 })
       return
     end
 
     vim.cmd('edit ' .. pos.file)
     for _, other in ipairs(Positions) do
       if other.file == pos.file then
-        vim.fn.sign_place(
-          pos.row,
-          'PositionSigns',
-          'PositionSign',
-          vim.api.nvim_get_current_buf(),
-          { lnum = other.line, priority = 10 }
-        )
+        vim.fn.sign_place(pos.row, 'PositionSigns', 'PositionSign', vim.api.nvim_get_current_buf(), { lnum = other.line, priority = 10 })
       end
     end
     vim.api.nvim_win_set_cursor(0, { pos.line, pos.col })

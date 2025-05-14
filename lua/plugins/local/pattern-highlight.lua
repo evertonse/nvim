@@ -1,7 +1,8 @@
 local M = {}
 function M.setup()
-  local todo_highlight_group = vim.api.nvim_create_augroup('TodoHighlight', { clear = true })
-  local xs = {
+  local pattern_highlight_group = vim.api.nvim_create_augroup('PatterHighlight', { clear = true })
+
+  local todos = {
     -- Old groups that I've used. You may reuse these
     -- 'MiniHipatternsFixme', 'MiniHipatternsHack', 'MiniHipatternsTodo', 'MiniHipatternsNote', 'MiniHipatternsNote', 'MiniHipatternsNote', 'Done',
     -- group, patterns
@@ -11,8 +12,12 @@ function M.setup()
     ['Done'] = '(DONE|IMPORTANT)',
   }
 
+  local filetypes = {
+    ['Note'] = '(vim)',
+  }
+
   -- TODO: Function to highlight TODOs in comments
-  local function highlight_todos()
+  local function highlight(xs)
     -- Get the current buffer
     local bufnr = vim.api.nvim_get_current_buf()
 
@@ -26,21 +31,32 @@ function M.setup()
     -- Try to clear existing TODO highlights safely
     pcall(function()
       for _, match_id in ipairs(vim.fn.getmatches(bufnr)) do
-        if match_id.group == 'TodoHighlight' then
+        if match_id.group == 'PatterHighlight' then
           vim.fn.matchdelete(match_id.id, bufnr)
         end
       end
     end)
 
-    for group, pattern in pairs(xs) do
+    for group, pattern in pairs(todos) do
       vim.fn.matchadd(group, [[\v<]] .. pattern .. [[>]], 10, -1, { conceal = 0, synID = 'Comment' })
     end
   end
 
   -- Create autocmd to highlight TODOs when buffer is loaded or filetype changes
   vim.api.nvim_create_autocmd({ 'BufReadPost', 'FileType', 'BufEnter' }, {
-    group = todo_highlight_group,
-    callback = highlight_todos,
+    pattern = '*',
+    group = pattern_highlight_group,
+    callback = function()
+      highlight(todos)
+    end,
+  })
+
+  vim.api.nvim_create_autocmd({ 'FileType' }, {
+    pattern = '*.vim',
+    group = pattern_highlight_group,
+    callback = function()
+      highlight(filetypes)
+    end,
   })
 end
 

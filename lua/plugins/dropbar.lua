@@ -78,7 +78,9 @@ local using_valid_type = {
 return {
   'Bekaboo/dropbar.nvim',
   -- optional, but required for fuzzy finder support
-  lazy = false,
+  lazy = true,
+  event = 'BufReadPost',
+
   enabled = true,
   opts = {
     sources = {

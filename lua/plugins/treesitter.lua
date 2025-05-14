@@ -13,8 +13,9 @@
 
 local disable_treesitter_when = function(lang, bufnr)
   local fts = { 'bin', 'odin', 'tmux', 'llvm', 'conf' }
+  local buf_ft = vim.bo.filetype
   for i, ft in ipairs(fts) do
-    if vim.bo.filetype == ft then
+    if buf_ft == ft then
       return true
     end
   end
@@ -34,7 +35,11 @@ local disable_treesitter_when = function(lang, bufnr)
     return true
   end
 
-  if vim.api.nvim_buf_line_count(bufnr) > 200 * 1000 then
+  local max_line_count = 200 * 1000
+  if buf_ft == 'c' then
+    max_line_count = 300 * 1000
+  end
+  if vim.api.nvim_buf_line_count(bufnr) > max_line_count then
     return true
   end
 
@@ -63,7 +68,7 @@ return { -- Highlight, edit, and navigate code
     indent = { enable = false, disable = { 'ruby' } },
 
     incremental_selection = {
-      enable = false,
+      enable = true,
       keymaps = {
         init_selection = '<CR>',
         scope_incremental = '<CR>',
@@ -87,7 +92,7 @@ return { -- Highlight, edit, and navigate code
           ['@function.outer'] = 'V', -- linewise
           ['@class.outer'] = '<c-v>', -- blockwise
         },
-        lookahead = true,
+        lookahead = false,
         keymaps = {
           ['af'] = '@function.outer',
           ['if'] = '@function.inner',

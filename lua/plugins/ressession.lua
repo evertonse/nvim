@@ -1,12 +1,13 @@
 return {
   'stevearc/resession.nvim',
   lazy = false,
+  -- event = 'VimEnter',
   enabled = true,
   dependencies = {
     {
       'evertonse/scope.nvim',
       branch = 'main',
-      lazy = false,
+      lazy = true,
     },
   },
   opts = {
@@ -112,8 +113,8 @@ return {
           end
         end)
       end,
-      nested = true,
     })
+
     vim.api.nvim_create_autocmd('VimLeavePre', {
       callback = function()
         close_quickfix()
@@ -130,6 +131,7 @@ return {
         end
         -- resession.save 'last'
       end,
+      nested = true,
     })
   end,
 }

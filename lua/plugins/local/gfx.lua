@@ -179,13 +179,13 @@ M.goto_file = function(line_string)
 end
 
 M.setup = function()
-  GotoFile = M.goto_file
   vim.api.nvim_create_user_command('GotoFile', function(opts)
-    -- Inspect(opts)
     M.goto_file(opts.args)
   end, {
     nargs = 1,
   })
+
+  GotoFile = M.goto_file
 
   vim.keymap.set({ 'n', 'v' }, 'gf', function()
     M.goto_file()

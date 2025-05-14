@@ -439,9 +439,12 @@ return {
     dependencies = { 'nvim-tree/nvim-web-devicons', 'nvim-treesitter/nvim-treesitter-textobjects' },
     config = function()
       -- mini_move() -- Decided to fork move.nvim
+
+      -- One of these has slow startup PERF
       mini_ai()
       mini_align()
-      mini_pick()
+
+      local _ = vim.g.self.mini_pick and mini_pick()
       mini_splijoin()
 
       mini_jump()

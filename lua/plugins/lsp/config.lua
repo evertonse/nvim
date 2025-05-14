@@ -65,8 +65,7 @@ return function()
       server_opts.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server_opts.capabilities or {})
       server_opts.root_dir = server_opts.root_dir
         or function(fname)
-          return lspconfig.util.root_pattern('setup.py', 'setup.cfg', 'pyproject.toml', '.git')(fname)
-            or vim.fn.getcwd()
+          return lspconfig.util.root_pattern('setup.py', 'setup.cfg', 'pyproject.toml', '.git')(fname) or vim.fn.getcwd()
         end
       lspconfig[server_local].setup(server_opts)
     end
@@ -128,34 +127,6 @@ return function()
     })
   else
     vim.lsp.handlers['textDocument/publishDiagnostics'] = function() end
-  end
-
-  -- Disable "No information available" notification on hover
-  -- plus define border for hover window
-  vim.lsp.handlers['textDocument/hover'] = function(_, result, ctx, config)
-    config = config
-      or {
-        border = {
-          { '╭', 'Comment' },
-          { '─', 'Comment' },
-          { '╮', 'Comment' },
-          { '│', 'Comment' },
-          { '╯', 'Comment' },
-          { '─', 'Comment' },
-          { '╰', 'Comment' },
-          { '│', 'Comment' },
-        },
-      }
-    config.focus_id = ctx.method
-    if not (result and result.contents) then
-      return
-    end
-    local markdown_lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
-    markdown_lines = vim.lsp.util.trim_empty_lines(markdown_lines)
-    if vim.tbl_isempty(markdown_lines) then
-      return
-    end
-    return vim.lsp.util.open_floating_preview(markdown_lines, 'markdown', config)
   end
 
   vim.diagnostic.config {

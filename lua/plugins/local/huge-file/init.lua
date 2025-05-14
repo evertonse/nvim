@@ -1,8 +1,64 @@
+local augroup = vim.api.nvim_create_augroup('huge-file', {})
 local M = {}
 
+local bufs = {}
 local list = {}
+
+-- NOTE: At the point this function gets called (in Pre buffer read) we don't have access to filetype nor line count xD, now go my child, go play with this footgun.
+--       Also, filetype is not decided by vim at this point (^Pre), it's actully an extension XD, sorry
+local should_disable = function(bufnr)
+  local buf = bufs[bufnr]
+  local buf_ft = buf:ft()
+
+  local fts = { 'bin', 'odin', 'tmux', 'llvm', 'conf' }
+  for i, ft in ipairs(fts) do
+    if buf_ft == ft then
+      return true
+    end
+  end
+
+  if string.find(buf.name, 'tmux%-') then
+    return true
+  end
+
+  local MB = 8
+  if buf.size > (MB * 1024 * 1024) then
+    return true
+  end
+
+  -- NOTE: line_count in BufReadPre is always 1, useless here
+  if buf:line_count() > 25 * 1000 then
+    return true
+  end
+
+  return false
+end
+
+local should_disable_aggressively = function(bufnr)
+  local buf = bufs[bufnr]
+  local ft = buf:ft()
+  if (ft == 'sh' or ft == 'zsh') and buf:line_count() > 100 * 1000 then
+    return true
+  end
+
+  if ft == 'c' then
+    return false
+  end
+
+  return false
+end
 -- Illuminate plugin
 -- https://github.com/RRethy/vim-illuminate
+
+list.misc = {
+  on = true,
+  disable = function()
+    if vim.fn.exists ':NoMatchParen' ~= 0 then
+      vim.cmd [[NoMatchParen]]
+    end
+    vim.b.minianimate_disable = true
+  end,
+}
 
 list.illuminate = {
   on = true,
@@ -111,7 +167,10 @@ list.treesitter = {
     end
 
     for _, mod_name in ipairs(treesitter_config.available_modules()) do
-      vim.cmd('TSBufDisable ' .. mod_name)
+      -- Never disable highlight should be done in Very Huge if necessary
+      if not mod_name == 'highlight' then
+        vim.cmd('TSBufDisable ' .. mod_name)
+      end
     end
   end,
 }
@@ -145,6 +204,7 @@ local vimopts_disabled = false
 
 list.vimopts = {
   on = true,
+  schedule = true,
 
   enable = function()
     if vimopts_disabled == true then
@@ -159,7 +219,7 @@ list.vimopts = {
     end
   end,
 
-  disable = function()
+  disable = vim.schedule_wrap(function(bufnr)
     if vimopts_disabled == false then
       vimopts_backup.statuscolumn = vim.opt_local.statuscolumn
       vimopts_backup.conceallevel = vim.opt_local.conceallevel
@@ -177,7 +237,15 @@ list.vimopts = {
     -- vim.opt_local.undolevels = -1 --- Makes no undo
     vim.opt_local.undoreload = 0
     vim.opt_local.list = false
-  end,
+
+    vim.opt_local.cursorline = false
+    vim.opt_local.redrawtime = 12525
+    vim.opt_local.cursorcolumn = false
+    -- vim.cmd [[setlocal nocursorcolumn]]
+    -- vim.cmd [[setlocal nocursorline]]
+    vim.cmd [[setlocal norelativenumber]]
+    vim.cmd [[syntax sync minlines=256]]
+  end),
 }
 
 -- Syntax
@@ -186,22 +254,28 @@ local syntax_backup = {}
 local syntax_disabled = false
 
 list.syntax = {
-  on = false,
+  on = true,
+  schedule = true,
 
-  enable = function()
+  enable = function(bufnr)
     if syntax_disabled == true then
       vim.opt_local.syntax = syntax_backup.syntax
       syntax_disabled = false
     end
   end,
 
-  disable = function()
+  disable = function(bufnr)
     if syntax_disabled == false then
       syntax_backup.syntax = vim.opt_local.syntax
       syntax_disabled = true
     end
-    vim.cmd 'syntax clear'
-    vim.opt_local.syntax = 'off'
+
+    if should_disable_aggressively(bufnr) and vim.treesitter.highlighter.active[bufnr] == nil then
+      vim.cmd 'syntax clear'
+      vim.opt_local.synmaxcol = 200
+      vim.opt_local.syntax = 'off'
+      vim.opt_local.filetype = ''
+    end
   end,
 }
 
@@ -248,92 +322,124 @@ list.lualine = {
   end,
 }
 
-local should_disable = function(bufnr)
-  local fts = { 'bin', 'odin', 'tmux', 'llvm', 'conf' }
-  for i, ft in ipairs(fts) do
-    if vim.bo.filetype == ft then
-      return true
-    end
-  end
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
-  local buf_name = vim.api.nvim_buf_get_name(bufnr)
+local buf_populate = function(bufnr)
+  bufs[bufnr] = {
+    processed = false,
+    name = vim.api.nvim_buf_get_name(bufnr),
+    ft = function(self)
+      local ft = vim.bo[bufnr].filetype
+      if ft ~= nil and ft ~= '' then
+        return ft
+      end
 
-  if string.find(buf_name, 'tmux%-') then
-    return true
-  end
+      local ext = self.name:match '^.+(%..+)$' or ''
+      return ext:gsub('^%.', '')
+    end,
 
-  local info = vim.loop.fs_stat(buf_name)
-  local file_size_permitted = (20 * 1024 * 1024)
-  local is_large_file = vim.fn.getfsize(buf_name) > file_size_permitted
-  local is_large_file = info and (info.size > (20 * 1024 * 1024))
+    line_count = function(self)
+      if self.__line_count > 1 then
+        return self.__line_count
+      end
 
-  if is_large_file then
-    return true
-  end
+      self.__line_count = vim.api.nvim_buf_line_count(bufnr)
 
-  if vim.api.nvim_buf_line_count(bufnr) > 200 * 1000 then
-    return true
-  end
+      local ft = vim.bo[bufnr].filetype
+      if ft ~= nil and ft ~= '' and self.__line_count == 1 then
+        return -1
+      end
 
-  return false
+      return self.__line_count
+    end,
+
+    __line_count = -1,
+  }
+
+  local info = vim.loop.fs_stat(bufs[bufnr].name) -- vim.fn.getfsize(bufs[bufnr].name)
+  bufs[bufnr].size = info and info.size or -1
 end
 
-local disable = function(args)
-  -- TODO confirm that it schedule is needed
-  -- vim.schedule(function()
-  if should_disable(args.buf) then
-    vim.notify 'Huge File Detected'
-    vim.api.nvim_buf_call(args.buf, function()
-      if vim.fn.exists ':NoMatchParen' ~= 0 then
-        vim.cmd [[NoMatchParen]]
-      end
-      vim.b.minianimate_disable = true
+local pre_bufread_callback = function(bufnr)
+  if bufs[bufnr] and bufs[bufnr].processed then
+    return
+  end
+  buf_populate(bufnr)
 
-      local pedantic = false
-      for name, plugin in pairs(list) do
-        -- TODO check this config.capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
-        if plugin.disable ~= nil then
-          if plugin.on then
-            if pedantic then
-              vim.notify('Applying ' .. name)
-            end
-            plugin.disable()
-          end
-        end
-      end
-    end)
-  else
-    if true then
-      return
-    end
+  local pedantic = false
+  local rest = {}
+
+  if should_disable(bufnr) then
+    bufs[bufnr].processed = true
+
+    local msg = ('Huge File Detected' .. vim.api.nvim_buf_get_name(bufnr))
+    vim.notify(msg)
+
     for name, plugin in pairs(list) do
-      if plugin.enable ~= nil then
-        if plugin.on then
-          plugin.enable()
+      if plugin and plugin.disable ~= nil and plugin.on then
+        if plugin.schedule == nil or plugin.schedule == false then
+          if pedantic then
+            vim.notify('Applying ' .. name)
+          end
+          plugin.disable(bufnr)
+        else
+          rest[name] = plugin
         end
       end
     end
   end
-  -- end)
+
+  -- Schedule disabling deferred features
+  vim.api.nvim_create_autocmd({ 'BufReadPost' }, {
+    group = group,
+    buffer = bufnr,
+    callback = vim.schedule_wrap(function()
+      -- Inspect { plugin }
+      for name, plugin in pairs(rest) do
+        if pedantic then
+          vim.notify('Applying scheduled ' .. name)
+        end
+        plugin.disable(bufnr)
+      end
+    end),
+    -- callback = vim.schedule_wrap(function()
+    --   Inspect { plugin }
+    --   vim.api.nvim_buf_call(bufnr, function()
+    --     for name, plugin in pairs(rest) do
+    --       if pedantic then
+    --         vim.notify('Applying scheduled ' .. name)
+    --       end
+    --       plugin.disable(bufnr)
+    --     end
+    --   end)
+    -- end),
+  })
 end
 
 M.init = function()
-  local augroup = vim.api.nvim_create_augroup('huge-file', {})
-
-  vim.api.nvim_create_autocmd('BufReadPre', {
+  -- 'BufReadPre' is too early for local options
+  vim.api.nvim_create_autocmd({ 'VimEnter', 'BufReadPre' }, {
     pattern = { '*' },
     group = augroup,
-    callback = disable,
+    callback = function(args)
+      pre_bufread_callback(args.buf)
+    end,
     desc = 'Huge-file',
   })
 
-  local _ = false
-    and vim.api.nvim_create_autocmd('BufReadPost', {
-      pattern = { '*' },
-      group = augroup,
-      callback = disable,
-      desc = 'Huge-file Post',
-    })
+  vim.api.nvim_create_autocmd({ 'BufDelete' }, {
+    pattern = { '*' },
+    group = augroup,
+    callback = function(args)
+      bufs[args.buf] = nil
+    end,
+    desc = 'Huge-file',
+  })
 end
 
 M.stop = function()

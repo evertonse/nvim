@@ -37,6 +37,7 @@ vim.g.self = {
     { 'true', 'false' },
     { 'False', 'True' },
     { 'public', 'private' },
+    { 'disable', 'enable' },
     { 'if', 'else', 'elseif' },
     { 'and', 'or' },
     { 'off', 'on' },
@@ -361,7 +362,7 @@ matchit_extend()
 -- Long lines a the single most important reason for when it's lagging for no reason
 -- Limiting the highlighting based on column looks like a decent solution
 -- vim.cmd [[set synmaxcol=250]]
-vim.cmd [[set synmaxcol=800]]
+vim.cmd [[set synmaxcol=400]]
 
 if OnWsl() then
   vim.cmd [[

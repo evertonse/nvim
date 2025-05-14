@@ -101,37 +101,6 @@ local servers = {
       },
     },
   },
-
-  lua_ls = {
-    autostart = true, -- This is the important new option
-    -- cmd = {...},
-    -- filetypes = { ...},
-    -- capabilities = {},
-    -- dynamicRegistration = false,
-    settings = {
-      -- Lua = {},
-      Lua = {
-        globals = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
-        runtime = { version = 'Lua 5.1' },
-
-        -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-        diagnostics = {
-          globals = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
-          disable = { 'missing-fields' },
-        },
-        workspace = {
-          -- Make the server aware of Neovim runtime files
-          -- library = vim.api.nvim_get_runtime_file('', true),
-          -- Someone wrote this helps if Lua Lsp is asking whether to create luassert.
-          checkThirdParty = true,
-        },
-        -- Do not send telemetry data containing a randomized but unique identifier.
-        telemetry = {
-          enable = false,
-        },
-      },
-    },
-  },
 }
 
 return servers

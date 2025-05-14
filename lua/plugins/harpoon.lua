@@ -7,7 +7,7 @@ return {
     { 'nvim-lua/plenary.nvim' },
   },
   config = function()
-    require('telescope').load_extension 'harpoon'
+    -- require('telescope').load_extension 'harpoon'
     require('harpoon').setup {
       global_settings = {
         -- sets the marks upon calling `toggle` on the ui, instead of require `:w`.

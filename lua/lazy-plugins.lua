@@ -16,29 +16,34 @@
 -- If you use your Neovim config on multiple machines, using the lockfile, you can ensure that the same version of every plugin is installed.
 -- If you are on another machine, you can do `:Lazy restore`, to update all your plugins to the version from the lockfile.
 
-local plugins_local = {
-  require 'plugins.local.huge-file',
-  require 'plugins.local.pattern-highlight',
-  require 'plugins.local.gfx',
-}
+local plugins_local_setup = function()
+  local plugins_local = {
+    require 'plugins.local.huge-file',
+    require 'plugins.local.pattern-highlight',
+    require 'plugins.local.gfx',
+  }
 
-for _, plugin in pairs(plugins_local) do
-  plugin.setup()
+  for _, plugin in pairs(plugins_local) do
+    plugin.setup()
+  end
 end
 
 local plugins = function()
   return {
     require 'plugins.colorscheme',
-
-    -- PERF Lsp slow as fuck sometimes, but culprit might always be the server its self, but nonethe less everything should be async, so if the server is slowing the fuck down, what does it matter to us? that seems like a problem
-    require 'plugins.lsp',
-
-    require 'plugins.dap',
-
-    -- PERF Might slow further test needed
-    require 'plugins.indent-blankline',
-
-    -- require 'plugins.snacks',
+    --
+    -- -- PERF Lsp slow as fuck sometimes, but culprit might always be the server its self, but nonethe less everything should be async, so if the server is slowing the fuck down, what does it matter to us? that seems like a problem
+    -- require 'plugins.lsp',
+    require('plugins.' .. vim.g.self.file_tree), -- NOTE: Neotree is slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
+    require 'plugins.telescope',
+    require 'plugins.Comment',
+    require 'plugins.mini',
+    require 'plugins.cycler',
+    require 'plugins.move',
+    --
+    require 'plugins.mason',
+    -- require 'plugins.fidget',
+    -- require 'plugins.neodev',
 
     -- PERF: Slow In bigfiles, treesitter has a slight slow when highlighting
     -- In cases like this regex based highglight is instant. Also inserting is majorly slow with treesitter, even if highlight is turned off.
@@ -47,36 +52,35 @@ local plugins = function()
     --     Disabling the highlight fix it
     -- Update: a.ll
     require 'plugins.treesitter',
-
     require 'plugins.nvim-treesitter-pairs',
-    require 'plugins.telescope',
-    require 'plugins.mini',
+
     require 'plugins.lualine',
     -- require 'plugins.staline',
 
     require 'plugins.conform',
-    require 'plugins.Comment',
-    require('plugins.' .. vim.g.self.file_tree), -- NOTE: Slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
+
+    -- PERF Might slow further test needed
+    require 'plugins.indent-blankline',
 
     -- PERF: needs to test more, bigfiles might need to slow the update time
     require 'plugins.blink-cmp',
+    require 'plugins.better-scape',
+
+    -- require 'plugins.snacks',
 
     -- PERF: slow but maybe fixable.
     -- require 'plugins.hlargs',
-    require 'plugins.move',
 
+    require 'plugins.dap',
     require 'plugins.bufjump',
-    require 'plugins.focus',
     require 'plugins.toggleterm',
     require 'plugins.scope',
     require 'plugins.which-key',
     require 'plugins.coerce',
     require 'plugins.diffview',
     require 'plugins.fzf-lua',
-    require 'plugins.vim-matchup', -- NOTE: Interaction with matchup and treesitter slow thing down when jumping from one context to another(lua table to another with jk), I think longer lines are more problematic
-    require 'plugins.autopairs',
     require 'plugins.undotree',
-    require 'plugins.guess-indent',
+    -- require 'plugins.guess-indent',
 
     -- PERF: Why is it mildly slow? findout maybe its all the stuff of autocommands
     require('plugins.' .. vim.g.self.session_plugin),
@@ -85,7 +89,6 @@ local plugins = function()
     require 'plugins.harpoon',
     require 'plugins.oil',
     require 'plugins.yazi',
-    require 'plugins.better-scape',
     require 'plugins.live-command',
 
     require 'plugins.colorizer',
@@ -94,22 +97,21 @@ local plugins = function()
     true and require 'plugins.spider' or require 'plugins.neowords',
     require 'plugins.multiple-cursors',
     require 'plugins.improved-ft',
-    (false and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar'
-      or require 'plugins.incline',
-    require 'plugins.cycler',
-    require 'plugins.marks', -- alternative: https://github.com/desdic/marlin.nvim
+    -- (true and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar' or require 'plugins.incline',
+    -- PERF haven't tested fully but it seemed better without it
+    -- require 'plugins.marks', -- alternative: https://github.com/desdic/marlin.nvim
     require 'plugins.snap',
 
-    require 'plugins.nvim-tree',
     require 'plugins.aerial',
     require 'plugins.compile-mode',
     require 'plugins.stickybuf',
 
-    { 'tpope/vim-abolish', lazy = true },
-    { 'tpope/vim-repeat', keys = { { '.' }, { ';' } } },
+    -- { 'tpope/vim-abolish', lazy = true },
+    -- { 'tpope/vim-repeat', keys = { { '.' }, { ';' } } },
+    { 'tpope/vim-sleuth', event = 'BufEnter', lazy = true, enabled = true }, -- Detect tabstop and shiftwidth automatically
 
-    'MunifTanjim/nui.nvim',
-    'nvim-lua/plenary.nvim',
+    -- 'MunifTanjim/nui.nvim',
+    -- 'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
   }
 end
@@ -123,9 +125,9 @@ local unused_plugins = function()
     -- require 'plugins.indentmini', -- Despite what is says, it's slow
     -- require 'plugins.bigfile',
 
-    { 'tpope/vim-sleuth', event = 'BufEnter', lazy = true, enabled = false }, -- Detect tabstop and shiftwidth automatically
-
     -- Color picker ccc
+    require 'plugins.autopairs',
+    require 'plugins.vim-matchup', -- NOTE: Interaction with matchup and treesitter slow thing down when jumping from one context to another(lua table to another with jk), I think longer lines are more problematic
     {
       'uga-rosa/ccc.nvim',
       enabled = false,
@@ -371,7 +373,10 @@ end
 
 personally_disable_runtime_plugins()
 
--- NOTE: Where you install your plugins.
+-- Locally "installed", not lazy
+plugins_local_setup()
+
+-- Lazy git installed
 require('lazy').setup(plugins(), lazy_config)
 
 -- vim: ts=2 sts=2 sw=2 et

@@ -1,6 +1,6 @@
 return {
   'mbbill/undotree',
-  enabled = true,
+  enabled = false,
   lazy = true,
   event = 'BufEnter',
   keys = {
