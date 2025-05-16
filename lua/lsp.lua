@@ -412,8 +412,7 @@ local lsp_attach_autocommands = function()
   })
 end
 
-local lsp_config = function()
-  -- Improve LSPs UI {{{
+local lsp_ui = function()
   local icons = {
     Class = ' ',
     Color = ' ',
@@ -443,6 +442,10 @@ local lsp_config = function()
   for i, kind in ipairs(completion_kinds) do
     completion_kinds[i] = icons[kind] and icons[kind] .. kind or kind
   end
+end
+
+local lsp_config = function()
+  vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
 
   if vim.g.self.linting_by_default then
     vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -458,6 +461,7 @@ local lsp_config = function()
 
   -- Disable "No information available" notification on hover
   -- Plus define border for hover window
+  -- vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
   vim.lsp.handlers['textDocument/hover'] = function(_, result, ctx, config)
     config = config
       or {
@@ -512,7 +516,9 @@ local lsp_config = function()
   end
 end
 
+-- See for exmaples: https://www.reddit.com/r/neovim/comments/1khidkg/mind_sharing_your_new_lsp_setup_for_nvim_011/
 -- TODO check this config.capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
 lsp_enable_all()
+lsp_ui()
 lsp_config()
 lsp_attach_autocommands()

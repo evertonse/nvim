@@ -20,6 +20,11 @@ View Tags
 
     nvim --startuptime startup.log -u ~/.config/nvim-min/init.lua --noplugin empty.txt
 
+    NVIM_APPNAME="nvim-tmp" ./nvim --startuptime startup.log  ~/.config/nvim/assets/speed/rmlint.sh && nvim -u NONE startup.log
+
+    nvim --startuptime startup.log  ~/.config/nvim/assets/speed/rmlint.sh && nvim -u NONE startup.log
+    
+
 Make sure to open huge files with and without syntax, with and without treesitter.
 Press C-d and C-u to go through and find places where it gets stuck for a microsec.
 Try to press v to select somewhere in the middle of the file, and use 'e' and 'b' to move the select word by word and feel if there's any input lag

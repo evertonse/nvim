@@ -16,13 +16,14 @@ return {
   dynamicRegistration = false,
   settings = {
     Lua = {
-      -- globals = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
-      builtins = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
+      globals = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
+      -- builtins = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
       runtime = { version = 'Lua 5.1' },
 
       -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
       diagnostics = {
-        globals = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
+        -- globals = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
+        -- builtins = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
         disable = { 'missing-fields' },
       },
       workspace = {

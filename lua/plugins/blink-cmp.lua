@@ -5,6 +5,61 @@
 --
 -- Default Config: https://cmp.saghen.dev/configuration/reference.html#completion-trigger
 --
+local transform_items = function(ctx, items)
+  return vim.tbl_filter(function(item)
+    -- Get the text from the line at the position specified by textEdit.insert
+    local start_char = item.textEdit and item.textEdit.insert and item.textEdit.insert.start.character or 0
+    local end_char = item.textEdit and item.textEdit.insert and item.textEdit.insert['end'].character or ctx.line:len()
+
+    -- Extract the substring from ctx.line
+    local line_substring = string.sub(ctx.line, start_char + 1, end_char)
+    -- Check if filterText is a substring of the extracted text
+    local is_substring = item.filterText:find(line_substring)
+    -- if ctx.line:len() > 5 then
+    --   Inspect {
+    --     aaaitemfilterText = item.filterText,
+    --     aaaline_substring = line_substring,
+    --     -- ctx = ctx,
+    --     aaacursor = ctx:get_cursor(),
+    --     aaakeyword = ctx:get_keyword() or 'lol',
+    --     -- items = items,
+    --     is_substring = is_substring,
+    --   }
+    -- end
+
+    return is_substring
+  end, items)
+end
+
+local cmdline_sort = function(a, b)
+  -- local cmdline = vim.fn.getcmdline()
+  local is_substring = function(item)
+    -- Get the text from the line at the position specified by textEdit.insert
+    local start_char = item.textEdit and item.textEdit.insert and item.textEdit.insert.start.character or 0
+    local end_char = item.textEdit and item.textEdit.insert and item.textEdit.insert['end'].character or ctx.line:len()
+
+    -- Extract the substring from ctx.line
+    local line_substring = string.sub(cmdline, start_char + 1, end_char)
+    -- Inspect { item.filterText, cmdline = line_substring, textEdit = item.textEdit, newText = item.textEdit.newText }
+    -- Open a file in append mode ('a' will create the file if it doesn't exist)
+    local file = io.open('output.txt', 'a')
+    Inspect { file = file, line_substring = line_substring }
+
+    if line_substring:len() > 3 then
+    end
+    -- Check if the file was opened successfully
+    if file then
+      -- Write the string to the file
+      file:write(line_substring)
+      -- Close the file
+      file:close()
+    end
+    -- Check if filterText is a substring of the extracted text
+    -- item.textEdit.newText
+    local is_substring = item.filterText:find(line_substring)
+    return is_substring
+  end
+end
 
 local inloop = false
 
@@ -99,7 +154,6 @@ end
 local cmdline_has_slash_before = function()
   local line = vim.fn.getcmdline()
   local suffix = '[/ ]'
-  -- ShowInspect { line, line:match(suffix .. '$') ~= nil }
   return line:match(suffix .. '$') ~= nil
 end
 
@@ -114,7 +168,7 @@ return {
 
   -- use a release tag to download pre-built binaries
   -- version = 'v1.2',
-  version = 'v1.*',
+  -- version = 'v1.*',
   -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
   -- build = 'cargo build --release',
   -- If you use nix, you can build from source using latest nightly rust with:
@@ -222,6 +276,7 @@ return {
       },
 
       completion = {
+
         menu = {
           auto_show = true,
         },
@@ -248,7 +303,6 @@ return {
     -- elsewhere in your config, without redefining it, due to `opts_extend`
     sources = {
       default = { 'lsp', 'path', 'snippets', 'buffer' },
-
       providers = {
         snippets = {
           name = 'snippets',
@@ -269,16 +323,38 @@ return {
       -- cmdline = {},
     },
     fuzzy = {
-      implementation = 'prefer_rust',
-      sorts = {
-        'exact',
-        -- defaults
-        'score',
-        'sort_text',
-      },
-    }, -- experimental signature help support
-    -- signature = { enabled = true },
+      -- use_typo_resistance = false,
+      max_typos = function(keyword)
+        -- math.floor(#keyword / #keyword)
+        return 0
+      end,
+
+      -- Frecency tracks the most recently/frequently used items and boosts the score of the item
+      -- Note, this does not apply when using the Lua implementation.
+      use_frecency = false,
+
+      -- Proximity bonus boosts the score of items matching nearby words
+      -- Note, this does not apply when using the Lua implementation.
+      use_proximity = false,
+
+      -- implementation = 'prefer_rust',
+      implementation = 'prefer_rust_with_warning',
+      sorts = {},
+
+      -- sorts = {
+      --   cmdline_sort,
+      --   'exact',
+      --   'label',
+      --   'score',
+      --   'sort_text',
+      -- },
+    },
+    -- signature = { enabled = true },-- experimental signature help support
     completion = {
+      keyword = {
+        -- https://main.cmp.saghen.dev/configuration/general#general
+        range = 'prefix',
+      },
       list = {
         selection = { preselect = false },
         cycle = {
@@ -291,8 +367,7 @@ return {
         auto_show = true,
       },
       trigger = {
-
-        prefetch_on_insert = false,
+        prefetch_on_insert = true,
         show_on_keyword = true,
       },
       -- Display a preview of the selected item on the current line

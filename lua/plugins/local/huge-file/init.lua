@@ -436,6 +436,7 @@ M.stop = function()
   vim.api.nvim_del_augroup_by_name 'huge-file'
 end
 
-M.setup = M.init
+-- M.setup = M.init
+M.setup = function() end
 
 return M

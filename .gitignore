@@ -6,3 +6,5 @@ nvim
 .last_yank.txt
 spell/
 **.trails
+**.log
+shada/

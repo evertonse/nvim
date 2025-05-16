@@ -1,3 +1,4 @@
+-- PERF aware, this is slow hence events or call it yourself because if big buffer then big trouble
 return {
   'NvChad/nvim-colorizer.lua',
   event = 'User FilePost',

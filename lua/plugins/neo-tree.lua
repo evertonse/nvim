@@ -3,21 +3,22 @@
 
 return {
   'nvim-neo-tree/neo-tree.nvim',
-  source_selector = {
-    winbar = true,
-    statusline = false,
-  },
   enabled = false,
   version = '*',
+  branch = 'v3.x',
+  cmd = { 'Neotree' },
   dependencies = {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
     'MunifTanjim/nui.nvim',
   },
-  cmd = 'Neotree',
+  source_selector = {
+    winbar = true,
+    statusline = false,
+  },
   keys = {
-    -- { '<leader>e', ':Neotree toggle<CR>', { desc = 'NeoTree toggle' } },
-    -- { '<leader>E', ':Neotree reveal<CR>', { desc = 'NeoTree reveal' } },
+    { '<leader>e', mode = { 'n' } },
+    { '<leader>E', mode = { 'n' } },
   },
   config = function()
     -- If you want icons for diagnostic errors, you'll need to define them somewhere:
@@ -200,6 +201,10 @@ return {
       },
       nesting_rules = {},
       filesystem = {
+        follow_current_file = {
+          enabled = true,
+          leave_dirs_open = true,
+        },
         bind_to_cwd = true, -- true creates a 2-way binding between vim's cwd and neo-tree's root
         cwd_target = {
           sidebar = 'tab', -- sidebar is when position = left or right
@@ -283,11 +288,6 @@ return {
         commands = {}, -- Add a custom command or override a global one using the same function name
       },
       buffers = {
-        follow_current_file = {
-          enabled = false, -- This will find and focus the file in the active buffer every time
-          --              -- the current file is changed while the tree is open.
-          leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
-        },
         group_empty_dirs = true, -- when true, empty folders will be grouped together
         show_unloaded = false,
         window = {

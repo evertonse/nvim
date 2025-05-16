@@ -231,7 +231,7 @@ local mini_jump = function()
       backward = 'F',
       forward_till = 't',
       backward_till = 'T',
-      repeat_jump = ';',
+      -- repeat_jump = ';',
     },
 
     -- Delay values (in ms) for different functionalities. Set any of them to
@@ -247,7 +247,7 @@ local mini_jump = function()
     -- Whether to disable showing non-error feedback
     -- This also affects (purely informational) helper messages shown after
     -- idle time if user input is required.
-    silent = false,
+    silent = true,
   }
 end
 
@@ -255,6 +255,7 @@ local mini_map = function()
   if not vim.g.self.mini_map then
     return
   end
+
   require('mini.map').setup {
     -- Highlight integrations (none by default)
     integrations = {
@@ -393,11 +394,12 @@ local mini_surround = function()
       -- update_n_lines = 'sn', -- Update `n_lines`
       update_n_lines = '', -- Update `n_lines`
 
-      -- suffix_last = 'l', -- Suffix to search with "prev" method
-      -- suffix_next = 'n', -- Suffix to search with "next" method
+      suffix_last = 'l', -- Suffix to search with "prev" method
+      suffix_next = 'n', -- Suffix to search with "next" method
+
       -- Add this only if you don't want to use extended mappings
-      suffix_last = '',
-      suffix_next = '',
+      -- suffix_last = '',
+      -- suffix_next = '',
     },
     search_method = 'cover_or_next',
     -- search_method = 'cover',

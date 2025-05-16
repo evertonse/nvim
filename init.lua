@@ -171,6 +171,17 @@
 --       But if we use nvim -u NONE then it's fast, or even pure vim, it's fast to load, not necessarily to C-d the full life
 --       Need to investigate that, even when using nvim-tmp APPNAME is does the same slow load
 
+--
+-- echo expand('$VIMRUNTIME/syntax')
+-- :syntime after moving aournd the buffer to see the time highlight takes
+-- :set redrawtime=10000 if slow or :set re=1
+--
+
+-- vim.cmd [[set runtimepath=]]
+if vim.loader then
+  vim.loader.enable()
+end
+
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'utils'
 

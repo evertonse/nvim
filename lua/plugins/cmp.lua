@@ -1,4 +1,12 @@
 -- https://github.com/hrsh6th/nvim-cmp/wiki/Advanced-techniques
+-- Working examples of cmp + friendly-snippets https://www.reddit.com/r/neovim/comments/qi09ym/a_working_example_for_nvimcmp_luasnip_and/
+
+-- Could also implement using :sub? but i think find is faster
+local is_prefix = function(str, prefix)
+  local start_index = 1
+  local found_start, found_end = string.find(str, prefix, start_index, true)
+  return found_start == start_index
+end
 
 local has_words_before2 = function()
   unpack = unpack or table.unpack
@@ -22,6 +30,70 @@ local cmdline_has_slash_before = function()
   return line:match(suffix .. '$') ~= nil
 end
 
+local ctx = {
+  cmp = nil,
+  mini = {
+    MiniSnippets = nil,
+  },
+}
+local setup = {
+  -- PERF: We're requiring all the time, is this slow?
+  mini = {
+    repo = 'echasnovski/mini.snippets',
+    ctx = {},
+    config = function()
+      local gen_loader = require('mini.snippets').gen_loader
+      local config_path = vim.fn.stdpath 'config'
+
+      ctx.mini.MiniSnippets = require 'mini.snippets'
+      ctx.mini.MiniSnippets.setup {
+        snippets = {
+          -- Load custom file with global snippets first (adjust for Windows)
+          gen_loader.from_file(config_path .. '/nvim/after/snippets/global.json'),
+
+          -- Load snippets based on current language by reading files from
+          -- "snippets/" subdirectories from 'runtimepath' directories.
+          gen_loader.from_lang(),
+        },
+        -- Module mappings. Use `''` (empty string) to disable one.
+        mappings = {
+          -- Expand snippet at cursor position. Created globally in Insert mode.
+          expand = '<tab>',
+          expand = '',
+          -- Interact with default `expand.insert` session.
+          -- Created for the duration of active session(s)
+          jump_next = '<tab>',
+          jump_prev = '<s-tab>',
+          stop = '<C-c>',
+        },
+      }
+    end,
+    expand = function(args) -- mini.snippets expands snippets from lsp...
+      Inspect(args)
+      local MiniSnippets = ctx.mini.MiniSnippets
+      local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
+      insert { body = args.body } -- Insert at cursor
+      ctx.cmp.resubscribe { 'TextChangedI', 'TextChangedP' }
+      require('cmp.config').set_onetime { sources = {} }
+    end,
+
+    select = function(snippets, insert)
+      local MiniSnippets = ctx.mini.MiniSnippets
+      -- Close completion window on snippet select - vim.ui.select
+      -- Needed to remove virtual text for fzf-lua and telescope, but not for mini.pick...
+      local select = MiniSnippets.default_select
+      select(snippets, insert)
+    end,
+
+    source = {
+      name = 'mini_snippets',
+      repo = 'abeldekat/cmp-mini-snippets',
+    },
+  },
+}
+
+local snippet = 'mini'
+
 return {
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -30,8 +102,12 @@ return {
     enabled = true,
     dependencies = {
       { 'onsails/lspkind.nvim', enabled = true },
+      -- { 'evertonse/friendly-snippets', enabled = true },
 
-      'dcampos/cmp-snippy',
+      setup[snippet].repo,
+      setup[snippet].source.repo,
+
+      -- 'dcampos/cmp-snippy',
       -- Adds other completion capabilities.
       --  nvim-cmp does not ship with all sources by default. They are split
       --  into multiple repos for maintenance purposes.
@@ -42,9 +118,12 @@ return {
       'hrsh7th/cmp-path',
     },
     config = function()
-      -- please take a look at this https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
-      --https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#completionItemKind
+      -- Please take a look at this https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
+      -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#completionItemKind
       local cmp = require 'cmp'
+      ctx.cmp = cmp
+
+      setup[snippet].config()
       local CompletionItemKind = {
         --[[Text ]]
         30,
@@ -106,6 +185,14 @@ return {
       end)
 
       cmp.setup {
+        matching = {
+          disallow_fuzzy_matching = true,
+          -- disallow_symbol_nonprefix_matching = true,
+          -- disallow_fullfuzzy_matching = true,
+          -- disallow_partial_fuzzy_matching = true,
+          -- disallow_partial_matching = true,
+          -- disallow_prefix_unmatching = false,
+        },
         -- @class cmp.PerformanceConfig
         -- @field public debounce integer
         -- @field public throttle integer
@@ -115,19 +202,14 @@ return {
         -- @field public max_view_entries integer
         sources = {
           { name = 'buffer' },
-          { name = 'snippy' },
           { name = 'nvim_lsp' },
           { name = 'path' },
+          { name = setup[snippet].source.name, keyword_length = 2 },
           -- { name = 'cmdline' },
         },
 
         snippet = {
-          expand = function(args)
-            require('snippy').expand_snippet(args.body)
-          end,
-          -- expand = function(args)
-          --   vim.snippet.expand(args.body)
-          -- end,
+          expand = setup[snippet].expand,
         },
 
         performance = {
@@ -142,9 +224,29 @@ return {
         sorting = {
           priority_weight = 1.2,
           comparators = {
-            -- cmp.score_offset, -- not good at all
+            -- cmp.score_offset, -- NOTE: Not good at all
             cmp.config.compare.exact,
+
+            function(entry1, entry2)
+              local input = entry1.match_view_args_ret.input
+              local text1 = entry1.word
+              local text2 = entry2.word
+              local prefix1 = is_prefix(text1, input)
+              -- local prefix2 = is_prefix(text2, input)
+              if not prefix1 then
+                entry1.score = 0
+              end
+              -- return text1:len() > text2:len()
+            end,
+            cmp.config.compare.score,
+
+            function(entry1, entry2)
+              local text1 = entry1.word
+              local text2 = entry2.word
+              return text1:len() < text2:len()
+            end,
             cmp.config.compare.locality,
+
             cmp.config.compare.recently_used,
 
             function(e1, e2)
@@ -260,6 +362,7 @@ return {
       -- `:` cmdline setup.
       local _ = not vim.g.self.wilder
         and cmp.setup.cmdline(':', {
+
           autocomplete = true,
           enabled = function()
             -- Set of commands where cmp will be disabled
@@ -342,9 +445,20 @@ return {
             -- },
           },
           sources = cmp.config.sources {
-            { name = 'path', option = {
-              trailing_slash = true,
-            } },
+            {
+              name = 'path',
+              option = {
+                trailing_slash = true,
+                -- matching = {
+                --   disallow_symbol_nonprefix_matching = true,
+                --   disallow_fuzzy_matching = true,
+                --   disallow_fullfuzzy_matching = true,
+                --   disallow_partial_fuzzy_matching = true,
+                --   disallow_partial_matching = true,
+                --   disallow_prefix_unmatching = false,
+                -- },
+              },
+            },
             {
               name = 'cmdline',
               option = {

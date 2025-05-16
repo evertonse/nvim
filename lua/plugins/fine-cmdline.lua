@@ -2,7 +2,7 @@ local fine_cmdline_keymaps_enabled = true
 return {
   'VonHeikemen/fine-cmdline.nvim',
   lazy = false,
-  enabled = false,
+  enabled = true,
 
   dependencies = {
     { 'MunifTanjim/nui.nvim' },

@@ -127,7 +127,7 @@ M.goto_file = function(line_string)
     vim.notify('File not readable: ' .. file, vim.log.levels.DEBUG)
     local ok = pcall(vim.cmd, [[normal! gF]]) -- Last resource
     if not ok then
-      vim.print('File not found: ' .. file)
+      vim.notify('File not foung by gF: ' .. file, vim.log.levels.DEBUG)
     end
     return
   end

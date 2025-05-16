@@ -1,3 +1,10 @@
 - add speed test files like sql amalgamation, zig.ll or zig.c (generated automatically)
-- Can we move queries, snippets to `after/`?
-- make snippet work again >.<
+- [x] edit: Yeah we can but we have to decided if we want ours to run first. Can we move queries, snippets to `after/`?
+- [x] make snippet work again >.<
+- [ ] gfx is in selection mode, use the selection to goto file
+- [ ] blink when matching if substring matching >> prio than fuzzy
+- [x] cmp fix snippets
+- [ ] Investigate Tabline buffer switch lag
+- [ ] Fix normal mode cmdline
+- [ ] Quick function to go ~/docs/notes/todo.md
+- [ ] Factor out cmdwin into a local

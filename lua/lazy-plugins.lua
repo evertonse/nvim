@@ -39,6 +39,11 @@ local plugins = function()
     require 'plugins.cycler',
     require 'plugins.move',
 
+    -- PERF: needs to test more, bigfiles might need to slow the update time
+    -- Can't disable fuzzy in 'blink-cmp' although it seems more performant then 'cmp'
+    -- require 'plugins.blink-cmp',
+    require 'plugins.cmp',
+
     -- PERF: Slow In bigfiles, treesitter has a slight slow when highlighting
     -- In cases like this regex based highglight is instant. Also inserting is majorly slow with treesitter, even if highlight is turned off.
     -- Update: I've found that is 'treesitter indent' that causes this huge slowness on insert
@@ -61,8 +66,6 @@ local plugins = function()
     -- PERF Might slow further test needed
     require 'plugins.indent-blankline',
 
-    -- PERF: needs to test more, bigfiles might need to slow the update time
-    require 'plugins.blink-cmp',
     require 'plugins.better-scape',
 
     -- require 'plugins.snacks',
@@ -72,24 +75,30 @@ local plugins = function()
 
     require 'plugins.dap',
     require 'plugins.bufjump',
+
+    -- Another option for runnig commands maybe
+    -- https://github.com/numToStr/FTerm.nvim
     require 'plugins.toggleterm',
+
     require 'plugins.scope',
     require 'plugins.which-key',
     require 'plugins.coerce',
     require 'plugins.diffview',
     require 'plugins.fzf-lua',
     require 'plugins.undotree',
-    -- require 'plugins.guess-indent',
 
     -- PERF: Why is it mildly slow? findout maybe its all the stuff of autocommands
     require('plugins.' .. vim.g.self.session_plugin),
+
+    require 'plugins.nvim-lint',
+    -- require 'plugins.noice',
+    require 'plugins.fine-cmdline',
 
     require 'plugins.zen-mode',
     require 'plugins.harpoon',
     require 'plugins.oil',
     require 'plugins.yazi',
     require 'plugins.live-command',
-
     require 'plugins.colorizer',
     require 'plugins.dressing',
 
@@ -98,9 +107,10 @@ local plugins = function()
     require 'plugins.improved-ft',
 
     -- PERF test dropbar
-    -- (true and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar' or require 'plugins.incline',
+    (false and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar' or require 'plugins.incline',
 
     -- PERF haven't tested fully but it seemed better without it
+    -- Take a look at this https://github.com/rockerBOO/awesome-neovim?tab=readme-ov-file#marks
     -- require 'plugins.marks', -- alternative: https://github.com/desdic/marlin.nvim
 
     require 'plugins.snap',
@@ -112,6 +122,7 @@ local plugins = function()
     -- { 'tpope/vim-abolish', lazy = true },
     -- { 'tpope/vim-repeat', keys = { { '.' }, { ';' } } },
     { 'tpope/vim-sleuth', event = 'BufEnter', lazy = true, enabled = true }, -- Detect tabstop and shiftwidth automatically
+    -- require 'plugins.guess-indent', -- Similar to vim-sleuth
 
     -- 'MunifTanjim/nui.nvim',
     -- 'nvim-lua/plenary.nvim',
@@ -207,8 +218,6 @@ local unused_plugins = function()
     -- require 'plugins.tabline',
     -- require 'plugins.wilder',
 
-    require 'plugins.fine-cmdline',
-
     require 'plugins.codewindow',
 
     require 'plugins.neogit',
@@ -226,7 +235,6 @@ local unused_plugins = function()
     -- BUGGY: require 'plugins.epo',
 
     require 'plugins.cmdbuf',
-    require 'plugins.cmp',
 
     require 'plugins.todo-comments',
 
@@ -256,11 +264,9 @@ local unused_plugins = function()
       end,
     },
     require 'plugins.inc-rename',
-    require 'plugins.lint',
 
     -- require 'plugins.nnn', -- NOTE: works fine but needs better NNN configurations with tui-preview plugin ,
     -- require 'plugins.lf', -- NOTE: Appear to bugout with my toggleterm config
-    require 'plugins.noice',
 
     -- @
     require 'plugins.neo-tree',

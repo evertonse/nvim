@@ -1,0 +1,1 @@
+-- https://github.com/fnune/recall.nvim?tab=readme-ov-file#project-specific-global-marks

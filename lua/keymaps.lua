@@ -9,7 +9,9 @@ local M = {}
 local term_opts = { silent = true }
 local noremap_opts = { noremap = true, silent = true, nowait = true }
 local wait_opts = { noremap = true, silent = true, nowait = false }
+
 FULLSCREEN = false
+
 local substitute = '%s' -- default
 -- local substitute = '%S' -- timpope
 -- local substitute = 'Subs' -- text-case.nvim
@@ -105,93 +107,6 @@ local function is_floating_window()
   local win_id = vim.api.nvim_get_current_win()
   local win_info = vim.api.nvim_win_get_config(win_id)
   return win_info.relative ~= ''
-end
-
-local last_floating_info = {}
-local file_tree_toggle = function(opts)
-  local _ = false
-    and vim.api.nvim_create_autocmd('BufUnload', {
-      pattern = '*',
-      callback = function(event)
-        local bufname = vim.api.nvim_buf_get_name(event.buf or 0)
-        local win_id = vim.api.nvim_get_current_win()
-        local is_floating = vim.api.nvim_win_get_config(win_id).relative ~= ''
-        if is_floating then
-          last_floating_info = {
-            buf = event.buf,
-            bufname = bufname,
-            event = event,
-          }
-          Inspect(last_floating_info)
-        end
-      end,
-      desc = 'hmm',
-    })
-
-  -- opts.height_percentage, opts.width_percentage, opts.focus
-  if vim.g.self.file_tree == 'neo-tree' then
-    return function()
-      require('neo-tree.command').execute {
-        action = 'focus', -- OPTIONAL, this is the default value
-        source = 'filesystem', -- OPTIONAL, this is the default value
-        position = 'float',
-        toggle = true,
-        reveal_file = opts.focus_file, -- path to file or folder to reveal
-        reveal_force_cwd = false, -- change cwd without asking if needed
-      }
-    end
-  elseif vim.g.self.file_tree == 'nvim-tree' then
-    return function()
-      local api = require 'nvim-tree.api'
-
-      api.tree.toggle {
-        find_file = opts.focus_file,
-      }
-
-      if true then
-        -- Avoid any logic after that for now
-        return
-      end
-
-      if api.tree.is_visible() then
-        api.tree.close {}
-      else
-        api.tree.open {
-          find_file = opts.focus_file,
-        }
-      end
-
-      local tree_win_id = vim.fn.win_getid(vim.fn.bufwinnr(vim.fn.bufname 'NvimTree'))
-      local is_valid_win = vim.api.nvim_win_is_valid(tree_win_id) and api.tree.is_visible()
-
-      if is_valid_win then
-        vim.api.nvim_win_set_option(tree_win_id, 'winblend', vim.g.self.is_transparent and 0 or 8) -- Set the highlight group for this window
-        -- vim.api.nvim_set_hl(tree_win_id, 'FloatBorder', { bg = '#FFFFFF' })
-      end
-    end
-  end
-end
-
-local old_neotree_bufnr
-ToggleNeoTree = function()
-  -- Get the window ID of the Neo-tree buffer
-  local bufname = vim.fn.bufname 'neo-tree'
-  local bufnr = vim.fn.bufnr(bufname)
-  if old_neotree_bufnr ~= nil then
-    print('about to show old_neotree_bufnr' .. old_neotree_bufnr)
-    -- vim.cmd('sbuffer ' .. bufnr)
-    return vim.api.nvim_open_win(bufnr, true, {})
-  end
-  local winnr = vim.fn.bufwinnr(bufname)
-  local tree_winid = vim.fn.win_getid(winnr)
-
-  print(' bufnr=' .. bufnr .. ' winnr=' .. winnr .. '\nbufname=' .. bufname .. '\ntree_winid=' .. tree_winid)
-  if tree_winid ~= -1 and winnr ~= 1 then
-    if old_neotree_bufnr == nil then
-      old_neotree_bufnr = bufnr
-    end
-    vim.api.nvim_win_hide(tree_winid)
-  end
 end
 
 -- Function to reopen the most recently saved buffer path
@@ -649,7 +564,7 @@ M.general = {
     },
     ['<C-j>'] = {
       function()
-        vim.api.nvim_input ':'
+        vim.api.nvim_input '='
       end,
       '',
     },
@@ -661,7 +576,7 @@ M.general = {
     },
     ['<C-l>'] = {
       function()
-        vim.api.nvim_input ';'
+        vim.api.nvim_input '*'
       end,
       '',
     },
@@ -673,13 +588,13 @@ M.general = {
     },
     ['<C-9>'] = {
       function()
-        vim.api.nvim_input '{'
+        vim.api.nvim_input '['
       end,
       '',
     },
     ['<C-0>'] = {
       function()
-        vim.api.nvim_input '}'
+        vim.api.nvim_input ']'
       end,
       '',
     },
@@ -780,13 +695,16 @@ M.general = {
       [[:]] .. substitute .. [[/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left><Space><BS>]],
       '[R]eplace [W]ord',
     },
-    -->> neo-tree
     ['<leader>e'] = {
-      file_tree_toggle { focus_file = false },
+      function()
+        require('functions').tree_toggle { focus_file = false }
+      end,
       'Toggle neo tree',
     },
     ['<leader>E'] = {
-      file_tree_toggle { focus_file = true },
+      function()
+        require('functions').tree_toggle { focus_file = true }
+      end,
       'Toggle neo tree',
     },
 
@@ -1088,13 +1006,14 @@ M.general = {
   },
   -- Visual --
   v = {
+    ['//'] = { 'y/<C-R>"<CR>', 'Search for highlighted text' },
     ['<C-s>'] = {
       function()
         vim.api.nvim_feedkeys(':', 'n', false)
         vim.api.nvim_feedkeys(LastCmd or '', 'c', false)
         vim.api.nvim_input '<C-f>i'
       end,
-      'Save file',
+      '',
     },
     ['<leader>re'] = {
       function()
@@ -1147,6 +1066,7 @@ M.general = {
       '',
       { expr = false },
     },
+
     ['<Up>'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },
     ['<Down>'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
 
@@ -1622,7 +1542,7 @@ M.cmp = {
 --
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+-- vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')

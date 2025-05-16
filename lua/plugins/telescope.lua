@@ -782,7 +782,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
       },
       cache_picker = {
         num_pickers = -1,
-        limit_entry = 4000,
+        limit_entry = 40,
         ignore_empty_prompt = true,
       },
       extensions = {

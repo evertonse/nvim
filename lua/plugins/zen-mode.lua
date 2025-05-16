@@ -1,7 +1,7 @@
 return {
   -- :ZenMode
   'folke/zen-mode.nvim',
-  event = 'BufEnter',
+  -- event = 'BufEnter',
   cmd = { 'ZenMode' },
   enabled = true,
   opts = {
