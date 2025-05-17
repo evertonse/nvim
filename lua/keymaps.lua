@@ -600,33 +600,9 @@ M.general = {
     },
     ------------------------------------
   },
-  c = {
-    ['<CR>'] = {
-      function()
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', true)
-        vim.schedule(function()
-          LastCmd = ''
-        end)
-      end,
-    },
-    ['<C-s>'] = {
-      function()
-        vim.api.nvim_input '<C-f>'
-      end,
-    },
-    ['<Esc>'] = {
-      function()
-        LastCmd = vim.fn.getcmdline()
-        if vim.g.self.autoskip_cmdline_on_esc then
-          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', false)
-        else
-          vim.api.nvim_input '<C-f>'
-        end
-        -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-s>', true, true, true), 'n', false)
-      end,
-      'Quit and save lastcmd',
-    },
 
+  -- [CMDLINE]
+  c = {
     -- ['<C-k>'] = {
     --   function()
     --     vim.api.nvim_input '<Up>'
@@ -638,6 +614,7 @@ M.general = {
     --   end,
     -- },
   },
+
   -- [NORMAL]
   n = {
 
@@ -870,14 +847,6 @@ M.general = {
       end,
       'close all buffers expect current one',
     },
-    ['<C-s>'] = {
-      function()
-        vim.api.nvim_feedkeys(':', 'n', false)
-        vim.api.nvim_feedkeys(LastCmd or '', 'c', false)
-        vim.api.nvim_input '<C-f>i'
-      end,
-      'Save file',
-    },
 
     -- Open Cmdline Window
     -- ['Q'] = { '<cmd> q:<CR>', 'Open Cmdline Window' },
@@ -933,8 +902,8 @@ M.general = {
     ['<leader>p'] = { '"+p', noremap_opts },
     ['<leader>P'] = { '"+P', noremap_opts },
 
-    ['<S-l>'] = { ':bnext<CR>', noremap_opts },
-    ['<S-h>'] = { ':bprevious<CR>', noremap_opts },
+    ['<S-l>'] = { '<cmd>bnext<CR>', noremap_opts },
+    ['<S-h>'] = { '<cmd>bprevious<CR>', noremap_opts },
 
     -- Move text up and down
     ['<A-j>'] = { '<Esc>:m .+1<CR>==', noremap_opts },
@@ -950,8 +919,8 @@ M.general = {
     ['<C-j>'] = { '}', noremap_opts },
     ['<C-k>'] = { '{', noremap_opts },
 
-    ['<leader>w'] = { ':w<CR>', noremap_opts },
-    ['<leader>q'] = { ':q<CR>', noremap_opts },
+    ['<leader>w'] = { '<cmd>w<CR>', noremap_opts },
+    ['<leader>q'] = { '<cmd>q<CR>', noremap_opts },
     ['<leader>c'] = { delete_buffer, noremap_opts },
     ['<leader>C'] = { reopen_last_buffer, noremap_opts },
     -- ["<leader>c"]     = { ":bd!<CR>",  noremap_opts },
@@ -1001,31 +970,22 @@ M.general = {
     ['<S-Down>'] = { '<C-o>v<Down>', noremap_opts },
     ['<S-Left>'] = { '<Left><C-o>v', noremap_opts },
     ['<S-Right>'] = { '<C-o>v', noremap_opts },
-    -- ['<C-c>'] = { '<Esc>', noremap_opts },
     ['<M-U>'] = { '<C-o><C-r>' },
   },
   -- Visual --
   v = {
     ['//'] = { 'y/<C-R>"<CR>', 'Search for highlighted text' },
-    ['<C-s>'] = {
-      function()
-        vim.api.nvim_feedkeys(':', 'n', false)
-        vim.api.nvim_feedkeys(LastCmd or '', 'c', false)
-        vim.api.nvim_input '<C-f>i'
-      end,
-      '',
-    },
     ['<leader>re'] = {
       function()
         TextPostDontTrigger = true
         local mode = vim.api.nvim_get_mode().mode
 
         -- Check if we are in Visual mode (including Visual Line and Visual Block)
-
         if mode == 'V' or mode == '\22' then
           -- Below we're using normal S beware
-          vim.api.nvim_input [[:s///gc<left><left><left><left>]]
-          -- vim.api.nvim_input([[:]] .. substitute .. [[///gc<left><left><left><left>]])
+          -- vim.api.nvim_input [[<cmd>s///gc<left><left><left><left>]]
+          -- vim.api.nvim_input [[:s///gc<left><left><left><left>]]
+          vim.api.nvim_input([[:]] .. substitute .. [[///gc<left><left><left><left>]])
           return
         end
 
@@ -1033,7 +993,7 @@ M.general = {
       end,
       '[R]eplace [W]ord',
     },
-    ['<leader>n'] = { ':norm ', 'normal keys insertion', { expr = true } },
+    ['<leader>n'] = { '<cmd>norm ', 'normal keys insertion', { expr = true } },
 
     ['*'] = {
       function()
@@ -1633,16 +1593,13 @@ if vim.fn.has 'nvim-0.10' == 0 then
   map('x', '#', [[y?\V<C-R>=escape(@", '?\')<CR><CR>]], { desc = 'Search backward' })
 end
 
-local back_to_cmdline_window = function()
-  vim.api.nvim_input '<C-f>'
-end
-
-map('c', { '<C-c>', 'jk', 'kk', 'kj' }, back_to_cmdline_window, { noremap = true, silent = false, desc = '' })
+-- map('c', { 'jk', 'kk', 'kj' }, back_to_cmdline_window, { noremap = true, silent = false, desc = '' })
 
 -- Move only sideways in command mode. Using `silent = false` makes movements
 -- to be immediately shown.
 map('c', '<M-h>', '<Left>', { silent = false, desc = 'Left' })
 map('c', '<M-l>', '<Right>', { silent = false, desc = 'Right' })
+
 -- Window resize (respecting `v:count`)
 map(
   'n',

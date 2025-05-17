@@ -153,12 +153,17 @@ local lsp_optimize_server_capabilites = function(client)
   -- client.server_capabilities.semanticTokensProvider = nil
   -- client.server_capabilities.textDocumentSync = nil
 
-  client.server_capabilities.codeActionProvider = false
-  client.server_capabilities.documentHighlightProvider = false
-  client.server_capabilities.inlayHintProvider = false
-  client.server_capabilities.codeLensProvider = false
-  client.server_capabilities.linkedEditingRangeProvider = false
-  client.server_capabilities.callHierarchyProvider = false
+  -- client.server_capabilities.codeActionProvider = false
+  -- client.server_capabilities.documentHighlightProvider = false
+  -- client.server_capabilities.inlayHintProvider = false
+  -- client.server_capabilities.codeLensProvider = false
+  -- client.server_capabilities.linkedEditingRangeProvider = false
+  -- client.server_capabilities.callHierarchyProvider = false
+  -- client.server_capabilities.foldingRangeProvider = false
+  -- client.server_capabilities.referencesProvider = false
+  -- client.server_capabilities.typeDefinitionProvider = false
+
+  -- Inspect(client.server_capabilities)
 end
 
 -- Force disable all unnecessary capabilities + dynamic features
@@ -368,12 +373,13 @@ end
 local lsp_attach_autocommands = function()
   local group = vim.api.nvim_create_augroup('lsp-attach', { clear = true })
   local au = vim.api.nvim_create_autocmd
-  au('VimEnter', {
-    group = group,
-    callback = function(event)
-      --vim.cmd.e()
-    end,
-  })
+
+  -- au('VimEnter', {
+  --   group = group,
+  --   callback = function(event)
+  --     --vim.cmd.e()
+  --   end,
+  -- })
 
   au('LspAttach', {
     group = group,
@@ -387,7 +393,8 @@ local lsp_attach_autocommands = function()
 
       lsp_keymaps(event)
       lsp_optimize_server_capabilites(client)
-      ---[[ Disable default formatting
+
+      --- Disable default formatting
       if client.name == 'tsserver' then
         client.server_capabilities.documentFormattingProvider = false
       end

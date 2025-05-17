@@ -69,7 +69,7 @@ local setup = {
       }
     end,
     expand = function(args) -- mini.snippets expands snippets from lsp...
-      Inspect(args)
+      Inspect { Hi_WeVeExpanded = args }
       local MiniSnippets = ctx.mini.MiniSnippets
       local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
       insert { body = args.body } -- Insert at cursor

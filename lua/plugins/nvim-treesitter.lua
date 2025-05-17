@@ -51,9 +51,9 @@ return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
   cmd = { 'TSInstall', 'TSBufEnable', 'TSBufDisable', 'TSModuleInfo' },
   build = ':TSUpdate',
-  event = { 'BufReadPost', 'BufNewFile' },
+  event = { 'BufReadPre', 'BufNewFile' },
   -- event = { 'BufEnter' },
-  dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects', event = 'InsertEnter' },
+  dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
   opts = {
     sync_install = false,
 

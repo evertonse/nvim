@@ -126,6 +126,8 @@
 --
 -- (in VISUAL MODE)
 -- :'<,'>!<shell_command><cr>
+-- Example, select a list to sort with
+-- :'<,'>! sort
 -- Output to buffer, or :redir @a :cmd and then :redir END to get the output of command into the `a` register
 
 -- awesome list: https://github.com/rockerBOO/awesome-neovim
@@ -177,6 +179,8 @@
 -- :set redrawtime=10000 if slow or :set re=1
 --
 
+-- Pasting in insert mode: ctrl + r
+
 -- vim.cmd [[set runtimepath=]]
 if vim.loader then
   vim.loader.enable()
@@ -192,9 +196,6 @@ require 'options'
 
 -- [[ Autocommands ]]
 require 'autocommands'
-
--- [[ User Commands ]]
-require 'commands'
 
 -- [[ Basic Keymaps ]]
 require 'keymaps'

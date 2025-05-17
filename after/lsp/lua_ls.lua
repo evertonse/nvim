@@ -2,7 +2,7 @@ return {
   cmd = { 'lua-language-server' },
   filetypes = { 'lua' },
   autostart = true,
-  autoformat = true,
+  autoformat = false,
   root_markers = {
     '.luarc.json',
     '.luarc.jsonc',

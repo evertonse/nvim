@@ -5,7 +5,14 @@ return {
   -- tag = "1.*",
   lazy = true,
   cmd = { 'Norm' },
-  keys = { { '<leader><leader>', ':Norm <Down>', 'live preview of normal command' } },
+  keys = {
+    {
+      '<space><space>',
+      ':Norm ',
+      mode = { 'n', 'v', 'x' },
+      desc = '',
+    },
+  },
   config = function()
     require('live-command').setup {
       commands = {

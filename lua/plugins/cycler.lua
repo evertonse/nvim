@@ -1,5 +1,5 @@
 return {
-  'evertonse/cycler.nvim', --NOTE: Maybe instead of alternater we want CYCLER
+  'evertonse/cycler.nvim',
   lazy = true,
   event = 'BufReadPost',
   config = function()

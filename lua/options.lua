@@ -1,21 +1,17 @@
 -- [[ Setting options ]]
 -- See `:help vim.opt`
--- NOTE: You can change these options as you wish!
---  For more options, you can see `:help option-list`
 
--- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
+--  Sync clipboard between OS and Neovim.
 --  See `:help 'clipboard'`
 
 -- WARNING: These lines are dangerous, they might break 'gF' for example
 -- vim.cmd [[filetype plugin on]]
 -- vim.cmd [[filetype plugin indent off]]
 
--- vim.filetype.add
+-- This idk what it is
 -- vim.cmd [[ set omnifunc= ]]
 
 local o, opt, g = vim.o, vim.opt, vim.g
-
 local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
 local surround_opts = { 'mini.surround', 'vim-surround' }
 local file_tree_opts = { 'nvim-tree', 'neo-tree' }
@@ -53,23 +49,19 @@ vim.g.self = {
   },
   -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
 }
-
+---
 vim.cmd [[ :set sessionoptions-=options ]]
-vim.cmd [[ set t_kb=^?]]
-
--- Will prevent shada files from being generated or read in Neovim.
--- For vim, set viminfo="NONE"
-vim.cmd [[ set shada="NONE"]]
+-- vim.cmd [[ set t_kb=^?]]
 
 g.mapleader = ' '
 g.maplocalleader = ' '
 
 -- disable some default providers
-g.loaded_perl_provider = 1
-g.loaded_ruby_provider = 1
-g.loaded_node_provider = 1
-g.loaded_python_provider = 1
-g.loaded_python3_provider = 1
+-- g.loaded_perl_provider = 1
+-- g.loaded_ruby_provider = 1
+-- g.loaded_node_provider = 1
+-- g.loaded_python_provider = 1
+-- g.loaded_python3_provider = 1
 
 g.loaded_netrw = 1
 g.loaded_netrwPlugin = 1
@@ -99,8 +91,17 @@ g.netrw_winsize = 25
 -- g.did_load_filetypes = 1
 
 opt.fillchars:append { eob = ' ' }
+--
+-- -- Will prevent shada files from being generated or read in Neovim.
+-- -- For vim, set viminfo="NONE"
+-- vim.cmd [[ set shada="NONE"]]
+-- vim.cmd [[ set viminfo="NONE"]]
+--
 
--- vim.o.cursorlineopt = 'oth' -- to enable cursorline
+-- vim.opt.shadafile = '.vim/project.shada'
+vim.opt.shada = nil
+
+vim.o.cursorlineopt = 'both' -- to enable cursorline
 -- opt.wildmode = 'list:longest,list:full' -- for : stuff
 opt.wildmode = 'list:longest' -- for : stuff
 opt.wildignore:append { '.javac', 'node_modules', '*.pyc' }
@@ -145,29 +146,29 @@ opt.inccommand = 'nosplit' -- NO spliting the windows to see preview
 
 opt.laststatus = 3
 
--- opt.clipboard = nil, -- allows neovim to access the system clipboard
-opt.clipboard = ''
-
+--- UFrom here
 opt.cmdheight = 1 -- more space in the neovim command line for displaying messages
 opt.completeopt = { 'noinsert', 'menuone', 'noselect', 'popup' } -- mostly just for cmp
 opt.conceallevel = 0 -- so that `` is visible in markdown files
 opt.fileencoding = 'utf-8' -- the encoding written to a file
 opt.hlsearch = true -- highlight all matches on previous search pattern
 opt.incsearch = true -- Set Incremental search
-opt.ignorecase = true -- ignore case in search patterns
+opt.ignorecase = true
+opt.smartcase = true -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 opt.mouse = 'a' -- allow the mouse to be used in neovim
 opt.pumheight = 5 -- pop up menu height
 opt.showmode = false -- we don't need to see things like -- INSERT -- anymore
 opt.showtabline = 1 -- always show tabs
-opt.smartcase = true -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 opt.smartindent = true -- make indenting smarter again
+opt.autoindent = true -- Keep identation from previous line
+opt.breakindent = true
 opt.splitbelow = true -- force all horizontal splits to go below current window
 opt.splitright = true -- force all vertical splits to go to the right of current window
 opt.swapfile = false -- creates a swapfile
 opt.termguicolors = true -- set term gui colors (most terminals support this)
 opt.timeoutlen = 100 -- time to wait for a mapped sequence to complete (in milliseconds)
 opt.undofile = true -- enable persistent undo
-opt.updatetime = 190 -- faster completion (4000ms default)
+opt.updatetime = 50 -- CursorHold
 opt.backup = false -- creates a backup file
 opt.writebackup = false -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
 opt.expandtab = true -- convert tabs to spaces
@@ -175,37 +176,17 @@ opt.tabstop = 4 -- insert 2 spaces for a tab
 opt.softtabstop = -1
 opt.shiftwidth = 4 -- the number of spaces inserted for each indentation
 
--- 'softtabstop' 'sts'	number	(default 0)
--- 			local to buffer
--- 	Number of spaces that a <Tab> counts for while performing editing
--- 	operations, like inserting a <Tab> or using <BS>.  It "feels" like
--- 	<Tab>s are being inserted, while in fact a mix of spaces and <Tab>s is
--- 	used.  This is useful to keep the 'ts' setting at its standard value
--- 	of 8, while being able to edit like it is set to 'sts'.  However,
--- 	commands like "x" still work on the actual characters.
--- 	When 'sts' is zero, this feature is off.
--- 	When 'sts' is negative, the value of 'shiftwidth' is used.
--- 	See also |ins-expandtab|.  When 'expandtab' is not set, the number of
--- 	spaces is minimized by using <Tab>s.
--- 	The 'L' flag in 'cpoptions' changes how tabs are used when 'list' is
--- 	set.
---
--- 	The value of 'softtabstop' will be ignored if |'varsofttabstop'| is set
--- 	to anything other than an empty string.
--- :set tabstop? | set shiftwidth? | set softtabstop?
-
 opt.cursorline = true -- highlight the current line
 opt.number = true -- set numbered lines
 opt.relativenumber = true -- set relative numbered lines
-opt.numberwidth = 1 -- set number column width to 2 {default 4}
 opt.signcolumn = 'yes' -- always show the sign column, otherwise it would shift the text each time
+opt.numberwidth = 2 -- set number column width to 2 {default 4}
 opt.wrap = false -- display lines as one long line
 opt.linebreak = true -- companion to wrap, don't split words
-opt.scrolloff = 4 -- minimal number of screen lines to keep above and below the cursor
+opt.scrolloff = 3 -- minimal number of screen lines to keep above and below the cursor
 opt.sidescrolloff = 4 -- minimal number of screen columns either side of cursor if wrap is `false`
 opt.guifont = 'JetBrainsMono NF:h9.1' -- the font used in graphical neovim applications
 opt.whichwrap = 'bs<>[]hl' -- which "horizontal" keys are allowed to travel to prev/next line
-opt.breakindent = true
 
 o.undofile = true -- Enable persistent undo (see also `:h undodir`)
 
@@ -230,7 +211,6 @@ opt.formatoptions = 'qjl1' -- Don't autoformat comments
 
 o.pumblend = vim.g.self.is_transparent and 0 or 10 -- Make builtin completion menus slightly transparent
 
-o.pumheight = 10 -- Make popup menu smaller
 o.winblend = vim.g.self.is_transparent and 0 or 10 -- Make floating windows slightly transparent
 
 -- NOTE: Having `tab` present is needed because `^I` will be shown if
@@ -241,14 +221,9 @@ o.winblend = vim.g.self.is_transparent and 0 or 10 -- Make floating windows slig
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 o.list = true -- Show some helper symbols
--- opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-opt.listchars = { extends = '…', tab = '» ', trail = ' ', nbsp = '␣' }
--- o.listchars = 'tab:> ,,precedes:…,nbsp:␣' -- Define which helper symbols to show
 
--- Enable syntax highlighting if it wasn't already (as it is time consuming)
---if vim.fn.exists 'syntax_on' ~= 1 then
---vim.cmd [[syntax enable]]
---end
+-- chars: '·'
+opt.listchars = { extends = '…', tab = '» ', trail = ' ', nbsp = '␣' }
 
 opt.diffopt:append 'linematch:50'
 
@@ -273,8 +248,7 @@ opt.runtimepath:remove '/vimfiles' -- separate vim plugins from neovim in case v
 opt.undodir = (os.getenv 'HOME' or '') .. '/.local/share/nvim'
 
 -- [[ Setting vim cmds ]]
-vim.cmd ':set display-=msgsep'
--- vim.cmd ':set display-=lastline' -- No Line on left
+opt.display = 'uhex'
 -- vim.cmd ':set nomore'
 vim.cmd ':set more'
 
@@ -298,7 +272,7 @@ if OnSSH() then
   vim.lsp.handlers['textDocument/publishDiagnostics'] = function() end
 else
   vim.cmd ':set nolz'
-  vim.opt.foldenable = true
+  vim.opt.foldenable = false
 end
 
 -- In your Neovim configuration:
@@ -308,7 +282,9 @@ end
 vim.opt.shadafile = '.vim/project.shada'
 
 --vim.cmd [[ :set iskeyword-=- ]]
-vim.cmd ':set clipboard=""'
+-- vim.cmd ':set clipboard=""'
+-- opt.clipboard = nil, -- allows neovim to access the system clipboard
+opt.clipboard = ''
 
 -- NOTE: Needs to make sure matchit is not disabled
 vim.g.matchit_words = vim.g.matchit_words and vim.g.matchit_words .. ',function:end' or 'function:end'
@@ -317,6 +293,7 @@ local matchit_extend = function()
   -- List of pairs to add
   local pairs_to_add = {
     '<:>',
+    'pica:final',
     'function:end',
     'if:endif',
     'switch:case',
@@ -345,7 +322,7 @@ matchit_extend()
 -- Long lines a the single most important reason for when it's lagging for no reason
 -- Limiting the highlighting based on column looks like a decent solution
 -- vim.cmd [[set synmaxcol=250]]
-vim.cmd [[set synmaxcol=400]]
+vim.opt.synmaxcol = 400
 
 if OnWsl() then
   vim.cmd [[

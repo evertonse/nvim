@@ -18,6 +18,7 @@ local plugins_local_setup = function()
     require 'plugins.local.huge-file',
     require 'plugins.local.pattern-highlight',
     require 'plugins.local.gfx',
+    require 'plugins.local.normal-cmdline',
   }
 
   for _, plugin in pairs(plugins_local) do
@@ -41,8 +42,8 @@ local plugins = function()
 
     -- PERF: needs to test more, bigfiles might need to slow the update time
     -- Can't disable fuzzy in 'blink-cmp' although it seems more performant then 'cmp'
-    -- require 'plugins.blink-cmp',
-    require 'plugins.cmp',
+    require 'plugins.blink-cmp',
+    -- require 'plugins.cmp',
 
     -- PERF: Slow In bigfiles, treesitter has a slight slow when highlighting
     -- In cases like this regex based highglight is instant. Also inserting is majorly slow with treesitter, even if highlight is turned off.
@@ -91,8 +92,6 @@ local plugins = function()
     require('plugins.' .. vim.g.self.session_plugin),
 
     require 'plugins.nvim-lint',
-    -- require 'plugins.noice',
-    require 'plugins.fine-cmdline',
 
     require 'plugins.zen-mode',
     require 'plugins.harpoon',
@@ -138,6 +137,8 @@ local unused_plugins = function()
     -- Another option https://github.com/Yggdroot/indentLine
     -- require 'plugins.indentmini', -- Despite what is says, it's slow
     -- require 'plugins.bigfile',
+    require 'plugins.noice',
+    require 'plugins.fine-cmdline',
 
     -- Color picker ccc
     require 'plugins.autopairs',
@@ -383,10 +384,11 @@ end
 personally_disable_runtime_plugins()
 
 -- Locally "installed", not lazy
-plugins_local_setup()
 
 -- Lazy git installed
 require('lazy').setup(plugins(), lazy_config)
+
+plugins_local_setup()
 
 -- vim: ts=2 sts=2 sw=2 et
 -- :set formatoptions-=r formatoptions-=c formatoptions-=o

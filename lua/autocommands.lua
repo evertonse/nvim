@@ -70,13 +70,7 @@ vim.cmd [[
 
 ]]
 
--- vim.cmd [[ autocmd RecordingEnter * set cmdheight=1 |  nmap Q q | echo "recording start" ]]
--- vim.cmd [[ autocmd RecordingEnter * set cmdheight=1 |  nnoremap Q q | echo "recording start" ]]
--- vim.cmd [[ autocmd RecordingEnter * set cmdheight=1 |  nnoremap q <Nop> | echo "recording start" ]]
--- vim.cmd [[ autocmd RecordingLeave * set cmdheight=0 |  nmap q q | echo "recording stop" ]]
--- vim.cmd [[ autocmd RecordingLeave * set cmdheight=0 |  nmap Q @q | echo "recording stop" ]]
-
--- vim.cmd([[ autocmd FileType *.c nnoremap <buffer> <F5> :wa<CR>:term gcc % -o %:r && ./%:r<CR> ]])
+vim.cmd [[ autocmd FileType *.c nnoremap <buffer> <F5> :w<CR>:term gcc % -o %:r && ./%:r<CR> ]]
 -- vim.cmd [[autocmd filetype cpp nnoremap <F5> :!g++ % -ggdb -o %:r && ./%:r <CR>]]
 -- vim.cmd [[autocmd FileType c nnoremap <F5> :!gcc % -g -o %:r && ./%:r <CR>]]
 
@@ -475,18 +469,6 @@ end)
 
 local _ = false and au({ 'WinEnter' }, '*', function(_) end)
 
--- Global variable to store unexecuted command line text
-LastCmd = ''
--- Function to capture unexecuted command line text
-local function capture_cmdline_text()
-  local cmd_type = vim.fn.getcmdtype()
-
-  Inspect('cmd type: "' .. cmd_type .. '" Unexecuted command line text saved: ' .. LastCmd)
-  if cmd_type == ':' or cmd_type == '/' or cmd_type == '?' then
-    print('Unexecuted command line text saved: ' .. LastCmd)
-  end
-end
-
 LastBuffer = nil
 au('BufLeave', '*', function(event)
   local current_buffer = vim.api.nvim_get_current_buf()
@@ -499,106 +481,6 @@ au('BufLeave', '*', function(event)
     end
   end
 end)
-
--- Before leaving the command-line (including non-interactive use of ":")
-au('CmdlineLeave', '*', function(event)
-  vim.opt.laststatus = previous_stats.laststatus
-  vim.opt.cmdheight = previous_stats.cmdheight
-  vim.g.ministatusline_disable = previous_stats.ministatusline_disable
-  TextPostDontTrigger = false
-end)
-
-au('CmdwinLeave', '*', function(event)
-  vim.api.nvim_create_augroup('ChangedModeInCmdwin', { clear = true })
-end)
-
-local _ = true
-  and au('CmdwinEnter', '*', function(event)
-    local map = vim.keymap.set
-    TextPostDontTrigger = true
-
-    previous_stats.laststatus = vim.opt.laststatus
-    previous_stats.cmdheight = vim.opt.cmdheight
-    previous_stats.ministatusline_disable = vim.g.ministatusline_disable
-
-    vim.cmd [[setlocal signcolumn=no]]
-    vim.g.ministatusline_disable = true
-    vim.o.laststatus = 0
-    vim.o.cmdheight = 0
-
-    vim.wo.number = false
-    vim.wo.relativenumber = false
-
-    local ok, cmp = pcall(require, 'cmp')
-    if ok then
-      cmp.close()
-      -- vim.schedule(cmp.complete)
-    end
-
-    local opts = { buffer = event.buf, noremap = true, silent = true }
-
-    au(
-      'ModeChanged',
-      -- '*',
-      '*:[i]*', -- insert mode
-      function()
-        TextPostDontTrigger = false
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', true)
-
-        local reanimate_cmdline = function()
-          -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<bs>', true, true, true), 'c', true)
-          vim.api.nvim_input 'i<bs>'
-        end
-
-        local defered_reanimate_cmdline = function()
-          vim.defer_fn(reanimate_cmdline, 0)
-        end
-        defered_reanimate_cmdline()
-
-        -- vim.schedule(defered_reanimate_cmdline)
-      end,
-      'ChangedModeInCmdwin',
-      vim.api.nvim_create_augroup('ChangedModeInCmdwin', { clear = true })
-    )
-
-    map({ 'x', 'v', 'n' }, '<CR>', function()
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, true, true), 'n', true)
-      vim.schedule(function()
-        LastCmd = ''
-      end)
-    end, opts)
-
-    map({ 'i', 'n' }, '<C-f>', '<C-c><Down>', opts)
-
-    map({ 'x', 'v', 'n', 'i' }, '<C-s>', function()
-      vim.api.nvim_input '<C-f>'
-    end, opts)
-
-    map('n', '<C-c>', function()
-      vim.cmd [[stopinsert]]
-    end, opts)
-
-    map({ 'n' }, '<Esc>', function()
-      -- LastCmd = vim.fn.getline '.'
-      LastCmd = vim.fn.getcmdline()
-      vim.cmd [[stopinsert]]
-      vim.cmd [[q!]]
-    end, opts)
-
-    map({ 'n' }, 'i', function()
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('i', true, true, true), 'n', true)
-      vim.schedule(function()
-        vim.api.nvim_input '<Right><Left>'
-      end)
-    end, opts)
-
-    map({ 'n', 'v', 'x' }, 'a', function()
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('i', true, true, true), 'n', true)
-      vim.schedule(function()
-        vim.api.nvim_input '<Right>'
-      end)
-    end, opts)
-  end)
 
 local telescope_yank_history = function()
   local finders = require 'telescope.finders'
