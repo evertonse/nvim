@@ -16,14 +16,22 @@ return {
   dynamicRegistration = false,
   settings = {
     Lua = {
-      globals = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
-      -- builtins = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
+      -- globals = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
+      builtin = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
       runtime = { version = 'Lua 5.1' },
+
+      completion = {
+        showWord = 'Disable',
+        workspaceWord = false,
+      },
+
+      hint = {
+        enable = true,
+      },
 
       -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
       diagnostics = {
-        -- globals = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
-        -- builtins = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
+        globals = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
         disable = { 'missing-fields' },
       },
       workspace = {
@@ -31,7 +39,9 @@ return {
         library = {
           unpack(vim.api.nvim_get_runtime_file('', true)),
         },
-        -- Someone wrote this helps if Lua Lsp is asking whether to create luassert.
+        -- If unbearably slow, you can just let VIMRUNTIME instead
+        -- library = { vim.env.VIMRUNTIME },
+
         checkThirdParty = false,
       },
       -- Do not send telemetry data containing a randomized but unique identifier.

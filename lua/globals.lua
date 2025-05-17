@@ -588,6 +588,45 @@ vim.api.nvim_create_user_command('FindFiles', function()
   local buf, win = OpenFloatingWindow { lines = files }
 end, {})
 
+local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
+local surround_opts = { 'mini.surround', 'vim-surround' }
+local file_tree_opts = { 'nvim-tree', 'neo-tree' }
+
+vim.g.self = {
+  linting_by_default = false,
+  terminal_always_insert = false,
+  use_minipick_when_slow = OnSlowPath(),
+  autoskip_cmdline_on_esc = true,
+  inc_rename = false,
+  icons = true,
+  nerd_font = true,
+  signcolumn = 'yes',
+  is_transparent = true,
+  theme = 'pastel',
+  wilder = false,
+  session_plugin = session_opts[2], --NOTE: Better note Idk, bugs with Telescope sometimes
+  mini_map = true or OnWindows() or OnSlowPath(),
+  mini_pick = true or OnWindows() or OnSlowPath() or OnSSH(),
+  notification_poll_rate = 80,
+  file_tree = file_tree_opts[OnWindows() and 1 or 1],
+  open_win_config_recalculate_every_time = true,
+  enable_file_tree_preview = false,
+  dont_format = { c = true, cpp = true, odin = true, python = true },
+  cycles = {
+    { '==', '!=' },
+    { 'true', 'false' },
+    { 'False', 'True' },
+    { 'public', 'private' },
+    { 'disable', 'enable' },
+    { 'if', 'else', 'elseif' },
+    { 'and', 'or' },
+    { 'off', 'on' },
+    { 'yes', 'no' },
+    { '1', '2', '3' },
+  },
+  -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
+}
+
 return {
   check = function()
     vim.health.start 'kickstart.nvim'

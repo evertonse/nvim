@@ -14,10 +14,22 @@ return {
     local snap = require 'snap'
     snap.maps {
 
-      { '<leader>sf', snap.config.file { producer = 'ripgrep.file' } },
+      -- { '<leader>sf', snap.config.file { producer = 'ripgrep.file' } },
+      { '<leader>sf', snap.config.file { producer = 'fd.file' } },
       { '<Leader>sb', snap.config.file { producer = 'vim.buffer' } },
       { '<Leader>so', snap.config.file { producer = 'vim.oldfile' } },
       { '<Leader>sF', snap.config.vimgrep {} },
+      {
+        '<Leader>sG',
+        function()
+          snap.run {
+            prompt = 'Global Marks>',
+            producer = snap.get 'consumer.fzy'(snap.get 'producer.vim.globalmarks'),
+            select = snap.get('select.vim.mark').select,
+            views = { snap.get 'preview.vim.mark' },
+          }
+        end,
+      },
     }
     vim.keymap.set('n', '<leader>sf', function()
       snap.run {

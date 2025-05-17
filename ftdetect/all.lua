@@ -58,7 +58,7 @@ vim.api.nvim_create_autocmd('FileType', {
 ---
 --- TLDR: If slow to open, add the filetype by extension below (:h vim.filetype.add)
 
--- Inspect 'You should only see this once' -- if you uncomment
+-- Inspect 'You should only see this once per neovim entire ssession' -- if you uncomment
 vim.filetype.add {
   extension = {
     sh = 'bash',
@@ -71,7 +71,13 @@ vim.filetype.add {
     hpp = 'cpp',
 
     glsl = 'glsl',
+    json = 'json',
 
     md = 'markdown',
   },
 }
+
+--- Choose exactly which parser you want for what filetypes
+--- For examples I want the 'json5' parser instead of 'json' parser for all.
+--- We could have chosen jsonc which supports comments too.
+vim.treesitter.language.register('json5', { 'json', 'json5' })

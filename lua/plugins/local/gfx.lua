@@ -8,7 +8,7 @@ local goto_file_from_file_line_and_col_number = function(file, line_num, col_num
   line_num = line_num and tonumber(line_num) or 0
   col_num = col_num and tonumber(col_num) or 0
 
-  -- 1) look through all windows in the current tab
+  -- Look through all windows in the current tab
   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
     local buf = vim.api.nvim_win_get_buf(win)
     local name = vim.api.nvim_buf_get_name(buf)
@@ -22,19 +22,19 @@ local goto_file_from_file_line_and_col_number = function(file, line_num, col_num
     end
   end
 
-  --  not in this tab: is the buffer loaded anywhere?
+  --  Not in this tab: is the buffer loaded anywhere?
   local bufnr = vim.fn.bufnr(abs, false) -- false = don’t create
   local target_win = vim.api.nvim_tabpage_list_wins(0)[1]
   vim.api.nvim_set_current_win(target_win)
 
   if bufnr ~= -1 then
-    -- buffer exists, just switch to it
+    -- Buffer exists, just switch to it
     vim.api.nvim_win_set_buf(target_win, bufnr)
     if line_num ~= 0 then
       vim.api.nvim_win_set_cursor(target_win, { line_num, col_num })
     end
   else
-    -- not loaded: edit the file in that window
+    -- Not loaded: edit the file in that window
     file = vim.fn.fnameescape(abs)
     if line_num then
       file = (file .. '|' .. line_num)

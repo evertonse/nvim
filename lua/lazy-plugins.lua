@@ -52,7 +52,6 @@ local plugins = function()
     --     Disabling the highlight fix it
     -- Update: a.ll
     require 'plugins.nvim-treesitter',
-
     -- require 'plugins.nvim-treesitter-pairs',
 
     require 'plugins.mason',

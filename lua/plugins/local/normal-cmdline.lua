@@ -1,4 +1,10 @@
---- Short names
+--- Short names and Helpers
+
+local au = vim.api.nvim_create_autocmd
+local input = vim.api.nvim_input
+local schedule = vim.schedule
+local schedule_wrap = vim.schedule_wrap
+
 local map = function(mode, lhs, rhs, opts)
   if lhs == '' then
     return
@@ -22,28 +28,26 @@ local setpos = function(pos)
   vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] })
 end
 
-local au = vim.api.nvim_create_autocmd
 local feedkeys = function(keys, behaviour)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, true, true), behaviour or 'n', false)
 end
 
-local input = vim.api.nvim_input
-local schedule = vim.schedule
-
---- Helpers
 local inspect = function(arg)
   vim.print(vim.inspect(arg))
   -- exit(0)
 end
 
 local is_in_cmdline = function()
-  return vim.fn.getcmdwintype() ~= '' or vim.fn.mode():match '^[/:]' ~= nil
+  --- Returns an empty string when not in the command-line window.
+  local in_cmdline_window = vim.fn.getcmdwintype() ~= ''
+  return vim.api.nvim_get_mode().mode == 'c' and in_cmdline_window and vim.fn.mode():match '^[/:]' ~= nil
 end
 
 --- Last cmd typed but not executed
 local last_cmd = ''
+
 --- Not used for now, because this affects usage of ':' from vim.cmd. It's not good when this is triggered from lua code instead of keymaps.
---- And it doesn't seem a way to make this distinction, bummer :/
+--- And it doesn't seem a way to make this distinction, even if using `vim.on_key`, bummer :/
 local should_restore_last_cmd = false
 
 --- Data from previous event
@@ -91,7 +95,7 @@ local save_opts = function()
   should_restore_last_cmd = false
 end
 
-local restore_opts = function()
+local restore_opts = schedule_wrap(function()
   vim.opt.laststatus = previous.opt.laststatus
   vim.opt.cmdheight = previous.opt.cmdheight
   vim.opt.cmdwinheight = previous.opt.cmdwinheight
@@ -100,7 +104,7 @@ local restore_opts = function()
 
   previous.restored = true
   should_restore_last_cmd = false
-end
+end)
 
 local set_local_opts = function()
   vim.wo.number = false
@@ -200,11 +204,13 @@ local M = {}
 
 M.goto_cmdline_window_from_cmdline = function()
   save_opts()
+  -- schedule(function()
   input '<c-f>'
+  -- end)
 end
 
 M.setup = function()
-  local _ = false -- Not necessary for. But if any problems occurs I'll leave the code for easy options setting
+  local _ = true -- Not necessary for. But if any problems occurs I'll leave the code for easy options setting
     and schedule(function()
       vim.opt.cmdwinheight = 2
       vim.opt.cmdheight = 1

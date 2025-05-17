@@ -902,16 +902,12 @@ M.general = {
     ['<leader>p'] = { '"+p', noremap_opts },
     ['<leader>P'] = { '"+P', noremap_opts },
 
-    ['<S-l>'] = { '<cmd>bnext<CR>', noremap_opts },
-    ['<S-h>'] = { '<cmd>bprevious<CR>', noremap_opts },
+    ['<C-l>'] = { '<cmd>bnext<CR>', noremap_opts },
+    ['<C-h>'] = { '<cmd>bprevious<CR>', noremap_opts },
 
     -- Move text up and down
     ['<A-j>'] = { '<Esc>:m .+1<CR>==', noremap_opts },
     ['<A-k>'] = { '<Esc>:m .-2<CR>==', noremap_opts },
-
-    -- >> move fast with crtl Movinge
-    ['<C-h>'] = { 'b', noremap_opts },
-    ['<C-l>'] = { 'e', noremap_opts },
 
     ['<C-Left>'] = { 'b', noremap_opts },
     ['<C-Right>'] = { 'e', noremap_opts },
@@ -1045,7 +1041,7 @@ M.general = {
     ['<A-k>'] = { ":m '<-2<CR>gv=gv", noremap_opts },
 
     ['p'] = { 'P', noremap_opts },
-    -- ['P'] = { '"_P', noremap_opts },
+    -- ['P'] = { '"_P', noremap_opts }, -- This one is wrong strangely
 
     ['<C-h>'] = { 'b' },
     ['<C-l>'] = { 'e' },

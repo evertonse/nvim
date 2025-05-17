@@ -186,13 +186,13 @@ if vim.loader then
   vim.loader.enable()
 end
 
+-- NOTE: might be useful `vim.defer_fn` or `vim.schedule`
+
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
-require 'utils'
+require 'globals'
 
 -- [[ Setting options ]]
 require 'options'
-
--- NOTE: might be useful `vim.defer_fn` or `vim.schedule`
 
 -- [[ Autocommands ]]
 require 'autocommands'

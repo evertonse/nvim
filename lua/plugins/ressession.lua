@@ -1,3 +1,18 @@
+local map = function(mode, lhs, rhs, opts)
+  if lhs == '' then
+    return
+  end
+  opts = vim.tbl_deep_extend('force', { silent = true }, opts or {})
+
+  if type(lhs) == 'table' then
+    for _, single_lhs in ipairs(lhs) do
+      vim.keymap.set(mode, single_lhs, rhs, opts)
+    end
+  else
+    vim.keymap.set(mode, lhs, rhs, opts)
+  end
+end
+
 return {
   'stevearc/resession.nvim',
   lazy = false,
@@ -62,16 +77,11 @@ return {
   config = function(_, opts)
     local resession = require 'resession'
     resession.setup(opts)
-    -- resession.setup {}
+
     -- Resession does NOTHING automagically, so we have to set up some keymaps
-    local maps = {
-      n = {
-        ['<leader>rss'] = { resession.save, 'Ressesion Save' },
-        ['<leader>rsl'] = { resession.load, 'Ressesion Load' },
-        ['<leader>rsd'] = { resession.delete, 'Ressesion delete' },
-      },
-    }
-    SetKeyMaps(maps)
+    map('n', '<leader>rss', resession.save, { desc = 'Ressesion Save' })
+    map('n', '<leader>rsl', resession.load, { desc = 'Ressesion Load' })
+    map('n', '<leader>rsd', resession.delete, { desc = 'Ressesion delete' })
     -- Define a function to close the quickfix window
     local function close_quickfix()
       local quickfix_open = false
@@ -93,7 +103,6 @@ return {
         if vim.fn.argc(-1) == 0 then
           -- Save these to a different directory, so our manual sessions don't get polluted
           resession.load(vim.fn.getcwd(), { dir = 'session', silence_errors = true })
-
           vim.schedule(function()
             vim.cmd [[stopinsert]]
             vim.cmd [[set cmdheight=1]]
@@ -106,7 +115,6 @@ return {
         vim.schedule(function()
           local ok, trail = pcall(require, 'trailblazer')
           if not ok then
-            local _ = false and vim.notify("Couldn't load trailblazer session from" .. trail_path .. '.', vim.log.levels.WARN)
             return
           end
 
@@ -122,10 +130,8 @@ return {
       callback = function()
         close_quickfix()
         resession.save(vim.fn.getcwd(), { dir = 'session', notify = true })
-
         local ok, trail = pcall(require, 'trailblazer')
         if not ok then
-          vim.notify("Couldn't load trailblazer session from" .. trail_path .. '.', vim.log.levels.WARN)
           return
         end
         ok = pcall(trail.save_trailblazer_state_to_file, trail_path)

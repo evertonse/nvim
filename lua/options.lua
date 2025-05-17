@@ -1,67 +1,28 @@
--- [[ Setting options ]]
--- See `:help vim.opt`
+--- See `:help vim.opt`
 
---  Sync clipboard between OS and Neovim.
---  See `:help 'clipboard'`
+---  Sync clipboard between OS and Neovim.
+---  See `:help 'clipboard'`
 
--- WARNING: These lines are dangerous, they might break 'gF' for example
+--- WARNING: These lines are dangerous, they might break 'gF' for example
 -- vim.cmd [[filetype plugin on]]
 -- vim.cmd [[filetype plugin indent off]]
 
--- This idk what it is
+--- This idk what it is exactly just a vague idea
 -- vim.cmd [[ set omnifunc= ]]
 
 local o, opt, g = vim.o, vim.opt, vim.g
-local session_opts = { 'nvim-possession', 'ressession', 'auto-session', 'persistence' }
-local surround_opts = { 'mini.surround', 'vim-surround' }
-local file_tree_opts = { 'nvim-tree', 'neo-tree' }
-vim.g.self = {
-  linting_by_default = false,
-  terminal_always_insert = false,
-  use_minipick_when_slow = OnSlowPath(),
-  autoskip_cmdline_on_esc = true,
-  inc_rename = false,
-  icons = true,
-  nerd_font = true,
-  signcolumn = 'yes',
-  is_transparent = true,
-  theme = 'pastel',
-  wilder = false,
-  session_plugin = session_opts[2], --NOTE: Better note Idk, bugs with Telescope sometimes
-  mini_map = true or OnWindows() or OnSlowPath(),
-  mini_pick = true or OnWindows() or OnSlowPath() or OnSSH(),
-  notification_poll_rate = 80,
-  file_tree = file_tree_opts[OnWindows() and 1 or 1],
-  open_win_config_recalculate_every_time = true,
-  enable_file_tree_preview = false,
-  dont_format = { c = true, cpp = true, odin = true, python = true },
-  cycles = {
-    { '==', '!=' },
-    { 'true', 'false' },
-    { 'False', 'True' },
-    { 'public', 'private' },
-    { 'disable', 'enable' },
-    { 'if', 'else', 'elseif' },
-    { 'and', 'or' },
-    { 'off', 'on' },
-    { 'yes', 'no' },
-    { '1', '2', '3' },
-  },
-  -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
-}
----
-vim.cmd [[ :set sessionoptions-=options ]]
 -- vim.cmd [[ set t_kb=^?]]
+vim.cmd [[set sessionoptions-=options ]]
 
 g.mapleader = ' '
 g.maplocalleader = ' '
 
--- disable some default providers
--- g.loaded_perl_provider = 1
--- g.loaded_ruby_provider = 1
--- g.loaded_node_provider = 1
--- g.loaded_python_provider = 1
--- g.loaded_python3_provider = 1
+-- Disable some default providers
+g.loaded_perl_provider = 1
+g.loaded_ruby_provider = 1
+g.loaded_node_provider = 1
+g.loaded_python_provider = 1
+g.loaded_python3_provider = 1
 
 g.loaded_netrw = 1
 g.loaded_netrwPlugin = 1
@@ -79,29 +40,24 @@ g.loaded_getscript = 1
 g.loaded_getscriptPlugin = 1
 g.loaded_logiPat = 1
 g.loaded_spellfile_plugin = 1
--- g.loaded_matchit = 1
--- g.loaded_matchparen = 1
 g.loaded_netrwSettings = 1
 g.loaded_netrwFileHandlers = 1
 g.netrw_browse_split = 0
 g.netrw_banner = 0
 g.netrw_winsize = 25
+
 -- WARNING: These below are about findinf filetypes
 -- g.do_filetype_lua = 1
 -- g.did_load_filetypes = 1
 
 opt.fillchars:append { eob = ' ' }
---
--- -- Will prevent shada files from being generated or read in Neovim.
--- -- For vim, set viminfo="NONE"
--- vim.cmd [[ set shada="NONE"]]
--- vim.cmd [[ set viminfo="NONE"]]
---
 
--- vim.opt.shadafile = '.vim/project.shada'
-vim.opt.shada = nil
+--- WARNING: This trips up the 'normal-cmdline' sometimes.
+--- Problably because when doing opt.shadafile = "NONE" it acually looks for NONE and
+--- loads some options and one of its options might be worth looking into harden normal-cmdline
+opt.shadafile = ''
 
-vim.o.cursorlineopt = 'both' -- to enable cursorline
+o.cursorlineopt = 'both' -- to enable cursorline
 -- opt.wildmode = 'list:longest,list:full' -- for : stuff
 opt.wildmode = 'list:longest' -- for : stuff
 opt.wildignore:append { '.javac', 'node_modules', '*.pyc' }
@@ -128,7 +84,7 @@ opt.wildignore:append {
 
 -- if set to `false` disallow autocomplete on cmdline since I'm using completion plugin
 o.wildmenu = false
-
+--
 -- Search for suffixes using gf
 opt.suffixesadd:append { '.java', '.rs' }
 
@@ -147,7 +103,6 @@ opt.inccommand = 'nosplit' -- NO spliting the windows to see preview
 opt.laststatus = 3
 
 --- UFrom here
-opt.cmdheight = 1 -- more space in the neovim command line for displaying messages
 opt.completeopt = { 'noinsert', 'menuone', 'noselect', 'popup' } -- mostly just for cmp
 opt.conceallevel = 0 -- so that `` is visible in markdown files
 opt.fileencoding = 'utf-8' -- the encoding written to a file
@@ -188,6 +143,8 @@ opt.sidescrolloff = 4 -- minimal number of screen columns either side of cursor 
 opt.guifont = 'JetBrainsMono NF:h9.1' -- the font used in graphical neovim applications
 opt.whichwrap = 'bs<>[]hl' -- which "horizontal" keys are allowed to travel to prev/next line
 
+opt.cmdheight = 1 -- more space in the neovim command line for displaying messages
+
 o.undofile = true -- Enable persistent undo (see also `:h undodir`)
 
 o.backup = false -- Don't store backup while overwriting the file
@@ -209,9 +166,9 @@ o.infercase = true -- Infer letter cases for a richer built-in keyword completio
 o.virtualedit = 'block' -- Allow going past the end of line in visual block mode
 opt.formatoptions = 'qjl1' -- Don't autoformat comments
 
-o.pumblend = vim.g.self.is_transparent and 0 or 10 -- Make builtin completion menus slightly transparent
+o.pumblend = g.self.is_transparent and 0 or 10 -- Make builtin completion menus slightly transparent
 
-o.winblend = vim.g.self.is_transparent and 0 or 10 -- Make floating windows slightly transparent
+o.winblend = g.self.is_transparent and 0 or 10 -- Make floating windows slightly transparent
 
 -- NOTE: Having `tab` present is needed because `^I` will be shown if
 -- omitted (documented in `:h listchars`).
@@ -255,38 +212,31 @@ vim.cmd ':set more'
 if OnSSH() then
   vim.cmd ':set lz' -- Lazy Redraw
   vim.cmd ':set ttyfast'
-  vim.o.ttyfast = true
-  vim.opt.timeoutlen = 300
-  vim.opt.ttimeoutlen = 10 -- Default is 100 ms
-  vim.opt.undolevels = 100 -- Default is 1000
-  vim.opt.swapfile = false
-  vim.opt.mouse = ''
-  vim.opt.foldenable = false
-  vim.opt.synmaxcol = 128 -- Only highlight the first 128 columns
-  vim.opt.lazyredraw = true -- Don't redraw while executing macros
-  vim.opt.signcolumn = 'no' -- Disable the sign column
-  vim.opt.foldmethod = 'manual'
-  vim.opt.backup = false
-  vim.opt.writebackup = false
+  o.ttyfast = true
+  opt.timeoutlen = 300
+  opt.ttimeoutlen = 10 -- Default is 100 ms
+  opt.undolevels = 100 -- Default is 1000
+  opt.swapfile = false
+  opt.mouse = ''
+  opt.foldenable = false
+  opt.synmaxcol = 128 -- Only highlight the first 128 columns
+  opt.lazyredraw = true -- Don't redraw while executing macros
+  opt.signcolumn = 'no' -- Disable the sign column
+  opt.foldmethod = 'manual'
+  opt.backup = false
+  opt.writebackup = false
   vim.cmd [[autocmd! CursorHold,CursorHoldI]] -- Minimize autocmd activity
-  vim.lsp.handlers['textDocument/publishDiagnostics'] = function() end
+  lsp.handlers['textDocument/publishDiagnostics'] = function() end
 else
-  vim.cmd ':set nolz'
-  vim.opt.foldenable = false
+  -- vim.cmd ':set nolz'
+  opt.foldenable = false
 end
 
--- In your Neovim configuration:
--- vim.opt.exrc = true
--- vim.opt.secure = true
-
-vim.opt.shadafile = '.vim/project.shada'
-
 --vim.cmd [[ :set iskeyword-=- ]]
--- vim.cmd ':set clipboard=""'
--- opt.clipboard = nil, -- allows neovim to access the system clipboard
-opt.clipboard = ''
 
 -- NOTE: Needs to make sure matchit is not disabled
+-- g.loaded_matchit = 1
+-- g.loaded_matchparen = 1
 vim.g.matchit_words = vim.g.matchit_words and vim.g.matchit_words .. ',function:end' or 'function:end'
 -- Ensure matchit is not disabled
 local matchit_extend = function()
@@ -322,8 +272,10 @@ matchit_extend()
 -- Long lines a the single most important reason for when it's lagging for no reason
 -- Limiting the highlighting based on column looks like a decent solution
 -- vim.cmd [[set synmaxcol=250]]
-vim.opt.synmaxcol = 400
+vim.opt.synmaxcol = 420
 
+-- opt.clipboard = nil, -- allows neovim to access the system clipboard
+opt.clipboard = ''
 if OnWsl() then
   vim.cmd [[
   "set clipboard+=unnamedplus
