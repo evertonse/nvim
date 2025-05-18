@@ -33,8 +33,8 @@ local plugins = function()
     -- PERF Lsp slow as fuck sometimes, but culprit might always be the server its self, but nonethe less everything should be async, so if the server is slowing the fuck down, what does it matter to us? that seems like a problem
     -- require 'plugins.lsp',
 
-    require('plugins.' .. vim.g.self.file_tree), -- NOTE: Neotree is slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
     require 'plugins.telescope',
+    require('plugins.' .. vim.g.self.file_tree), -- NOTE: Neotree is slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
     require 'plugins.Comment',
     require 'plugins.mini',
     require 'plugins.cycler',
@@ -70,7 +70,7 @@ local plugins = function()
 
     -- require 'plugins.snacks',
 
-    -- PERF: slow but maybe fixable.
+    -- PERF: slow but maybe fixable. But ultimately not needed.
     -- require 'plugins.hlargs',
 
     require 'plugins.dap',
@@ -90,7 +90,7 @@ local plugins = function()
     -- PERF: Why is it mildly slow? findout maybe its all the stuff of autocommands
     require('plugins.' .. vim.g.self.session_plugin),
 
-    require 'plugins.nvim-lint',
+    -- require 'plugins.nvim-lint',
 
     require 'plugins.zen-mode',
     require 'plugins.harpoon',
@@ -105,7 +105,7 @@ local plugins = function()
     require 'plugins.improved-ft',
 
     -- PERF test dropbar
-    (false and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar' or require 'plugins.incline',
+    -- (false and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar' or require 'plugins.incline',
 
     -- PERF haven't tested fully but it seemed better without it
     -- Take a look at this https://github.com/rockerBOO/awesome-neovim?tab=readme-ov-file#marks
@@ -373,9 +373,6 @@ local lazy_config = {
 
 local personally_disable_runtime_plugins = function()
   for _, bplugin in ipairs(lazy_config.performance.rtp.disabled_plugins) do
-    if true then
-      break
-    end
     vim.g['loaded_' .. bplugin:gsub('%..*', '')] = 1
   end
 end

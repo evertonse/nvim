@@ -545,7 +545,7 @@ M.general = {
     -- },
   },
 
-  si = {
+  csi = {
 
     ['<S-Tab>'] = { '<C-d>', 'Reverse Tab' },
     -- go to  beginning and end
@@ -583,18 +583,6 @@ M.general = {
     ['<C-g>'] = {
       function()
         vim.api.nvim_input '&'
-      end,
-      '',
-    },
-    ['<C-9>'] = {
-      function()
-        vim.api.nvim_input '['
-      end,
-      '',
-    },
-    ['<C-0>'] = {
-      function()
-        vim.api.nvim_input ']'
       end,
       '',
     },
@@ -901,6 +889,9 @@ M.general = {
     ['<leader>Y'] = { '"+y$', noremap_opts },
     ['<leader>p'] = { '"+p', noremap_opts },
     ['<leader>P'] = { '"+P', noremap_opts },
+
+    -- ['<S-l>'] = { '<cmd>bnext<CR>', noremap_opts },
+    -- ['<S-h>'] = { '<cmd>bprevious<CR>', noremap_opts },
 
     ['<C-l>'] = { '<cmd>bnext<CR>', noremap_opts },
     ['<C-h>'] = { '<cmd>bprevious<CR>', noremap_opts },

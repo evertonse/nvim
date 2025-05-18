@@ -14,7 +14,12 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPre' }, {
     '*.INC',
   },
   callback = function()
-    -- assert(vim.bo.filetype == nil) -- If our event is Pre it should be nil otherwise runtime functions has been called before us
+    local our_ft = 'fasm64bits'
+    if vim.b.current_syntax == our_ft then
+      return
+    end
+    vim.b.current_syntax = 'fasm64bits'
+
     vim.bo.filetype = 'fasm64bits'
     vim.bo.commentstring = ';%s'
     vim.api.nvim_command 'setlocal commentstring=;%s'

@@ -36,11 +36,11 @@ return {
       },
       workspace = {
         -- Make the server aware of Neovim runtime files
-        library = {
-          unpack(vim.api.nvim_get_runtime_file('', true)),
-        },
+        -- library = {
+        --   unpack(vim.api.nvim_get_runtime_file('', true)),
+        -- },
         -- If unbearably slow, you can just let VIMRUNTIME instead
-        -- library = { vim.env.VIMRUNTIME },
+        library = { vim.env.VIMRUNTIME },
 
         checkThirdParty = false,
       },

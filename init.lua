@@ -130,6 +130,8 @@
 -- :'<,'>! sort
 -- Output to buffer, or :redir @a :cmd and then :redir END to get the output of command into the `a` register
 
+-- '==' for bring to indent level and just '=' if in visual mode or even 'gq'
+
 -- awesome list: https://github.com/rockerBOO/awesome-neovim
 
 -- Non greedy search in vim is done using {-} operator. Like this:
@@ -181,9 +183,8 @@
 
 -- Pasting in insert mode: ctrl + r
 
--- vim.cmd [[set runtimepath=]]
 if vim.loader then
-  vim.loader.enable()
+  vim.loader.enable(true)
 end
 
 -- NOTE: might be useful `vim.defer_fn` or `vim.schedule`
@@ -208,3 +209,6 @@ require 'lazy-plugins'
 
 -- [[ Configure Lsp ]]
 require 'lsp'
+
+-- [[ Configure Treesitter after the nvim-treesitter plugin ]]
+require 'treesitter'

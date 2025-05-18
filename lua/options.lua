@@ -1,18 +1,23 @@
 --- See `:help vim.opt`
+local o, opt, g = vim.o, vim.opt, vim.g
 
 ---  Sync clipboard between OS and Neovim.
 ---  See `:help 'clipboard'`
 
+--- This idk what it is exactly just a vague idea
+-- vim.cmd [[ set omnifunc= ]]
+
+-- vim.cmd [[ set t_kb=^?]]
+vim.cmd [[set sessionoptions-=options ]]
 --- WARNING: These lines are dangerous, they might break 'gF' for example
 -- vim.cmd [[filetype plugin on]]
 -- vim.cmd [[filetype plugin indent off]]
 
---- This idk what it is exactly just a vague idea
--- vim.cmd [[ set omnifunc= ]]
-
-local o, opt, g = vim.o, vim.opt, vim.g
--- vim.cmd [[ set t_kb=^?]]
-vim.cmd [[set sessionoptions-=options ]]
+--- WARNING: These below are about find certain filetypes
+---          See: https://www.reddit.com/r/neovim/comments/rvwsl3/introducing_filetypelua_and_a_call_for_help/
+-- g.do_filetype_lua = 0 -- I don't think this works anymore
+-- - A value of 0 for this variable disables filetype.vim. A value of 1 disables both filetype.vim and filetype.lua (which you probably don't want).
+-- g.did_load_filetypes = 0
 
 g.mapleader = ' '
 g.maplocalleader = ' '
@@ -46,16 +51,9 @@ g.netrw_browse_split = 0
 g.netrw_banner = 0
 g.netrw_winsize = 25
 
--- WARNING: These below are about findinf filetypes
--- g.do_filetype_lua = 1
--- g.did_load_filetypes = 1
-
 opt.fillchars:append { eob = ' ' }
 
---- WARNING: This trips up the 'normal-cmdline' sometimes.
---- Problably because when doing opt.shadafile = "NONE" it acually looks for NONE and
---- loads some options and one of its options might be worth looking into harden normal-cmdline
-opt.shadafile = ''
+opt.shadafile = 'NONE' -- equilavent to vim.cmd [[set shada=]]
 
 o.cursorlineopt = 'both' -- to enable cursorline
 -- opt.wildmode = 'list:longest,list:full' -- for : stuff
@@ -114,7 +112,7 @@ opt.mouse = 'a' -- allow the mouse to be used in neovim
 opt.pumheight = 5 -- pop up menu height
 opt.showmode = false -- we don't need to see things like -- INSERT -- anymore
 opt.showtabline = 1 -- always show tabs
-opt.smartindent = true -- make indenting smarter again
+opt.smartindent = true -- make indenting smarter againopt
 opt.autoindent = true -- Keep identation from previous line
 opt.breakindent = true
 opt.splitbelow = true -- force all horizontal splits to go below current window
@@ -123,7 +121,7 @@ opt.swapfile = false -- creates a swapfile
 opt.termguicolors = true -- set term gui colors (most terminals support this)
 opt.timeoutlen = 100 -- time to wait for a mapped sequence to complete (in milliseconds)
 opt.undofile = true -- enable persistent undo
-opt.updatetime = 50 -- CursorHold
+opt.updatetime = 75 -- CursorHold
 opt.backup = false -- creates a backup file
 opt.writebackup = false -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
 opt.expandtab = true -- convert tabs to spaces

@@ -89,13 +89,16 @@ local save_opts = function()
   --- The other solution is momentarily disable the lualine of ministatusline and other plugins
   vim.opt.laststatus = 0
   vim.opt.cmdheight = 0
-  vim.opt.cmdwinheight = 3
+
+  local hist_count = vim.fn.histnr ':' --- Can be -1 but we're taking a 'max' anyway
+  local cmdwinheight_desired = math.min(math.max(1, hist_count), math.max(1, previous.opt.cmdwinheight))
+  vim.opt.cmdwinheight = cmdwinheight_desired
   vim.opt.more = false
   vim.g.ministatusline_disable = true
   should_restore_last_cmd = false
 end
 
-local restore_opts = schedule_wrap(function()
+local restore_opts = function()
   vim.opt.laststatus = previous.opt.laststatus
   vim.opt.cmdheight = previous.opt.cmdheight
   vim.opt.cmdwinheight = previous.opt.cmdwinheight
@@ -104,7 +107,7 @@ local restore_opts = schedule_wrap(function()
 
   previous.restored = true
   should_restore_last_cmd = false
-end)
+end
 
 local set_local_opts = function()
   vim.wo.number = false
@@ -127,7 +130,7 @@ local setup_autocommands = function()
 
   --- Where all the magic happens triggered by simply going into cmdwin
   au('CmdwinEnter', {
-    pattern = '*',
+    -- pattern = '*',
     callback = function(event)
       --- NOTE: Throughout the 'simulation' of inputs we use 'nvim_input' which is low level, seemed smoother then 'feedkeys'.
 
@@ -204,31 +207,33 @@ local M = {}
 
 M.goto_cmdline_window_from_cmdline = function()
   save_opts()
-  -- schedule(function()
-  input '<c-f>'
-  -- end)
+  schedule(function()
+    input '<c-f>'
+  end)
 end
 
 M.setup = function()
-  local _ = true -- Not necessary for. But if any problems occurs I'll leave the code for easy options setting
+  local _ = false -- Not necessary for. But if any problems occurs I'll leave the code for easy options setting
     and schedule(function()
-      vim.opt.cmdwinheight = 2
+      vim.opt.cmdwinheight = 1
       vim.opt.cmdheight = 1
       vim.opt.more = false
       vim.opt.showcmd = false
       vim.opt.showmode = false
       vim.opt.showcmdloc = 'last'
+      vim.opt.shortmess:append 'saAtilmnrxwWoOtTIFcC' -- flags to shorten vim messages, see :help 'shortmess'
+      vim.opt.shortmess:append 'c' -- don't give |ins-completion-menu| messages
     end)
 
   local opts_global = { noremap = true, silent = true }
 
   --- Override they keys we need to make it work
-  map({ 'n' }, 'q:', function()
+  map({ 'n' }, 'q:', function(args)
     -- input ':'
-    feedkeys ':'
-    schedule(function()
-      M.goto_cmdline_window_from_cmdline()
-    end)
+    input ':'
+    -- schedule(function()
+    M.goto_cmdline_window_from_cmdline()
+    -- end)
   end, opts_global)
 
   map({ 'c' }, { '<c-c>', 'jk', 'kj' }, function()
@@ -250,5 +255,25 @@ M.setup = function()
   --- Setup callbacks to Cmdwindow events that will make this plugin work
   setup_autocommands()
 end
+
+-- ModeChanged			After changing the mode. The pattern is
+-- 				matched against `'old_mode:new_mode'`, for
+-- 				example match against `*:c` to simulate
+-- 				|CmdlineEnter|.
+-- 				The following values of |v:event| are set:
+-- 					old_mode The mode before it changed.
+-- 					new_mode The new mode as also returned
+-- 						by |mode()| called with a
+-- 						non-zero argument.
+-- 				When ModeChanged is triggered, old_mode will
+-- 				have the value of new_mode when the event was
+-- 				last triggered.
+-- 				This will be triggered on every minor mode
+-- 				change.
+-- 				Usage example to use relative line numbers
+-- 				when entering visual mode: >
+-- 		:au ModeChanged [vV\x16]*:* let &l:rnu = mode() =~# '^[vV\x16]'
+-- 		:au ModeChanged *:[vV\x16]* let &l:rnu = mode() =~# '^[vV\x16]'
+-- 		:au WinEnter,WinLeave * let &l:rnu = mode() =~# '^[vV\x16]'
 
 return M

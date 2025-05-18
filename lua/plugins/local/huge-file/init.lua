@@ -437,6 +437,6 @@ M.stop = function()
 end
 
 -- M.setup = M.init
-M.setup = function() end
+M.setup = function() end -- Disabled
 
 return M

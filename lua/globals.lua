@@ -1,3 +1,4 @@
+DEBUG = true
 BufferPaths = {}
 
 function _TestExtMarks()
@@ -120,10 +121,7 @@ SetKeyMaps = function(mapping_table)
     for mode in modes:gmatch '.' do
       for key, mapping in pairs(mappings) do
         if mapping == '' then
-          local ok = pcall(vim.keymap.del, mode, key)
-          if ok and DEBUG then
-            vim.fn.confirm('Deleted key = ' .. key .. ' in mode = ' .. vim.inspect(mode))
-          end
+          local _ok, _ = pcall(vim.keymap.del, mode, key)
         else
           set(mode, key, mapping)
         end
@@ -323,7 +321,9 @@ function TableDump(node)
 end
 
 Inspect = function(table)
-  vim.fn.confirm(vim.inspect(table))
+  if DEBUG then
+    vim.fn.confirm(vim.inspect(table))
+  end
 end
 
 ShowInspect = function(table)
@@ -623,6 +623,17 @@ vim.g.self = {
     { 'off', 'on' },
     { 'yes', 'no' },
     { '1', '2', '3' },
+  },
+
+  --- Choose exactly which parser you want for what filetypes
+  --- For examples I want the 'json5' parser instead of 'json' parser for all.
+  --- We could have chosen jsonc which supports comments too.
+  treesitter_registrations = {
+    -- ['json'] = { 'json', 'json5' },
+    ['json5'] = { 'json', 'json5' },
+    ['bash'] = { 'sh', 'zsh', 'bash' },
+    ['c'] = { 'c', 'evy', 'destroyer of worlds' },
+    ['llvm'] = { 'llvm' },
   },
   -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
 }

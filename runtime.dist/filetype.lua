@@ -11,12 +11,12 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile', 'StdinReadPost' }, {
     if not vim.api.nvim_buf_is_valid(args.buf) then
       return
     end
-    local ft, on_detect = vim.filetype.match({
+    local ft, on_detect = vim.filetype.match {
       -- The unexpanded file name is needed here. #27914
       -- However, bufname() can't be used, as it doesn't work with :doautocmd. #31306
       filename = args.file,
       buf = args.buf,
-    })
+    }
     if not ft then
       -- Generic configuration file used as fallback
       ft = require('vim.filetype.detect').conf(args.file, args.buf)
@@ -55,8 +55,8 @@ if not vim.g.ft_ignore_pat then
 end
 
 -- These *must* be sourced after the autocommands above are created
-vim.cmd([[
+vim.cmd [[
   augroup filetypedetect
   runtime! ftdetect/*.{vim,lua}
   augroup END
-]])
+]]

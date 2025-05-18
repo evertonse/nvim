@@ -861,7 +861,7 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 local function disable_linting()
-  for _, client in pairs(vim.lsp.get_active_clients()) do
+  for _, client in pairs(vim.lsp.get_clients()) do
     -- Disable the diagnostics handler
     client.handlers['textDocument/publishDiagnostics'] = function() end
 

@@ -13,6 +13,42 @@ local map = function(mode, lhs, rhs, opts)
   end
 end
 
+local fix_buffers_per_window = function()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local bufnr = vim.api.nvim_win_get_buf(win)
+    local ft = vim.api.nvim_buf_get_option(bufnr, 'filetype')
+    local parser_name = vim.treesitter.language.get_lang(ft)
+
+    -- Reload the buffer with :edit to trigger filetype detection again, along with Lsp
+    pcall(vim.api.nvim_buf_call, bufnr, vim.cmd.edit)
+
+    -- Enable treesitter, maybe
+    if not require('functions').disable_treesitter_highlight_when(parser_name, bufnr) then
+      pcall(vim.api.nvim_buf_call, bufnr, vim.treesitter.start)
+    else
+      -- Just in case it's on
+      pcall(vim.api.nvim_buf_call, bufnr, vim.treesitter.stop)
+    end
+  end
+end
+
+local fix_all_buffers = function()
+  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_buf_get_option(bufnr, 'buflisted') then
+      local ft = vim.api.nvim_buf_get_option(bufnr, 'filetype')
+      local parser_name = vim.treesitter.language.get_lang(ft)
+
+      pcall(vim.api.nvim_buf_call, bufnr, vim.cmd.edit)
+
+      if not require('functions').disable_treesitter_highlight_when(parser_name, bufnr) then
+        pcall(vim.api.nvim_buf_call, bufnr, vim.treesitter.start)
+      else
+        pcall(vim.api.nvim_buf_call, bufnr, vim.treesitter.stop)
+      end
+    end
+  end
+end
+
 return {
   'stevearc/resession.nvim',
   lazy = false,
@@ -30,15 +66,15 @@ return {
       'binary',
       -- 'bufhidden',
       'buflisted',
-      -- 'cmdheight',
+      'cmdheight',
       'diff',
       'filetype',
       'modifiable',
       'previewwindow',
       'readonly',
       'scrollbind',
-      'winfixheight',
-      'winfixwidth',
+      -- 'winfixheight',
+      -- 'winfixwidth',
     },
     -- Show more detail about the sessions when selecting one to load.
     -- Disable if it causes lag.
@@ -98,31 +134,31 @@ return {
 
     local trail_path = './.trail.tbsv'
     vim.api.nvim_create_autocmd('VimEnter', {
-      callback = function()
+      callback = function(args)
         -- Only load the session if nvim was started with no args
         if vim.fn.argc(-1) == 0 then
           -- Save these to a different directory, so our manual sessions don't get polluted
-          resession.load(vim.fn.getcwd(), { dir = 'session', silence_errors = true })
+          resession.load(vim.fn.getcwd(), { dir = 'session', silence_errors = false })
+
           vim.schedule(function()
-            vim.cmd [[stopinsert]]
-            vim.cmd [[set cmdheight=1]]
-            if vim.fn.bufname '%' ~= '' then
-              vim.cmd.edit()
+            local ok, trail = pcall(require, 'trailblazer')
+            if not ok then
+              return
+            end
+
+            ok = pcall(trail.load_trailblazer_state_from_file, trail_path)
+            if not ok then
+              local _ = false and vim.notify("Couldn't load trailblazer session from" .. trail_path .. '.', vim.log.levels.WARN)
             end
           end)
+          vim.schedule(function()
+            fix_all_buffers()
+          end)
+
+          -- Restore UI
+          vim.opt.cmdheight = 1
+          vim.cmd 'stopinsert'
         end
-
-        vim.schedule(function()
-          local ok, trail = pcall(require, 'trailblazer')
-          if not ok then
-            return
-          end
-
-          ok = pcall(trail.load_trailblazer_state_from_file, trail_path)
-          if not ok then
-            local _ = false and vim.notify("Couldn't load trailblazer session from" .. trail_path .. '.', vim.log.levels.WARN)
-          end
-        end)
       end,
     })
 

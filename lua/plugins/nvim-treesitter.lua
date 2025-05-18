@@ -11,41 +11,6 @@
 --
 -- treesitter-query in treesitter.txt
 
-local disable_treesitter_when = function(lang, bufnr)
-  local fts = { 'bin', 'odin', 'tmux', 'llvm', 'conf' }
-  local buf_ft = vim.bo.filetype
-  for i, ft in ipairs(fts) do
-    if buf_ft == ft then
-      return true
-    end
-  end
-
-  local buf_name = vim.api.nvim_buf_get_name(bufnr)
-
-  if lang == 'conf' or string.find(buf_name, 'tmux%-') then
-    return true
-  end
-
-  local info = vim.loop.fs_stat(buf_name)
-  local file_size_permitted = (20 * 1024 * 1024)
-  local is_large_file = vim.fn.getfsize(buf_name) > file_size_permitted
-  local is_large_file = info and (info.size > (20 * 1024 * 1024))
-
-  if is_large_file then
-    return true
-  end
-
-  local max_line_count = 200 * 1000
-  if buf_ft == 'c' then
-    max_line_count = 300 * 1000
-  end
-  if vim.api.nvim_buf_line_count(bufnr) > max_line_count then
-    return true
-  end
-
-  return false
-end
-
 -- NOTE: custom parser -> https://github.com/nvim-treesitter/nvim-treesitter/issues/2241
 return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
@@ -61,10 +26,13 @@ return { -- Highlight, edit, and navigate code
     --XXX: Found out that putting these highlight options is laggy on long lines when the cursor is
     -- on the far right going up and down (j and k movement).
     -- EDIT(2024-jul-06): This is only true together with vim-matchup, which I have disabled some things that improved performance
+    --- EDIT 2025-05-18: I wanna do things and these theesitter modules gets in the way
+    ---                  The highlight module doesnt do much on neovim-0.11 it just setup's up some filetype autocmmands and do vim.tresitter.start(bufnr, lang) when a ft is detected
+    ---                  We're gonna do this ourselves because sometimes I wanna be very precise about when do I enable TShighlight and do some heuristics to decide when to enable regex highlight. Sometimes I wanna do from BufReadPre, wayy before ft gets even decided. And nvim-treesitter keeps getting in the way by chaging something I did before
+    ---                  Because of that, at least the highlight, we can setup ourselves. So i'm setting to false here.
     highlight = {
-      enable = true,
+      enable = false,
       disable = disable_treesitter_when,
-      -- additional_vim_regex_highlighting = { 'c' },
     },
     -- NOTE: Very slow to INSERT text on bigfiles
     indent = { enable = false, disable = { 'ruby' } },
@@ -75,8 +43,8 @@ return { -- Highlight, edit, and navigate code
       keymaps = {
         init_selection = '<CR>',
         scope_incremental = '<CR>',
-        node_incremental = '<TAB>',
-        node_decremental = '<S-TAB>',
+        node_incremental = '<cr>',
+        node_decremental = '<S-<cr>>',
       },
       -- keymaps = {
       --   init_selection = 'gnn',
@@ -117,6 +85,7 @@ return { -- Highlight, edit, and navigate code
         },
         goto_previous_start = {
           ['[m'] = '@function.outer',
+
           ['[['] = '@class.outer',
         },
         goto_previous_end = {
@@ -180,39 +149,21 @@ return { -- Highlight, edit, and navigate code
     require('nvim-treesitter.install').prefer_git = true
 
     ---@diagnostic disable-next-line: missing-fields
-    require('nvim-treesitter.configs').setup(opts)
+    local ts_configs = require 'nvim-treesitter.configs'
+    ts_configs.setup(opts)
 
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    -- Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    -- Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    -- Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
-
-    -------------------------------------------------------
-    -----How to get parser from a new language-------------
-    -------------------------------------------------------
-    -- local treesitter_parser_config = require('nvim-treesitter.parsers').get_parser_configs()
-    -- treesitter_parser_config.odin = {
-    --   install_info = {
-    --     url = 'https://github.com/ap29600/tree-sitter-odin',
-    --     branch = 'main',
-    --     files = { 'src/parser.c' },
-    --   },
-    --   filetype = 'odin',
-    -- }
-    -- vim.treesitter.language.register('odin', '*.odin')
-
-    -- treesitter_parser_config.templ = {
-    --   install_info = {
-    --     url = 'https://github.com/vrischmann/tree-sitter-templ.git',
-    --     files = { 'src/parser.c', 'src/scanner.c' },
-    --     branch = 'master',
-    --   },
-    -- }
-    --
-    -- vim.treesitter.language.register('templ', 'templ')
-    -------------------------------------------------------
-    -------------------------------------------------------
+    --- NOTE: 'nvim-treesitter' dos set some default language registrations,
+    ---       So we set those we want AFTER nvim-treesitter.configs.setup
+    --- NOTE: Sometimes, even if we set right here, still get either ovewritten or fucked somewhere in FileType events bizarro, even tho I've checked by modified the nvim-treesitter plugin itsself, the order IS/WAS correct
+    ---       So if something you go to any.lua and here to check things
+    if vim.g.self and vim.g.self.treesitter_registrations then
+      for lang, fts in pairs(vim.g.self.treesitter_registrations) do
+        assert(lang ~= nil and fts ~= nil)
+        -- print(vim.inspect { lang, fts })
+        vim.treesitter.language.register(lang, fts)
+      end
+    else
+      vim.notify 'Missing vim.g.self.treesitter_registrations'
+    end
   end,
 }

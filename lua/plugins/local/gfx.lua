@@ -1,4 +1,50 @@
 local M = {}
+local get_visual_selection = function(opts)
+  opts = vim.tbl_deep_extend('force', {
+    register = '"',
+    escape = {
+      enabled = false,
+      parens = false,
+      brackets = false,
+      curly = false,
+      angle_brackets = false,
+    },
+  }, opts or {})
+
+  local before_main_register_text = vim.fn.getreg '"'
+
+  vim.cmd('normal!' .. '"' .. opts.register .. 'y')
+
+  local register_text = vim.fn.getreg(opts.register)
+  local selection = vim.fn.trim(register_text)
+  selection = selection:gsub('\n', ''):match '^%s*(.-)%s*$'
+
+  if opts.escape.enabled then
+    selection = selection:gsub('%\\', '%\\%\\') -- NOTE: this should be the first one to avoid cluterring with '/'
+    if opts.escape.parens then
+      selection = selection:gsub('%(', '%\\%(')
+      selection = selection:gsub('%)', '%\\%)')
+    end
+
+    if opts.escape.brackets then
+      selection = selection:gsub('%[', '%\\%[')
+      selection = selection:gsub('%]', '%\\%]')
+      -- selection = selection:gsub('%<', '%\\%<')
+    end
+
+    if opts.escape.curly then
+      selection = selection:gsub('%{', '%\\%{') -- this is NFA repetition
+      selection = selection:gsub('%}', '%\\%}') -- this is NFA repetition
+    end
+
+    selection = selection:gsub('%/', '%\\%/')
+    selection = selection:gsub('%.', '%\\%.')
+    selection = selection:gsub('%*', '%\\%*')
+  end
+
+  vim.fn.setreg('"', before_main_register_text)
+  return selection
+end
 
 local goto_file_from_file_line_and_col_number = function(file, line_num, col_num)
   -- Get absolute, resolved path for reliable bufname matching
@@ -23,6 +69,7 @@ local goto_file_from_file_line_and_col_number = function(file, line_num, col_num
   end
 
   --  Not in this tab: is the buffer loaded anywhere?
+
   local bufnr = vim.fn.bufnr(abs, false) -- false = don’t create
   local target_win = vim.api.nvim_tabpage_list_wins(0)[1]
   vim.api.nvim_set_current_win(target_win)
@@ -51,13 +98,17 @@ end
 M.goto_file = function(line_string)
   -- Get the full line or the file/word under cursor
   if not line_string then
-    line_string = vim.api.nvim_get_current_line()
+    if vim.api.nvim_get_mode().mode == 'v' then
+      line_string = get_visual_selection()
+    else
+      line_string = vim.api.nvim_get_current_line()
+    end
 
-    if line_string and line_string == '' then
+    if line_string == nil or line_string == '' then
       line_string = vim.fn.expand '<cfile>'
     end
 
-    if line_string and line_string == '' then
+    if line_string == nil or line_string == '' then
       line_string = vim.fn.expand '<cWORD>'
     end
   end
