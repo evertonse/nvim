@@ -2,9 +2,9 @@ tags
 .luarc.json
 *.tbsv
 nvim
-**~
 .last_yank.txt
-spell/
+**~
 **.trails
 **.log
+spell/
 shada/

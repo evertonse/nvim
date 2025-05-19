@@ -54,7 +54,7 @@ return {
 
     -- (Default) Only show the documentation popup when manually triggered
     completion = { documentation = { auto_show = true } },
-    signature = { enabled = true },
+    signature = { enabled = false },
     cmdline = {
       enabled = true,
       completion = {
@@ -79,7 +79,7 @@ return {
         'path',
         'snippets',
         'buffer',
-        'ripgrep', -- 👈🏻 add "ripgrep" here
+        -- 'ripgrep',
         'emoji',
         'sql',
       },

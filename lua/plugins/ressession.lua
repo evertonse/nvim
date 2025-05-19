@@ -138,7 +138,7 @@ return {
         -- Only load the session if nvim was started with no args
         if vim.fn.argc(-1) == 0 then
           -- Save these to a different directory, so our manual sessions don't get polluted
-          resession.load(vim.fn.getcwd(), { dir = 'session', silence_errors = false })
+          pcall(resession.load, vim.fn.getcwd(), { dir = 'session', silence_errors = false })
 
           vim.schedule(function()
             local ok, trail = pcall(require, 'trailblazer')
@@ -156,7 +156,9 @@ return {
           end)
 
           -- Restore UI
+
           vim.opt.cmdheight = 1
+          -- vim.opt.cmdheight = 7
           vim.cmd 'stopinsert'
         end
       end,

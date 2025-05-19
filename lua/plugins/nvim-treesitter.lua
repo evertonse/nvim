@@ -10,14 +10,15 @@
 -- treesitter-highlight-priority in treesitter.txt
 --
 -- treesitter-query in treesitter.txt
+local disable_treesitter_when = require('functions').disable_treesitter_highlight_when
 
 -- NOTE: custom parser -> https://github.com/nvim-treesitter/nvim-treesitter/issues/2241
 return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
   cmd = { 'TSInstall', 'TSBufEnable', 'TSBufDisable', 'TSModuleInfo' },
   build = ':TSUpdate',
-  event = { 'BufReadPre', 'VimEnter' },
-  lazy = true,
+  event = { 'VimEnter' },
+  lazy = false,
   enabled = true,
   dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
   opts = {
@@ -32,7 +33,6 @@ return { -- Highlight, edit, and navigate code
     ---                  Because of that, at least the highlight, we can setup ourselves. So i'm setting to false here.
     highlight = {
       enable = false,
-      disable = disable_treesitter_when,
     },
     -- NOTE: Very slow to INSERT text on bigfiles
     indent = { enable = false, disable = { 'ruby' } },

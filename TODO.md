@@ -7,6 +7,7 @@
 - [ ] gfx Better "universal" path matching regex. If it contains alowed caracters intermixed with
 
 - [ ] if .bak, and has another .lua in front highglight as lua normally
+
 - [ ] normal-cmdline - fix height when not opening from ':' cmdline
 - [ ] normal-cmdline make it not wrap
 - [ ] normal-cmdline if we go cmdline-window we remape ESC to be goto normal mdoe just for this "session"

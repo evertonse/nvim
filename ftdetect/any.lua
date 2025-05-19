@@ -8,6 +8,7 @@
 -- :lua print(vim.inspect(vim.treesitter.language.add('c')))
 -- :lua print(vim.inspect(vim.treesitter.start(vim.api.nvim_get_current_buf(), 'c')))
 
+--- Get active buffers
 -- :lua print(vim.inspect(vim.treesitter.highlighter.active[vim.api.nvim_get_current_buf()] or 'not active'))
 -- :lua vim.treesitter.get_parser(vim.api.nvim_get_current_buf()):parse()
 
@@ -16,6 +17,8 @@
 -- :lua vim.treesitter.start(0, 'json5')
 
 -- group = 'filetypedetect',
+local should_ts_hl_disable = require('functions').disable_treesitter_highlight_when
+local should_rx_hl_disable = require('functions').disable_regex_highlight_when
 
 local DEBUG = false
 local Inspect = DEBUG and Inspect or function(arg) end
@@ -23,28 +26,35 @@ local want_regex = false
 
 local _ = true
   -- 'FileType'
-  and vim.api.nvim_create_autocmd({ 'FileType', 'BufReadPost' }, {
+  -- 'BufReadPost'
+  and vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = vim.api.nvim_create_augroup('AnyHighlight', {}),
+
     -- pattern = '*',
     callback = function(args)
+      -- Inspect { 'Any FileType', args = args, ft = vim.bo.filetype, loaded = vim.api.nvim_buf_is_loaded(args.buf) or '??' }
       if vim.b.did_syntax then
         return
       end
       vim.b.did_syntax = true
 
       local bufnr = args.buf
-      if not vim.api.nvim_buf_is_loaded(bufnr) then
-        if vim.api.nvim_buf_get_name(bufnr) ~= '' then
-          pcall(vim.api.nvim_buf_call, bufnr, vim.cmd.edit)
-        else
-          vim.fn.bufload(bufnr)
-        end
-      end
-
       local ft = vim.bo.filetype
-      local parser_name = vim.treesitter.language.get_lang(ft)
-
-      if require('functions').disable_treesitter_highlight_when(parser_name, bufnr) then
+      local parser_name = vim.treesitter.language.get_lang(ft) or ft
+      if should_ts_hl_disable(parser_name, bufnr) then
+        Inspect {
+          'disabled treesitter highlight',
+          ft = ft,
+        }
+        if should_rx_hl_disable(parser_name, bufnr) then
+          Inspect {
+            'disabled regex highlight',
+            ft = ft,
+          }
+          vim.schedule(function()
+            vim.bo[bufnr].syntax = ''
+          end)
+        end
         return
       end
 
@@ -66,11 +76,8 @@ local _ = true
           vim.treesitter.start(bufnr, parser_name)
 
           if want_regex then
-            vim.bo[bufnr].syntax = 'ON'
+            vim.bo[bufnr].syntax = 'on'
           end
-
-          --- Optional: enable legacy syntax highlighting if desired
-          -- vim.bo[bufnr].syntax = 'on'
         end
       end
     end,
@@ -118,6 +125,7 @@ local _ = true
 vim.filetype.add {
   extension = {
     sh = function(path, bufnr)
+      Inspect 'sh extension thats how we find out'
       return 'sh',
         function(bufnr)
           --- Just leaving as example for if you wanna do something extra, you can on this return
@@ -139,23 +147,85 @@ vim.filetype.add {
     md = 'markdown',
   },
   pattern = {
+    --- TODO: Maybe change the pattern to do only on extensionless filetypes
     ['.*'] = {
       function(path, bufnr, matched)
+        --- NOTE: IIRC for runtime/filetype.lua this is not enough to determine that the filetype is pure posix shell, which is fair, sometime is it bash or csh.
+        ---       BUT for myself IT IS. I wanna load 100mb of shell scripts sometimes, because rmlint utility spits and other tools spits out huge scripts I need to take a look. 2025-05-18
         local content = vim.api.nvim_buf_get_lines(bufnr, 0, 1, false)[1] or ''
         local bin = 'sh'
-        --- IIRC for runtime/filetype.lua this is not enough to determine that the filetype is pure posix shell, which is fair, sometime is it bash or csh.
-        --- BUT for myself IT IS. I wanna load 100mb of shell scripts sometimes, because rmlint utility spits and other tools spits out huge scripts I need to take a look. 2025-05-18
         local matched = vim.regex([[^#!.*/]] .. bin):match_str(content) ~= nil
-        Inspect { matched = matched, path = path, content = content, bufnr = bufnr }
+        Inspect { 'pattern', loaded = vim.api.nvim_buf_is_loaded(bufnr), matched = matched, path = path, content = content, bufnr = bufnr }
         if matched then
           return 'sh'
         end
         return nil -- Fallback
       end,
-      { priority = -math.huge },
+      -- If + math.huge it's made first, if -math.huge then is the very last thing
+      { priority = math.huge },
     },
   },
 }
+
+--- This is read before filetype.lua and it's meant block regex syntax highlight
+--- to even load, I don't wanna see a breach of regex highlight if we have treesitter
+local _ = true
+  and vim.api.nvim_create_autocmd({ 'BufReadPre', 'StdinReadPre' }, {
+    group = vim.api.nvim_create_augroup('PreHighlight', {}),
+    callback = function(args, ext)
+      local loaded = vim.api.nvim_buf_is_loaded(args.buf)
+      Inspect {
+        'Pre',
+        ft = ft or 'no ft',
+        args = args,
+        ext = ext or 'no ext',
+        valid = vim.api.nvim_buf_is_valid(args.buf),
+        loaded = vim.api.nvim_buf_is_loaded(args.buf),
+      }
+
+      if not loaded then
+        if vim.api.nvim_buf_get_name(args.buf) ~= '' then
+          Inspect { 'Pre', 'about to edit ' }
+          pcall(vim.api.nvim_buf_call, args.buf, vim.cmd.edit)
+        else
+          Inspect { 'Pre', 'about to bufload ' }
+          vim.fn.bufload(args.buf)
+        end
+      end
+
+      --- If it's loaded then it's always valid?
+      local valid = vim.api.nvim_buf_is_valid(args.buf)
+      if not valid then
+        return
+      end
+
+      --- TODO: There should be a on detect call here to setup some vars and context or whatever
+      Inspect { 'Pre before filetype.match', did_ft = vim.fn.did_filetype() or '?', ft = ft or 'no ft' }
+      local ft, on_detect = vim.filetype.match {
+        filename = args.file,
+        buf = args.buf,
+      }
+
+      Inspect { 'Pre after filetype.match', did_ft = vim.fn.did_filetype() or '?', ft = ft or 'no ft' }
+
+      if ft then
+        --- Doing this *assignment* triggers all Filetype events. So does 'setf' and 'setfiletype'.
+        vim.bo[args.buf].filetype = ft
+        local parser_name = vim.treesitter.language.get_lang(ft) or ft
+        if not should_ts_hl_disable(parser_name, args.buf, ft) then
+          Inspect { 'Pre', parser_name = parser_name, ft = ft or 'no ft' }
+          local parser_exist = vim.treesitter.language.add(parser_name)
+          if parser_exist then
+            --- This 'current_syntax' buffer variable should disallow any regex highlighting
+            vim.b.current_syntax = ft
+            --- Idk setting this just in case
+            vim.bo[args.buf].syntax = ''
+            Inspect { 'Pre parser exist', did_ft = vim.fn.did_filetype() or '?', ft = ft or 'no ft' }
+          end
+        end
+      end
+    end,
+  })
 
 --- NOTE: Any treesitter language registration must be done AFTER `nvim-tressiter` plugin setup,
 ---       because they register a lot of laguanges so our config would get overwritten.
