@@ -12,6 +12,7 @@
 -- treesitter-query in treesitter.txt
 local disable_treesitter_when = require('functions').disable_treesitter_highlight_when
 
+local enabled = true
 -- NOTE: custom parser -> https://github.com/nvim-treesitter/nvim-treesitter/issues/2241
 return { -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
@@ -19,8 +20,8 @@ return { -- Highlight, edit, and navigate code
   build = ':TSUpdate',
   event = { 'VimEnter' },
   lazy = false,
-  enabled = true,
-  dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
+  enabled = enabled,
+  dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects', enabled = enabled },
   opts = {
     sync_install = false,
 
@@ -38,13 +39,13 @@ return { -- Highlight, edit, and navigate code
     indent = { enable = false, disable = { 'ruby' } },
 
     incremental_selection = {
-      enable = true,
+      enable = false,
       disable = disable_treesitter_when,
       keymaps = {
         init_selection = '<CR>',
         scope_incremental = '<CR>',
-        node_incremental = '<cr>',
-        node_decremental = '<S-<cr>>',
+        node_incremental = '<CR>',
+        node_decremental = '<S-<CR>>',
       },
       -- keymaps = {
       --   init_selection = 'gnn',
@@ -54,7 +55,7 @@ return { -- Highlight, edit, and navigate code
       -- },
     },
     textobjects = {
-      enable = true,
+      enable = enabled,
       disable = disable_treesitter_when,
       select = {
         enable = true,
@@ -63,7 +64,7 @@ return { -- Highlight, edit, and navigate code
           ['@function.outer'] = 'V', -- linewise
           ['@class.outer'] = '<c-v>', -- blockwise
         },
-        lookahead = false,
+        lookahead = true,
         keymaps = {
           ['af'] = '@function.outer',
           ['if'] = '@function.inner',

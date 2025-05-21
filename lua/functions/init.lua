@@ -4,6 +4,39 @@ local DEBUG = false
 local Inspect = DEBUG and Inspect or function(arg) end
 local want_regex = false
 
+M.clear_diagnostics_for_buf = function(bufnr)
+  vim.diagnostic.reset(nil, bufnr)
+end
+
+M.clear_diagnostics_for_curr_buf = function(bufnr)
+  M.clear_diagnostics_for_buf(vim.api.nvim_get_current_buf() or 0)
+end
+
+M.is_too_big_for_completions = function(bufnr)
+  local cached = vim.b[bufnr].too_big_for_completions
+  if cached then
+    return cached
+  end
+  local return_result = function(bool)
+    vim.b[bufnr].too_big_for_completions = bool
+    return vim.b[bufnr].too_big_for_completions
+  end
+  local buf_name = vim.api.nvim_buf_get_name(bufnr)
+  local info = vim.loop.fs_stat(buf_name)
+  local file_size_permitted = 20 * (1024 * 1024)
+  -- local is_large_file = vim.fn.getfsize(buf_name) > file_size_permitted
+  local is_large_file = false
+  if info then
+    is_large_file = info.size > file_size_permitted
+  end
+
+  if is_large_file then
+    return return_result(true)
+  end
+
+  return return_result(false)
+end
+
 M.disable_treesitter_highlight_when = function(lang, bufnr, buf_ft)
   local cached = vim.b[bufnr].disabled_treesitter
   if cached then

@@ -11,12 +11,6 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile', 'StdinReadPost' }, {
     if not vim.api.nvim_buf_is_valid(args.buf) then
       return
     end
-    --- @runtime-modified Another way we could've done is 'fn.did_filetype' but even if we've set it
-    --- before it is reseted by the time we get here, maybe from C (look curbuf->b_au_did_filetype and b_did_filetype)
-    if vim.bo[args.buf].filetype ~= nil and vim.bo[args.buf].filetype ~= '' then
-      return
-    end
-
     local ft, on_detect = vim.filetype.match {
       -- The unexpanded file name is needed here. #27914
       -- However, bufname() can't be used, as it doesn't work with :doautocmd. #31306

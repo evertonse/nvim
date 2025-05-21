@@ -162,7 +162,8 @@ return {
   -- optional: provides snippets for the snippet source
   dependencies = { 'evertonse/friendly-snippets', enabled = true },
   -- event = 'BufReadPost',
-  event = { 'CmdlineChanged', 'InsertCharPre' },
+  -- event = { 'CmdlineChanged', 'InsertCharPre' },
+  event = { 'InsertCharPre' },
   enabled = true,
   lazy = true,
 

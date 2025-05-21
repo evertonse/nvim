@@ -1,5 +1,5 @@
 -- " :help new-filetype
--- " :h vim.filetype.add
+-- dis" :h vim.filetype.add
 -- vim.cmd [[au BufRead,BufNewFile *.asm set filetype=fasm64bits]]
 
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPre' }, {

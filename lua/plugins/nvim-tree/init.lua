@@ -110,6 +110,7 @@ local function nvimtree_on_attach(bufnr)
 
   local map = vim.keymap.set
 
+  --- TODO: Fix selection to be more like yazi
   map({ 'v' }, 'D', function()
     api.marks.clear()
     mark_selected_files(bufnr)

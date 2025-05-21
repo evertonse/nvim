@@ -30,15 +30,20 @@ local _ = true
   and vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = vim.api.nvim_create_augroup('AnyHighlight', {}),
 
+    -- The 'pattern' of the FileType event is a list of filetypes.
     -- pattern = '*',
     callback = function(args)
-      -- Inspect { 'Any FileType', args = args, ft = vim.bo.filetype, loaded = vim.api.nvim_buf_is_loaded(args.buf) or '??' }
-      if vim.b.did_syntax then
+      local bufnr = args.buf
+      -- Only ever attach to buffers that represent an actual file.
+      if vim.bo[bufnr].buftype ~= '' then
         return
       end
-      vim.b.did_syntax = true
+      -- Inspect { 'Any FileType', args = args, ft = vim.bo.filetype, loaded = vim.api.nvim_buf_is_loaded(args.buf) or '??' }
+      if vim.b[bufnr].did_syntax then
+        return
+      end
+      vim.b[bufnr].did_syntax = true
 
-      local bufnr = args.buf
       local ft = vim.bo.filetype
       local parser_name = vim.treesitter.language.get_lang(ft) or ft
       if should_ts_hl_disable(parser_name, bufnr) then
@@ -143,6 +148,7 @@ vim.filetype.add {
 
     glsl = 'glsl',
     json = 'json5',
+    log = 'log',
 
     md = 'markdown',
   },
@@ -169,7 +175,8 @@ vim.filetype.add {
 
 --- This is read before filetype.lua and it's meant block regex syntax highlight
 --- to even load, I don't wanna see a breach of regex highlight if we have treesitter
-local _ = true
+--- BEWARE: This is problably imperfect as we bypass filetype.lua, expect some strangeness from LSP, or something, for you to fix.
+local _ = false
   and vim.api.nvim_create_autocmd({ 'BufReadPre', 'StdinReadPre' }, {
     group = vim.api.nvim_create_augroup('PreHighlight', {}),
     callback = function(args, ext)
@@ -209,8 +216,20 @@ local _ = true
       Inspect { 'Pre after filetype.match', did_ft = vim.fn.did_filetype() or '?', ft = ft or 'no ft' }
 
       if ft then
+        -- on_detect is called before setting the filetype so that it can set any buffer local
+        -- variables that may be used the filetype's ftplugin
+        if on_detect then
+          on_detect(args.buf)
+        end
+
+        --- TODO: Check if this is enough for not having to modify 'runtime/filetype.lua', 2025-05-19
         --- Doing this *assignment* triggers all Filetype events. So does 'setf' and 'setfiletype'.
         vim.bo[args.buf].filetype = ft
+
+        -- vim._with({ buf = args.buf }, function()
+        --   vim.api.nvim_cmd({ cmd = 'setf', args = { ft } }, {})
+        -- end)
+
         local parser_name = vim.treesitter.language.get_lang(ft) or ft
         if not should_ts_hl_disable(parser_name, args.buf, ft) then
           Inspect { 'Pre', parser_name = parser_name, ft = ft or 'no ft' }
@@ -223,6 +242,8 @@ local _ = true
             Inspect { 'Pre parser exist', did_ft = vim.fn.did_filetype() or '?', ft = ft or 'no ft' }
           end
         end
+      else
+        vim.bo[args.buf].filetype = ''
       end
     end,
   })

@@ -152,7 +152,8 @@ return {
             end
           end)
           vim.schedule(function()
-            fix_all_buffers()
+            -- fix_all_buffers()
+            fix_buffers_per_window()
           end)
 
           -- Restore UI

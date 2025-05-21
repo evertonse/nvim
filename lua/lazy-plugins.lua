@@ -32,6 +32,7 @@ local plugins = function()
 
     -- PERF Lsp slow as fuck sometimes, but culprit might always be the server its self, but nonethe less everything should be async, so if the server is slowing the fuck down, what does it matter to us? that seems like a problem
     -- require 'plugins.lsp',
+    require 'plugins.nvim-lint',
 
     require 'plugins.telescope',
     require('plugins.' .. vim.g.self.file_tree), -- NOTE: Neotree is slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
@@ -42,6 +43,8 @@ local plugins = function()
 
     -- PERF: needs to test more, bigfiles might need to slow the update time
     -- Can't disable fuzzy in 'blink-cmp' although it seems more performant then 'cmp'
+    -- NOTE PERF (2025-05-21):Both struggle with performance when then file is way to big like rmlint.json
+    -- It happens because of pulling data from 'buffer' provider
     require 'plugins.blink-cmp',
     -- require 'plugins.cmp',
 
@@ -73,12 +76,13 @@ local plugins = function()
     -- PERF: slow but maybe fixable. But ultimately not needed.
     -- require 'plugins.hlargs',
 
-    require 'plugins.dap',
     require 'plugins.bufjump',
-
+    require 'plugins.dap',
+    --
     -- Another option for runnig commands maybe
     -- https://github.com/numToStr/FTerm.nvim
     require 'plugins.toggleterm',
+    -- require 'plugins.recall', -- Just didn't work
 
     require 'plugins.scope',
     require 'plugins.which-key',
@@ -100,12 +104,12 @@ local plugins = function()
     require 'plugins.colorizer',
     require 'plugins.dressing',
 
-    true and require 'plugins.spider' or require 'plugins.neowords',
+    -- true and require 'plugins.spider' or require 'plugins.neowords',
     require 'plugins.multiple-cursors',
-    require 'plugins.improved-ft',
+    require 'plugins.improved-ft', -- Ff and Tt keys
 
     -- PERF test dropbar
-    -- (false and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar' or require 'plugins.incline',
+    (false and (vim.fn.has 'nvim-0.10' == 1 or vim.fn.has 'nvim-0.11' == 1)) and require 'plugins.dropbar' or require 'plugins.incline',
 
     -- PERF haven't tested fully but it seemed better without it
     -- Take a look at this https://github.com/rockerBOO/awesome-neovim?tab=readme-ov-file#marks
@@ -119,8 +123,8 @@ local plugins = function()
 
     -- { 'tpope/vim-abolish', lazy = true },
     -- { 'tpope/vim-repeat', keys = { { '.' }, { ';' } } },
-    { 'tpope/vim-sleuth', event = 'BufEnter', lazy = true, enabled = true }, -- Detect tabstop and shiftwidth automatically
-    -- require 'plugins.guess-indent', -- Similar to vim-sleuth
+    -- { 'tpope/vim-sleuth', event = 'BufEnter', lazy = true, enabled = true }, -- Detect tabstop and shiftwidth automatically
+    require 'plugins.guess-indent', -- Similar to vim-sleuth
 
     -- 'MunifTanjim/nui.nvim',
     -- 'nvim-lua/plenary.nvim',

@@ -326,6 +326,16 @@ Inspect = function(table)
   end
 end
 
+DumpInspect = function(filename, table)
+  local file, err = io.open((filename or '') .. '.dump', 'w')
+  if not file then
+    vim.notify('Error opening file: ' .. err)
+    return
+  end
+  file:write(vim.inspect(table))
+  file:close()
+end
+
 ShowInspect = function(table)
   ShowStringAndWait(vim.inspect(table))
 end
@@ -622,7 +632,14 @@ vim.g.self = {
     { 'and', 'or' },
     { 'off', 'on' },
     { 'yes', 'no' },
-    { '1', '2', '3' },
+
+    function(text)
+      local ok, num = pcall(tonumber, text)
+      if ok and num then
+        return tostring(num + 1)
+      end
+      return nil -- fallback
+    end,
   },
 
   --- Choose exactly which parser you want for what filetypes

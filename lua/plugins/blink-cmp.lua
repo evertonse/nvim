@@ -1,3 +1,4 @@
+local is_too_big = require('functions').is_too_big_for_completions
 return {
   'saghen/blink.cmp',
   -- optional: provides snippets for the snippet source
@@ -18,6 +19,7 @@ return {
     },
   },
   event = { 'CmdlineChanged', 'InsertCharPre' },
+  -- event = { 'InsertCharPre' },
 
   -- use a release tag to download pre-built binaries
   version = '1.*',
@@ -33,13 +35,11 @@ return {
     -- 'super-tab' for mappings similar to vscode (tab to accept)
     -- 'enter' for enter to accept
     -- 'none' for no mappings
-    --
     -- All presets have the following mappings:
     -- C-space: Open menu or open docs if already open
     -- C-n/C-p or Up/Down: Select next/previous item
     -- C-e: Hide menu
     -- C-k: Toggle signature help (if signature.enabled = true)
-    --
     -- See :h blink-cmp-config-keymap for defining your own keymap
     keymap = {
       preset = 'default',
@@ -56,7 +56,9 @@ return {
     completion = { documentation = { auto_show = true } },
     signature = { enabled = false },
     cmdline = {
+      -- ignores cmdline completions when executing shell commands
       enabled = true,
+
       completion = {
 
         menu = {
@@ -73,17 +75,85 @@ return {
 
     -- Default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, due to `opts_extend`
+    -- NOTE: see: https://cmp.saghen.dev/recipes.html#sources
     sources = {
-      default = {
-        'lsp',
-        'path',
-        'snippets',
-        'buffer',
-        -- 'ripgrep',
-        'emoji',
-        'sql',
-      },
+      min_keyword_length = function()
+        return vim.bo.filetype == 'markdown' and 2 or 3
+      end,
+      default = function(ctx)
+        local success, node = pcall(vim.treesitter.get_node)
+        if success and node and vim.tbl_contains({ 'comment', 'line_comment', 'block_comment' }, node:type()) then
+          return { 'buffer' }
+        elseif vim.bo.filetype == 'txt' then
+          return {
+            'lsp',
+            'path',
+            'snippets',
+            'buffer',
+            'ripgrep',
+            'emoji',
+          }
+        elseif vim.bo.filetype == 'sql' then
+          return {
+            'lsp',
+            'path',
+            'snippets',
+            --- PERF: Pulling in from the buffer is SLOW when the file is too big
+            'buffer',
+            'sql',
+          }
+        else
+          return {
+            'lsp',
+            'path',
+            'snippets',
+            --- PERF: Pulling in from the buffer is SLOW when the file is too big
+            'buffer',
+          }
+        end
+      end,
+
       providers = {
+
+        cmdline = {
+          --- Ignores cmdline completions when executing shell commands
+          enabled = function()
+            if true then
+              return true
+            end
+            return vim.fn.getcmdtype() ~= ':' or not vim.fn.getcmdline():match "^[%%0-9,'<>%-]*!"
+          end,
+        },
+
+        lsp = {
+          name = 'LSP',
+          module = 'blink.cmp.sources.lsp',
+          transform_items = function(_, items)
+            return vim.tbl_filter(function(item)
+              return item.kind ~= require('blink.cmp.types').CompletionItemKind.Keyword
+            end, items)
+          end,
+        },
+        path = {
+          opts = {
+            get_cwd = function(_)
+              return vim.fn.getcwd()
+            end,
+          },
+        },
+        buffer = {
+          opts = {
+            --- Get all buffers, even ones like neo-tree
+            -- get_bufnrs = vim.api.nvim_list_bufs,
+
+            --- Get only decent not too big buffers
+            get_bufnrs = function()
+              return vim.tbl_filter(function(bufnr)
+                return vim.bo[bufnr].buftype == '' and (not is_too_big(bufnr))
+              end, vim.api.nvim_list_bufs())
+            end,
+          },
+        },
         ripgrep = {
           module = 'blink-ripgrep',
           name = 'Ripgrep',

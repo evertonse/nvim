@@ -520,6 +520,9 @@ M.general = {
     ['q'] = { '', 'annoying that `q` is quit but also record ??', { expr = false } },
     ['gh'] = { '^', 'Move backwards until previous is space', { expr = false } },
     ['gl'] = { 'g_', 'Move forwards until next is space', { expr = false } },
+
+    ['H'] = { '0', 'Move backwards until previous is space', { expr = false } },
+    ['L'] = { '$', 'Move forwards until next is space', { expr = false } },
     -- ['gh'] = { '0', 'Move big left', { expr = false } },
     -- ['gl'] = { '$', 'Move big right', { expr = false } },
     ['gH'] = { 'v:count || mode(1)[0:1] == "" ? "0" : "g0"', 'Move left', { expr = true } },
@@ -1771,7 +1774,7 @@ function JumpPosition(count)
 end
 
 -- Key mappings
-map('n', '<leader>m', save_position, { noremap = true, silent = true })
+map('n', '<leader>ms', save_position, { noremap = true, silent = true })
 
 map('n', '<leader><tab>', ':b#<CR>', { noremap = true, silent = true })
 

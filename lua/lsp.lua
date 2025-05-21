@@ -1,8 +1,37 @@
+local DEBUG = false
+local Inspect = DEBUG and Inspect or function(arg) end
+local DumpInspect = DEBUG and DumpInspect or function(arg) end
+
+local function deduplicate_items_from_goto_definition(items)
+  local seen = {}
+  for i = 1, #items do
+    local item = items[i]
+    if item then
+      local key = item.filename .. ':' .. item.lnum
+      if seen[key] then
+        items[i] = nil
+      else
+        seen[key] = true
+      end
+    end
+  end
+end
+
+local get_token_text = function(bufnr, token)
+  local buf = bufnr
+  local line = token.line
+  local start_col = token.start_col
+  local end_col = token.end_col
+
+  local text = vim.api.nvim_buf_get_text(buf, line, start_col, line, end_col, {})[1]
+  return text
+end
+
 local lsp_enable_all = function()
   local lsp_folder = vim.fn.stdpath 'config' .. '/after/lsp'
   local handle = vim.loop.fs_scandir(lsp_folder)
   if not handle then
-    print('Could not open directory: ' .. lsp_folder)
+    vim.notify('lsp: Could not open directory: ' .. lsp_folder)
     return
   end
 
@@ -22,7 +51,6 @@ local lsp_enable_all = function()
 end
 
 local lsp_keymaps = function(event)
-  local is_nvim_11_or_higher = true
   local map = function(keys, func, desc, mode, opts)
     mode = mode or 'n'
     opts =
@@ -31,10 +59,30 @@ local lsp_keymaps = function(event)
   end
 
   local on_list = function(options)
-    -- Check the number of items in the options
     if #options.items == 1 then
-      -- vim.lsp.util.jump_to_location(options.items[1])
       vim.lsp.buf.definition()
+    elseif #options.items == 2 and vim.bo.filetype == 'lua' then
+      local item = options.items[1]
+      local b = item.bufnr or vim.fn.bufadd(item.filename)
+      -- Save position in jumplist
+      vim.cmd "normal! m'"
+      vim.bo[b].buflisted = true
+      local win = vim.api.nvim_get_current_win()
+      local w = win
+      local reuse_win = true
+      if reuse_win then
+        w = vim.fn.win_findbuf(b)[1] or w
+        if w ~= win then
+          vim.api.nvim_set_current_win(w)
+        end
+      end
+      vim.api.nvim_win_set_buf(w, b)
+      vim.api.nvim_win_set_cursor(w, { item.lnum, item.col - 1 })
+      vim._with({ win = w }, function()
+        -- Open folds under the cursor
+        vim.cmd 'normal! zv'
+      end)
+      return
     else
       -- If there are multiple items, set the quickfix list and open it
       vim.fn.setqflist({}, ' ', options)
@@ -133,75 +181,54 @@ local lsp_keymaps = function(event)
 end
 
 local lsp_optimize_server_capabilites = function(client)
-  -- client.server_capabilities.documentFormattingProvider = true
-  -- client.server_capabilities.documentRangeFormattingProvider = true
-  -- client.server_capabilities.hoverProvider = true
-  -- client.server_capabilities.signatureHelpProvider = true
-  -- client.server_capabilities.documentSymbolProvider = true
-  -- client.server_capabilities.colorProvider = true
-  -- client.server_capabilities.publishDiagnostics = true
-  -- client.server_capabilities.referencesProvider = true
-  -- client.server_capabilities.renameProvider = true
-  -- client.server_capabilities.implementationProvider = true
-  -- client.server_capabilities.typeDefinitionProvider = true
-  -- client.server_capabilities.declarationProvider = true
-  -- client.server_capabilities.workspaceSymbolProvider = true
-  -- client.server_capabilities.selectionRangeProvider = true
-  -- client.server_capabilities.foldingRangeProvider = true
-  -- client.server_capabilities.completionProvider.resolveProvider = true
+  DumpInspect('server_capabilities', { client.server_capabilities })
+  client.server_capabilities.codeActionProvider = nil
+  client.server_capabilities.codeLensProvider = nil
+  client.server_capabilities.colorProvider = nil
+  -- client.server_capabilities.definitionProvider = false
+  client.server_capabilities.documentFormattingProvider = false
+  client.server_capabilities.documentHighlightProvider = false
+  client.server_capabilities.documentOnTypeFormattingProvider = nil
+  client.server_capabilities.documentRangeFormattingProvider = true
 
-  -- client.server_capabilities.semanticTokensProvider = nil
-  -- client.server_capabilities.textDocumentSync = nil
+  client.server_capabilities.documentSymbolProvider = false
+  client.server_capabilities.executeCommandProvider = nil
 
-  -- client.server_capabilities.codeActionProvider = false
-  -- client.server_capabilities.documentHighlightProvider = false
-  -- client.server_capabilities.inlayHintProvider = false
-  -- client.server_capabilities.codeLensProvider = false
-  -- client.server_capabilities.linkedEditingRangeProvider = false
-  -- client.server_capabilities.callHierarchyProvider = false
-  -- client.server_capabilities.foldingRangeProvider = false
+  client.server_capabilities.foldingRangeProvider = false
+  -- client.server_capabilities.hoverProvider = false
+  -- client.server_capabilities.implementationProvider = false
+  client.server_capabilities.inlayHintProvider = nil
   -- client.server_capabilities.referencesProvider = false
-  -- client.server_capabilities.typeDefinitionProvider = false
+  -- client.server_capabilities.renameProvider = nil
 
-  -- Inspect(client.server_capabilities)
+  if client.name == 'lua_ls' then
+    -- client.server_capabilities.semanticTokensProvider = nil
+  end
+
+  -- client.server_capabilities.signatureHelpProvider = nil
+
+  -- Inspect { server_capabilities = client.server_capabilities }
+
+  -- client.server_capabilities.textDocumentSync = nil
+  -- client.server_capabilities.typeDefinitionProvider = false
+  client.server_capabilities.workspaceSymbolProvider = nil
 end
 
 -- Force disable all unnecessary capabilities + dynamic features
-local lsp_optimize_client_capabilites = function(capabilities)
-  local capabilities = capabilities or vim.lsp.protocol.make_client_capabilities()
+local lsp_optimize_client_capabilites = function(capabilities, make_defaults)
+  local capabilities = capabilities or (make_defaults and vim.lsp.protocol.make_client_capabilities() or {})
   capabilities = vim.tbl_deep_extend('force', capabilities, {
-    workspace = {
-      executeCommand = { dynamicRegistration = false },
-      symbol = {
-        dynamicRegistration = false,
-      },
-      configuration = true,
-      didChangeConfiguration = {
-        dynamicRegistration = false,
-      },
-      workspaceFolders = true,
-      applyEdit = true,
-      workspaceEdit = {
-        resourceOperations = { 'rename', 'create', 'delete' },
-      },
-      semanticTokens = {
-        refreshSupport = true,
-      },
-      didChangeWatchedFiles = {
-        dynamicRegistration = false,
-        relativePatternSupport = false,
-      },
-      inlayHint = {
-        refreshSupport = true,
+    general = {
+      positionEncodings = {
+        'utf-8',
+        -- 'utf-16',
+        -- 'utf-32',
       },
     },
+
     textDocument = {
       diagnostic = {
         dynamicRegistration = false,
-      },
-      foldingRange = {
-        dynamicRegistration = true,
-        lineFoldingOnly = true,
       },
       inlayHint = {
         dynamicRegistration = false,
@@ -215,9 +242,7 @@ local lsp_optimize_client_capabilites = function(capabilities)
         },
       },
       semanticTokens = {
-        dynamicRegistration = true,
-        multilineTokenSupport = true,
-        completion = { completionItem = { snippetSupport = true } },
+        dynamicRegistration = false,
         tokenTypes = {
           'namespace',
           'type',
@@ -257,56 +282,65 @@ local lsp_optimize_client_capabilites = function(capabilities)
         },
         formats = { 'relative' },
         requests = {
-          -- TODO(jdrouhard): Add support for this
           range = true,
           full = { delta = true },
         },
 
-        overlappingTokenSupport = true,
-        -- TODO(jdrouhard): Add support for this
+        overlappingTokenSupport = false,
+        multilineTokenSupport = false,
         serverCancelSupport = false,
         augmentsSyntaxTokens = true,
       },
+
       synchronization = {
         dynamicRegistration = false,
 
-        willSave = true,
-        willSaveWaitUntil = true,
-
-        -- Send textDocument/didSave after saving (BufWritePost)
+        willSave = false,
+        willSaveWaitUntil = false,
         didSave = true,
       },
       codeAction = {
-        dynamicRegistration = true,
-
-        isPreferredSupport = true,
-        dataSupport = true,
+        dynamicRegistration = false,
+        isPreferredSupport = false,
+        dataSupport = false,
         resolveSupport = {
-          properties = { 'edit' },
+          properties = { 'edit', 'command' },
         },
       },
+
+      codeLens = {
+        dynamicRegistration = false,
+        resolveSupport = {
+          properties = { 'command' },
+        },
+      },
+      foldingRange = {
+        dynamicRegistration = false,
+        lineFoldingOnly = true,
+        foldingRange = {
+          collapsedText = true,
+        },
+      },
+
       formatting = {
-        dynamicRegistration = true,
+        dynamicRegistration = false,
       },
       rangeFormatting = {
-        dynamicRegistration = true,
+        dynamicRegistration = false,
+        rangesSupport = false,
       },
+
       completion = {
         dynamicRegistration = false,
         completionItem = {
-          documentationFormat = { 'markdown', 'plaintext' },
-          snippetSupport = true,
-          preselectSupport = true,
-          insertReplaceSupport = true,
-          labelDetailsSupport = false,
-          deprecatedSupport = false,
+          snippetSupport = false,
           commitCharactersSupport = false,
-          tagSupport = { valueSet = { 1 } },
+          preselectSupport = false,
+          deprecatedSupport = true,
           resolveSupport = {
             properties = {
-              'documentation',
-              'detail',
               'additionalTextEdits',
+              'command',
             },
           },
         },
@@ -318,16 +352,14 @@ local lsp_optimize_client_capabilites = function(capabilities)
             'data',
           },
         },
-
-        -- TODO(tjdevries): Implement this
-        contextSupport = false,
+        contextSupport = true,
       },
       declaration = {
         linkSupport = true,
       },
       definition = {
         linkSupport = true,
-        dynamicRegistration = true,
+        dynamicRegistration = false,
       },
       implementation = {
         linkSupport = true,
@@ -340,6 +372,12 @@ local lsp_optimize_client_capabilites = function(capabilities)
       },
       signatureHelp = {
         dynamicRegistration = false,
+        signatureInformation = {
+          activeParameterSupport = true,
+          parameterInformation = {
+            labelOffsetSupport = true,
+          },
+        },
       },
       references = {
         dynamicRegistration = false,
@@ -349,24 +387,60 @@ local lsp_optimize_client_capabilites = function(capabilities)
       },
       documentSymbol = {
         dynamicRegistration = false,
-        hierarchicalDocumentSymbolSupport = true,
+        hierarchicalDocumentSymbolSupport = false,
       },
       rename = {
         dynamicRegistration = true,
         prepareSupport = true,
       },
       publishDiagnostics = {
-        relatedInformation = true,
-        dataSupport = true,
+        relatedInformation = false,
+        dataSupport = false,
       },
       callHierarchy = {
         dynamicRegistration = false,
       },
-      codeLens = { dynamicRegistration = false },
-      documentLink = { dynamicRegistration = false },
       colorProvider = { dynamicRegistration = false },
     },
+    workspace = {
+      configuration = false,
+      executeCommand = { dynamicRegistration = false },
+      symbol = {
+        dynamicRegistration = false,
+      },
+      didChangeConfiguration = {
+        dynamicRegistration = false,
+      },
+      workspaceFolders = false,
+      applyEdit = false,
+      workspaceEdit = {
+        resourceOperations = { 'rename', 'create', 'delete' },
+      },
+      semanticTokens = {
+        refreshSupport = false,
+      },
+      didChangeWatchedFiles = {
+        dynamicRegistration = false,
+        relativePatternSupport = false,
+      },
+      inlayHint = {
+        refreshSupport = true,
+      },
+    },
+    experimental = nil,
+    window = {
+      workDoneProgress = false,
+      showMessage = {
+        messageActionItem = {
+          additionalPropertiesSupport = false,
+        },
+      },
+      showDocument = {
+        support = false,
+      },
+    },
   })
+
   return capabilities
 end
 
@@ -374,13 +448,52 @@ local lsp_attach_autocommands = function()
   local group = vim.api.nvim_create_augroup('lsp-attach', { clear = true })
   local au = vim.api.nvim_create_autocmd
 
-  -- au('VimEnter', {
-  --   group = group,
-  --   callback = function(event)
-  --     --vim.cmd.e()
-  --   end,
-  -- })
+  au('LspTokenUpdate', {
+    callback = function(args)
+      --- Layout of args
+      -- {
+      --   args = {
+      --     buf = 1,
+      --     data = {
+      --       client_id = 1,
+      --       token = {
+      --         end_col = 23,
+      --         line = 573,
+      --         marked = true,
+      --         modifiers = {},
+      --         start_col = 0,
+      --         type = "function"
+      --       }
+      --     },
+      --     event = "LspTokenUpdate",
+      --     file = "/home/excyber/.config/nvim/lua/lsp.lua",
+      --     id = 80,
+      --     match = "/home/excyber/.config/nvim/lua/lsp.lua"
+      --   }
+      -- }
 
+      if args.data == nil then
+        return
+      end
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      if client and client.name ~= 'lua_ls' then
+        return
+      end
+      local token = args.data.token
+
+      --- Make 'vim' global act as default library, this is done for every 'vim' token.
+      --- This might not be the best way to do it ask neovim subreddit (TODO)
+      if token.type == 'variable' and token.modifiers.global == true and not token.modifiers.readonly then
+        local token_text = get_token_text(args.buf, token)
+        if token_text == 'vim' then
+          local hlgroup = '@lsp.typemod.variable.defaultLibrary'
+          vim.lsp.semantic_tokens.highlight_token(token, args.buf, args.data.client_id, hlgroup)
+        end
+      end
+    end,
+  })
+
+  --- NOTE(deccan): 'LspAttach' executes before ´on_attach´ function defined in vim.lsp.config['lua_ls']
   au('LspAttach', {
     group = group,
     callback = function(event)
@@ -390,9 +503,12 @@ local lsp_attach_autocommands = function()
       if not client then
         return
       end
-
       lsp_keymaps(event)
-      lsp_optimize_server_capabilites(client)
+
+      -- Unset 'formatexpr'
+      vim.bo[bufnr].formatexpr = nil
+      -- Unset 'omnifunc'
+      vim.bo[bufnr].omnifunc = nil
 
       --- Disable default formatting
       if client.name == 'tsserver' then
@@ -406,6 +522,10 @@ local lsp_attach_autocommands = function()
       if client:supports_method('textDocument/completion', bufnr) then
         -- Enable auto-completion
         vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+      end
+
+      if client:supports_method 'textDocument/inlayHints' then
+        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
       end
     end,
   })
@@ -450,13 +570,102 @@ local lsp_ui = function()
     completion_kinds[i] = icons[kind] and icons[kind] .. kind or kind
   end
 end
+local diagnostic_config = function()
+  vim.diagnostic.config {
+    -- virtual_text = true, -- Show for all
+    virtual_lines = {
+      -- Only show virtual line diagnostics for the current cursor line
+      current_line = true,
+    },
+    update_in_insert = false,
+    float = {
+      focusable = true,
+      style = 'minimal',
+      border = 'single',
+      -- source = 'always',
+      header = '',
+      prefix = '',
+    },
+  }
+end
 
-local lsp_config = function()
+--- See all handlers with :lua vim.print(vim.tbl_keys(vim.lsp.handlers))
+--- See :h vim.lsp.handlers (Note: only for server-to-client requests/notifications, not client-to-server.)
+local lsp_handlers = function()
+  --- NOTE: Disabled handlers. Uncomment those you WANT support for.
+  for _, it in pairs {
+    '$/progress',
+    'callHierarchy/incomingCalls',
+    'callHierarchy/outgoingCalls',
+
+    'client/registerCapability',
+    -- 'client/unregisterCapability',
+
+    'textDocument/codeLens',
+    'textDocument/diagnostic',
+    'textDocument/documentHighlight',
+    'textDocument/documentSymbol',
+    'textDocument/formatting',
+    'textDocument/inlayHint',
+    'textDocument/publishDiagnostics',
+    'textDocument/rangeFormatting',
+    -- 'textDocument/rename',
+    -- 'textDocument/signatureHelp',
+    -- 'textDocument/completion',
+    'textDocument/hover',
+
+    'hover',
+    'signature_help',
+
+    'window/logMessage',
+    'window/showDocument',
+    'window/showMessage',
+    'window/showMessageRequest',
+    'window/workDoneProgress/create',
+
+    'workspace/configuration',
+    'workspace/applyEdit',
+    'workspace/workspaceFolders',
+    'workspace/executeCommand',
+    'workspace/inlayHint/refresh',
+    'workspace/semanticTokens/refresh',
+    'workspace/symbol',
+
+    -- 'typeHierarchy/subtypes',
+    -- 'typeHierarchy/supertypes',
+  } do
+    vim.lsp.handlers[it] = function(_, _, ctx)
+      --- Defined by JSON RPC
+      -- ParseError = -32700,
+      -- InvalidRequest = -32600,
+      -- MethodNotFound = -32601,
+      -- InvalidParams = -32602,
+      -- InternalError = -32603,
+      -- serverErrorStart = -32099,
+      -- serverErrorEnd = -32000,
+      -- ServerNotInitialized = -32002,
+      -- UnknownErrorCode = -32001,
+
+      --- Defined by the protocol.
+      -- RequestCancelled = -32800,
+      -- ContentModified = -32801,
+      -- ServerCancelled = -32802,
+
+      --- NOTE(deccan 2025-05-20): Right now I think preteding the method is not found is fine to just make every plugins or neovim native feature think that is just not supported
+      -- return nil, vim.lsp.rpc.rpc_response_error(vim.lsp.protocol.ErrorCodes.MethodNotFound, 'No handler', { method = ctx.method })
+      return nil, vim.lsp.rpc.rpc_response_error(vim.lsp.protocol.ErrorCodes.RequestCancelled, 'Disabled', { method = ctx.method })
+    end
+  end
+  if true then
+    return
+  end
+
   vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
 
   if vim.g.self.linting_by_default then
     vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
       virtual_text = true,
+      update_in_insert = false,
     })
   else
     vim.lsp.handlers['textDocument/publishDiagnostics'] = function() end
@@ -466,8 +675,6 @@ local lsp_config = function()
   -- vim.lsp.handlers["textDocument/hover"] = function() end
   -- vim.lsp.handlers["textDocument/signatureHelp"] = function() end
 
-  -- Disable "No information available" notification on hover
-  -- Plus define border for hover window
   -- vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
   vim.lsp.handlers['textDocument/hover'] = function(_, result, ctx, config)
     config = config
@@ -494,38 +701,85 @@ local lsp_config = function()
     end
     return vim.lsp.util.open_floating_preview(markdown_lines, 'markdown', config)
   end
+end
+local lsp_config = function()
+  --- NOTE: The table set here gets merged with default
+  ---       Preserving OUR settings, it only gets overriden by capabilites from runtime ´lsp/´ configs
+  ---       Therefore lsp/lua_ls > vim.lsp.config('*',...) > default
+  ---       Since it's just a table, functions like on_init or on_attach will get completely overriden
+  ---       If you wanna preserve some logic, you might wanna import your default ´on_init´ function and call inside your specific ´on_init´.
+  ---       h: lsp + decent examplation at https://lsp-zero.netlify.app/blog/lsp-config-without-plugins.html
+  ---
+  ---       Another thing to consider, plugins such as ´blink.cmp´ might also have a call to
+  ---       vim.lsp.config('*',...) which means whoever it'll get merged as well, but whoever gets called later has priority.
+  ---       Idk if there's a way to ensure that out config is the very last without setting on runtime lsp/*.lua.
+  ---       I'm unsure if vim.schedule solves it, probably not because some plugin might have a very late setup.
+  ---
+  ---       With that said then IMPORTANT(deccan 2025-05-20): As of right now, blink.cmp late merge their capabilites.textDocument.completion into ours.
+  ---       We're gonna trust it's good for them to have priority and we're mess with anything else to squeeze performance.
 
-  vim.diagnostic.config {
-    -- virtual_text = true, -- Show for all
-    virtual_lines = {
-      -- Only show virtual line diagnostics for the current cursor line
-      current_line = true,
-    },
-    update_in_insert = false,
-    float = {
-      focusable = true,
-      style = 'minimal',
-      border = 'single',
-      -- source = 'always',
-      header = '',
-      prefix = '',
-    },
+  --- These two achieve the same:
+  -- vim.lsp.config('*', {
+  vim.lsp.config['*'] = {
+    --- @alias vim.lsp.client.on_init_cb fun(client: vim.lsp.Client, init_result: lsp.InitializeResult)
+    on_init = function(client, init_result)
+      --- WARNING: If a client overrides this config, then the server will handle everythin
+      lsp_optimize_server_capabilites(client)
+      DumpInspect('on_init', client)
+    end,
+
+    --- @alias vim.lsp.client.before_init_cb fun(params: lsp.InitializeParams, config: vim.lsp.ClientConfig)
+    before_init = function(params, config)
+      DumpInspect('before_init', { params = params, config = config })
+    end,
+
+    --- @alias vim.lsp.client.on_attach_cb fun(client: vim.lsp.Client, bufnr: integer)
+    on_attach = function(client, bufnr)
+      DumpInspect('on_attach', client)
+    end,
+
+    --- @alias vim.lsp.client.on_exit_cb fun(code: integer, signal: integer, client_id: integer)
+    on_exit = function(client, bufnr) end,
+
+    capabilities = lsp_optimize_client_capabilites(),
   }
+end
 
+LspEditLog = function()
+  vim.lsp.set_log_level 'debug'
+  vim.cmd.edit(vim.lsp.get_log_path())
+end
+-- See for exmaples: https://www.reddit.com/r/neovim/comments/1khidkg/mind_sharing_your_new_lsp_setup_for_nvim_011/
+-- TODO check this config.capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
+local schedule = function(func)
   if false then
-    vim.lsp.config('*', {
-      capabilities = lsp_optimize_client_capabilites(),
-      on_attach = function(client, bufnr)
-        lsp_optimize_server_capabilites(client, bufnr)
-        -- lsp_optimize_client_capabilites(client, bufnr)
-      end,
-    })
+    vim.schedule(func)
+  else
+    func()
   end
 end
 
--- See for exmaples: https://www.reddit.com/r/neovim/comments/1khidkg/mind_sharing_your_new_lsp_setup_for_nvim_011/
--- TODO check this config.capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = false
-lsp_enable_all()
-lsp_ui()
-lsp_config()
-lsp_attach_autocommands()
+schedule(function()
+  diagnostic_config()
+  lsp_handlers()
+  lsp_config()
+  lsp_enable_all()
+  lsp_ui()
+  lsp_attach_autocommands()
+end)
+
+--- Resources:
+---     https://vonheikemen.github.io/devlog/tools/neovim-lsp-client-guide/
+--- Since Neovim v0.11
+---
+---     In normal mode, grn renames all references of the symbol under the cursor.
+---
+---     In normal mode, gra shows a list of code actions available in the line under the cursor.
+---
+---     In normal mode, grr lists all the references of the symbol under the cursor.
+---
+---     In normal mode, gri lists all the implementations for the symbol under the cursor.
+---
+---     In normal mode, gO lists all symbols in the current buffer.
+---
+---     In insert mode, <Ctrl-s> displays the function signature of the symbol under the cursor.

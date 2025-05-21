@@ -4,16 +4,27 @@
 
 - [x] gfx is in selection mode, use the selection to goto file
 - [ ] gfx learn about extending gF in ftplugins
-- [ ] gfx Better "universal" path matching regex. If it contains alowed caracters intermixed with
+- [ ] gfx Better "universal" path matching regex. If it contains allowed characters intermixed with
+
+- [ ] on_detect what is the problem with doing it on a BufPre event
+
+- [ ] Fix any.lua when ressession and entering
+- [ ] Fix slow selection mode in BIG files
+- [ ] Fix slow insertion of text in BIG files
+
 
 - [ ] if .bak, and has another .lua in front highglight as lua normally
 
-- [ ] normal-cmdline - fix height when not opening from ':' cmdline
+- [ ] Extend mini.ai to use < > in cib
+- [ ] Fix shell search when doing something like :!sort or whatever, it's probably something about $PATH in wsl (again)
+
+- [x] normal-cmdline - fix height when not opening from ':' cmdline
 - [ ] normal-cmdline make it not wrap
-- [ ] normal-cmdline if we go cmdline-window we remape ESC to be goto normal mdoe just for this "session"
+- [x] normal-cmdline if we go cmdline-window we remape ESC to be goto normal mode just for this "session"
 
 
-- [ ] Fix linting to only on save using nvim-lint (on demand)
+- [x] Fix linting to only on save using nvim-lint (on demand)
+- [ ] Fix  omega dealy when entering neovim, probably by lsp or something
 
 - [ ] Investigate LAG when holding delete and backspace on the cmdline
 
@@ -21,17 +32,21 @@
 
 - [ ] lsp/treesitter make it stoppable easily
 
-- [ ] lsp Fix client and server capabilities make it less bloated
-- [ ] lsp make it fast with client capabilities
-- [ ] lsp make it fast with client server_capabilities
+- [x] edit: it was the completion  . lsp fix sync problem
+- [x] lsp fix jump to definition whnere there is just two
+- [x] lsp Fix client and server capabilities make it less bloated
+- [x] lsp make it fast with client capabilities
+- [x] lsp make it fast with client server_capabilities
 
-- [ ] Make cmp better like this: https://www.youtube.com/watch?v=gK31IVy0Gp0
+- [ ] Make cmp better like this: [https://www.youtube.com/watch?v=gK31IVy0Gp0]
 
-- [ ] blink when matching if substring matching >> prio than fuzzy
+- [ ] blink when matching if substring matching >> prio than fuzzy (Waiting for bug fixes from developer)
+
 - [x] cmp fix snippets
 - [x] buffer switch on `<c-[lh]>`
 
 - [ ] Investigate Tabline buffer switch lag
+- [ ] Fix trails
 
 - [ ] Quick function to go ~/docs/notes/todo.md
 
@@ -43,5 +58,4 @@
 
 - [ ] Make cmp only fuzzy on lsp or only prefix on paths
 - [ ] Make cycler receive functions
-
 

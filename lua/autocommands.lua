@@ -7,6 +7,10 @@ local previous_stats = {
   ministatusline_disable = vim.g.ministatusline_disable,
 }
 
+local augroup = function(name)
+  return vim.api.nvim_create_augroup('my_nvim_' .. name, { clear = true })
+end
+
 local function is_in_cmdline()
   return vim.fn.getcmdwintype() ~= '' or vim.fn.mode():match '^[/:]' ~= nil
 end
@@ -870,7 +874,7 @@ local function disable_linting()
       vim.diagnostic.reset(nil, buffer)
     end
   end
-  print 'Linting disabled and diagnostics cleared.'
+  vim.notify 'Linting disabled and diagnostics cleared.'
 end
 
 -- Function to enable linting by restoring the default `textDocument/publishDiagnostics` handler
@@ -1140,3 +1144,12 @@ end
 vim.api.nvim_create_user_command('Run', function(opts)
   run_command_in_window(opts.args)
 end, { nargs = '+' })
+-- wrap and check for spell in text filetypes
+vim.api.nvim_create_autocmd('FileType', {
+  group = augroup 'wrap_spell',
+  pattern = { '*.txt', '*.tex', '*.typ', 'gitcommit', 'markdown' },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.spell = true
+  end,
+})

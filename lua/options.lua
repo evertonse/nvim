@@ -82,7 +82,10 @@ opt.wildignore:append {
 
 -- if set to `false` disallow autocomplete on cmdline since I'm using completion plugin
 o.wildmenu = false
---
+
+-- o.winborder = 'single'
+o.winborder = ''
+
 -- Search for suffixes using gf
 opt.suffixesadd:append { '.java', '.rs' }
 
@@ -118,16 +121,18 @@ opt.breakindent = true
 opt.splitbelow = true -- force all horizontal splits to go below current window
 opt.splitright = true -- force all vertical splits to go to the right of current window
 opt.swapfile = false -- creates a swapfile
+opt.backup = false
 opt.termguicolors = true -- set term gui colors (most terminals support this)
 opt.timeoutlen = 100 -- time to wait for a mapped sequence to complete (in milliseconds)
-opt.undofile = true -- enable persistent undo
 opt.updatetime = 75 -- CursorHold
-opt.backup = false -- creates a backup file
 opt.writebackup = false -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
 opt.expandtab = true -- convert tabs to spaces
 opt.tabstop = 4 -- insert 2 spaces for a tab
 opt.softtabstop = -1
 opt.shiftwidth = 4 -- the number of spaces inserted for each indentation
+
+opt.hidden = true
+opt.errorbells = false
 
 opt.cursorline = true -- highlight the current line
 opt.number = true -- set numbered lines
@@ -143,9 +148,6 @@ opt.whichwrap = 'bs<>[]hl' -- which "horizontal" keys are allowed to travel to p
 
 opt.cmdheight = 1 -- more space in the neovim command line for displaying messages
 
-o.undofile = true -- Enable persistent undo (see also `:h undodir`)
-
-o.backup = false -- Don't store backup while overwriting the file
 o.writebackup = false -- Don't store backup while overwriting the file
 
 vim.cmd [[ set backspace=indent,eol,start ]]
@@ -199,8 +201,23 @@ vim.cmd [[:set formatoptions-=cro ]]
 
 opt.runtimepath:remove '/vimfiles' -- separate vim plugins from neovim in case vim still in use
 
--- Set the directory for undo files
+--- WARNING(2025-05-21): Undofile loading is VERY slow on big ass files, it's safe to turn on
+---          I advise to just locally enable on certain files. Disabling on certain files doesn't do anything about startup because it'll read it anyways and just them disable it which doesn't matter at that point
+---          Rn idgaf about it, but I'm sure it'll come around to bite in the ass and I'll be "Jesus why didn't I use presisent undos?".
 opt.undodir = (os.getenv 'HOME' or '') .. '/.local/share/nvim'
+opt.undofile = true -- Enable persistent undo (see also `:h undodir`)
+opt.undolevels = 100 -- Default is 1000
+
+vim.api.nvim_create_autocmd('BufReadPre', {
+  callback = function(args)
+    local max_size = 1024 * 1024 * 2 -- 2MB
+    local file = vim.fn.expand(args.file)
+    local ok, stat = pcall(vim.loop.fs_stat, file)
+    if ok and stat and stat.size > max_size then
+      vim.bo[args.buf].undofile = false
+    end
+  end,
+})
 
 -- [[ Setting vim cmds ]]
 opt.display = 'uhex'
@@ -226,22 +243,16 @@ if OnSSH() then
   vim.cmd [[autocmd! CursorHold,CursorHoldI]] -- Minimize autocmd activity
   lsp.handlers['textDocument/publishDiagnostics'] = function() end
 else
-  -- vim.cmd ':set nolz'
+  vim.cmd ':set nolz'
   opt.foldenable = false
 end
 
 --vim.cmd [[ :set iskeyword-=- ]]
 
--- NOTE: Needs to make sure matchit is not disabled
--- g.loaded_matchit = 1
--- g.loaded_matchparen = 1
-vim.g.matchit_words = vim.g.matchit_words and vim.g.matchit_words .. ',function:end' or 'function:end'
--- Ensure matchit is not disabled
 local matchit_extend = function()
   -- List of pairs to add
   local pairs_to_add = {
     '<:>',
-    'pica:final',
     'function:end',
     'if:endif',
     'switch:case',
@@ -265,6 +276,12 @@ local matchit_extend = function()
   -- If matchit_words is not set, initialize it with the first pair
 end
 
+-- NOTE: Needs to make sure matchit is not disabled
+g.loaded_matchit = 1
+-- g.loaded_matchparen = 1
+-- vim.g.matchit_words = vim.g.matchit_words and vim.g.matchit_words .. ',function:end' or 'function:end'
+-- Ensure matchit is not disabled
+
 matchit_extend()
 
 -- Long lines a the single most important reason for when it's lagging for no reason
@@ -275,7 +292,8 @@ vim.opt.synmaxcol = 420
 -- opt.clipboard = nil, -- allows neovim to access the system clipboard
 opt.clipboard = ''
 if OnWsl() then
-  vim.cmd [[
+  local windows_path_clipboard = false
+    and vim.cmd [[
   "set clipboard+=unnamedplus
   let g:clipboard = {
           \   'name': 'win32yank-wsl',
@@ -290,6 +308,31 @@ if OnWsl() then
           \   'cache_enabled': 0,
           \ }
   ]]
+
+  local yank_bin_name = 'win32yank.exe'
+  local system32dir = vim.env.WINDOWS_SYSTEM32
+  local yank_bin = nil
+  if system32dir then
+    yank_bin = vim.env.WINDOWS_SYSTEM32 .. yank_bin_name
+  else
+    --- Function call has bigger binding power than '..' operator
+    yank_bin = vim.fn.stdpath 'config' .. '/assets/bin/' .. yank_bin_name
+  end
+  assert(yank_bin ~= nil)
+
+  -- Set up clipboard using win32yank in Neovim
+  vim.g.clipboard = {
+    name = 'win32yank-wsl',
+    copy = {
+      ['+'] = yank_bin .. ' -i --crlf',
+      ['*'] = yank_bin .. ' -i --crlf',
+    },
+    paste = {
+      ['+'] = yank_bin .. ' -o --lf',
+      ['*'] = yank_bin .. ' -o --lf',
+    },
+    cache_enabled = 0,
+  }
 end
 
 local fuck_with_runtime = function()

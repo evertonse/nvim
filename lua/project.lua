@@ -1,3 +1,4 @@
+--- WARNING this already exists. It's caled exerc
 local function source_project()
   local project_file = vim.fn.getcwd() .. '/local.lua'
   local config_path = vim.fn.stdpath 'config'

@@ -1,3 +1,4 @@
+---@type vim.lsp.Config
 return {
   cmd = { 'lua-language-server' },
   filetypes = { 'lua' },
@@ -13,11 +14,11 @@ return {
     'selene.yml',
     '.git',
   },
+
   dynamicRegistration = false,
   settings = {
     Lua = {
-      -- globals = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
-      builtin = { 'bit', 'vim', 'it', 'describe', 'before_each', 'after_each' },
+      globals = { 'bit', 'stacktrace', 'vim', 'it', 'describe', 'before_each', 'after_each' },
       runtime = { version = 'Lua 5.1' },
 
       completion = {
@@ -27,6 +28,7 @@ return {
 
       hint = {
         enable = true,
+        arrayIndex = 'Disable',
       },
 
       -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
