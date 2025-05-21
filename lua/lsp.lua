@@ -191,7 +191,9 @@ local lsp_optimize_server_capabilites = function(client)
   client.server_capabilities.documentOnTypeFormattingProvider = nil
   client.server_capabilities.documentRangeFormattingProvider = true
 
-  client.server_capabilities.documentSymbolProvider = false
+  -- Setting `documentSymbolProvider` false make incline and dropbar be unable to show nested symbols
+  -- client.server_capabilities.documentSymbolProvider = false
+
   client.server_capabilities.executeCommandProvider = nil
 
   client.server_capabilities.foldingRangeProvider = false
@@ -206,8 +208,6 @@ local lsp_optimize_server_capabilites = function(client)
   end
 
   -- client.server_capabilities.signatureHelpProvider = nil
-
-  -- Inspect { server_capabilities = client.server_capabilities }
 
   -- client.server_capabilities.textDocumentSync = nil
   -- client.server_capabilities.typeDefinitionProvider = false
@@ -504,6 +504,7 @@ local lsp_attach_autocommands = function()
         return
       end
       lsp_keymaps(event)
+      lsp_optimize_server_capabilites(client)
 
       -- Unset 'formatexpr'
       vim.bo[bufnr].formatexpr = nil
@@ -598,11 +599,11 @@ local lsp_handlers = function()
     'callHierarchy/incomingCalls',
     'callHierarchy/outgoingCalls',
 
-    'client/registerCapability',
+    -- 'client/registerCapability',
     -- 'client/unregisterCapability',
 
     'textDocument/codeLens',
-    'textDocument/diagnostic',
+    -- 'textDocument/diagnostic',
     'textDocument/documentHighlight',
     'textDocument/documentSymbol',
     'textDocument/formatting',
@@ -612,10 +613,10 @@ local lsp_handlers = function()
     -- 'textDocument/rename',
     -- 'textDocument/signatureHelp',
     -- 'textDocument/completion',
-    'textDocument/hover',
+    -- 'textDocument/hover',
 
-    'hover',
-    'signature_help',
+    -- 'hover',
+    -- 'signature_help',
 
     'window/logMessage',
     'window/showDocument',
@@ -628,8 +629,8 @@ local lsp_handlers = function()
     'workspace/workspaceFolders',
     'workspace/executeCommand',
     'workspace/inlayHint/refresh',
-    'workspace/semanticTokens/refresh',
-    'workspace/symbol',
+    -- 'workspace/semanticTokens/refresh',
+    -- 'workspace/symbol',
 
     -- 'typeHierarchy/subtypes',
     -- 'typeHierarchy/supertypes',
@@ -724,18 +725,17 @@ local lsp_config = function()
     --- @alias vim.lsp.client.on_init_cb fun(client: vim.lsp.Client, init_result: lsp.InitializeResult)
     on_init = function(client, init_result)
       --- WARNING: If a client overrides this config, then the server will handle everythin
-      lsp_optimize_server_capabilites(client)
-      DumpInspect('on_init', client)
+      -- DumpInspect('on_init', client)
     end,
 
     --- @alias vim.lsp.client.before_init_cb fun(params: lsp.InitializeParams, config: vim.lsp.ClientConfig)
     before_init = function(params, config)
-      DumpInspect('before_init', { params = params, config = config })
+      -- DumpInspect('before_init', { params = params, config = config })
     end,
 
     --- @alias vim.lsp.client.on_attach_cb fun(client: vim.lsp.Client, bufnr: integer)
     on_attach = function(client, bufnr)
-      DumpInspect('on_attach', client)
+      -- DumpInspect('on_attach', client)
     end,
 
     --- @alias vim.lsp.client.on_exit_cb fun(code: integer, signal: integer, client_id: integer)
@@ -763,9 +763,9 @@ schedule(function()
   diagnostic_config()
   lsp_handlers()
   lsp_config()
-  lsp_enable_all()
   lsp_ui()
   lsp_attach_autocommands()
+  lsp_enable_all()
 end)
 
 --- Resources:

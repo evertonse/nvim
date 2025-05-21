@@ -204,9 +204,14 @@ opt.runtimepath:remove '/vimfiles' -- separate vim plugins from neovim in case v
 --- WARNING(2025-05-21): Undofile loading is VERY slow on big ass files, it's safe to turn on
 ---          I advise to just locally enable on certain files. Disabling on certain files doesn't do anything about startup because it'll read it anyways and just them disable it which doesn't matter at that point
 ---          Rn idgaf about it, but I'm sure it'll come around to bite in the ass and I'll be "Jesus why didn't I use presisent undos?".
+---          EDIT: I do. I do give a fuck about it, we need a better solution. May this undoreload options can help with this huge buffer case.
+---          The other option is throw an autocommand on this bih.
 opt.undodir = (os.getenv 'HOME' or '') .. '/.local/share/nvim'
 opt.undofile = true -- Enable persistent undo (see also `:h undodir`)
 opt.undolevels = 100 -- Default is 1000
+-- Note that this causes the whole buffer to be stored in memory.  Set
+-- this option to a lower value if you run out of memory.
+opt.undoreload = 1000
 
 vim.api.nvim_create_autocmd('BufReadPre', {
   callback = function(args)

@@ -183,11 +183,14 @@
 
 -- Pasting in insert mode: ctrl + r
 
+-- NOTE: might be useful `vim.defer_fn` or `vim.schedule`
+
+-------------------------------------------------------------------------------------
 if vim.loader then
   vim.loader.enable(true)
 end
 
--- NOTE: might be useful `vim.defer_fn` or `vim.schedule`
+vim.g.did_load_filetypes = 1
 
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'globals'
