@@ -1793,6 +1793,41 @@ SetKeyMaps(M.general)
 SetKeyMaps(M.blankline)
 
 vim.schedule(function()
-  -- Disable fucking manual laggy search
-  vim.api.nvim_set_keymap('n', 'K', '<Nop>', { noremap = true, silent = true })
+  -- Disable fucking manual laggy search when theres windows directories on $PATH (wsl only)
+  map('n', 'K', '<Nop>', { noremap = true, silent = true })
 end)
+
+map('n', '<F2>', function()
+  --- See: https://github.com/ibhagwan/fzf-lua/wiki/Advanced
+  local home = vim.env.HOME
+
+  local files_from = function(dir)
+    local list = {}
+    local handle = vim.loop.fs_scandir(dir)
+    while true do
+      local name, _ = vim.loop.fs_scandir_next(handle)
+      if not name then
+        break
+      end
+
+      if not name:match '%/$' then
+        table.insert(list, dir .. name)
+      end
+    end
+    return list
+  end
+  require('fzf-lua').fzf_exec({
+    home .. '/todo.md',
+    'random',
+    unpack(files_from(home .. '/docs/')),
+  }, {
+    prompt = 'Personal > ',
+    actions = {
+      -- Use fzf-lua builtin actions or your own handler
+      ['default'] = require('fzf-lua').actions.file_edit,
+      ['ctrl-y'] = function(selected, opts)
+        Inspect { 'selected item:', selected[1], opts = opts }
+      end,
+    },
+  })
+end, { noremap = true, silent = true })

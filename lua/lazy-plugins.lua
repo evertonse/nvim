@@ -54,12 +54,10 @@ local plugins = function()
     -- Edit: `.ll` files from llvm is slow to <C-d> or <C-u> from the end (tested with a.ll)
     --     Disabling the highlight fix it
     -- Update: a.ll
-    require 'plugins.nvim-treesitter',
+    -- require 'plugins.nvim-treesitter',
     -- require 'plugins.nvim-treesitter-pairs',
 
     require 'plugins.mason',
-    -- require 'plugins.fidget',
-    -- require 'plugins.neodev',
 
     require 'plugins.lualine',
     -- require 'plugins.staline',
@@ -142,6 +140,8 @@ local unused_plugins = function()
     -- require 'plugins.bigfile',
     require 'plugins.noice',
     require 'plugins.fine-cmdline',
+    -- require 'plugins.fidget',
+    -- require 'plugins.neodev',
 
     -- Color picker ccc
     require 'plugins.autopairs',
@@ -370,13 +370,14 @@ local lazy_config = {
         'compiler',
         'bugreport',
         'ftplugin',
+        'ftdetect',
       },
     },
   },
 }
 
 local personally_disable_runtime_plugins = function()
-  for _, bplugin in ipairs(lazy_config.performance.rtp.disabled_plugins) do
+  for _, bplugin in ipairs(lazy_config.performance.rtp.disabled_plugins or {}) do
     vim.g['loaded_' .. bplugin:gsub('%..*', '')] = 1
   end
 end

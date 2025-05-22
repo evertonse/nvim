@@ -36,7 +36,7 @@ local ctx = {
     MiniSnippets = nil,
   },
 }
-local setup = {
+local snippet = {
   -- PERF: We're requiring all the time, is this slow?
   mini = {
     repo = 'echasnovski/mini.snippets',
@@ -92,7 +92,7 @@ local setup = {
   },
 }
 
-local snippet = 'mini'
+local snippet_name = 'mini'
 
 return {
   { -- Autocompletion
@@ -104,8 +104,8 @@ return {
       { 'onsails/lspkind.nvim', enabled = true },
       -- { 'evertonse/friendly-snippets', enabled = true },
 
-      setup[snippet].repo,
-      setup[snippet].source.repo,
+      snippet[snippet_name].repo,
+      snippet[snippet_name].source.repo,
 
       -- 'dcampos/cmp-snippy',
       -- Adds other completion capabilities.
@@ -123,7 +123,7 @@ return {
       local cmp = require 'cmp'
       ctx.cmp = cmp
 
-      setup[snippet].config()
+      snippet[snippet_name].config()
       local CompletionItemKind = {
         --[[Text ]]
         30,
@@ -204,12 +204,12 @@ return {
           { name = 'buffer' },
           { name = 'nvim_lsp' },
           { name = 'path' },
-          { name = setup[snippet].source.name, keyword_length = 2 },
+          { name = snippet[snippet_name].source.name, keyword_length = 2 },
           -- { name = 'cmdline' },
         },
 
         snippet = {
-          expand = setup[snippet].expand,
+          expand = snippet[snippet_name].expand,
         },
 
         performance = {

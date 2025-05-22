@@ -65,7 +65,7 @@ return {
     vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
       group = lint_augroup,
       callback = function()
-        if not vim.b.can_lint then
+        if not vim.b.can_lint or not vim.bo.modifiable then
           return
         end
         pcall(require('lint').try_lint)

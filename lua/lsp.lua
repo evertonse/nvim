@@ -572,13 +572,25 @@ local lsp_ui = function()
   end
 end
 local diagnostic_config = function()
+  -- Diagnostic Config
+  -- See :help vim.diagnostic.Opts
   vim.diagnostic.config {
-    -- virtual_text = true, -- Show for all
+    severity_sort = true,
+    float = { border = 'rounded', source = 'if_many' },
+    underline = { severity = vim.diagnostic.severity.ERROR },
+    signs = vim.g.have_nerd_font and {
+      text = {
+        [vim.diagnostic.severity.ERROR] = '󰅚 ',
+        [vim.diagnostic.severity.WARN] = '󰀪 ',
+        [vim.diagnostic.severity.INFO] = '󰋽 ',
+        [vim.diagnostic.severity.HINT] = '󰌶 ',
+      },
+    } or {},
+
     virtual_lines = {
       -- Only show virtual line diagnostics for the current cursor line
       current_line = true,
     },
-    update_in_insert = false,
     float = {
       focusable = true,
       style = 'minimal',
@@ -587,6 +599,20 @@ local diagnostic_config = function()
       header = '',
       prefix = '',
     },
+    virtual_text = {
+      source = 'if_many',
+      spacing = 2,
+      format = function(diagnostic)
+        local diagnostic_message = {
+          [vim.diagnostic.severity.ERROR] = diagnostic.message,
+          [vim.diagnostic.severity.WARN] = diagnostic.message,
+          [vim.diagnostic.severity.INFO] = diagnostic.message,
+          [vim.diagnostic.severity.HINT] = diagnostic.message,
+        }
+        return diagnostic_message[diagnostic.severity]
+      end,
+    },
+    update_in_insert = false,
   }
 end
 

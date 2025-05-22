@@ -10,6 +10,7 @@
 -- treesitter-highlight-priority in treesitter.txt
 --
 -- treesitter-query in treesitter.txt
+
 local disable_treesitter_when = require('functions').disable_treesitter_highlight_when
 
 local enabled = true

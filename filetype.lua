@@ -1,4 +1,5 @@
 --- NOTE(2025-05-21): Our filetype.lua runs AFTER the runtime/filetype.lua
+---                   this file is meant to run when vim.g.did_load_filetypes == 1, so set it somewhere
 if vim.g.did_load_custom_filetypes then
   return
 end

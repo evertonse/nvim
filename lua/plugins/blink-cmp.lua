@@ -78,7 +78,7 @@ return {
     -- NOTE: see: https://cmp.saghen.dev/recipes.html#sources
     sources = {
       min_keyword_length = function()
-        return vim.bo.filetype == 'markdown' and 2 or 3
+        return vim.bo.filetype == 'markdown' and 3 or 2
       end,
       default = function(ctx)
         local success, node = pcall(vim.treesitter.get_node)

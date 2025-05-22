@@ -1,5 +1,6 @@
 --- See `:help vim.opt`
 local o, opt, g = vim.o, vim.opt, vim.g
+local schedule = vim.schedule
 
 ---  Sync clipboard between OS and Neovim.
 ---  See `:help 'clipboard'`
@@ -15,9 +16,7 @@ vim.cmd [[set sessionoptions-=options ]]
 
 --- WARNING: These below are about find certain filetypes
 ---          See: https://www.reddit.com/r/neovim/comments/rvwsl3/introducing_filetypelua_and_a_call_for_help/
--- g.do_filetype_lua = 0 -- I don't think this works anymore
--- - A value of 0 for this variable disables filetype.vim. A value of 1 disables both filetype.vim and filetype.lua (which you probably don't want).
--- g.did_load_filetypes = 0
+g.did_load_filetypes = 1
 
 g.mapleader = ' '
 g.maplocalleader = ' '
@@ -157,6 +156,10 @@ vim.cmd [[ set backspace=indent,eol,start ]]
 o.ruler = false -- Don't show cursor position in command line
 o.showmode = false -- Don't show mode in command line
 o.wrap = false -- Display long lines as just one line
+-- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
+-- instead raise a dialog asking if you wish to save the current file(s)
+-- See `:help 'confirm'`
+vim.o.confirm = true
 
 o.signcolumn = 'yes' -- Always show sign column (otherwise it will shift text)
 o.fillchars = 'eob: ' -- Don't show `~` outside of buffer
@@ -206,6 +209,7 @@ opt.runtimepath:remove '/vimfiles' -- separate vim plugins from neovim in case v
 ---          Rn idgaf about it, but I'm sure it'll come around to bite in the ass and I'll be "Jesus why didn't I use presisent undos?".
 ---          EDIT: I do. I do give a fuck about it, we need a better solution. May this undoreload options can help with this huge buffer case.
 ---          The other option is throw an autocommand on this bih.
+--- TODO: Solve this. Test file `rmlint.json`
 opt.undodir = (os.getenv 'HOME' or '') .. '/.local/share/nvim'
 opt.undofile = true -- Enable persistent undo (see also `:h undodir`)
 opt.undolevels = 100 -- Default is 1000
@@ -224,11 +228,11 @@ vim.api.nvim_create_autocmd('BufReadPre', {
   end,
 })
 
--- [[ Setting vim cmds ]]
 opt.display = 'uhex'
 -- vim.cmd ':set nomore'
-vim.cmd ':set more'
+vim.opt.more = false
 
+-- [[ Setting vim cmds ]]
 if OnSSH() then
   vim.cmd ':set lz' -- Lazy Redraw
   vim.cmd ':set ttyfast'
@@ -292,13 +296,15 @@ matchit_extend()
 -- Long lines a the single most important reason for when it's lagging for no reason
 -- Limiting the highlighting based on column looks like a decent solution
 -- vim.cmd [[set synmaxcol=250]]
-vim.opt.synmaxcol = 420
+opt.synmaxcol = 300
+opt.list = false
 
 -- opt.clipboard = nil, -- allows neovim to access the system clipboard
-opt.clipboard = ''
-if OnWsl() then
-  local windows_path_clipboard = false
-    and vim.cmd [[
+schedule(function()
+  opt.clipboard = ''
+  if OnWsl() then
+    local windows_path_clipboard = false
+      and vim.cmd [[
   "set clipboard+=unnamedplus
   let g:clipboard = {
           \   'name': 'win32yank-wsl',
@@ -314,31 +320,32 @@ if OnWsl() then
           \ }
   ]]
 
-  local yank_bin_name = 'win32yank.exe'
-  local system32dir = vim.env.WINDOWS_SYSTEM32
-  local yank_bin = nil
-  if system32dir then
-    yank_bin = vim.env.WINDOWS_SYSTEM32 .. yank_bin_name
-  else
-    --- Function call has bigger binding power than '..' operator
-    yank_bin = vim.fn.stdpath 'config' .. '/assets/bin/' .. yank_bin_name
-  end
-  assert(yank_bin ~= nil)
+    local yank_bin_name = 'win32yank.exe'
+    local system32dir = vim.env.WINDOWS_SYSTEM32
+    local yank_bin = nil
+    if system32dir then
+      yank_bin = vim.env.WINDOWS_SYSTEM32 .. yank_bin_name
+    else
+      --- Function call has bigger binding power than '..' operator
+      yank_bin = vim.fn.stdpath 'config' .. '/assets/bin/' .. yank_bin_name
+    end
+    assert(yank_bin ~= nil)
 
-  -- Set up clipboard using win32yank in Neovim
-  vim.g.clipboard = {
-    name = 'win32yank-wsl',
-    copy = {
-      ['+'] = yank_bin .. ' -i --crlf',
-      ['*'] = yank_bin .. ' -i --crlf',
-    },
-    paste = {
-      ['+'] = yank_bin .. ' -o --lf',
-      ['*'] = yank_bin .. ' -o --lf',
-    },
-    cache_enabled = 0,
-  }
-end
+    -- Set up clipboard using win32yank in Neovim
+    vim.g.clipboard = {
+      name = 'win32yank-wsl',
+      copy = {
+        ['+'] = yank_bin .. ' -i --crlf',
+        ['*'] = yank_bin .. ' -i --crlf',
+      },
+      paste = {
+        ['+'] = yank_bin .. ' -o --lf',
+        ['*'] = yank_bin .. ' -o --lf',
+      },
+      cache_enabled = 0,
+    }
+  end
+end)
 
 local fuck_with_runtime = function()
   local paths = {

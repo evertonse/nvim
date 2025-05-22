@@ -190,8 +190,6 @@ if vim.loader then
   vim.loader.enable(true)
 end
 
-vim.g.did_load_filetypes = 1
-
 -- [[ Setting globals utils functions before any plugin config function has any chance try to use a nil Global function ]]
 require 'globals'
 
@@ -201,17 +199,25 @@ require 'options'
 -- [[ Autocommands ]]
 require 'autocommands'
 
+-- [[ Usercommands ]]
+require 'usercommands'
+
 -- [[ Basic Keymaps ]]
 require 'keymaps'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 require 'lazy-bootstrap'
 
+-- [[ Self Protection ]]
+-- NOTE: This checks needs to be done before loading plugins, because lazy.nvim will call neovim runtime files
+-- As it's loading packages, therefore we need to either block the file (vim.g.did_load_filetypes = 1) or say fuck it to lazy vim and just git create a gitclone manager "adpater" over lazyvim syntax
+require 'checks'
+
 -- [[ Configure and install plugins ]]
 require 'lazy-plugins'
 
 -- [[ Configure Lsp ]]
-require 'lsp'
+-- require 'lsp'
 
 -- [[ Configure Treesitter after the nvim-treesitter plugin ]]
 -- require 'treesitter'

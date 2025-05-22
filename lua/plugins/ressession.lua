@@ -52,7 +52,7 @@ end
 return {
   'stevearc/resession.nvim',
   lazy = false,
-  -- event = 'VimEnter',
+  -- event = { 'VimEnter' },
   enabled = true,
   dependencies = {
     {
