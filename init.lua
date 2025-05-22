@@ -217,7 +217,7 @@ require 'checks'
 require 'lazy-plugins'
 
 -- [[ Configure Lsp ]]
--- require 'lsp'
+require 'lsp'
 
 -- [[ Configure Treesitter after the nvim-treesitter plugin ]]
 -- require 'treesitter'

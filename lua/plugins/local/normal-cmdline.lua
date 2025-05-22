@@ -217,7 +217,9 @@ local setup_autocommands = function()
           setpos { pos[1], 0 }
           feedkeys '<c-c>'
           for i = 1, pos[2] do
-            input '<Right>'
+            schedule(function()
+              input '<Right>'
+            end)
           end
 
           schedule(function()

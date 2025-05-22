@@ -286,7 +286,7 @@ local matchit_extend = function()
 end
 
 -- NOTE: Needs to make sure matchit is not disabled
-g.loaded_matchit = 1
+-- g.loaded_matchit = 1
 -- g.loaded_matchparen = 1
 -- vim.g.matchit_words = vim.g.matchit_words and vim.g.matchit_words .. ',function:end' or 'function:end'
 -- Ensure matchit is not disabled

@@ -1818,7 +1818,6 @@ map('n', '<F2>', function()
   end
   require('fzf-lua').fzf_exec({
     home .. '/todo.md',
-    'random',
     unpack(files_from(home .. '/docs/')),
   }, {
     prompt = 'Personal > ',
