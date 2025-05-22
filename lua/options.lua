@@ -256,12 +256,17 @@ else
   opt.foldenable = false
 end
 
+for _, it in ipairs { '(:)', '{:}', '[:]', '<:>', '=:;' } do
+  opt.matchpairs:append(it)
+end
+-- opt.matchpairs:append '<:>'
+-- opt.matchpairs:append '<:>'
+
 --vim.cmd [[ :set iskeyword-=- ]]
 
 local matchit_extend = function()
   -- List of pairs to add
   local pairs_to_add = {
-    '<:>',
     'function:end',
     'if:endif',
     'switch:case',
@@ -282,13 +287,12 @@ local matchit_extend = function()
       vim.g.matchit_words = pair
     end
   end
-  -- If matchit_words is not set, initialize it with the first pair
+  -- TODO: Make matchit work
 end
 
 -- NOTE: Needs to make sure matchit is not disabled
--- g.loaded_matchit = 1
 -- g.loaded_matchparen = 1
--- vim.g.matchit_words = vim.g.matchit_words and vim.g.matchit_words .. ',function:end' or 'function:end'
+-- g.loaded_matchit = 1
 -- Ensure matchit is not disabled
 
 matchit_extend()

@@ -32,7 +32,7 @@ local want_regex = false
 local _ = true
   -- 'FileType'
   -- 'BufReadPost'
-  and vim.api.nvim_create_autocmd({ 'FileType' }, {
+  and vim.api.nvim_create_autocmd({ 'FileType', 'BufReadPost' }, {
     group = vim.api.nvim_create_augroup('AnyHighlight', {}),
 
     -- The 'pattern' of the FileType event is a list of filetypes.
@@ -49,6 +49,12 @@ local _ = true
       end
       vim.b[bufnr].did_syntax = true
 
+      vim.api.nvim_create_autocmd({ 'BufUnload' }, {
+        once = true,
+        callback = function(args)
+          vim.b[args.buf].did_syntax = nil
+        end,
+      })
       local ft = vim.bo.filetype
       local parser_name = vim.treesitter.language.get_lang(ft) or ft
       if should_ts_hl_disable(parser_name, bufnr) then

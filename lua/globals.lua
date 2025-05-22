@@ -545,6 +545,7 @@ GetVisualSelection = function(opts)
     escape = {
       enabled = true,
       parens = true,
+      dots = false,
       brackets = true,
       curly = false,
       angle_brackets = true,
@@ -576,13 +577,11 @@ GetVisualSelection = function(opts)
       selection = selection:gsub('%}', '%\\%}') -- this is NFA repetition
     end
 
+    if opts.escape.dots then
+      selection = selection:gsub('%.', '%\\%.')
+    end
     selection = selection:gsub('%/', '%\\%/')
-    selection = selection:gsub('%.', '%\\%.')
     selection = selection:gsub('%*', '%\\%*')
-  end
-
-  if false then
-    Inspect { opts, register_text, selection }
   end
 
   vim.fn.setreg('"', before_main_register_text)

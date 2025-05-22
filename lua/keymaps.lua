@@ -1119,7 +1119,14 @@ M.general = {
     ['<C-x>'] = { vim.api.nvim_replace_termcodes('<C-\\><C-N>', true, true, true), 'Escape terminal mode' },
     -- ["<C-c>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal with Crtl + c which my be strange to do since crtl+c already means something" },
     ['<C-f>'] = { vim.api.nvim_replace_termcodes('<C-W>', true, true, true), 'Avance to next word completion in term' },
-    ['<C-w>'] = { vim.api.nvim_replace_termcodes('<C-\\><C-w>', false, false, false), 'Escape terminal mode' },
+    --- C-w is used too much for this to work
+    -- ['<C-w>'] = { vim.api.nvim_replace_termcodes('<C-\\><C-w>', false, false, false), 'Escape terminal mode' },
+    -- ['<C-w>h'] = { '<C-\\><C-N><C-w>h', term_opts },
+    -- ['<C-w>j'] = { '<C-\\><C-N><C-w>j', term_opts },
+    -- ['<C-w>k'] = { '<C-\\><C-N><C-w>k', term_opts },
+    -- ['<C-w>l'] = { '<C-\\><C-N><C-w>l', term_opts },
+    -- ['<C-w>s'] = { '<C-\\><C-N><C-w>s', term_opts },
+    -- ['<C-w>v'] = { '<C-\\><C-N><C-w>v', term_opts },
     ['<A-o>'] = {
       function()
         last_terminal_mode = 'i'
@@ -1128,12 +1135,6 @@ M.general = {
         vim.api.nvim_input '<C-o>'
       end,
     },
-    ['<C-w>h'] = { '<C-\\><C-N><C-w>h', term_opts },
-    ['<C-w>j'] = { '<C-\\><C-N><C-w>j', term_opts },
-    ['<C-w>k'] = { '<C-\\><C-N><C-w>k', term_opts },
-    ['<C-w>l'] = { '<C-\\><C-N><C-w>l', term_opts },
-    ['<C-w>s'] = { '<C-\\><C-N><C-w>s', term_opts },
-    ['<C-w>v'] = { '<C-\\><C-N><C-w>v', term_opts },
     ['<C-o>'] = { '<C-\\><C-N><C-o>', term_opts },
   },
 }
@@ -1371,6 +1372,17 @@ M.telescope = {
     ['<leader>th'] = { '<cmd> Telescope themes <CR>', 'Nvchad themes' },
 
     ['<leader>ma'] = { '<cmd> Telescope marks initial_mode=normal<CR>', 'telescope bookmarks' },
+  },
+}
+
+M.fzf = {
+  plugin = true,
+
+  n = {
+    ['<leader>f'] = {
+      function() end,
+      'Fastest fuzzy finder',
+    },
   },
 }
 

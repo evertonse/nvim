@@ -1,5 +1,7 @@
 
+- [ ] Fix highlight pattern
 
+- [ ] Investigate blink-cmp bug(?) where c-p actually changes another window on the side of the completion window
 - [ ] if .bak, and has another .lua in front highlight as lua normally
 
 - [ ] Extend mini.ai to use < > in cib
