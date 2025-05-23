@@ -4,7 +4,7 @@
 -- We could also try to see if treesitter can give us that context and highlight that FAST in a generic way also.
 
 -- Is 'matchadd' is faster than 'highlight' cmd?
-local function highlight_orig(xs)
+local highlight_orig = function(xs)
   local bufnr = vim.api.nvim_get_current_buf()
   for group, pattern in pairs(xs) do
     vim.fn.matchadd(group, [[\v<]] .. pattern .. [[>]], 10, -1, { conceal = 0, synID = 'Comment' })
@@ -12,8 +12,7 @@ local function highlight_orig(xs)
 end
 
 -- PERF: although it's faster than them all, we still should
-local function highlight(xs)
-  local bufnr = vim.api.nvim_get_current_buf()
+local function highlight(xs, bufnr)
   local commentstring = vim.bo.commentstring or ''
 
   -- Remove any formatting placeholders (like %s) and clean up whitespace
@@ -145,16 +144,16 @@ function M.setup()
   vim.api.nvim_create_autocmd({ 'BufReadPost' }, {
     pattern = '*',
     group = pattern_highlight_group,
-    callback = function()
-      highlight(todos)
+    callback = function(args)
+      highlight(todos, args.buf)
     end,
   })
 
   vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = pattern_highlight_group,
     pattern = { 'lua' },
-    callback = function()
-      highlight(filetypes)
+    callback = function(args)
+      highlight(filetypes, args.buf)
     end,
   })
 end

@@ -1,5 +1,5 @@
 
-- [ ] Fix highlight pattern
+- [x] Fix highlight pattern
 
 - [ ] Investigate blink-cmp bug(?) where c-p actually changes another window on the side of the completion window
 - [ ] if .bak, and has another .lua in front highlight as lua normally
@@ -9,7 +9,8 @@
 - [ ] @low(there an issue that is getting looked at. iirc i'm subscribed to it) blink when matching if substring matching >> prio than fuzzy (Waiting for bug fixes from developer)
 
 - [ ] Fix post.lua when using ressession. Probaly will need to dive in the source code
-- [ ] Fix treesitter init on post.lua
+- [ ] @high @hiatus Fix treesitter init on post.lua
+lua print(vim.inspect(vim.treesitter.highlighter.active[vim.api.nvim_get_current_buf()] or 'not active'))
 
 - [ ] @low(problably will get done as i'm using and find its flaws in work flow) Make trails into a local plugin with support for lsp
 - [ ] Fix or change multicursors

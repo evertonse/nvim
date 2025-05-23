@@ -1,18 +1,19 @@
 return { -- https://docs.basedpyright.com/#/settings
-  autostart = true, -- This is the important new option
+
+  autostart = true,
   -- offset_encoding = 'utf-8', -- Not supported yet by based_pyright
-  -- capabilities = basedpyright_capabilities,
-  -- capabilities = capabilities,
   on_init = function(client)
     client.server_capabilities.documentFormattingProvider = true
     client.server_capabilities.documentFormattingRangeProvider = true
   end,
 
-  -- root_dir = lspconfig.util.root_pattern '.git',
   root_dir = function(fname)
-    Inspect(fname)
-    return require('lspconfig').util.root_pattern('.git', 'pyproject.toml', 'setup.py')(fname) or vim.fn.getcwd()
-    -- return require('lspconfig').util.root_pattern('.git', , 'setup.py', 'setup.cfg')(fname) or vim.fn.getcwd()
+    -- TODO: vim.fs.root
+    return {
+      'pyproject.toml',
+      'setup.py',
+      '.git',
+    }
   end,
 
   filetypes = { 'python' },

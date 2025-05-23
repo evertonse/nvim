@@ -22,6 +22,7 @@ g.mapleader = ' '
 g.maplocalleader = ' '
 
 -- Disable some default providers
+g.loaded_lua_provider = 1 -- This is invented idk if it works
 g.loaded_perl_provider = 1
 g.loaded_ruby_provider = 1
 g.loaded_node_provider = 1
@@ -55,6 +56,7 @@ opt.fillchars:append { eob = ' ' }
 opt.shadafile = 'NONE' -- equilavent to vim.cmd [[set shada=]]
 
 o.cursorlineopt = 'both' -- to enable cursorline
+opt.cursorcolumn = false
 -- opt.wildmode = 'list:longest,list:full' -- for : stuff
 opt.wildmode = 'list:longest' -- for : stuff
 opt.wildignore:append { '.javac', 'node_modules', '*.pyc' }
@@ -172,6 +174,11 @@ opt.formatoptions = 'qjl1' -- Don't autoformat comments
 o.pumblend = g.self.is_transparent and 0 or 10 -- Make builtin completion menus slightly transparent
 
 o.winblend = g.self.is_transparent and 0 or 10 -- Make floating windows slightly transparent
+
+-- opt.redrawtime = 12525
+opt.redrawtime = 3525
+-- vim.cmd [[syntax sync fromstart]]
+-- vim.cmd [[syntax sync minlines=500]]
 
 -- NOTE: Having `tab` present is needed because `^I` will be shown if
 -- omitted (documented in `:h listchars`).

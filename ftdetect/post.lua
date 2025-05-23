@@ -43,16 +43,18 @@ local _ = true
       if vim.bo[bufnr].buftype ~= '' then
         return
       end
-      -- Inspect { 'Any FileType', args = args, ft = vim.bo.filetype, loaded = vim.api.nvim_buf_is_loaded(args.buf) or '??' }
       if vim.b[bufnr].did_syntax then
         return
       end
       vim.b[bufnr].did_syntax = true
 
-      vim.api.nvim_create_autocmd({ 'BufUnload' }, {
+      -- 'BufUnload'
+      vim.api.nvim_create_autocmd({ 'Bufdelete' }, {
+        buffer = args.buf,
         once = true,
-        callback = function(args)
+        callback = function()
           vim.b[args.buf].did_syntax = nil
+          vim.bo[args.buf].ft = nil
         end,
       })
       local ft = vim.bo.filetype
@@ -88,7 +90,11 @@ local _ = true
           --- NOTE: By default, disables regex syntax highlighting, which may be
           ---       required for some plugins. In this case, add `vim.bo.syntax = 'on'` after
           ---       the call to `start`.
-          -- Inspect { 'about to start treesitter with parser = ' .. parser_name, ft = vim.bo.filetype, args }
+
+          -- vim.api.nvim_buf_call(bufnr, function()
+          --   vim.treesitter.start()
+          -- end)
+
           vim.treesitter.start(bufnr, parser_name)
 
           if want_regex then
