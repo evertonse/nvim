@@ -34,7 +34,7 @@ local get_visual_selection = function(opts)
 
     if opts.escape.curly then
       selection = selection:gsub('%{', '%\\%{') -- this is NFA repetition
-      selection = selection:gsub('%}', '%\\%}') -- this is NFA repetition
+      selection = selection:gsub('%}', '%\\%}')
     end
 
     selection = selection:gsub('%/', '%\\%/')
@@ -60,8 +60,10 @@ local goto_file_from_file_line_and_col_number = function(file, line_num, col_num
     local name = vim.api.nvim_buf_get_name(buf)
     if name == abs then
       vim.api.nvim_set_current_win(win)
-
       if line_num ~= 0 then
+        local total_lines = vim.api.nvim_buf_line_count(buf)
+        -- Clamp the line number
+        line_num = math.max(1, math.min(line_num, total_lines))
         vim.api.nvim_win_set_cursor(win, { line_num, col_num })
       end
       return
@@ -123,6 +125,8 @@ M.goto_file = function(line_string)
     -- Shell
     -- sh: <filepath>: line 12: syntax error near unexpected token `else'
     '%s*sh.%s*([^│%[%]():]+)%s*.%s*line%s*(%d+).*',
+    -- <filepath>: 169: Syntax error:
+    '%s*([^│%[%]():]+):%s*(%d+).*',
 
     -- Python
     --  File "<filepath>", line 334, in <module>
@@ -140,9 +144,11 @@ M.goto_file = function(line_string)
     -- <filepath>|123
     '([^|()]+)|(%d+).*',
     -- <filepath>|
-    '([^|()]+).*',
+    '([^|()%s]+).*',
+    --  after/lsp/ols.lua
+    '[^%w/]*(.+)[^%w/]*',
     -- <filepath>
-    '([^:()]+).*',
+    '([^:()%s]+).*',
   }
 
   local pattern_extended = {
@@ -154,7 +160,7 @@ M.goto_file = function(line_string)
   for _, pattern in ipairs(patterns) do
     file, line_num, col_num = string.match(line_string, pattern)
     -- @Debug
-    -- Inspect { idx = idx, file = file, line_string = line_string, pattern = pattern }
+    -- Inspect { file = file, line_string = line_string, pattern = pattern }
     if file then
       local newfile = string.match(file, '.*{([^:()]+)}.*')
       if newfile then

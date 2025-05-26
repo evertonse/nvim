@@ -1,7 +1,7 @@
 return {
   cmd = {
     'clangd',
-    '-j=' .. 2,
+    '-j=' .. 4,
     '--background-index',
     '--clang-tidy',
     '--inlay-hints',
@@ -13,19 +13,20 @@ return {
     '--pch-storage=memory',
   },
   init_options = {
-    fallbackFlags = { '--std=c++20' },
+    fallbackFlags = { '--std=c23' },
+    -- fallbackFlags = { '--std=c++20' },
   },
   filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
   on_attach = function() end,
   root_markers = {
-    'src/',
+    -- 'src/',
+    'compile_commands.json',
     '.clangd',
     '.clang-tidy',
     '.clang-format',
-    'compile_commands.json',
     'compile_flags.txt',
     'configure.ac',
-    --AutoTools '.git',
+    '.git',
     vim.uv.cwd(),
   },
   autostart = true,

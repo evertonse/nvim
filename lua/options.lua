@@ -161,12 +161,14 @@ o.wrap = false -- Display long lines as just one line
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
-vim.o.confirm = true
+vim.o.confirm = false
 
 o.signcolumn = 'yes' -- Always show sign column (otherwise it will shift text)
 o.fillchars = 'eob: ' -- Don't show `~` outside of buffer
 
 o.infercase = true -- Infer letter cases for a richer built-in keyword completion
+
+o.exrc = true -- Infer letter cases for a richer built-in keyword completion
 
 o.virtualedit = 'block' -- Allow going past the end of line in visual block mode
 opt.formatoptions = 'qjl1' -- Don't autoformat comments

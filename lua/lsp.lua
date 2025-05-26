@@ -631,18 +631,18 @@ local lsp_handlers = function()
     'textDocument/codeLens',
     -- 'textDocument/diagnostic',
     'textDocument/documentHighlight',
-    'textDocument/documentSymbol',
+    -- 'textDocument/documentSymbol',
     'textDocument/formatting',
     'textDocument/inlayHint',
     'textDocument/publishDiagnostics',
     'textDocument/rangeFormatting',
     -- 'textDocument/rename',
-    -- 'textDocument/signatureHelp',
+    'textDocument/signatureHelp',
     -- 'textDocument/completion',
     -- 'textDocument/hover',
 
     -- 'hover',
-    -- 'signature_help',
+    'signature_help',
 
     'window/logMessage',
     'window/showDocument',
@@ -679,8 +679,8 @@ local lsp_handlers = function()
       -- ServerCancelled = -32802,
 
       --- NOTE(deccan 2025-05-20): Right now I think preteding the method is not found is fine to just make every plugins or neovim native feature think that is just not supported
-      -- return nil, vim.lsp.rpc.rpc_response_error(vim.lsp.protocol.ErrorCodes.MethodNotFound, 'No handler', { method = ctx.method })
-      return nil, vim.lsp.rpc.rpc_response_error(vim.lsp.protocol.ErrorCodes.RequestCancelled, 'Disabled', { method = ctx.method })
+      return {}, vim.lsp.rpc.rpc_response_error(vim.lsp.protocol.ErrorCodes.MethodNotFound, 'No handler', { method = ctx.method })
+      -- return nil, vim.lsp.rpc.rpc_response_error(vim.lsp.protocol.ErrorCodes.RequestCancelled, 'Disabled', { method = ctx.method })
     end
   end
   if true then

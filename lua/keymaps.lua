@@ -13,6 +13,7 @@ local wait_opts = { noremap = true, silent = true, nowait = false }
 FULLSCREEN = false
 
 local substitute = '%s' -- default
+local substitute_multi = 's' -- default
 -- local substitute = '%S' -- timpope
 -- local substitute = 'Subs' -- text-case.nvim
 
@@ -975,7 +976,7 @@ M.general = {
           -- Below we're using normal S beware
           -- vim.api.nvim_input [[<cmd>s///gc<left><left><left><left>]]
           -- vim.api.nvim_input [[:s///gc<left><left><left><left>]]
-          vim.api.nvim_input([[:]] .. substitute .. [[///gc<left><left><left><left>]])
+          vim.api.nvim_input([[:]] .. substitute_multi .. [[///gc<left><left><left><left>]])
           return
         end
 
@@ -1121,12 +1122,6 @@ M.general = {
     ['<C-f>'] = { vim.api.nvim_replace_termcodes('<C-W>', true, true, true), 'Avance to next word completion in term' },
     --- C-w is used too much for this to work
     -- ['<C-w>'] = { vim.api.nvim_replace_termcodes('<C-\\><C-w>', false, false, false), 'Escape terminal mode' },
-    -- ['<C-w>h'] = { '<C-\\><C-N><C-w>h', term_opts },
-    -- ['<C-w>j'] = { '<C-\\><C-N><C-w>j', term_opts },
-    -- ['<C-w>k'] = { '<C-\\><C-N><C-w>k', term_opts },
-    -- ['<C-w>l'] = { '<C-\\><C-N><C-w>l', term_opts },
-    -- ['<C-w>s'] = { '<C-\\><C-N><C-w>s', term_opts },
-    -- ['<C-w>v'] = { '<C-\\><C-N><C-w>v', term_opts },
     ['<A-o>'] = {
       function()
         last_terminal_mode = 'i'

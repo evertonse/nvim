@@ -6,7 +6,17 @@ local fzf_simple = {
   lazy = true,
   config = function()
     -- calling `setup` is optional for customization
-    require('fzf-lua').setup {}
+    require('fzf-lua').setup {
+      keymap = {
+        builtin = {
+          true,
+          -- NOTE: we use a custom <Esc> callback that also sends esc to fzf
+          -- so we can store the last query on the execute-silent callback
+          ['q'] = 'hide',
+          ['<Esc>'] = 'abort',
+        },
+      },
+    }
   end,
 }
 

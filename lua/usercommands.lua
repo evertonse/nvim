@@ -24,7 +24,10 @@ local toggle_brighten_comments = function()
     original_comment_highlight = vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID 'Comment'), 'fg')
 
     -- Change
-    vim.cmd 'hi Comment ctermfg=White guifg=White'
+    local color = '#819884'
+    -- vim.api.nvim_set_hl(0, 'Comment', { link = 'Normal' })
+    vim.api.nvim_set_hl(0, 'Comment', { fg = color })
+    -- vim.cmd 'hi def link Normal Comment'
     vim.notify 'Comments brightened.'
   else
     -- Restore the original highlight

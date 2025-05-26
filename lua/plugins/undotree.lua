@@ -1,8 +1,8 @@
 return {
   'mbbill/undotree',
-  enabled = false,
+  enabled = true,
   lazy = true,
-  event = 'BufEnter',
+  -- event = 'BufEnter',
   keys = {
     { '<leader>ut', '<cmd>UndotreeToggle<CR>', desc = 'Toggle undotree' },
   },

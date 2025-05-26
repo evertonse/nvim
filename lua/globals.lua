@@ -650,6 +650,7 @@ vim.g.self = {
     ['bash'] = { 'sh', 'zsh', 'bash' },
     ['c'] = { 'c', 'evy', 'destroyer of worlds' },
     ['llvm'] = { 'llvm' },
+    ['glsl'] = { 'glsl' },
   },
   -- BufferPaths = {}, -- XXX: SomeHow it does not user when i's on vim.g, too make problems no cap
 }

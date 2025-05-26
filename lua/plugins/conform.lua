@@ -1,3 +1,8 @@
+local clang_format = {
+  bin = 'clang-format',
+  prepend_args = {},
+}
+
 return {
   'stevearc/conform.nvim',
   lazy = true,
@@ -34,6 +39,14 @@ return {
         lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
       }
     end,
+    formatters = {
+      ['clang-format'] = {
+        command = 'clang-format',
+        prepend_args = {
+          '-style={BasedOnStyle: LLVM, IndentWidth: 3, UseTab: Never, ColumnLimit: 320}',
+        },
+      },
+    },
 
     formatters_by_ft = {
 
@@ -47,6 +60,7 @@ return {
           return { 'isort', 'black' }
         end
       end,
+
       c = { 'clang-format' },
       cpp = { 'clang-format' },
       glsl = { 'clang-format' },

@@ -1,4 +1,5 @@
 
+- [ ] When renaming a file the treesitter detaches
 - [x] Fix highlight pattern
 
 - [ ] Investigate blink-cmp bug(?) where c-p actually changes another window on the side of the completion window

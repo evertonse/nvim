@@ -6,6 +6,7 @@ local augroup = vim.api.nvim_create_augroup
 local input = vim.api.nvim_input
 local schedule = vim.schedule
 local schedule_wrap = vim.schedule_wrap
+local getcmdpos = vim.fn.getcmdpos
 
 local opts_global = { noremap = true, silent = true }
 
@@ -94,7 +95,7 @@ local save_opts = function()
   previous.g.ministatusline_disable = vim.g.ministatusline_disable
 
   previous.restored = false
-  previous.position = vim.fn.getcmdpos()
+  previous.position = getcmdpos()
 
   --- NOTE: If lastatus is not 0, the statusline will be in the way of the text
   --- At the same time if we set to anything else will get statusline
@@ -217,12 +218,14 @@ local setup_autocommands = function()
           setpos { pos[1], 0 }
           feedkeys '<c-c>'
           for i = 1, pos[2] do
-            schedule(function()
-              input '<Right>'
-            end)
+            input '<Right>'
           end
-
           schedule(function()
+            if getcmdpos() == 1 then
+              input '<Right><Left>'
+            else
+              input '<Left><Right>'
+            end
             --- NOTE: 'redrawstatus' isn't enough when cmdwinheight > 1
             vim.cmd [[redraw]]
           end)

@@ -381,9 +381,36 @@ local mini_surround = function()
   -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
   -- - sd'   - [S]urround [D]elete [']quotes
   -- - sr)'  - [S]urround [R]eplace [)] [']
-  require('mini.surround').setup {
+  local MiniSurround = require 'mini.surround'
+  MiniSurround.setup {
     -- see `:h MiniSurround.config`.
-    custom_surroundings = nil,
+    custom_surroundings = {
+      -- Lua long brackets set thins
+      s = {
+        -- Configuration for "input" (like for delete) is done with Lua patterns
+        input = { find = '%[%[.-%]%]', extract = '^(..).*(..)$' },
+        -- Configuration for "output" (like for add) is done with plain text
+        output = { left = '[[', right = ']]' },
+      },
+      ['*'] = {
+        input = function()
+          local n_star = MiniSurround.user_input 'Number of * to find'
+          local many_star = string.rep('%*', tonumber(n_star) or 1)
+          return { many_star .. '().-()' .. many_star }
+        end,
+        output = function()
+          local n_star = MiniSurround.user_input 'Number of * to output'
+          local many_star = string.rep('*', tonumber(n_star) or 1)
+          return { left = many_star, right = many_star }
+        end,
+      },
+      -- Make brackets not add space as the default is
+      -- ['2'] = { output = { left = '[[', right = ']]' } },
+      ['('] = { output = { left = '(', right = ')' } },
+      ['{'] = { output = { left = '{', right = '}' } },
+      ['['] = { output = { left = '[', right = ']' } },
+      ['<'] = { output = { left = '<', right = '>' } },
+    },
     mappings = {
       add = 'sa', -- Add surrounding in Normal and Visual modes
       delete = 'sd', -- Delete surrounding
@@ -391,8 +418,8 @@ local mini_surround = function()
       find_left = 'sF', -- Find surrounding (to the left)
       highlight = 'sh', -- Highlight surrounding
       replace = 'sc', -- Chande Surrounding
-      -- update_n_lines = 'sn', -- Update `n_lines`
-      update_n_lines = '', -- Update `n_lines`
+      update_n_lines = 'sn', -- Update `n_lines`
+      -- update_n_lines = '', -- Update `n_lines`
 
       suffix_last = 'l', -- Suffix to search with "prev" method
       suffix_next = 'n', -- Suffix to search with "next" method

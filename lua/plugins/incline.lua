@@ -1,7 +1,6 @@
 return {
   'b0o/incline.nvim',
   event = 'VeryLazy',
-  lazy = true,
   enabled = true,
   dependencies = {
     { 'SmiteshP/nvim-navic', opts = { lsp = { auto_attach = true } } },
