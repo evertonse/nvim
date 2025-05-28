@@ -625,6 +625,7 @@ vim.g.self = {
     { '==', '!=' },
     { 'true', 'false' },
     { 'False', 'True' },
+    { 'FALSE', 'TRUE' },
     { 'public', 'private' },
     { 'disable', 'enable' },
     { 'if', 'else', 'elseif' },

@@ -107,8 +107,9 @@ return {
             'lsp',
             'path',
             'snippets',
-            --- PERF: Pulling in from the buffer is SLOW when the file is too big
             'buffer',
+            'ripgrep',
+            --- PERF: Pulling in from the buffer is SLOW when the file is too big
           }
         end
       end,
@@ -148,9 +149,18 @@ return {
 
             --- Get only decent not too big buffers
             get_bufnrs = function()
-              return vim.tbl_filter(function(bufnr)
-                return vim.bo[bufnr].buftype == '' and (not is_too_big(bufnr))
+              local list = vim.tbl_filter(function(bufnr)
+                return not is_too_big(bufnr)
               end, vim.api.nvim_list_bufs())
+
+              local names = {}
+              for _, buf in ipairs(list) do
+                local buf_name = vim.api.nvim_buf_get_name(buf)
+                table.insert(names, buf_name)
+              end
+              -- Inspect(names)
+              local curr_bufnr = vim.api.nvim_get_current_buf()
+              return { not is_too_big(curr_bufnr) and curr_bufnr or nil }
             end,
           },
         },
@@ -179,7 +189,7 @@ return {
             -- Examples:
             -- "1024" (bytes by default), "200K", "1M", "1G", which will
             -- exclude files larger than that size.
-            max_filesize = '1M',
+            max_filesize = '100K',
 
             -- Specifies how to find the root of the project where the ripgrep
             -- search will start from. Accepts the same options as the marker

@@ -184,7 +184,7 @@ local lsp_optimize_server_capabilites = function(client)
   DumpInspect('server_capabilities', { client.server_capabilities })
   client.server_capabilities.codeActionProvider = nil
   client.server_capabilities.codeLensProvider = nil
-  client.server_capabilities.colorProvider = nil
+  -- client.server_capabilities.colorProvider = nil
   -- client.server_capabilities.definitionProvider = false
   client.server_capabilities.documentFormattingProvider = false
   client.server_capabilities.documentHighlightProvider = false
@@ -211,7 +211,7 @@ local lsp_optimize_server_capabilites = function(client)
 
   -- client.server_capabilities.textDocumentSync = nil
   -- client.server_capabilities.typeDefinitionProvider = false
-  client.server_capabilities.workspaceSymbolProvider = nil
+  -- client.server_capabilities.workspaceSymbolProvider = nil
 end
 
 -- Force disable all unnecessary capabilities + dynamic features
@@ -242,7 +242,7 @@ local lsp_optimize_client_capabilites = function(capabilities, make_defaults)
         },
       },
       semanticTokens = {
-        dynamicRegistration = false,
+        dynamicRegistration = true,
         tokenTypes = {
           'namespace',
           'type',
@@ -283,17 +283,17 @@ local lsp_optimize_client_capabilites = function(capabilities, make_defaults)
         formats = { 'relative' },
         requests = {
           range = true,
-          full = { delta = true },
+          full = { delta = false },
         },
 
-        overlappingTokenSupport = false,
-        multilineTokenSupport = false,
-        serverCancelSupport = false,
-        augmentsSyntaxTokens = true,
+        overlappingTokenSupport = true,
+        multilineTokenSupport = true,
+        serverCancelSupport = true,
+        augmentsSyntaxTokens = false,
       },
 
       synchronization = {
-        dynamicRegistration = false,
+        dynamicRegistration = true,
 
         willSave = false,
         willSaveWaitUntil = false,
@@ -359,7 +359,7 @@ local lsp_optimize_client_capabilites = function(capabilities, make_defaults)
       },
       definition = {
         linkSupport = true,
-        dynamicRegistration = false,
+        dynamicRegistration = true,
       },
       implementation = {
         linkSupport = true,
@@ -371,7 +371,7 @@ local lsp_optimize_client_capabilites = function(capabilities, make_defaults)
         dynamicRegistration = true,
       },
       signatureHelp = {
-        dynamicRegistration = false,
+        dynamicRegistration = true,
         signatureInformation = {
           activeParameterSupport = true,
           parameterInformation = {
@@ -380,14 +380,14 @@ local lsp_optimize_client_capabilites = function(capabilities, make_defaults)
         },
       },
       references = {
-        dynamicRegistration = false,
+        dynamicRegistration = true,
       },
       documentHighlight = {
         dynamicRegistration = false,
       },
       documentSymbol = {
-        dynamicRegistration = false,
-        hierarchicalDocumentSymbolSupport = false,
+        dynamicRegistration = true,
+        hierarchicalDocumentSymbolSupport = true,
       },
       rename = {
         dynamicRegistration = true,
@@ -398,9 +398,9 @@ local lsp_optimize_client_capabilites = function(capabilities, make_defaults)
         dataSupport = false,
       },
       callHierarchy = {
-        dynamicRegistration = false,
+        dynamicRegistration = true,
       },
-      colorProvider = { dynamicRegistration = false },
+      colorProvider = { dynamicRegistration = true },
     },
     workspace = {
       configuration = false,

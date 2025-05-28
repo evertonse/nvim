@@ -1,6 +1,7 @@
 local M = {}
 
 local DEBUG = false
+local AlwaysInspect = Inspect
 local Inspect = DEBUG and Inspect or function(arg) end
 local want_regex = false
 
@@ -17,10 +18,13 @@ M.is_too_big_for_completions = function(bufnr)
   if cached then
     return cached
   end
+
   local return_result = function(bool)
+    -- AlwaysInspect { big = bool, buf = vim.api.nvim_buf_get_name(bufnr), toobigcache = vim.b[bufnr].too_big_for_completions or 'not' }
     vim.b[bufnr].too_big_for_completions = bool
     return vim.b[bufnr].too_big_for_completions
   end
+
   local buf_name = vim.api.nvim_buf_get_name(bufnr)
   local info = vim.loop.fs_stat(buf_name)
   local file_size_permitted = 20 * (1024 * 1024)

@@ -8,7 +8,7 @@ To avoid unintentional modifications:
 
 When updates neovim updates this, or if the slowness on somethings have been fixed, then you could symlink it
 
-# Find cheanged parts
+# Find changed parts
 Diffs won't help as I'd like, every single change is marked with a comment `@runtime-modified`. Grep it to find them all
 
 ## Runtime Structure Explained by GPT xD, will check later tho the order
