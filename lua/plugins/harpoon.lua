@@ -1,7 +1,7 @@
 return {
   'ThePrimeagen/harpoon',
   lazy = true,
-  enabled = true,
+  enabled = false,
   keys = { { '<A-o>', mode = { 'n', 'v', 'x' } } },
   dependencies = {
     { 'nvim-lua/plenary.nvim' },

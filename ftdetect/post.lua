@@ -49,9 +49,9 @@ local _ = true
       vim.b[bufnr].did_syntax = true
 
       -- 'BufUnload'
-      vim.api.nvim_create_autocmd({ 'Bufdelete' }, {
+      vim.api.nvim_create_autocmd({ 'BufDelete' }, {
         buffer = args.buf,
-        once = true,
+        once = false,
         callback = function()
           vim.b[args.buf].did_syntax = nil
           vim.bo[args.buf].ft = nil

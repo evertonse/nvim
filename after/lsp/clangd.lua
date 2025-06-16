@@ -13,8 +13,8 @@ return {
     '--pch-storage=memory',
   },
   init_options = {
-    fallbackFlags = { '--std=c23' },
-    -- fallbackFlags = { '--std=c++20' },
+    -- fallbackFlags = { '--std=c23' },
+    -- fallbackFlags = { '--std=c++23' },
   },
   filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
   on_attach = function() end,

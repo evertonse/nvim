@@ -649,7 +649,7 @@ vim.g.self = {
     -- ['json'] = { 'json', 'json5' },
     ['json5'] = { 'json', 'json5' },
     ['bash'] = { 'sh', 'zsh', 'bash' },
-    ['c'] = { 'c', 'evy', 'destroyer of worlds' },
+    ['c'] = { 'c', 'hpp', 'cpp', 'evy', 'destroyer of worlds' },
     ['llvm'] = { 'llvm' },
     ['glsl'] = { 'glsl' },
   },

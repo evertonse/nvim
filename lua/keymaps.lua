@@ -363,16 +363,9 @@ local grep_and_show_results = function()
   -- vim.cmd "cclose"
 end
 
-local float_term = {
-  terminal = nil,
-  width_percentage = 0.60,
-  height_percentage = 0.65,
-  width_min = 70,
-  height_min = 23,
-}
 local function switch_to_non_floating_buffer()
   local current_win = vim.api.nvim_get_current_win()
-  local current_buf = vim.api.nvim_win_get_buf(current_win)
+  local current_buf = vim.Api.nvim_win_get_buf(current_win)
 
   local windows = vim.api.nvim_list_wins()
   for _, win in ipairs(windows) do
@@ -387,11 +380,13 @@ local function switch_to_non_floating_buffer()
   end
 end
 
-local float_term_get_or_create = function()
+local float_term_get_or_create = function(float_term, on_open)
   local ok, tt = pcall(require, 'toggleterm.terminal')
   if not ok then
     return
   end
+
+  on_open = on_open or function() end
 
   local f = float_term
   f.terminal = f.terminal
@@ -402,7 +397,7 @@ local float_term_get_or_create = function()
         height = math.floor(vim.o.lines * f.height_percentage),
       },
       on_open = function(term) ---@diagnostic disable-line: unused-local
-        vim.cmd 'startinsert!'
+        on_open()
       end,
     }
   f.terminal.float_opts.width = math.max(f.width_min, math.floor(vim.o.columns * f.width_percentage))
@@ -410,23 +405,41 @@ local float_term_get_or_create = function()
   return f
 end
 
-local float_term_toggle = function()
+local float_terms = {
+  {
+    terminal = nil,
+    width_percentage = 0.60,
+    height_percentage = 0.85,
+    width_min = 70,
+    height_min = 23,
+  },
+
+  {
+    terminal = nil,
+    width_percentage = 0.60,
+    height_percentage = 0.95,
+    width_min = 70,
+    height_min = 23,
+  },
+}
+
+local float_term_toggle = function(float_term, on_open)
   local tt, ok = pcall(require, 'toggleterm.terminal')
   if not ok then
     return
   end
 
-  local f = float_term_get_or_create()
+  local f = float_term_get_or_create(float_term, on_open)
   f.terminal:toggle()
 end
 
-local float_term_rerun_cmd = function()
+local float_term_rerun_cmd = function(float_term)
   local ok, tt = pcall(require, 'toggleterm.terminal')
   if not ok then
     return
   end
   local first_open = float_term.terminal == nil
-  local f = float_term_get_or_create()
+  local f = float_term_get_or_create(float_term)
 
   if not f.terminal:is_open() then
     f.terminal:open()
@@ -452,7 +465,7 @@ local float_term_rerun_cmd = function()
   end)
 end
 
-local float_term_run_selection = function()
+local float_term_run_selection = function(float_term)
   local tt, ok = pcall(require, 'toggleterm.terminal')
   if not ok then
     return
@@ -462,14 +475,13 @@ local float_term_run_selection = function()
   local selection = GetVisualSelection { register = 'a', escape = { enabled = false, parens = false, brackets = false } }
 
   local first_open = float_term.terminal == nil
-  local f = float_term_get_or_create()
+  local f = float_term_get_or_create(float_term)
   if not f.terminal:is_open() then
     f.terminal:open()
   end
   f.terminal:focus()
 
   vim.schedule(function()
-    -- local first_open = float_term.terminal == nil
     if first_open then
       -- Hackish as mofo, like it takes some time for my zshrc to load so before it loads
       -- nothing we send will go through XDDD
@@ -509,7 +521,7 @@ M.general = {
   tni = {
     ['<F5>'] = {
       function()
-        float_term_rerun_cmd()
+        float_term_rerun_cmd(float_terms[1])
       end,
       'Rerun floating terminal',
     },
@@ -532,7 +544,7 @@ M.general = {
   vx = {
     ['<F5>'] = {
       function()
-        float_term_run_selection()
+        float_term_run_selection(float_terms[1])
       end,
       'Rerun floating terminal',
     },
@@ -654,8 +666,16 @@ M.general = {
     -->> ToggleTerm
     ['<A-i>'] = {
       function()
-        float_term_toggle()
-        --vim.cmd [[startinsert]]
+        float_term_toggle(float_terms[1], function()
+          vim.cmd [[startinsert]]
+        end)
+      end,
+      'Toggle floating terminal',
+    },
+
+    ['<A-o>'] = {
+      function()
+        float_term_toggle(float_terms[2])
       end,
       'Toggle floating terminal',
     },
@@ -709,111 +729,6 @@ M.general = {
       scratch,
       'this works like file navigation except that if there is no terminal at the specified index a new terminal is created.',
     },
-    -->> Harpoon A-o is more ergonomic
-    ['<A-o>'] = {
-      function()
-        if vim.bo.buftype == 'terminal' then
-          last_terminal_mode = vim.fn.mode()
-          -- vim.cmd "bp"
-          vim.api.nvim_input '<C-o>'
-          -- vim.cmd [[call feedkeys("<C-o>")]]
-        else
-          -- vim.api.nvim_input "mM" -- Might be useful to know this cmd exists later
-          require('harpoon.term').gotoTerminal(1)
-          if vim.g.self.terminal_always_insert then
-            vim.cmd 'startinsert'
-          else
-            if last_terminal_mode == 'i' then
-              vim.cmd 'startinsert'
-            end
-          end
-        end
-      end,
-      'this works like file navigation except that if there is no terminal at the specified index a new terminal is created.',
-    },
-    ['<leader>ha'] = {
-      function()
-        require('harpoon.mark').add_file()
-        print 'harpoon mark added'
-      end,
-      '[H]arpoon [A]dd mark',
-    },
-    ['<leader>hr'] = {
-      function()
-        require('harpoon.mark').rm_file 'harpoon mark removed'
-      end,
-      '[H]arpoon [R]emove mark',
-    },
-    -- ["<A-b>"]         = { ":Telescope harpoon marks initial_mode=normal <CR>", "this works like file navigation except that if there is no terminal at the specified index a new terminal is created." },
-    ['<leader>hh'] = {
-      function()
-        require('harpoon.ui').toggle_quick_menu()
-      end,
-      '[H]arpoon [B]uffer navigation',
-    },
-    ['<A-n>'] = {
-      function()
-        require('harpoon.ui').nav_next()
-      end,
-      '-- navigates to next mark',
-    },
-    ['<A-p>'] = {
-      function()
-        require('harpoon.ui').nav_prev()
-      end,
-      '-- navigates to next mark',
-    },
-
-    -- @todo close tree if opened
-    ["<A-'>"] = {
-      function()
-        require('harpoon.ui').nav_file(1)
-      end,
-      '-- navigates to 1',
-    },
-    ['<A-1>'] = {
-      function()
-        require('harpoon.ui').nav_file(2)
-      end,
-      '-- navigates to 1',
-    },
-    ['<A-2>'] = {
-      function()
-        require('harpoon.ui').nav_file(3)
-      end,
-      '-- navigates to 2',
-    },
-    ['<A-3>'] = {
-      function()
-        require('harpoon.ui').nav_file(4)
-      end,
-      '-- navigates to 3',
-    },
-    ['<A-4>'] = {
-      function()
-        require('harpoon.ui').nav_file(5)
-      end,
-      '-- navigates to 4',
-    },
-    ['<A-5>'] = {
-      function()
-        require('harpoon.ui').nav_file(5)
-      end,
-      '-- navigates to 5',
-    },
-    ['<A-6>'] = {
-      function()
-        require('harpoon.ui').nav_file(7)
-      end,
-      '-- navigates to 5',
-    },
-    ['<A-7>'] = {
-      function()
-        require('harpoon.ui').nav_file(8)
-      end,
-      '-- navigates to 5',
-    },
-
     -- >> recorging
     -- ['Q'] = { '@', 'Activate MACRO on q register' },
     -- ["q"]             = { "q", "Activate MACRO on q register" },
@@ -1112,7 +1027,8 @@ M.general = {
     -->> ToggleTerm
     ['<A-i>'] = {
       function()
-        float_term_toggle()
+        float_term_toggle(float_terms[1])
+        vim.cmd [[startinsert]]
       end,
       'Toggle nvimtree',
     },
