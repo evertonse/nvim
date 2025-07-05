@@ -1718,13 +1718,16 @@ vim.schedule(function()
   -- Disable fucking manual laggy search when theres windows directories on $PATH (wsl only)
   map('n', 'K', '<Nop>', { noremap = true, silent = true })
 
-  local change_hjkl = true
+  local change_hjkl = false
   if change_hjkl then
-    map({ 'o', 'n', 'x', 'v' }, 'l', 'h', { noremap = true, silent = true })
-    map({ 'o', 'n', 'x', 'v' }, ';', 'l', { noremap = true, silent = true })
-    map({ 'o', 'n', 'x', 'v' }, 'h', 'b', { noremap = true, silent = true })
-
-    -- map({ 'o', 'n', 'x', 'v' }, ';', 'b', { noremap = true, silent = true })
+    local compatible_with_other_programs = true
+    if compatible_with_other_programs then
+      map({ 'o', 'n', 'x', 'v' }, ';', 'b', { noremap = true, silent = true })
+    else
+      map({ 'o', 'n', 'x', 'v' }, 'l', 'h', { noremap = true, silent = true })
+      map({ 'o', 'n', 'x', 'v' }, ';', 'l', { noremap = true, silent = true })
+      map({ 'o', 'n', 'x', 'v' }, 'h', 'b', { noremap = true, silent = true })
+    end
   end
 end)
 
