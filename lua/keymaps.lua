@@ -125,24 +125,6 @@ local current_buffer_file_extension = function()
   return extension
 end
 
-local handle_k = function()
-  local mode = vim.api.nvim_get_mode().mode
-  if vim.v.count == 0 and mode ~= 'n' and mode ~= 'no' then
-    return 'gk'
-  else
-    return 'k'
-  end
-end
-
-local handle_j = function()
-  local mode = vim.api.nvim_get_mode().mode
-  if vim.v.count == 0 and mode ~= 'n' and mode ~= 'no' then
-    return 'gj'
-  else
-    return 'j'
-  end
-end
-
 local scratch = function()
   vim.ui.input({ prompt = 'enter command: ', completion = 'command' }, function(input)
     if input == nil then
@@ -531,15 +513,6 @@ M.general = {
     ['<A-q>'] = { '/', "I'm too used to Alt + q being search", { expr = false } },
     ['Q'] = { 'q', 'annoying that `q` is quit but also record ??', { expr = false } },
     ['q'] = { '', 'annoying that `q` is quit but also record ??', { expr = false } },
-    ['gh'] = { '^', 'Move backwards until previous is space', { expr = false } },
-    ['gl'] = { 'g_', 'Move forwards until next is space', { expr = false } },
-
-    ['H'] = { '0', 'Move backwards until previous is space', { expr = false } },
-    ['L'] = { '$', 'Move forwards until next is space', { expr = false } },
-    -- ['gh'] = { '0', 'Move big left', { expr = false } },
-    -- ['gl'] = { '$', 'Move big right', { expr = false } },
-    ['gH'] = { 'v:count || mode(1)[0:1] == "" ? "0" : "g0"', 'Move left', { expr = true } },
-    ['gL'] = { 'v:count || mode(1)[0:1] == "no" ? "$" : "g$"', 'Move right', { expr = true } },
   },
   vx = {
     ['<F5>'] = {
@@ -735,13 +708,13 @@ M.general = {
     --
     -- ["Q"]             = { "qq", "Record MACRO on q register" },
 
-    ['<leader>xl'] = {
+    ['<leader>x;'] = {
       function()
         close_buffers_by_operation 'right'
       end,
       'close all buffers to the right of current one',
     },
-    ['<leader>xh'] = {
+    ['<leader>xj'] = {
       function()
         close_buffers_by_operation 'left'
       end,
@@ -767,15 +740,6 @@ M.general = {
 
     -- line numbers
     ['<leader>rn'] = { '<cmd> set rnu! <CR>', 'Toggle relative number' },
-
-    -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
-    -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
-    -- empty mode is same as using <cmd> :map
-    -- also don't use g[j|k] when in operator pending mode, so it doesn't alter d, y or c behaviour
-    ['k'] = { handle_k, 'Move up', { expr = true } },
-    ['j'] = { handle_j, 'Move down', { expr = true } },
-    ['<Up>'] = { handle_k, 'Move up', { expr = true } },
-    ['<Down>'] = { handle_j, 'Move down', { expr = true } },
 
     -- new buffer
     ['<C-w>f'] = {
@@ -932,22 +896,9 @@ M.general = {
       { expr = false },
     },
 
-    ['<Up>'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },
-    ['<Down>'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
-
-    ['j'] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', 'Move down', { expr = true } },
-    ['k'] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', 'Move up', { expr = true } },
-
-    ['J'] = { ":m '>+1<CR>gv=gv", noremap_opts },
-    ['K'] = { ":m '<-2<CR>gv=gv", noremap_opts },
-
     -- Stay in indent mode
     ['<'] = { '<gv', noremap_opts },
     ['>'] = { '>gv', noremap_opts },
-
-    -- Move text up and down
-    ['<A-j>'] = { ":m '>+1<CR>gv=gv", noremap_opts },
-    ['<A-k>'] = { ":m '<-2<CR>gv=gv", noremap_opts },
 
     ['p'] = { 'P', noremap_opts },
     -- ['P'] = { '"_P', noremap_opts }, -- This one is wrong strangely
@@ -1422,7 +1373,6 @@ M.cmp = {
 -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 -- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
 -- Function to set keymaps
@@ -1717,17 +1667,36 @@ SetKeyMaps(M.blankline)
 vim.schedule(function()
   -- Disable fucking manual laggy search when theres windows directories on $PATH (wsl only)
   map('n', 'K', '<Nop>', { noremap = true, silent = true })
+  -- TODO: Temporary nop, find use for 'h'
+  map('n', 'h', '<Nop>', { noremap = true, silent = true })
+  map('n', '<C-w>h', '<Nop>', { noremap = true, silent = true }) -- Move to the left window
 
-  local change_hjkl = false
+  local change_hjkl = true
   if change_hjkl then
-    local compatible_with_other_programs = true
-    if compatible_with_other_programs then
-      map({ 'o', 'n', 'x', 'v' }, ';', 'b', { noremap = true, silent = true })
-    else
-      map({ 'o', 'n', 'x', 'v' }, 'l', 'h', { noremap = true, silent = true })
-      map({ 'o', 'n', 'x', 'v' }, ';', 'l', { noremap = true, silent = true })
-      map({ 'o', 'n', 'x', 'v' }, 'h', 'b', { noremap = true, silent = true })
-    end
+    local modes = { 's', 'o', 'n', 'x', 'v' }
+    local opts = { noremap = true, silent = true, expr = false }
+    map(modes, 'm', 'b', opts)
+    map(modes, 'b', 'm', opts)
+
+    -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
+    -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
+    -- empty mode is same as using <cmd> :map
+    -- also don't use g[j|k] when in operator pending mode, so it doesn't alter d, y or c behaviour
+    map(modes, 'j', 'h', opts)
+    map(modes, 'k', [[(v:count == 0 ? 'gj' : 'j')]], { noremap = true, silent = true, expr = true })
+    map(modes, 'l', [[(v:count == 0 ? 'gk' : 'k')]], { noremap = true, silent = true, expr = true })
+    map(modes, ';', 'l', opts)
+
+    map(modes, 'J', '0', opts)
+    map(modes, ';', 'l', opts)
+
+    map(modes, 'gj', '^', opts)
+    map(modes, 'g;', 'g_', opts)
+
+    map('n', '<C-w>j', '<C-w>h', opts) -- Move to the window below
+    map('n', '<C-w>k', '<C-w>j', opts) -- Move to the right window
+    map('n', '<C-w>l', '<C-w>k', opts) -- Move to the left window
+    map('n', '<C-w>;', '<C-w>l', opts) -- Move to the window above
   end
 end)
 
