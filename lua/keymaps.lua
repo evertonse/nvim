@@ -553,7 +553,6 @@ M.general = {
       '[R]eplace [W]ord',
     },
 
-    [';'] = { ':<Down><Down>', 'Command Mode' },
     -- ['<C-\\>'] = {
     --   function()
     --     vim.api.nvim_input ':<Down><C-f>'
@@ -1718,6 +1717,15 @@ SetKeyMaps(M.blankline)
 vim.schedule(function()
   -- Disable fucking manual laggy search when theres windows directories on $PATH (wsl only)
   map('n', 'K', '<Nop>', { noremap = true, silent = true })
+
+  local change_hjkl = true
+  if change_hjkl then
+    map({ 'o', 'n', 'x', 'v' }, 'l', 'h', { noremap = true, silent = true })
+    map({ 'o', 'n', 'x', 'v' }, ';', 'l', { noremap = true, silent = true })
+    map({ 'o', 'n', 'x', 'v' }, 'h', 'b', { noremap = true, silent = true })
+
+    -- map({ 'o', 'n', 'x', 'v' }, ';', 'b', { noremap = true, silent = true })
+  end
 end)
 
 map('n', '<F2>', function()

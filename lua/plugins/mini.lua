@@ -31,7 +31,7 @@ local mini_align = function()
     -- Alignment is done in three main steps:
     --     Split lines into parts based on Lua pattern(s) or user-supplied rule.
     --
-    --     Justify parts for certain side(s) to be same width inside columns.
+    --     Justify parts for certain side(e) to be same width inside columns.
     --
     --     Merge parts to be lines, with customizable delimiter(s).
     --
@@ -231,7 +231,7 @@ local mini_jump = function()
       backward = 'F',
       forward_till = 't',
       backward_till = 'T',
-      -- repeat_jump = ';',
+      repeat_jump = '<nop>',
     },
 
     -- Delay values (in ms) for different functionalities. Set any of them to
