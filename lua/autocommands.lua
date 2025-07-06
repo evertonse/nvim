@@ -533,7 +533,7 @@ local telescope_yank_history = function()
         end
         map({ 'n', 'i' }, '<CR>', choose)
         map({ 'n', 'i' }, 'y', choose)
-        map({ 'n', 'i' }, 'l', choose)
+        map({ 'n', 'i' }, ';', choose)
         return true
       end,
     })
@@ -630,7 +630,7 @@ local function show_yank_history_on_quick()
     ['<CR>'] = choose,
     ['y'] = choose,
     ['<c-y>'] = choose,
-    ['l'] = choose,
+    [';'] = choose,
   }
 
   -- Set the mappings for the quickfix window
@@ -755,7 +755,7 @@ au('Filetype', 'qf', function(event)
     --   vim.cmd 'cclose'
     -- end,
     ['<cr>'] = '<cr><cmd>cclose<CR>',
-    ['l'] = '<cr><cmd>cclose<CR>',
+    [';'] = '<cr><cmd>cclose<CR>',
     ['<Esc>'] = ':cclose<CR>',
     ['q'] = ':cclose<CR>',
   }

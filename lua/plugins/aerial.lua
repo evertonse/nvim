@@ -40,7 +40,7 @@ return {
       ['O'] = 'actions.tree_toggle_recursive',
       ['zA'] = 'actions.tree_toggle_recursive',
       ['o'] = 'actions.tree_toggle',
-      ['l'] = 'actions.jump',
+      [';'] = 'actions.jump',
       ['zo'] = 'actions.tree_open',
       ['L'] = 'actions.tree_open_recursive',
       ['zO'] = 'actions.tree_open_recursive',

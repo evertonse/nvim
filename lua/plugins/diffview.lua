@@ -82,7 +82,7 @@ return {
           { 'n', '<up>', actions.prev_entry, { desc = 'Bring the cursor to the previous file entry' } },
           { 'n', '<cr>', actions.select_entry, { desc = 'Open the diff for the selected entry' } },
           { 'n', 'o', actions.select_entry, { desc = 'Open the diff for the selected entry' } },
-          { 'n', 'l', actions.select_entry, { desc = 'Open the diff for the selected entry' } },
+          { 'n', ';', actions.select_entry, { desc = 'Open the diff for the selected entry' } },
           { 'n', '<2-LeftMouse>', actions.select_entry, { desc = 'Open the diff for the selected entry' } },
           { 'n', '-', actions.toggle_stage_entry, { desc = 'Stage / unstage the selected entry' } },
           { 'n', 's', actions.toggle_stage_entry, { desc = 'Stage / unstage the selected entry' } },
