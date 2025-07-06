@@ -543,13 +543,9 @@ M.general = {
     -----------------------------------------------------
     --- remap key to output symbols easier ininsert mode
     -----------------------------------------------------
-    ['<C-b>'] = { '<ESC>^i', 'Beginning of line' },
-    ['<C-h>'] = {
-      function()
-        vim.api.nvim_input '_'
-      end,
-      '',
-    },
+
+    -- This can't be done because somehow CTRL+m is the same as ENTER. I had the same thing happen to me in Alacritty on the notebook
+    -- ['<C-m>'] = { '<ESC>^i', 'Beginning of line' },
     ['<C-j>'] = {
       function()
         vim.api.nvim_input '='
@@ -575,20 +571,6 @@ M.general = {
       '',
     },
     ------------------------------------
-  },
-
-  -- [CMDLINE]
-  c = {
-    -- ['<C-k>'] = {
-    --   function()
-    --     vim.api.nvim_input '<Up>'
-    --   end,
-    -- },
-    -- ['<C-j>'] = {
-    --   function()
-    --     vim.api.nvim_input '<Down>'
-    --   end,
-    -- },
   },
 
   -- [NORMAL]
@@ -775,18 +757,14 @@ M.general = {
     -- ['<S-l>'] = { '<cmd>bnext<CR>', noremap_opts },
     -- ['<S-h>'] = { '<cmd>bprevious<CR>', noremap_opts },
 
-    ['<C-l>'] = { '<cmd>bnext<CR>', noremap_opts },
-    ['<C-h>'] = { '<cmd>bprevious<CR>', noremap_opts },
-
-    -- Move text up and down
-    ['<A-j>'] = { '<Esc>:m .+1<CR>==', noremap_opts },
-    ['<A-k>'] = { '<Esc>:m .-2<CR>==', noremap_opts },
+    ['<C-;>'] = { '<cmd>bnext<CR>', noremap_opts },
+    ['<C-j>'] = { '<cmd>bprevious<CR>', noremap_opts },
 
     ['<C-Left>'] = { 'b', noremap_opts },
     ['<C-Right>'] = { 'e', noremap_opts },
 
-    ['<C-j>'] = { '}', noremap_opts },
-    ['<C-k>'] = { '{', noremap_opts },
+    ['<C-k>'] = { '}', noremap_opts },
+    ['<C-l>'] = { '{', noremap_opts },
 
     ['<leader>w'] = { '<cmd>w<CR>', noremap_opts },
     ['<leader>q'] = { '<cmd>q<CR>', noremap_opts },
@@ -1377,49 +1355,6 @@ M.cmp = {
 --  See `:help wincmd` for a list of all window commands
 -- Function to set keymaps
 
-local setup_marks_to_always_globals = function()
-  local function set_global_mark(mark)
-    local existing_mark = vim.fn.getpos("'" .. mark)
-    -- Check if the mark is already set (line number will be > 0)
-    if existing_mark[2] > 0 then
-      local buffer_name = vim.fn.bufname(existing_mark[1])
-      local line_number = existing_mark[2]
-      -- Prompt the user for confirmation
-      local response =
-        vim.fn.confirm("Mark '" .. mark .. "' " .. buffer_name .. ':' .. line_number .. '  already exists.\nOverwrite?', '&yes\n&no', 2)
-      if response ~= 1 then
-        return
-      end
-    end
-    -- Set the global mark
-    vim.cmd('mark ' .. mark)
-  end
-
-  -- global marks
-  local prefixes = "m'"
-  local letters = 'abcdefghijklmnopqrstuvwxyz'
-  for i = 1, #prefixes do
-    local prefix = prefixes:sub(i, i)
-    for j = 1, #letters do
-      local lower_letter = letters:sub(j, j)
-      local upper_letter = string.upper(lower_letter)
-      if prefix == 'm' then
-        M.general.vnx[prefix .. lower_letter] = {
-          function()
-            set_global_mark(upper_letter)
-          end,
-          ' Mark ' .. upper_letter,
-        }
-      else
-        M.general.vnx[prefix .. lower_letter] = { prefix .. upper_letter, 'Go to mark ' .. upper_letter }
-        -- M.general.vnx[prefix .. upper_letter] = { prefix .. lower_letter, 'Go to mark ' .. lower_letter }
-      end
-    end
-  end
-end
-
-local _ = false and setup_marks_to_always_globals()
-
 local map = function(mode, lhs, rhs, opts)
   if lhs == '' then
     return
@@ -1675,8 +1610,11 @@ vim.schedule(function()
   if change_hjkl then
     local modes = { 's', 'o', 'n', 'x', 'v' }
     local opts = { noremap = true, silent = true, expr = false }
+
     map(modes, 'm', 'b', opts)
     map(modes, 'b', 'm', opts)
+    map(modes, 'B', 'M', opts)
+    map(modes, 'M', 'B', opts)
 
     -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
     -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
@@ -1685,9 +1623,6 @@ vim.schedule(function()
     map(modes, 'j', 'h', opts)
     map(modes, 'k', [[(v:count == 0 ? 'gj' : 'j')]], { noremap = true, silent = true, expr = true })
     map(modes, 'l', [[(v:count == 0 ? 'gk' : 'k')]], { noremap = true, silent = true, expr = true })
-    map(modes, ';', 'l', opts)
-
-    map(modes, 'J', '0', opts)
     map(modes, ';', 'l', opts)
 
     map(modes, 'gj', '^', opts)

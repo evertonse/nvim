@@ -196,7 +196,6 @@ local function nvimtree_on_attach(bufnr)
   map('n', 'y', api.fs.copy.node, opts 'Copy')
   map('n', 'Y', api.fs.copy.relative_path, opts 'Copy Relative Path')
   map('n', 'gy', api.fs.copy.filename, opts 'Copy Name')
-  map('n', 'l', edit_or_open, opts 'Open: No Window Picker')
   map('n', 'L', function() end, opts 'Do Nothing')
 
   map('n', '<CR>', api.node.open.no_window_picker, opts 'Open: No Window Picker')
@@ -208,7 +207,8 @@ local function nvimtree_on_attach(bufnr)
   -- map("n", "<leader>e", function(node)
   --   vim.cmd ":wincmd p"
   -- end, opts "Go back to previous Window")
-  map('n', 'h', api.node.navigate.parent_close, opts 'Close Directory')
+  map('n', ';', edit_or_open, opts 'Open: No Window Picker')
+  map('n', 'j', api.node.navigate.parent_close, opts 'Close Directory')
   -- vim.keymap.set('n', 'v', api.node.open.vertical, opts 'Open: Vertical Split')
 
   map('v', 'K', function()

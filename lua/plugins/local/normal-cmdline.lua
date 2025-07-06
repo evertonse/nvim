@@ -285,7 +285,7 @@ M.setup = function()
     -- end)
   end, opts_global)
 
-  map({ 'c' }, { '<c-c>', 'jk', 'kj' }, function()
+  map({ 'c' }, { '<c-c>', 'kl', 'lk' }, function()
     M.goto_cmdline_window_from_cmdline()
   end, opts_global)
 

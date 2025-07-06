@@ -419,7 +419,7 @@ local telescope_hop = function(prompt_bufnr, opts)
 
     local last_key = vim.fn.nr2char(vim.fn.getchar())
     actions.select_default(prompt_bufnr)
-    if last_key == 'l' then
+    if last_key == ';' then
     end
   end
 end
@@ -746,7 +746,9 @@ return { -- Fuzzy Finder (files, lsp, etc)
             ['<C-o>'] = actions.cycle_history_prev,
             ['<C-i>'] = actions.cycle_history_next,
 
-            ['l'] = actions.select_default,
+            [';'] = actions.select_default,
+            ['k'] = actions.move_selection_next,
+            ['l'] = actions.move_selection_previous,
 
             ['s'] = actions.select_horizontal,
             ['v'] = actions.select_vertical,
