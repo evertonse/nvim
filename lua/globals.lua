@@ -623,11 +623,15 @@ vim.g.self = {
   dont_format = { c = true, cpp = true, odin = true, python = true },
   cycles = {
     { '==', '!=' },
+
     { 'true', 'false' },
     { 'False', 'True' },
     { 'FALSE', 'TRUE' },
+    { 'GL_FALSE', 'GL_TRUE' },
+
     { 'public', 'private' },
     { 'disable', 'enable' },
+    { 'glDisable', 'glEnable' },
     { 'if', 'else', 'elseif' },
     { 'and', 'or' },
     { 'off', 'on' },

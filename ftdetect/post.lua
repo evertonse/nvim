@@ -18,6 +18,8 @@
 
 -- :lua print(vim.inspect(vim.treesitter.get_parser(vim.api.nvim_get_current_buf())))
 
+-- Start treesitter
+-- :lua vim.treesitter.start()
 -- :lua vim.treesitter.start(0, 'json5')
 
 -- group = 'filetypedetect',
@@ -43,7 +45,8 @@ local _ = true
       if vim.bo[bufnr].buftype ~= '' then
         return
       end
-      if vim.b[bufnr].did_syntax then
+      -- Always do this for now, because when opening a file that is already open it removes the syntax
+      if false and vim.b[bufnr].did_syntax then
         return
       end
       vim.b[bufnr].did_syntax = true
