@@ -45,8 +45,8 @@ local plugins = function()
     -- Can't disable fuzzy in 'blink-cmp' although it seems more performant then 'cmp'
     -- NOTE PERF (2025-05-21):Both struggle with performance when then file is way to big like rmlint.json
     -- It happens because of pulling data from 'buffer' provider
-    require 'plugins.blink-cmp',
-    -- require 'plugins.cmp',
+    -- require 'plugins.blink-cmp',
+    require 'plugins.cmp',
 
     -- PERF: Slow In bigfiles, treesitter has a slight slow when highlighting
     -- In cases like this regex based highglight is instant. Also inserting is majorly slow with treesitter, even if highlight is turned off.

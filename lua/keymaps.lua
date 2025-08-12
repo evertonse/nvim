@@ -1610,11 +1610,25 @@ vim.schedule(function()
   if change_hjkl then
     local modes = { 's', 'o', 'n', 'x', 'v' }
     local opts = { noremap = true, silent = true, expr = false }
+    local change_n = false
+    if change_n then
+      map(modes, 'n', 'b', opts)
+      map(modes, 'b', 'n', opts)
 
-    map(modes, 'm', 'b', opts)
-    map(modes, 'b', 'm', opts)
-    map(modes, 'B', 'M', opts)
-    map(modes, 'M', 'B', opts)
+      map(modes, 'N', 'B', opts)
+      map(modes, 'B', 'N', opts)
+
+      map(modes, 'h', 'n', opts)
+      map(modes, 'H', 'N', opts)
+    else
+      map(modes, 'm', 'b', opts)
+      map(modes, 'b', 'm', opts)
+
+      map(modes, 'M', 'B', opts)
+      map(modes, 'B', 'M', opts)
+
+      map(modes, 'h', '/', opts)
+    end
 
     -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
     -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
@@ -1662,9 +1676,7 @@ map('n', '<F2>', function()
     actions = {
       -- Use fzf-lua builtin actions or your own handler
       ['default'] = require('fzf-lua').actions.file_edit,
-      ['ctrl-y'] = function(selected, opts)
-        Inspect { 'selected item:', selected[1], opts = opts }
-      end,
+      ['ctrl-y'] = function(selected, opts) end,
     },
   })
 end, { noremap = true, silent = true })

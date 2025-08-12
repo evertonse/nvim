@@ -181,7 +181,6 @@ local lsp_keymaps = function(event)
 end
 
 local lsp_optimize_server_capabilites = function(client)
-  DumpInspect('server_capabilities', { client.server_capabilities })
   client.server_capabilities.codeActionProvider = nil
   client.server_capabilities.codeLensProvider = nil
   -- client.server_capabilities.colorProvider = nil

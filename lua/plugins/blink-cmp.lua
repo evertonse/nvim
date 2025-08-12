@@ -322,6 +322,7 @@ return {
     fuzzy = {
       prebuilt_binaries = {
         download = true,
+        ignore_version_mismatch = true,
       },
       implementation = 'prefer_rust_with_warning',
     },

@@ -28,8 +28,6 @@ local _ = false
         buf = args.buf,
       }
 
-      Inspect { 'Pre after filetype.match', did_ft = vim.fn.did_filetype() or '?', ft = ft or 'no ft' }
-
       if ft then
         -- on_detect is called before setting the filetype so that it can set any buffer local
         -- variables that may be used the filetype's ftplugin

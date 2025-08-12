@@ -1085,7 +1085,6 @@ local run_command_in_window = function(cmd)
   -- Custom gf mapping
   run_buf = buf
   run_layout = store_window_layout(win)
-  Inspect { buf = buf, run_buf = run_buf }
   vim.keymap.set('n', 'gf', function()
     GoToFileUnderCursor()
     vim.api.nvim_win_hide(win)
