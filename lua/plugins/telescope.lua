@@ -38,6 +38,51 @@ local select_nth_entry = function(nth)
   end
 end
 
+local function live_grep_current_tab(opts)
+  local telescope = require 'telescope.builtin'
+
+  opts = opts or {}
+
+  local mode = vim.api.nvim_get_mode().mode
+  local selection = ''
+  if mode == 'v' or mode == 'V' or mode == '\22' then
+    selection = GetVisualSelection()
+  end
+
+  -- If opts.single_dir is passed, just grep recursively there
+  if opts.single_dir then
+    telescope.live_grep(vim.tbl_extend('force', opts, {
+      search_dirs = { opts.single_dir },
+      default_text = selection,
+      prompt_title = 'Special Live Grep (' .. opts.single_dir .. ')',
+      initial_mode = 'insert',
+    }))
+    return
+  end
+
+  local bufs = {}
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted then
+      local name = vim.api.nvim_buf_get_name(buf)
+      if name ~= '' then
+        table.insert(bufs, name)
+      end
+    end
+  end
+
+  if #bufs == 0 then
+    vim.notify('No named buffers in current tab', vim.log.levels.WARN)
+    return
+  end
+
+  telescope.live_grep(vim.tbl_extend('force', opts, {
+    search_dirs = bufs,
+    default_text = selection,
+    prompt_title = 'Special Live Grep (Tab Buffers)',
+    initial_mode = 'insert',
+  }))
+end
+
 local function custom_find_files()
   -- Define the displayer configuration using entry_display.create()
   local actions = require 'telescope.actions'
@@ -811,6 +856,9 @@ return { -- Fuzzy Finder (files, lsp, etc)
     -- See `:help telescope.builtin`
     local builtin = require 'telescope.builtin'
     local mappings = {
+      vxn = {
+        ['<leader>B'] = { live_grep_current_tab, 'Searching inside open buffers' },
+      },
       v = {
 
         ['<leader>F'] = {
@@ -852,51 +900,6 @@ return { -- Fuzzy Finder (files, lsp, etc)
         ['<leader>sd'] = { builtin.diagnostics, '[S]earch [D]iagnostics' },
         ['<leader>srf'] = { builtin.resume, '[S]earch [R]esume' },
         ['<leader>s.'] = { builtin.oldfiles, '[S]earch Recent Files ("." for repeat)' },
-        ['<leader>B'] = {
-          function()
-            builtin.buffers {
-              initial_mode = 'insert',
-              select_current = true,
-              attach_mappings = function(prompt_bufnr, map)
-                if true then
-                  return
-                end
-                vim.defer_fn(
-                  function(inner1_prompt_bufnr)
-                    -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
-                    local opts = {
-                      -- callback = actions.toggle_selection,
-                      callback = function(inner2_prompt_bufnr)
-                        actions.select_default(inner2_prompt_bufnr)
-                        -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
-                      end,
-                      -- loop_callback = actions.send_selected_to_qflist,
-                      -- loop_callback = actions.select_default,
-                    }
-                    require('telescope').extensions.hop._hop(prompt_bufnr, opts)
-                    -- require('telescope').extensions.hop._hop_loop(prompt_bufnr, opts)
-                  end,
-                  -- select_nth_entry(prompt_bufnr, 1) -- Select the first entry
-                  100
-                )
-                -- map({ 'i', 'n' }, '<tab>', actions.git_staging_toggle)
-                local prompt_win = vim.fn.bufwinid(prompt_bufnr)
-                if prompt_win ~= -1 and vim.api.nvim_win_is_valid(prompt_win) then
-                  vim.schedule(function()
-                    vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
-                  end)
-                end
-                return true -- Use Default mappings
-              end,
-              on_complete = {
-                function(_self)
-                  assert(false)
-                end,
-              },
-            }
-          end,
-          'Find existing [B]uffers',
-        },
         -- Slightly advanced example of overriding default behavior and theme
         ['<leader>/'] = {
           function() -- You can pass additional configuration to Telescope to change the theme, layout, etc.

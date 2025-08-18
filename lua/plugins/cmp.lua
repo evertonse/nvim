@@ -26,7 +26,6 @@ end
 local cmdline_has_slash_before = function()
   local line = vim.fn.getcmdline()
   local suffix = '/'
-  -- ShowInspect { line, line:match(suffix .. '$') ~= nil }
   return line:match(suffix .. '$') ~= nil
 end
 
@@ -69,7 +68,6 @@ local snippet = {
       }
     end,
     expand = function(args) -- mini.snippets expands snippets from lsp...
-      Inspect { Hi_WeVeExpanded = args }
       local MiniSnippets = ctx.mini.MiniSnippets
       local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
       insert { body = args.body } -- Insert at cursor
@@ -428,7 +426,6 @@ return {
             --       cmp.select_next_item()
             --       cmp.confirm { select = true }
             --       cmp.complete() -- Trigger completion again after confirm
-            --       -- -- ShowInspect { 'Fuckyou' }
             --       -- -- cmp.mapping.complete_common_string()
             --       -- cmp.select_next_item()
             --       -- cmp.mapping.confirm { select = true }
@@ -436,7 +433,6 @@ return {
             --       -- vim.schedule(function()
             --       --   cmp.complete()
             --       -- end)
-            --       -- ShowInspect {}
             --     else
             --       cmp.complete()
             --       cmp.mapping.complete_common_string()

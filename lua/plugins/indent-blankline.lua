@@ -30,8 +30,8 @@ return {
   main = 'ibl',
   tag = 'v3.7.1',
   opts = {
-    -- debounce = 512,
-    debounce = 128,
+    debounce = 512,
+    -- debounce = 128,
     indent = {
       -- char = '▏',
       -- char = '⏐',
