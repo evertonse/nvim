@@ -184,7 +184,7 @@ return {
 
       cmp.setup {
         matching = {
-          disallow_fuzzy_matching = true,
+          disallow_fuzzy_matching = false,
           -- disallow_symbol_nonprefix_matching = true,
           -- disallow_fullfuzzy_matching = true,
           -- disallow_partial_fuzzy_matching = true,
@@ -199,9 +199,9 @@ return {
         -- @field public async_budget integer Maximum time (in ms) an async function is allowed to run during one step of the event loop.
         -- @field public max_view_entries integer
         sources = {
-          { name = 'buffer' },
-          { name = 'nvim_lsp' },
-          { name = 'path' },
+          { name = 'buffer', keyword_length = 2 },
+          { name = 'nvim_lsp', keyword_length = 2 },
+          { name = 'path', keyword_length = 2 },
           { name = snippet[snippet_name].source.name, keyword_length = 2 },
           -- { name = 'cmdline' },
         },
@@ -321,7 +321,8 @@ return {
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          -- ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<Tab>'] = cmp.mapping.confirm { select = true },
           -- ['<Tab>'] = cmp.mapping.confirm { select = true },
           ['|'] = cmp.mapping.confirm { select = true },
 

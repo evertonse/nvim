@@ -1,3 +1,4 @@
+local modes = { 'n', 'x', 'v' }
 if false then
   return {
     'mg979/vim-visual-multi',
@@ -14,19 +15,73 @@ else
       pre_hook = function()
         require('cmp').setup { enabled = false }
         vim.g.minipairs_disable = true
-        vim.cmd 'set nocul'
-        vim.cmd 'NoMatchParen'
       end,
       post_hook = function()
         require('cmp').setup { enabled = true }
         vim.g.minipairs_disable = false
-        vim.cmd 'set cul'
-        vim.cmd 'DoMatchParen'
       end,
       custom_key_maps = {
+        {
+          modes,
+          '<Leader>sa',
+          function(_, count, motion_cmd, char)
+            vim.cmd('normal ' .. count .. 'sa' .. motion_cmd .. char)
+          end,
+          'mc',
+        },
+        {
+          modes,
+          'j',
+          function()
+            require('multiple-cursors.normal_mode.motion').h()
+          end,
+          'nowrap',
+        },
+        {
+          modes,
+          'k',
+          function()
+            require('multiple-cursors.normal_mode.motion').j()
+          end,
+          'nowrap',
+        },
+        {
+          modes,
+          'l',
+          function()
+            require('multiple-cursors.normal_mode.motion').k()
+          end,
+          'nowrap',
+        },
+        {
+          modes,
+          ';',
+          function()
+            require('multiple-cursors.normal_mode.motion').l()
+          end,
+          'nowrap',
+        },
+
+        {
+          modes,
+          'm',
+          function()
+            require('multiple-cursors.normal_mode.motion').b()
+          end,
+          'nowrap',
+        },
+
+        {
+          modes,
+          'M',
+          function()
+            require('multiple-cursors.normal_mode.motion').B()
+          end,
+          'nowrap',
+        },
         -- w
         {
-          { 'n', 'x' },
+          modes,
           'gw',
           function(_, count)
             if count ~= 0 and vim.api.nvim_get_mode().mode == 'n' then
@@ -60,7 +115,7 @@ else
         },
         {
           'n',
-          '<Leader>|',
+          'ga',
           function()
             require('multiple-cursors').align()
           end,
@@ -95,16 +150,5 @@ else
 
       { '<Leader>L', '<Cmd>MultipleCursorsLock<CR>', mode = { 'n', 'x' }, desc = 'Lock virtual cursors' },
     },
-    config = function(opts)
-      vim.api.nvim_set_hl(0, 'MultipleCursorsCursor', { bg = '#FFFFFF', fg = '#000000' })
-      vim.api.nvim_set_hl(0, 'MultipleCursorsVisual', { bg = '#CCCCCC', fg = '#000000' })
-
-      require('multiple-cursors').setup(opts)
-
-      --
-      -- API
-      -- require("multiple-cursors").add_cursor(lnum, col, curswant)
-      --
-    end,
   }
 end

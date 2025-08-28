@@ -1,4 +1,5 @@
 -- NOTE: Plugins can specify dependencies.
+
 --
 -- The dependencies are proper plugin specifications as well - anything
 -- you do for a plugin at the top level, you can do for a dependency.
@@ -976,7 +977,10 @@ return { -- Fuzzy Finder (files, lsp, etc)
 
         vim.defer_fn(function()
           local prompt_win = vim.fn.bufwinid(prompt_bufnr)
-          vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
+          local is_valid_win = vim.api.nvim_win_is_valid(prompt_win)
+          if is_valid_win then
+            vim.api.nvim_win_set_option(prompt_win, 'winblend', 0) -- Set the desired winblend for the prompt window
+          end
           -- Inspect(prompt_win)
         end, 100)
         -- Inspect { args, prompt_win }
