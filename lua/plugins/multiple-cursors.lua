@@ -1,4 +1,5 @@
 local modes = { 'n', 'x', 'v' }
+-- local modes = { 'n', 'x' }
 if false then
   return {
     'mg979/vim-visual-multi',
@@ -9,7 +10,10 @@ if false then
 else
   return {
     'brenton-leighton/multiple-cursors.nvim',
-    version = '*', -- Use the latest tagged version
+    -- version = '*', -- Use the latest tagged version
+    version = 'v',
+    branch = 'main',
+    commit = '8d410c06fad32cc0e3849318e056b308fbaafede',
     lazy = false,
     opts = {
       pre_hook = function()
