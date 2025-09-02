@@ -475,7 +475,7 @@ local lsp_attach_autocommands = function()
         return
       end
       local client = vim.lsp.get_client_by_id(args.data.client_id)
-      if client and client.name ~= 'lua_ls' then
+      if client and client.name ~= 'lua_ls' and client.name ~= 'clangd' then
         return
       end
       local token = args.data.token
@@ -486,6 +486,26 @@ local lsp_attach_autocommands = function()
         local token_text = get_token_text(args.buf, token)
         if token_text == 'vim' then
           local hlgroup = '@lsp.typemod.variable.defaultLibrary'
+          vim.lsp.semantic_tokens.highlight_token(token, args.buf, args.data.client_id, hlgroup)
+        end
+      end
+
+      if
+        token.type == 'variable'
+        and token.modifiers.globalScope == true
+        and token.modifiers.declaration
+        and token.modifiers.definition
+      then
+        local keywords_to_highlight = {
+          ['overload'] = true,
+          ['internal'] = true,
+          ['require'] = true,
+          ['private'] = true,
+          ['thread_local'] = true,
+        }
+        local token_text = get_token_text(args.buf, token)
+        if keywords_to_highlight[token_text] then
+          local hlgroup = '@keyword'
           vim.lsp.semantic_tokens.highlight_token(token, args.buf, args.data.client_id, hlgroup)
         end
       end

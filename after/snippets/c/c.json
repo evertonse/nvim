@@ -123,7 +123,7 @@
     },
     "if": {
         "prefix": "if",
-        "body": ["if (${1:true}) {", "   $0", "}"],
+        "body": ["if () {", "   $0", "}"],
         "description": "'if' snippet"
     },
     "if else": {
@@ -202,8 +202,8 @@
     "for list": {
         "prefix": "forl",
         "body": [
-            "for (int index = 0; index < ${1:}.count; index += 1) {",
-            "   auto item = $1.items[index];",
+            "for (int index = 0; index < list.count; index += 1) {",
+            "   auto $0item = list.items[index];",
             "}"
         ],
         "description": "'for' loop focusing on iteration times"

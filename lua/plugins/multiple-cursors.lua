@@ -11,7 +11,6 @@ else
   return {
     'brenton-leighton/multiple-cursors.nvim',
     -- version = '*', -- Use the latest tagged version
-    version = 'v',
     branch = 'main',
     commit = '8d410c06fad32cc0e3849318e056b308fbaafede',
     lazy = false,

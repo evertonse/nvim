@@ -945,7 +945,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
     local on_windows = OnWindows()
     if on_windows or OnSlowPath() and vim.g.self.use_minipick_when_slow then
       mappings.n['<leader>f'] = {
-        ':Pick files<CR>',
+        ':FzfLua files<CR>',
         '[S]earch [F]iles',
       }
     else
