@@ -1,4 +1,5 @@
 local DEBUG = false
+local AlwaysInspect = Inspect
 local Inspect = DEBUG and Inspect or function(arg) end
 local DumpInspect = DEBUG and DumpInspect or function(arg) end
 
@@ -491,10 +492,8 @@ local lsp_attach_autocommands = function()
       end
 
       if
-        token.type == 'variable'
-        and token.modifiers.globalScope == true
-        and token.modifiers.declaration
-        and token.modifiers.definition
+        token.type == 'type'
+        or (token.type == 'variable' and token.modifiers.globalScope == true and token.modifiers.declaration and token.modifiers.definition)
       then
         local keywords_to_highlight = {
           ['overload'] = true,

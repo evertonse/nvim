@@ -16,12 +16,16 @@ else
     lazy = false,
     opts = {
       pre_hook = function()
-        require('cmp').setup { enabled = false }
         vim.g.minipairs_disable = true
+        pcall(function()
+          require('cmp').setup { enabled = false }
+        end)
       end,
       post_hook = function()
-        require('cmp').setup { enabled = true }
         vim.g.minipairs_disable = false
+        pcall(function()
+          require('cmp').setup { enabled = true }
+        end)
       end,
       custom_key_maps = {
         {
