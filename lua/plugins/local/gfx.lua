@@ -99,6 +99,8 @@ end
 -- line_string:string|nil
 M.goto_file = function(line_string)
   -- Get the full line or the file/word under cursor
+  -- Attempt to simulate pressing gF, only if we didn't pass a line_string
+
   if not line_string then
     if vim.api.nvim_get_mode().mode == 'v' then
       line_string = get_visual_selection()
@@ -159,8 +161,6 @@ M.goto_file = function(line_string)
   local file, line_num, col_num
   for _, pattern in ipairs(patterns) do
     file, line_num, col_num = string.match(line_string, pattern)
-    -- @Debug
-    -- Inspect { file = file, line_string = line_string, pattern = pattern }
     if file then
       local newfile = string.match(file, '.*{([^:()]+)}.*')
       if newfile then

@@ -5,6 +5,11 @@
 --
 -- Default Config: https://cmp.saghen.dev/configuration/reference.html#completion-trigger
 --
+
+local DEBUG = false
+local AlwaysInspect = Inspect
+local Inspect = DEBUG and Inspect or function(arg) end
+
 local transform_items = function(ctx, items)
   return vim.tbl_filter(function(item)
     -- Get the text from the line at the position specified by textEdit.insert
@@ -16,16 +21,6 @@ local transform_items = function(ctx, items)
     -- Check if filterText is a substring of the extracted text
     local is_substring = item.filterText:find(line_substring)
     -- if ctx.line:len() > 5 then
-    --   Inspect {
-    --     aaaitemfilterText = item.filterText,
-    --     aaaline_substring = line_substring,
-    --     -- ctx = ctx,
-    --     aaacursor = ctx:get_cursor(),
-    --     aaakeyword = ctx:get_keyword() or 'lol',
-    --     -- items = items,
-    --     is_substring = is_substring,
-    --   }
-    -- end
 
     return is_substring
   end, items)

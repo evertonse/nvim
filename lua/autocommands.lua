@@ -610,7 +610,6 @@ local function show_yank_history_on_quick()
       lnum = vim.api.nvim__buf_stats(0).current_lnum
     end
 
-    -- Inspect { lnum, qfl[idx].user_data, qfl = qfl }
     if idx > 0 and idx <= #qfl then
       return qfl[idx]
     else
@@ -621,7 +620,6 @@ local function show_yank_history_on_quick()
 
   local choose = function()
     local data = get_selected_location_entry().user_data
-    -- Inspect { data }
     vim.fn.setreg('"', data)
     vim.cmd 'cclose'
   end
@@ -950,14 +948,6 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
   callback = function(args)
     vim.schedule(function()
       require('vim.treesitter').stop(args.buf)
-      -- vim.cmd [[TSBufDisable highlight]] -- This way needs to 'vim.schedule' it and because of that it bugs if we quickly change buffers
-
-      --   local ts = require 'vim.treesitter'
-      --   -- ShowInspect { buf = vim.api.nvim_get_current_buf(), active = require('vim.treesitter').highlighter.active }
-      --   -- lua ShowInspect({buf = vim.api.nvim_get_current_buf(),  active = require('vim.treesitter').highlighter.active })
-      --   if ts.highlighter and ts.highlighter.active[args.buf] then
-      --     ts.highlighter.active[args.buf] = nil
-      --   end
     end)
   end,
 })
@@ -1093,7 +1083,6 @@ local run_command_in_window = function(cmd)
 
   vim.keymap.set('n', '<leader>o', function()
     if run_buf == nil or run_layout == nil then
-      Inspect { 'you fucked up jk' }
       return
     end
     show_window(run_buf, run_layout)

@@ -64,6 +64,7 @@ return {
       c = { 'clang-format' },
       cpp = { 'clang-format' },
       glsl = { 'clang-format' },
+      hlsl = { 'clang-format' },
       java = { 'clang-format' },
       json = { 'fixjson' },
       -- java = { 'google-java-format' },
