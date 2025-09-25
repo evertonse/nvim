@@ -3,7 +3,7 @@ return {
   'saghen/blink.cmp',
   -- optional: provides snippets for the snippet source
   dependencies = {
-    'evertonse/friendly-snippets',
+    -- 'evertonse/friendly-snippets',
     'moyiz/blink-emoji.nvim',
     'ray-x/cmp-sql',
     'mikavilpas/blink-ripgrep.nvim',
@@ -172,7 +172,6 @@ return {
                 local buf_name = vim.api.nvim_buf_get_name(buf)
                 table.insert(names, buf_name)
               end
-              -- Inspect(names)
               local curr_bufnr = vim.api.nvim_get_current_buf()
               return { not is_too_big(curr_bufnr) and curr_bufnr or nil }
             end,
