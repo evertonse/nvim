@@ -14,7 +14,7 @@ return {
   },
   init_options = {
     -- fallbackFlags = { '--std=c23' },
-    -- fallbackFlags = { '--std=c++23' },
+    fallbackFlags = { '--std=c++23' },
   },
   filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
   on_attach = function() end,
