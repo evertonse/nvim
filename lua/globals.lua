@@ -631,6 +631,7 @@ vim.g.self = {
 
     { 'public', 'private' },
     { 'disable', 'enable' },
+    { 'disabled', 'enabled' },
     { 'glDisable', 'glEnable' },
     { 'if', 'else', 'elseif' },
     { 'and', 'or' },

@@ -339,7 +339,7 @@ schedule(function()
     if system32dir then
       yank_bin = vim.env.WINDOWS_SYSTEM32 .. yank_bin_name
     else
-      --- Function call has bigger binding power than '..' operator
+      -- Slower in my tests, better to leave it at system32
       yank_bin = vim.fn.stdpath 'config' .. '/assets/bin/' .. yank_bin_name
     end
     assert(yank_bin ~= nil)
