@@ -40,3 +40,43 @@ usercmd('LspDisable', disable_lsp_current_buffer, {})
 usercmd('LspDisableAll', disable_all_lsp, {})
 usercmd('TreesitterBufDisable', disable_treesitter_for_current_buffer, {})
 usercmd('ToggleBrightenComments', toggle_brighten_comments, {})
+
+vim.api.nvim_create_user_command('RgOpenBuffers', function()
+  local dirs = {}
+  local files = {}
+  local seen = {}
+
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+
+    if not seen[buf] then
+      seen[buf] = true
+
+      local name = vim.api.nvim_buf_get_name(buf)
+
+      -- ignore non-file buffers
+      if name ~= '' and vim.bo[buf].buftype == '' then
+        table.insert(files, vim.fn.fnamemodify(name, ':t'))
+
+        local dir = vim.fn.fnamemodify(name, ':h')
+        if dir ~= '' then
+          dirs[dir] = true
+        end
+      end
+    end
+  end
+
+  if vim.tbl_isempty(files) then
+    print 'No visible file-backed buffers'
+    return
+  end
+
+  local dir_list = vim.tbl_keys(dirs)
+
+  require('telescope.builtin').live_grep {
+    search_dirs = dir_list,
+
+    -- search only current visible files
+    glob_pattern = '{' .. table.concat(files, ',') .. '}',
+  }
+end, {})

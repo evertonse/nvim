@@ -1649,6 +1649,31 @@ vim.schedule(function()
   end
 end)
 
+local function simple_select(items, opts, on_confirm)
+  -- opts = { prompt = "Choose: " }
+  opts = opts or {}
+  vim.ui.select(items, {
+    prompt = opts.prompt or 'Select',
+    kind = opts.kind or nil,
+  }, function(choice)
+    if choice ~= nil then
+      on_confirm(choice)
+    end
+  end)
+
+  -- These defer are so hackish istg. They work tho
+  vim.defer_fn(function()
+    if vim.api.nvim_get_mode().mode ~= 'i' then
+      pcall(vim.cmd, 'startinsert')
+    end
+  end, 1) -- delay in ms
+end
+
+-- Example handler: edit chosen file
+local function edit_file(path)
+  vim.cmd('edit ' .. vim.fn.fnameescape(path))
+end
+
 map('n', '<F2>', function()
   --- See: https://github.com/ibhagwan/fzf-lua/wiki/Advanced
   local home = vim.env.HOME
@@ -1668,15 +1693,12 @@ map('n', '<F2>', function()
     end
     return list
   end
-  require('fzf-lua').fzf_exec({
-    home .. '/todo.md',
+
+  local files = {
     unpack(files_from(home .. '/docs/')),
-  }, {
-    prompt = 'Personal > ',
-    actions = {
-      -- Use fzf-lua builtin actions or your own handler
-      ['default'] = require('fzf-lua').actions.file_edit,
-      ['ctrl-y'] = function(selected, opts) end,
-    },
-  })
+  }
+  simple_select(files, { prompt = 'Personal > ' }, function(choice)
+    local path = vim.fn.fnameescape(choice)
+    vim.cmd('edit ' .. path)
+  end)
 end, { noremap = true, silent = true })
