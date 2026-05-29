@@ -1141,3 +1141,109 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.opt_local.spell = true
   end,
 })
+
+local fake_keywords = {
+  ['overload'] = true,
+  ['internal'] = true,
+  ['require'] = true,
+  ['private'] = true,
+  ['thread_local'] = true,
+}
+
+local previous_word = function(lines, start_line, start_col)
+  local line = start_line
+  local col = start_col
+
+  while line >= 1 do
+    local text = lines[line]
+
+    if text and #text > 0 then
+      -- clamp column for new lines
+      if col > #text then
+        col = #text
+      end
+
+      -- skip whitespace backwards
+      while col > 0 do
+        local c = text:byte(col)
+
+        if c == 32 or c == 9 then
+          col = col - 1
+        else
+          break
+        end
+      end
+
+      local end_col = col
+
+      -- walk backwards until whitespace
+      while col > 0 do
+        local c = text:byte(col)
+
+        if c == 32 or c == 9 then
+          break
+        end
+
+        col = col - 1
+      end
+
+      local start_col = col + 1
+
+      if start_col <= end_col then
+        return {
+          line = line,
+          start_col = start_col,
+          end_col = end_col,
+          word = text:sub(start_col, end_col),
+        }
+      end
+    end
+
+    line = line - 1
+
+    if line >= 1 then
+      col = #(lines[line] or '')
+    end
+  end
+end
+
+vim.api.nvim_create_autocmd('LspTokenUpdate', {
+  callback = function(args)
+    if not args.data or not args.data.token then
+      return
+    end
+
+    local token = args.data.token
+    local buf = args.buf
+
+    if token.type ~= 'variable' then
+      return
+    end
+
+    if not token.modifiers.globalScope then
+      return
+    end
+
+    local max_lines_count = 2
+    local lines = vim.api.nvim_buf_get_lines(buf, token.line - max_lines_count / 2, token.line + max_lines_count / 2, false)
+    local res = previous_word(lines, max_lines_count, token.start_col)
+
+    local line_index = res.line
+    local start_col = res.start_col
+    local end_col = res.end_col
+
+    local prev = lines[line_index]:sub(start_col, end_col)
+
+    if not fake_keywords[prev] then
+      return
+    end
+
+    local global_line_index = token.line - (max_lines_count - line_index)
+
+    -- Highlight fake keywords
+    vim.api.nvim_buf_add_highlight(buf, -1, '@keyword', global_line_index, start_col - 1, end_col)
+
+    -- Force current token to Type
+    vim.lsp.semantic_tokens.highlight_token(token, buf, args.data.client_id, '@lsp.type.class.c')
+  end,
+})

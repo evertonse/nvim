@@ -62,6 +62,7 @@ vim.filetype.add {
     cpp = 'cpp',
     hpp = 'cpp',
     hlsl = 'hlsl',
+    compute = 'hlsl',
 
     glsl = 'glsl',
     json = 'json5',

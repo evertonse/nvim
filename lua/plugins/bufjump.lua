@@ -16,6 +16,7 @@ return {
     vim.keymap.set('n', '<M-8>', function()
       require('bufjump').forward()
     end, opts)
+
     vim.keymap.set('n', '<C-S-o>', function()
       print 'jump backward in same buffer'
       require('bufjump').backward_same_buf()

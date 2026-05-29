@@ -1639,8 +1639,8 @@ vim.schedule(function()
     map(modes, 'l', [[(v:count == 0 ? 'gk' : 'k')]], { noremap = true, silent = true, expr = true })
     map(modes, ';', 'l', opts)
 
-    map(modes, 'gj', '^', opts)
-    map(modes, 'g;', 'g_', opts)
+    map(modes, 'gj', [[(v:count == 0 ? 'g0' : '^')]], { noremap = true, silent = true, expr = true })
+    map(modes, 'g;', [[(v:count == 0 ? 'g$' : '_')]], { noremap = true, silent = true, expr = true })
 
     map('n', '<C-w>j', '<C-w>h', opts) -- Move to the window below
     map('n', '<C-w>k', '<C-w>j', opts) -- Move to the right window

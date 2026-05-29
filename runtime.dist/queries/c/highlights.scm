@@ -17,6 +17,7 @@
   "struct"
   "union"
   "typedef"
+  "overload"
 ] @keyword.type
 
 [

@@ -36,12 +36,13 @@ local toggle_brighten_comments = function()
     vim.notify 'Comments restored to original color.'
   end
 end
+
 usercmd('LspDisable', disable_lsp_current_buffer, {})
 usercmd('LspDisableAll', disable_all_lsp, {})
 usercmd('TreesitterBufDisable', disable_treesitter_for_current_buffer, {})
 usercmd('ToggleBrightenComments', toggle_brighten_comments, {})
 
-vim.api.nvim_create_user_command('RgOpenBuffers', function()
+vim.api.nvim_create_user_command('TelescopeOpenBuffers', function()
   local dirs = {}
   local files = {}
   local seen = {}
