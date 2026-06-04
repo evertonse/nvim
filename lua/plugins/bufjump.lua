@@ -17,10 +17,15 @@ return {
       require('bufjump').forward()
     end, opts)
 
-    vim.keymap.set('n', '<C-S-o>', function()
-      print 'jump backward in same buffer'
+    local forwards = function()
+      print 'jump forwards in same buffer'
+      require('bufjump').forward_same_buf()
+    end
+
+    local backwards = function()
+      print 'jump backwards in same buffer'
       require('bufjump').backward_same_buf()
-    end, opts)
+    end
 
     -- IMPORTANT(solved, leaving the comment as history documentation): This is mapped to "ctrl + shift + ."
     --          But, in alacritty, I'm send the escape code for "crtl + shift + ." when I press 'crtl + shift + i'
@@ -29,11 +34,12 @@ return {
 
     -- DONE: Fixed after reading https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296799
     --       Any crtl + shift + <key> can be send as escape code "\u001b".."[" .. ascii_char_code_for_key .. ";5u"
-    local back = function()
-      print 'jump forward in same buffer'
-      require('bufjump').forward_same_buf()
-    end
-    vim.keymap.set('n', '<C-S-i>', back, opts)
-    vim.keymap.set('n', '<C-+>', back, opts)
+    -- { key = "O",      mods = "Control|Shift", chars  = "\x1F"  },
+    -- { key = "I",      mods = "Control|Shift", chars  = "\u001b[43;5u"  },
+    vim.keymap.set('n', '<C-S-o>', backwards, opts)
+    vim.keymap.set('n', '<C-_>', backwards, opts)
+
+    vim.keymap.set('n', '<C-S-i>', forwards, opts)
+    vim.keymap.set('n', '<C-+>', forwards, opts)
   end,
 }
