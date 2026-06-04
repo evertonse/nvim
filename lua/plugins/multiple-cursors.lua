@@ -147,7 +147,7 @@ else
       { '<C-LeftMouse>', '<Cmd>MultipleCursorsMouseAddDelete<CR>', mode = { 'n', 'i' }, desc = 'Add or remove cursor' },
 
       { '<leader><C-N>', '<Cmd>MultipleCursorsAddMatches<CR>', mode = { 'n', 'v', 'x' }, desc = 'Add cursors to cword' },
-      { '<C-N>', '<Cmd>MultipleCursorsAddJumpNextMatch<CR>', mode = { 'n', 'v', 'x' }, desc = 'Add cursors to cword' },
+      { '<C-S-N>', '<Cmd>MultipleCursorsAddJumpNextMatch<CR>', mode = { 'n', 'v', 'x' }, desc = 'Add cursors to cword' },
       { '<C-P>', '<Cmd>MultipleCursorsJumpNextMatch<CR>', mode = { 'n', 'v', 'x' }, desc = 'Add cursors to cword' },
 
       -- { '<Leader>A', '<Cmd>MultipleCursorsAddMatchesV<CR>', mode = { 'n', 'x' }, desc = 'Add cursors to cword in previous area' },
