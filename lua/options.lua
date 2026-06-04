@@ -187,9 +187,9 @@ o.pumblend = g.self.is_transparent and 0 or 10 -- Make builtin completion menus 
 o.winblend = g.self.is_transparent and 0 or 10 -- Make floating windows slightly transparent
 
 -- opt.redrawtime = 12525
-opt.redrawtime = 3525
+-- opt.redrawtime = 3525
 -- opt.redrawtime = 1
--- vim.cmd [[syntax sync fromstart]]
+vim.cmd [[syntax sync fromstart]]
 -- vim.cmd [[syntax sync minlines=500]]
 
 -- NOTE: Having `tab` present is needed because `^I` will be shown if

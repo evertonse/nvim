@@ -54,7 +54,7 @@ local plugins = function()
     -- Edit: `.ll` files from llvm is slow to <C-d> or <C-u> from the end (tested with a.ll)
     --     Disabling the highlight fix it
     -- Update: a.ll
-    -- require 'plugins.nvim-treesitter',
+    require 'plugins.nvim-treesitter',
     -- require 'plugins.nvim-treesitter-pairs',
 
     require 'plugins.mason',
