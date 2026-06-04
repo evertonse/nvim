@@ -61,19 +61,15 @@ return {
       end)
 
       vim.keymap.set('n', '<C-1>', function()
-        Inspect 'Fuck you'
         harpoon:list():select(1)
       end)
       vim.keymap.set('n', '<C-2>', function()
-        Inspect 'Fuck you'
         harpoon:list():select(2)
       end)
       vim.keymap.set('n', '<C-3>', function()
-        Inspect 'Fuck you'
         harpoon:list():select(3)
       end)
       vim.keymap.set('n', '<C-4>', function()
-        Inspect 'Fuck you'
         harpoon:list():select(4)
       end)
 

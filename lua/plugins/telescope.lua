@@ -333,7 +333,6 @@ local function custom_find_files()
           -- Automatically select the first entry when the picker opens
           vim.defer_fn(
             function(inner1_prompt_bufnr)
-              -- vim.fn.confirm('fuckyou', '&yes\n&no', 2)
               local opts = {
                 -- callback = actions.toggle_selection,
                 callback = function(inner2_prompt_bufnr)
