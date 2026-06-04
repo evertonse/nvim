@@ -1,4 +1,6 @@
 
+- [ ] We should say fuck it to lazy loading and use git submodules and freeze it update by shell script or one by one.
+
 - [ ] When renaming a file the treesitter detaches
 - [x] Fix highlight pattern
 

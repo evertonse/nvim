@@ -11,7 +11,7 @@ return {
     max_lines = nil, -- If auto_enable is true, don't open the minimap for buffers which have more than this many lines.
     minimap_width = 4, -- The width of the text part of the minimap
     use_lsp = true, -- Use the builtin LSP to show errors and warnings
-    use_treesitter = true, -- Use nvim-treesitter to highlight the code
+    use_treesitter = false, -- Use nvim-treesitter to highlight the code
     use_git = true, -- Show small dots to indicate git additions and deletions
     width_multiplier = 10, -- How many characters one dot represents
     z_index = 1, -- The z-index the floating window will be on

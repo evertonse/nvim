@@ -138,7 +138,7 @@ return {
         -- Only load the session if nvim was started with no args
         if vim.fn.argc(-1) == 0 then
           -- Save these to a different directory, so our manual sessions don't get polluted
-          pcall(resession.load, vim.fn.getcwd(), { dir = 'session', silence_errors = false })
+          pcall(resession.load, vim.fn.getcwd(), { dir = 'session', silence_errors = true })
 
           vim.schedule(function()
             local ok, trail = pcall(require, 'trailblazer')
@@ -152,8 +152,9 @@ return {
             end
           end)
           vim.schedule(function()
+            vim.cmd ':e'
             -- fix_all_buffers()
-            fix_buffers_per_window()
+            -- fix_buffers_per_window() -- NOTE: This is wrong if we're not using nevim-treesitter which we're not
           end)
 
           -- Restore UI

@@ -1,8 +1,12 @@
 local HEIGHT_PADDING = 20
 local WIDTH_PADDING = 10
-local REPOSITORY = 'evertonse/nvim-tree.lua' -- 'nvim-tree/nvim-tree.lua',
+
+-- local REPOSITORY = 'evertonse/nvim-tree.lua' -- 'nvim-tree/nvim-tree.lua',
+local REPOSITORY = 'nvim-tree/nvim-tree.lua' -- 'nvim-tree/nvim-tree.lua',
 -- local BRANCH = 'feat/icon_placement-right_align'
 local BRANCH = 'master'
+-- local BRANCH = 'main' -- new for 0.12
+
 local ALLOW_PREVIEW = vim.g.self.enable_file_tree_preview and not OnSlowPath() and not OnWindows()
 local WIDTH_MIN = 55
 local HEIGHT_MIN = 28

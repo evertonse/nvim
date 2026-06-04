@@ -205,7 +205,7 @@ return {
             -- When a result is found for a file whose filetype does not have a
             -- treesitter parser installed, fall back to regex based highlighting
             -- that is bundled in Neovim.
-            fallback_to_regex_highlighting = true,
+            fallback_to_regex_highlighting = false,
 
             -- Any additional paths to search in, in addition to the project
             -- root. This can be useful if you want to include dictionary files

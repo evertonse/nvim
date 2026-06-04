@@ -1,4 +1,4 @@
-return {
+local old = {
   'ThePrimeagen/harpoon',
   lazy = true,
   enabled = false,
@@ -37,5 +37,98 @@ return {
         width = vim.api.nvim_win_get_width(0) - 4,
       },
     }
+  end,
+}
+
+return {
+  'ThePrimeagen/harpoon',
+  branch = 'harpoon2',
+  dependencies = { 'nvim-lua/plenary.nvim' },
+  lazy = false,
+  config = function(_, opts)
+    vim.schedule(function()
+      local harpoon = require 'harpoon'
+      -- REQUIRED
+      vim.schedule(function()
+        harpoon:setup()
+      end)
+
+      vim.keymap.set('n', '<leader>a', function()
+        harpoon:list():add()
+      end)
+      vim.keymap.set('n', '<C-e>', function()
+        harpoon.ui:toggle_quick_menu(harpoon:list())
+      end)
+
+      vim.keymap.set('n', '<C-1>', function()
+        Inspect 'Fuck you'
+        harpoon:list():select(1)
+      end)
+      vim.keymap.set('n', '<C-2>', function()
+        Inspect 'Fuck you'
+        harpoon:list():select(2)
+      end)
+      vim.keymap.set('n', '<C-3>', function()
+        Inspect 'Fuck you'
+        harpoon:list():select(3)
+      end)
+      vim.keymap.set('n', '<C-4>', function()
+        Inspect 'Fuck you'
+        harpoon:list():select(4)
+      end)
+
+      -- Toggle previous & next buffers stored within Harpoon list
+      vim.keymap.set('n', '<C-P>', function()
+        harpoon:list():prev()
+      end)
+      vim.keymap.set('n', '<C-N>', function()
+        harpoon:list():next()
+      end)
+      harpoon:extend {
+        UI_CREATE = function(cx)
+          vim.keymap.set('n', '<C-v>', function()
+            harpoon.ui:select_menu_item { vsplit = true }
+          end, { buffer = cx.bufnr })
+
+          vim.keymap.set('n', '<C-x>', function()
+            harpoon.ui:select_menu_item { split = true }
+          end, { buffer = cx.bufnr })
+
+          vim.keymap.set('n', '<C-t>', function()
+            harpoon.ui:select_menu_item { tabedit = true }
+          end, { buffer = cx.bufnr })
+        end,
+      }
+
+      local please_use_telescope_picker = false
+      if please_use_telescope_picker then
+        -- basic telescope configuration
+        local ok, config = pcall(require, 'telescope.config')
+        if ok then
+          local conf = config.values
+          local function toggle_telescope(harpoon_files)
+            local file_paths = {}
+            for _, item in ipairs(harpoon_files.items) do
+              table.insert(file_paths, item.value)
+            end
+
+            require('telescope.pickers')
+              .new({}, {
+                prompt_title = 'Harpoon',
+                finder = require('telescope.finders').new_table {
+                  results = file_paths,
+                },
+                previewer = conf.file_previewer {},
+                sorter = conf.generic_sorter {},
+              })
+              :find()
+          end
+
+          vim.keymap.set('n', '<C-e>', function()
+            toggle_telescope(harpoon:list())
+          end, { desc = 'Open harpoon window' })
+        end
+      end
+    end)
   end,
 }

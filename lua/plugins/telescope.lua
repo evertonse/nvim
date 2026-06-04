@@ -23,8 +23,8 @@ local self = {
 
 local using = {
   repo = them.repo,
-  commit_working_path_support = them.commit_working_path_support_branch,
-  commit_working_path_support_branch = them.commit_working_path_support_branch,
+  -- commit_working_path_support = them.commit_working_path_support_branch,
+  -- commit_working_path_support_branch = them.commit_working_path_support_branch,
 }
 
 local select_nth_entry = function(nth)
@@ -388,9 +388,9 @@ local telescope_hop = function(prompt_bufnr, opts)
     'd',
     'f',
     'g',
-    'h',
-    'j',
-    'k',
+    -- 'h',
+    -- 'j',
+    -- 'k',
     'l',
     'q',
     'w',
@@ -740,9 +740,6 @@ return { -- Fuzzy Finder (files, lsp, etc)
             ['<C-o>'] = actions.cycle_history_prev,
             ['<C-i>'] = actions.cycle_history_next,
 
-            ['<c-j>'] = actions.move_selection_next,
-            ['<c-k>'] = actions.move_selection_previous,
-
             ['<C-c>'] = function()
               vim.cmd [[stopinsert]]
             end,
@@ -792,10 +789,15 @@ return { -- Fuzzy Finder (files, lsp, etc)
             ['<C-o>'] = actions.cycle_history_prev,
             ['<C-i>'] = actions.cycle_history_next,
 
-            [';'] = actions.select_default,
-            ['k'] = actions.move_selection_next,
-            ['l'] = actions.move_selection_previous,
-
+            -- [';'] = actions.select_default,
+            ['k'] = function() end,
+            -- ['l'] = actions.move_selection_previous,
+            ['j'] = function()
+              vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Left>', true, true, true), 'n', true)
+            end,
+            [';'] = function()
+              vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Right>', true, true, true), 'n', true)
+            end,
             ['s'] = actions.select_horizontal,
             ['v'] = actions.select_vertical,
             ['<C-t>'] = actions.select_tab,

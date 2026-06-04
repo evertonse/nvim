@@ -1227,6 +1227,9 @@ vim.api.nvim_create_autocmd('LspTokenUpdate', {
     local max_lines_count = 2
     local lines = vim.api.nvim_buf_get_lines(buf, token.line - max_lines_count / 2, token.line + max_lines_count / 2, false)
     local res = previous_word(lines, max_lines_count, token.start_col)
+    if not res then
+      return
+    end
 
     local line_index = res.line
     local start_col = res.start_col

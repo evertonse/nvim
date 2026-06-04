@@ -465,7 +465,10 @@ return {
     -- event = 'VimEnter',
     event = 'BufReadPost',
     cmds = vim.g.self.mini_pick and { 'Pick' } or {},
-    dependencies = { 'nvim-tree/nvim-web-devicons', 'nvim-treesitter/nvim-treesitter-textobjects' },
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+      -- We're not using nvim-treesitter for now 'nvim-treesitter/nvim-treesitter-textobjects',
+    },
     config = function()
       -- mini_move() -- Decided to fork move.nvim
 

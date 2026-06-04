@@ -2,6 +2,12 @@
 local o, opt, g = vim.o, vim.opt, vim.g
 local schedule = vim.schedule
 
+-- :help ui2
+local ui2 = require 'vim._core.ui2'
+ui2.enable {
+  enable = true,
+}
+
 ---  Sync clipboard between OS and Neovim.
 ---  See `:help 'clipboard'`
 
@@ -124,7 +130,8 @@ opt.splitright = true -- force all vertical splits to go to the right of current
 opt.swapfile = false -- creates a swapfile
 opt.backup = false
 opt.termguicolors = true -- set term gui colors (most terminals support this)
-opt.timeoutlen = 100 -- time to wait for a mapped sequence to complete (in milliseconds)
+opt.timeoutlen = 70 -- time to wait for a mapped sequence to complete (in milliseconds)
+o.ttimeoutlen = 0
 opt.updatetime = 75 -- CursorHold
 opt.writebackup = false -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
 opt.expandtab = true -- convert tabs to spaces
@@ -147,7 +154,9 @@ opt.sidescrolloff = 4 -- minimal number of screen columns either side of cursor 
 opt.guifont = 'JetBrainsMono NF:h9.1' -- the font used in graphical neovim applications
 opt.whichwrap = 'bs<>[]hl' -- which "horizontal" keys are allowed to travel to prev/next line
 
-opt.cmdheight = 1 -- more space in the neovim command line for displaying messages
+opt.cmdheight = 0 -- more space in the neovim command line for displaying messages
+
+opt.autocomplete = false
 
 o.writebackup = false -- Don't store backup while overwriting the file
 
@@ -179,6 +188,7 @@ o.winblend = g.self.is_transparent and 0 or 10 -- Make floating windows slightly
 
 -- opt.redrawtime = 12525
 opt.redrawtime = 3525
+-- opt.redrawtime = 1
 -- vim.cmd [[syntax sync fromstart]]
 -- vim.cmd [[syntax sync minlines=500]]
 

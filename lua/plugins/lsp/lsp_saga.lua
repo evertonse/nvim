@@ -1,5 +1,6 @@
 -- I don't think I'll ever need to use this, but theses configs in here are always like this XD
 require('lazy').setup {
+  enabled = false,
   'nvimdev/lspsaga.nvim',
   config = function()
     require('lspsaga').setup {}
