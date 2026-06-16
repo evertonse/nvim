@@ -152,7 +152,7 @@ return {
             end
           end)
           vim.schedule(function()
-            vim.cmd ':e'
+            pcall(vim.cmd, ':e')
             -- fix_all_buffers()
             -- fix_buffers_per_window() -- NOTE: This is wrong if we're not using nevim-treesitter which we're not
           end)

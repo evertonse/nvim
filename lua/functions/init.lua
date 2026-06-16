@@ -49,6 +49,9 @@ M.disable_treesitter_highlight_when = function(lang, bufnr, buf_ft)
   end
 
   local return_result = function(bool)
+    if bool then
+      Inspect 'buffer highlight disabled'
+    end
     vim.b[bufnr].disabled_treesitter = bool
     return vim.b[bufnr].disabled_treesitter
   end

@@ -914,35 +914,6 @@ local function enable_linting()
   print 'Linting enabled and diagnostics refreshed.'
 end
 
-vim.api.nvim_create_augroup('FileTypeBrdf', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
-  pattern = { '*.brdf', '*.fs', '*.vs' },
-  callback = function()
-    vim.bo.filetype = 'glsl'
-  end,
-
-  group = 'FileTypeBrdf',
-})
-
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
-  pattern = '*.brdf',
-  callback = function()
-    vim.bo.filetype = 'glsl'
-  end,
-
-  group = 'FileTypeBrdf',
-})
-
-vim.api.nvim_create_augroup('FileTypeC', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
-  pattern = { '*.c', '*.h' },
-  callback = function()
-    vim.bo.filetype = 'c'
-  end,
-
-  group = 'FileTypeBrdf',
-})
-
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
   pattern = { '*.conf', 'tmux' },
   callback = function(args)

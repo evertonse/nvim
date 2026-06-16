@@ -28,6 +28,15 @@ end
 
 local plugins = function()
   return {
+    { -- Highlight, edit, and navigate code
+      'nvim-treesitter/nvim-treesitter-textobjects',
+      branch = 'main', -- 0.12 nvim support
+      lazy = false,
+      enabled = true,
+    },
+    require 'plugins.nvim-treesitter',
+    -- require 'plugins.nvim-treesitter-pairs',
+
     require 'plugins.colorscheme',
 
     -- PERF Lsp slow as fuck sometimes, but culprit might always be the server its self, but nonethe less everything should be async, so if the server is slowing the fuck down, what does it matter to us? that seems like a problem
@@ -54,8 +63,6 @@ local plugins = function()
     -- Edit: `.ll` files from llvm is slow to <C-d> or <C-u> from the end (tested with a.ll)
     --     Disabling the highlight fix it
     -- Update: a.ll
-    require 'plugins.nvim-treesitter',
-    -- require 'plugins.nvim-treesitter-pairs',
 
     require 'plugins.mason',
 

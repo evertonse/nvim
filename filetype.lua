@@ -65,6 +65,12 @@ vim.filetype.add {
     compute = 'hlsl',
 
     glsl = 'glsl',
+    brdf = 'glsl',
+    fs = 'glsl',
+    vs = 'glsl',
+
+    fx = 'hlsl',
+
     json = 'json5',
     log = 'log',
 

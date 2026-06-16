@@ -12,7 +12,7 @@ else
     'brenton-leighton/multiple-cursors.nvim',
     -- version = '*', -- Use the latest tagged version
     branch = 'main',
-    commit = '8d410c06fad32cc0e3849318e056b308fbaafede',
+    -- commit = '8d410c06fad32cc0e3849318e056b308fbaafede',
     lazy = false,
     opts = {
       pre_hook = function()
