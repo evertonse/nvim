@@ -44,6 +44,7 @@ local plugins = function()
     require 'plugins.nvim-lint',
 
     require 'plugins.telescope',
+    -- require 'plugins.fff',
     require('plugins.' .. vim.g.self.file_tree), -- NOTE: Neotree is slower than nvim-tree but better git support and has box to edit things, and indication of changes and bulk rename and select,
     require 'plugins.Comment',
     require 'plugins.mini',

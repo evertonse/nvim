@@ -1,7 +1,7 @@
 return {
   'stevearc/oil.nvim',
   event = 'VeryLazy',
-  enabled = true,
+  enabled = false,
   opts = {},
   config = function(_, opts)
     local on_windows = OnWindows()

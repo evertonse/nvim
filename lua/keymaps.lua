@@ -1666,7 +1666,7 @@ local function simple_select(items, opts, on_confirm)
     if vim.api.nvim_get_mode().mode ~= 'i' then
       pcall(vim.cmd, 'startinsert')
     end
-  end, 1) -- delay in ms
+  end, 0.1) -- delay in ms
 end
 
 -- Example handler: edit chosen file
@@ -1697,6 +1697,7 @@ map('n', '<F2>', function()
   local files = {
     unpack(files_from(home .. '/docs/')),
   }
+
   simple_select(files, { prompt = 'Personal > ' }, function(choice)
     local path = vim.fn.fnameescape(choice)
     vim.cmd('edit ' .. path)
