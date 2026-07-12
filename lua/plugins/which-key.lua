@@ -18,7 +18,7 @@ return {
     'folke/which-key.nvim',
     -- tag = 'v3.11.0',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
-    enabled = false,
+    enabled = true,
     keys = {
       {
         '<leader>?',

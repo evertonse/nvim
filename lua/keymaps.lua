@@ -1749,15 +1749,15 @@ map({ 'n', 'v', 'x' }, 'gc', function()
   local mode = vim.fn.mode()
   if mode == 'n' or mode == 'V' or mode == 'x' then
     vim.o.operatorfunc = "v:lua.require'vim._comment'.operator"
-    vim.api.nvim_feedkeys('g@$', 'n', false) -- apply to current line, linewise-ish
+    vim.api.nvim_feedkeys('g@$', 'n', false)
     if false then
+      -- Nice way to use but only for 1 line because we're passing vim.fn.line '.' twice
       require('vim._comment').toggle_lines(vim.fn.line '.', vim.fn.line '.')
     end
   elseif mode == 'v' or mode == '\22' then
     -- Exit visual mode to update marks
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
-    -- Use a small timer or schedule to ensure the mode change
-    -- has processed before we read the marks.
+
     local block_commentstring = vim.b.block_commentstring or { '/* ', ' */' }
     vim.schedule(function()
       toggle_block_comment(block_commentstring)
