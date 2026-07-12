@@ -2,7 +2,8 @@ local comment_line_prefix = 'gc'
 local comment_block_prefix = 'gB'
 return {
   'numToStr/Comment.nvim',
-  lazy = true,
+  lazy = false,
+  enabled = false,
   keys = { { 'gc', mode = { 'n', 'v', 'x' } } },
   opts = {
     ---Add a space b/w comment and the line
@@ -49,13 +50,11 @@ return {
   },
   config = function(_, opts)
     local api = require 'Comment.api'
-    local config = require('Comment.config'):get()
 
     require('Comment').setup(opts)
 
     vim.keymap.set({ 'v', 'x' }, 'gc', function()
       local mode = vim.fn.mode()
-      print(mode)
       local esc = vim.api.nvim_replace_termcodes('<ESC>', true, false, true)
 
       vim.api.nvim_feedkeys(esc, 'nx', false)

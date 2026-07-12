@@ -457,6 +457,11 @@ local mini_hipatterns = function()
   }
 end
 
+local mini_comment = function()
+  local comment = require 'mini.comment'
+  comment.setup {}
+end
+
 return {
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
@@ -467,7 +472,7 @@ return {
     cmds = vim.g.self.mini_pick and { 'Pick' } or {},
     dependencies = {
       'nvim-tree/nvim-web-devicons',
-      -- We're not using nvim-treesitter for now 'nvim-treesitter/nvim-treesitter-textobjects',
+      -- We're not using nvim-treesitter for now'nvim-treesitter/nvim-treesitter-textobjects',
     },
     config = function()
       -- mini_move() -- Decided to fork move.nvim
@@ -493,6 +498,7 @@ return {
       -- mini_statusline()
 
       mini_trailspace()
+      -- mini_comment()
 
       -- PERF Big files make this slow because it uses extmarks which reads the whole buffer into memory to to determine the marks, BAD for my cases
       -- mini_hipatterns()

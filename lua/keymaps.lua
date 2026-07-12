@@ -18,7 +18,8 @@ local substitute_multi = 's' -- default
 -- local substitute = 'Subs' -- text-case.nvim
 
 -- Define a table to store previous positions
-local function vim_cmd_switch_buffer()
+--[[local]]
+function vim_cmd_switch_buffer()
   vim.cmd 'set nomore | ls | set more | b '
 end
 
@@ -155,8 +156,7 @@ M.disabled = {
   },
   n = {
     ['<C-a>'] = '',
-    ['gcc'] = '',
-    ['gc'] = '',
+    -- ['gcc'] = '',
     ['<C-<Space>>'] = '',
     ['K'] = '', -- does't work disable search for `man` pages, too slow
     ['<leader>D'] = '',
@@ -229,7 +229,6 @@ M.disabled = {
   },
   xvo = {
     -- comment
-    ['gc'] = '',
     ['<leader>/'] = '',
     ['<M-Down'] = '',
     ['<leader>'] = '',
@@ -1606,6 +1605,8 @@ vim.schedule(function()
   map('n', 'h', '<Nop>', { noremap = true, silent = true })
   map('n', '<C-w>h', '<Nop>', { noremap = true, silent = true }) -- Move to the left window
 
+  vim.keymap.del('n', 'gcc')
+
   local change_hjkl = true
   if change_hjkl then
     local modes = { 's', 'o', 'n', 'x', 'v' }
@@ -1702,4 +1703,64 @@ map('n', '<F2>', function()
     local path = vim.fn.fnameescape(choice)
     vim.cmd('edit ' .. path)
   end)
+end, { noremap = true, silent = true })
+
+local get_visual_selection = function()
+  -- Leave visual mode so marks are updated
+  vim.cmd 'normal! \27'
+
+  local start = vim.fn.getpos "'<"
+  local finish = vim.fn.getpos "'>"
+
+  vim.cmd 'normal! gv'
+
+  local row1 = start[2]
+  local col1 = start[3]
+  local row2 = finish[2]
+  local col2 = finish[3]
+
+  if row1 > row2 or (row1 == row2 and col1 > col2) then
+    row1, col1, row2, col2 = row2, col2, row1, col1
+  end
+
+  -- Zero based
+  return row1 - 1, col1 - 1, row2 - 1, col2 - 1
+end
+
+local toggle_block_comment = function(markers)
+  local open, close = markers[1], markers[2]
+  local srow, scol, erow, ecol = get_visual_selection()
+  -- Read the selection as one string, joining multiple lines with \n
+  --Inspect { s = { srow, scol }, e = { erow, ecol } }
+  local text = table.concat(vim.api.nvim_buf_get_text(0, srow, scol, erow, ecol + 1, {}), '\n')
+
+  -- Inspect { text, text:sub(1, #open), text:sub(-#close) }
+  if text:sub(1, #open) == open and text:sub(-#close) == close then
+    text = text:sub(#open + 1, -#close - 1) -- already wrapped: strip markers
+  else
+    text = open .. text .. close -- not wrapped: add markers
+  end
+
+  vim.api.nvim_buf_set_text(0, srow, scol, erow, ecol + 1, vim.split(text, '\n'))
+  vim.cmd 'normal! \27'
+end
+
+map({ 'n', 'v', 'x' }, 'gc', function()
+  local mode = vim.fn.mode()
+  if mode == 'n' or mode == 'V' or mode == 'x' then
+    vim.o.operatorfunc = "v:lua.require'vim._comment'.operator"
+    vim.api.nvim_feedkeys('g@$', 'n', false) -- apply to current line, linewise-ish
+    if false then
+      require('vim._comment').toggle_lines(vim.fn.line '.', vim.fn.line '.')
+    end
+  elseif mode == 'v' or mode == '\22' then
+    -- Exit visual mode to update marks
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
+    -- Use a small timer or schedule to ensure the mode change
+    -- has processed before we read the marks.
+    local block_commentstring = vim.b.block_commentstring or { '/* ', ' */' }
+    vim.schedule(function()
+      toggle_block_comment(block_commentstring)
+    end)
+  end
 end, { noremap = true, silent = true })

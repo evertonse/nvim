@@ -3,3 +3,5 @@ vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 0
 vim.opt.expandtab = true
 vim.opt.textwidth = 220
+
+vim.b.block_commentstring = { [[--[[ ]], ' ]]' }

@@ -44,4 +44,4 @@ return {
       desc = 'Search current word / selection',
     },
   },
-}
+/* } */

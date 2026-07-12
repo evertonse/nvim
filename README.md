@@ -30,6 +30,8 @@ Press C-d and C-u to go through and find places where it gets stuck for a micros
 Try to press v to select somewhere in the middle of the file, and use 'e' and 'b' to move the select word by word and feel if there's any input lag
 Also try to insert in a huge file, tressiter indent was the culprit for slow insert.
 
+Check this from time to time ~/.local/state/nvim/lsp.log
+
 
 ![](assets/theme1.png)
 
