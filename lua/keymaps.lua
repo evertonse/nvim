@@ -1748,7 +1748,7 @@ end
 map({ 'n', 'v', 'x' }, 'gc', function()
   local mode = vim.fn.mode()
   if mode == 'n' or mode == 'V' or mode == 'x' then
-    vim.o.operatorfunc = "v:lua.require'vim._comment'.operator"
+    vim.opt.operatorfunc = "v:lua.require'vim._comment'.operator"
     vim.api.nvim_feedkeys('g@$', 'n', false)
     if false then
       -- Nice way to use but only for 1 line because we're passing vim.fn.line '.' twice

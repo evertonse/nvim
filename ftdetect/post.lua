@@ -98,7 +98,7 @@ local _ = true
           --   vim.treesitter.start()
           -- end)
 
-          vim.treesitter.start(bufnr, parser_name)
+          pcall(vim.treesitter.start, bufnr, parser_name or ft)
 
           if want_regex then
             vim.bo[bufnr].syntax = 'on'
